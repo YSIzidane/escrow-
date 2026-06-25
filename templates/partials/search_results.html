@@ -1,0 +1,173 @@
+{% load site_i18n %}
+
+<div data-active-search-tab="{{ active_tab|default:'deals' }}">
+  {% if query_too_short %}
+  <section class="sr-empty">
+    <span class="sr-empty-icon"><i class="fas fa-keyboard" aria-hidden="true"></i></span>
+    <h2>{% t "search.enter_two" %}</h2>
+    <p>{% t "search.enter_two_sub" %}</p>
+  </section>
+  {% elif query %}
+  <section class="sr-card sr-results-head">
+    <div>
+      <span>{% t "search.button" %}</span>
+      <strong>"{{ query }}"</strong>
+      <p>{{ users_total }} {% t "search.found_users" %} - {{ deals_total }} {% t "search.found_deals" %}</p>
+    </div>
+    <div class="sr-tabs" role="tablist" aria-label="{% if current_language == 'ar' %}أنواع النتائج{% else %}Result types{% endif %}">
+      <button type="button" class="sr-tab" data-search-tab="deals" onclick="setSearchTab('deals')">
+        {% t "search.deals_tab" %}
+        <b>{{ deals_total }}</b>
+      </button>
+      <button type="button" class="sr-tab" data-search-tab="users" onclick="setSearchTab('users')">
+        {% t "search.users_tab" %}
+        <b>{{ users_total }}</b>
+      </button>
+    </div>
+  </section>
+
+  <section data-search-panel="deals" class="sr-panel">
+    {% if deals %}
+    <div class="sr-section-head">
+      <h2>{% t "search.deals_tab" %}</h2>
+      <span class="sr-soft-pill">{{ deals_total }}</span>
+    </div>
+    <div class="sr-results-grid">
+      {% for deal in deals %}
+      <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="sr-result-card sr-deal-card">
+        <div class="sr-card-media">
+          {% if deal.images.exists %}
+          <img src="{{ deal.images.first.image|file_url:'images/brand/og-card.webp' }}" alt="{{ deal.product_title }}" loading="lazy" decoding="async" width="640" height="420">
+          {% else %}
+          <div class="sr-card-fallback"><i class="fas fa-image" aria-hidden="true"></i></div>
+          {% endif %}
+          <span class="sr-type-pill">
+            {% if deal.is_auction %}{% t "deals.auction" %}{% else %}{% t "deals.fixed_price" %}{% endif %}
+          </span>
+        </div>
+        <div class="sr-card-body">
+          <h3>{{ deal.product_title|truncatechars:54 }}</h3>
+          <p>{{ deal.product_description|truncatechars:100 }}</p>
+          <div class="sr-card-foot">
+            <span>
+              <strong>${% if deal.is_auction %}{{ deal.starting_price }}{% else %}{{ deal.price }}{% endif %}</strong>
+              <small>{{ deal.seller.username }}</small>
+            </span>
+            <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% if deals.has_other_pages %}
+    <nav class="sr-pagination" aria-label="{% if current_language == 'ar' %}صفحات نتائج الصفقات{% else %}Deal result pages{% endif %}">
+      {% if deals.has_previous %}
+      <a
+        href="?q={{ query }}&page_deals={{ deals.previous_page_number }}&page_users={{ request.GET.page_users }}"
+        hx-get="?q={{ query }}&page_deals={{ deals.previous_page_number }}&page_users={{ request.GET.page_users }}"
+        hx-target="#search-results"
+        hx-push-url="true"
+      >{% if current_language == 'ar' %}السابق{% else %}Previous{% endif %}</a>
+      {% endif %}
+      {% for num in deals.paginator.page_range %}
+        {% if deals.number == num %}
+        <span class="is-active">{{ num }}</span>
+        {% elif num > deals.number|add:'-3' and num < deals.number|add:'3' %}
+        <a
+          href="?q={{ query }}&page_deals={{ num }}&page_users={{ request.GET.page_users }}"
+          hx-get="?q={{ query }}&page_deals={{ num }}&page_users={{ request.GET.page_users }}"
+          hx-target="#search-results"
+          hx-push-url="true"
+        >{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+      {% if deals.has_next %}
+      <a
+        href="?q={{ query }}&page_deals={{ deals.next_page_number }}&page_users={{ request.GET.page_users }}"
+        hx-get="?q={{ query }}&page_deals={{ deals.next_page_number }}&page_users={{ request.GET.page_users }}"
+        hx-target="#search-results"
+        hx-push-url="true"
+      >{% if current_language == 'ar' %}التالي{% else %}Next{% endif %}</a>
+      {% endif %}
+    </nav>
+    {% endif %}
+    {% else %}
+    <section class="sr-empty">
+      <span class="sr-empty-icon"><i class="fas fa-box-open" aria-hidden="true"></i></span>
+      <h2>{% t "search.no_deals_found" %}</h2>
+      <p>{% t "search.try_other_keywords" %}</p>
+      <a href="{% url 'listings' %}" class="sr-btn sr-btn-primary">{% t "search.browse_all_deals" %}</a>
+    </section>
+    {% endif %}
+  </section>
+
+  <section data-search-panel="users" class="sr-panel">
+    {% if users %}
+    <div class="sr-section-head">
+      <h2>{% t "search.users_tab" %}</h2>
+      <span class="sr-soft-pill">{{ users_total }}</span>
+    </div>
+    <div class="sr-users-list">
+      {% for u in users %}
+      <a href="{% url 'user_profile' u.id %}" class="sr-user-row">
+        {% if u.profile.avatar %}
+        <img src="{{ u.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ u.username }}" loading="lazy">
+        {% else %}
+        <span class="sr-user-fallback">{{ u.username|first|upper }}</span>
+        {% endif %}
+        <span>
+          <strong>{{ u.username }}{% verification_badge u.profile %}</strong>
+          <small>{{ u.published_deals_count }} {% t "search.user_published_deals" %}</small>
+        </span>
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+      </a>
+      {% endfor %}
+    </div>
+    {% if users.has_other_pages %}
+    <nav class="sr-pagination" aria-label="{% if current_language == 'ar' %}صفحات نتائج المستخدمين{% else %}User result pages{% endif %}">
+      {% if users.has_previous %}
+      <a
+        href="?q={{ query }}&page_users={{ users.previous_page_number }}&page_deals={{ request.GET.page_deals }}"
+        hx-get="?q={{ query }}&page_users={{ users.previous_page_number }}&page_deals={{ request.GET.page_deals }}"
+        hx-target="#search-results"
+        hx-push-url="true"
+      >{% if current_language == 'ar' %}السابق{% else %}Previous{% endif %}</a>
+      {% endif %}
+      {% for num in users.paginator.page_range %}
+        {% if users.number == num %}
+        <span class="is-active">{{ num }}</span>
+        {% elif num > users.number|add:'-3' and num < users.number|add:'3' %}
+        <a
+          href="?q={{ query }}&page_users={{ num }}&page_deals={{ request.GET.page_deals }}"
+          hx-get="?q={{ query }}&page_users={{ num }}&page_deals={{ request.GET.page_deals }}"
+          hx-target="#search-results"
+          hx-push-url="true"
+        >{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+      {% if users.has_next %}
+      <a
+        href="?q={{ query }}&page_users={{ users.next_page_number }}&page_deals={{ request.GET.page_deals }}"
+        hx-get="?q={{ query }}&page_users={{ users.next_page_number }}&page_deals={{ request.GET.page_deals }}"
+        hx-target="#search-results"
+        hx-push-url="true"
+      >{% if current_language == 'ar' %}التالي{% else %}Next{% endif %}</a>
+      {% endif %}
+    </nav>
+    {% endif %}
+    {% else %}
+    <section class="sr-empty">
+      <span class="sr-empty-icon"><i class="fas fa-users-slash" aria-hidden="true"></i></span>
+      <h2>{% t "search.no_user_found" %}</h2>
+      <p>{% t "search.try_other_name" %}</p>
+    </section>
+    {% endif %}
+  </section>
+  {% else %}
+  <section class="sr-empty">
+    <span class="sr-empty-icon"><i class="fas fa-search" aria-hidden="true"></i></span>
+    <h2>{% if current_language == 'ar' %}ابدأ بالبحث عن صفقة أو مستخدم{% else %}Start with a deal or user{% endif %}</h2>
+    <p>{% if current_language == 'ar' %}اكتب حرفين على الأقل، وستظهر النتائج بتقسيم واضح بين الصفقات والحسابات.{% else %}Type at least two characters to see deals and accounts separated cleanly.{% endif %}</p>
+  </section>
+  {% endif %}
+</div>

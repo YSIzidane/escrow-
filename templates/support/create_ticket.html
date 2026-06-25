@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{% if is_report_mode %}{% t "support.report.title" %}{% else %}{% t "support.create.title" %}{% endif %} - Safouane{% endblock %}
+{% block page_type %}support{% endblock %}
+{% block nav_support %}active{% endblock %}
+
+{% block meta %}
+{{ block.super }}
+{% endblock %}
+
+{% block late_css %}
+<link rel="stylesheet" href="{% static 'css/support_dark.css' %}?v=20260523b">
+{% endblock %}
+
+{% block content %}
+<main class="sd-page {% if is_report_mode %}sd-bg-report{% else %}sd-bg-create{% endif %}" dir="{{ current_dir }}">
+  <section class="sd-shell" aria-labelledby="support-form-title">
+    <header class="sd-hero sd-hero-compact">
+      <div class="sd-hero-copy">
+        <span class="sd-kicker">
+          <i class="fas {% if is_report_mode %}fa-flag{% else %}fa-headset{% endif %}" aria-hidden="true"></i>
+          {% if is_report_mode %}{% t "support.report.kicker" %}{% else %}{% t "support.create.kicker" %}{% endif %}
+        </span>
+        <h1 id="support-form-title">{% if is_report_mode %}{% t "support.report.title" %}{% else %}{% t "support.create.title" %}{% endif %}</h1>
+        <p>{% if is_report_mode %}{% t "support.report.compact_sub" %}{% else %}{% t "support.create.compact_sub" %}{% endif %}</p>
+      </div>
+
+      <div class="sd-actions">
+        <a href="{% url 'my_tickets' %}" class="sd-btn sd-btn-ghost">
+          <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          <span>{% t "support.back_to_support" %}</span>
+        </a>
+      </div>
+    </header>
+
+    <section class="sd-form-intro" aria-label="{% t "support.create.steps_label" %}">
+      <article>
+        <span><i class="fas fa-pen" aria-hidden="true"></i></span>
+        <strong>{% t "support.create.step_summary_title" %}</strong>
+        <small>{% t "support.step_summary" %}</small>
+      </article>
+      <article>
+        <span><i class="fas fa-handshake" aria-hidden="true"></i></span>
+        <strong>{% t "support.create.step_deal_title" %}</strong>
+        <small>{% t "support.step_deal" %}</small>
+      </article>
+      <article>
+        <span><i class="fas fa-paperclip" aria-hidden="true"></i></span>
+        <strong>{% t "support.create.step_evidence_title" %}</strong>
+        <small>{% t "support.step_evidence" %}</small>
+      </article>
+    </section>
+
+    <div class="sd-layout sd-form-layout">
+      <section class="sd-card sd-main-card" aria-label="{% if is_report_mode %}{% t "support.report.form_label" %}{% else %}{% t "support.create.form_label" %}{% endif %}">
+        <div class="sd-card-head">
+          <div>
+            <h2>{% t "support.request_details" %}</h2>
+            <p>{% if is_report_mode %}{% t "support.request_details_report_sub" %}{% else %}{% t "support.request_details_create_sub" %}{% endif %}</p>
+          </div>
+          <span class="sd-soft-pill">
+            <i class="fas fa-lock" aria-hidden="true"></i>
+            {% t "support.saved" %}
+          </span>
+        </div>
+
+        {% if is_report_mode %}
+        {% if prefill_deal or report_target_user %}
+        <div class="sd-context-row">
+          {% if prefill_deal %}
+          <div class="sd-context-chip">
+            <i class="fas fa-handshake" aria-hidden="true"></i>
+            <span>{% t "support.context_deal" %} #{{ prefill_deal.id }} - {{ prefill_deal.product_title|truncatechars:42 }}</span>
+          </div>
+          {% endif %}
+          {% if report_target_user %}
+          <div class="sd-context-chip">
+            <i class="fas fa-user-shield" aria-hidden="true"></i>
+            <span>{% t "support.context_reported_account" %}: {{ report_target_user.username }}</span>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+        {% endif %}
+
+        <div class="sd-form-mode-panel">
+          <div>
+            <i class="fas {% if is_report_mode %}fa-flag{% else %}fa-headset{% endif %}" aria-hidden="true"></i>
+            <span>{% if is_report_mode %}{% t "support.report.kicker" %}{% else %}{% t "support.create.kicker" %}{% endif %}</span>
+          </div>
+          <p>{% if is_report_mode %}{% t "support.report.compact_sub" %}{% else %}{% t "support.create.compact_sub" %}{% endif %}</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="sd-form" data-sd-submit-form novalidate>
+          {% csrf_token %}
+          <input type="hidden" name="mode" value="{{ mode }}">
+          {% if prefill_deal %}<input type="hidden" name="deal_id" value="{{ prefill_deal.id }}">{% endif %}
+          {% if report_target_user %}<input type="hidden" name="reported_user_id" value="{{ report_target_user.id }}">{% endif %}
+
+          <div class="sd-field sd-field-full">
+            <label for="ticket-subject">
+              <i class="fas fa-pen" aria-hidden="true"></i>
+              {% t "support.subject" %}
+            </label>
+            <input
+              id="ticket-subject"
+              type="text"
+              name="subject"
+              placeholder="{% if is_report_mode %}{% t "support.report.subject_placeholder" %}{% else %}{% t "support.create.subject_placeholder" %}{% endif %}"
+              required
+              minlength="6"
+              maxlength="200"
+            >
+          </div>
+
+          <div class="sd-field">
+            <label for="ticket-category">
+              <i class="fas fa-tag" aria-hidden="true"></i>
+              {% t "support.create.category" %}
+            </label>
+            <select id="ticket-category" name="category">
+              <option value="payment" {% if request.GET.category == 'payment' %}selected{% endif %}>{% t "support.create.cat_payment" %}</option>
+              <option value="deal" {% if is_report_mode and prefill_deal or request.GET.category == 'deal' %}selected{% endif %}>{% t "support.create.cat_deal" %}</option>
+              <option value="account" {% if is_report_mode and report_target_user and not prefill_deal or request.GET.category == 'account' %}selected{% endif %}>{% t "support.create.cat_account" %}</option>
+              <option value="technical" {% if request.GET.category == 'technical' %}selected{% endif %}>{% t "support.create.cat_technical" %}</option>
+              <option value="other" {% if not is_report_mode and not request.GET.category %}selected{% endif %}>{% t "support.create.cat_other" %}</option>
+            </select>
+          </div>
+
+          {% if not prefill_deal %}
+          <div class="sd-field">
+            <label for="ticket-deal">
+              <i class="fas fa-handshake" aria-hidden="true"></i>
+              {% t "support.create.related_deal" %}
+            </label>
+            <select id="ticket-deal" name="deal_id">
+              <option value="">{% t "support.create.no_deal" %}</option>
+              {% for deal in user_deals %}
+              <option value="{{ deal.id }}">#{{ deal.id }} - {{ deal.product_title|truncatechars:42 }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% endif %}
+
+          <div class="sd-field sd-field-full">
+            <span class="sd-label">
+              <i class="fas fa-signal" aria-hidden="true"></i>
+              {% t "support.priority" %}
+            </span>
+            <div class="sd-choice-grid" role="radiogroup" aria-label="{% t "support.priority_choice" %}">
+              <label class="sd-choice">
+                <input type="radio" name="priority" value="low">
+                <span><i class="fas fa-circle" aria-hidden="true"></i> {% t "support.filter.low" %}</span>
+              </label>
+              <label class="sd-choice">
+                <input type="radio" name="priority" value="medium" {% if not is_report_mode %}checked{% endif %}>
+                <span><i class="fas fa-circle" aria-hidden="true"></i> {% t "support.filter.medium" %}</span>
+              </label>
+              <label class="sd-choice">
+                <input type="radio" name="priority" value="high" {% if is_report_mode %}checked{% endif %}>
+                <span><i class="fas fa-arrow-trend-up" aria-hidden="true"></i> {% t "support.filter.high" %}</span>
+              </label>
+              <label class="sd-choice">
+                <input type="radio" name="priority" value="urgent">
+                <span><i class="fas fa-bolt" aria-hidden="true"></i> {% t "support.filter.urgent" %}</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="sd-field sd-field-full">
+            <label for="ticket-description">
+              <i class="fas fa-align-right" aria-hidden="true"></i>
+              {% if is_report_mode %}{% t "support.report.description" %}{% else %}{% t "support.create.description" %}{% endif %}
+            </label>
+            <textarea
+              id="ticket-description"
+              name="description"
+              rows="7"
+              placeholder="{% if is_report_mode %}{% t "support.report.description_placeholder" %}{% else %}{% t "support.create.description_placeholder" %}{% endif %}"
+              required
+              minlength="12"
+            ></textarea>
+            <span class="sd-help-text">{% t "support.description_help" %}</span>
+          </div>
+
+          <div class="sd-field sd-field-full">
+            <span class="sd-label">
+              <i class="fas fa-paperclip" aria-hidden="true"></i>
+              {% t "support.create.attachment" %}
+            </span>
+            <label class="sd-file-drop" for="ticket-attachment" data-sd-file-wrap>
+              <span class="sd-file-icon"><i class="fas fa-cloud-arrow-up" aria-hidden="true"></i></span>
+              <strong data-sd-file-name data-default-text="{% t "support.file_default" %}">{% t "support.file_default" %}</strong>
+              <span>{% t "support.file_formats" %}</span>
+              <input id="ticket-attachment" type="file" name="attachment" accept="image/*,.pdf,.doc,.docx" data-sd-file-input>
+            </label>
+          </div>
+
+          <div class="sd-form-actions">
+            <button type="submit" class="sd-btn sd-btn-primary" data-sd-submit-button data-loading-text="{% if is_report_mode %}{% t "support.report.sending" %}{% else %}{% t "support.create.sending" %}{% endif %}">
+              <i class="fas {% if is_report_mode %}fa-flag{% else %}fa-paper-plane{% endif %}" aria-hidden="true"></i>
+              <span>{% if is_report_mode %}{% t "support.report.submit" %}{% else %}{% t "support.create.submit" %}{% endif %}</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="sd-side-stack" aria-label="{% t "support.guidance" %}">
+        <section class="sd-side-card">
+          <span class="sd-live">
+            <i aria-hidden="true"></i>
+            {% t "support.organized_review" %}
+          </span>
+          <h2>{% if is_report_mode %}{% t "support.report.strong_title" %}{% else %}{% t "support.create.need_title" %}{% endif %}</h2>
+          <div class="sd-steps">
+            <span><b>1</b> {% t "support.step_summary" %}</span>
+            <span><b>2</b> {% t "support.step_deal" %}</span>
+            <span><b>3</b> {% t "support.step_evidence" %}</span>
+          </div>
+        </section>
+
+        <section class="sd-side-card sd-tone-card">
+          <i class="fas fa-shield-halved" aria-hidden="true"></i>
+          <h2>{% t "support.privacy_title" %}</h2>
+          <p>{% t "support.privacy_sub" %}</p>
+        </section>
+      </aside>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/support_dark.js' %}?v=20260523b"></script>
+{% endblock %}

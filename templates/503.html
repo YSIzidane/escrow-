@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% t "error.503.title" %}{% endblock %}
+{% block page_type %}503{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/error_pages.css' %}?v=20260520c">
+{% endblock %}
+
+{% block content %}
+<div class="se-error-shell">
+  <div class="se-error-wrap se-error-503">
+    <div class="se-error-code">503</div>
+
+    <div class="se-error-card">
+      <div class="se-error-icon">
+        <i class="fas fa-tools"></i>
+      </div>
+
+      <h1 class="se-error-title">{% t "error.503.header" %}</h1>
+      <p class="se-error-message">{% t "error.503.message" %}</p>
+
+      {% if maintenance_end_iso %}
+      <div class="se-error-timer">
+        <p class="se-error-timer-copy">{% t "error.503.time_left" %}</p>
+        <p class="se-error-timer-target">
+          {% t "error.503.expected_return" %}
+          {{ maintenance_end|date:"Y-m-d H:i" }}
+        </p>
+        <div class="se-error-timer-grid">
+          <div class="se-error-timer-unit">
+            <div class="se-error-timer-value" id="hours">--</div>
+            <div class="se-error-timer-label">{% t "error.503.hours" %}</div>
+          </div>
+          <div class="se-error-timer-unit">
+            <div class="se-error-timer-value" id="minutes">--</div>
+            <div class="se-error-timer-label">{% t "error.503.minutes" %}</div>
+          </div>
+          <div class="se-error-timer-unit">
+            <div class="se-error-timer-value" id="seconds">--</div>
+            <div class="se-error-timer-label">{% t "error.503.seconds" %}</div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="se-error-actions">
+        <button type="button" class="se-error-btn se-error-btn-primary" onclick="window.location.reload();">
+          <i class="fas fa-sync-alt"></i>
+          {% t "error.503.refresh" %}
+        </button>
+        <a href="{% url 'home' %}" class="se-error-btn se-error-btn-secondary">
+          <i class="fas fa-home"></i>
+          {% t "error.503.back_home" %}
+        </a>
+      </div>
+
+      <div class="se-error-contact">
+        <p class="se-error-contact-copy">{% t "error.503.follow_us" %}</p>
+        <div class="se-error-contact-links">
+          <a href="https://www.instagram.com/__safouane__0/" target="_blank" class="se-error-contact-link instagram" title="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=100082472740802" target="_blank" class="se-error-contact-link facebook" title="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://wa.me/213663580460" target="_blank" class="se-error-contact-link whatsapp" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+          <a href="{% url 'create_ticket' %}" class="se-error-contact-link mail" title="Support ticket">
+            <i class="fas fa-ticket-alt"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if maintenance_end_iso %}
+<script>
+  function startCountdown(endIso) {
+    const endTime = new Date(endIso).getTime();
+    if (Number.isNaN(endTime)) {
+      return;
+    }
+
+    function updateCountdown() {
+      const remaining = endTime - Date.now();
+      if (remaining <= 0) {
+        document.getElementById('hours').textContent = '00';
+        document.getElementById('minutes').textContent = '00';
+        document.getElementById('seconds').textContent = '00';
+        return;
+      }
+
+      const h = Math.floor(remaining / (1000 * 60 * 60));
+      const m = Math.floor((remaining / (1000 * 60)) % 60);
+      const s = Math.floor((remaining / 1000) % 60);
+
+      document.getElementById('hours').textContent = String(h).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(m).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(s).padStart(2, '0');
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    startCountdown('{{ maintenance_end_iso|escapejs }}');
+  });
+</script>
+{% endif %}
+{% endblock %}

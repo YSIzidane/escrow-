@@ -1,0 +1,1038 @@
+/* Enterprise consistency layer for the remaining product pages. */
+:root {
+  --eu-bg: #f5f7fb;
+  --eu-bg-soft: #eef3f8;
+  --eu-ink: #0d1b2a;
+  --eu-ink-2: #435366;
+  --eu-muted: #7d8ca0;
+  --eu-border: rgba(13, 27, 42, 0.09);
+  --eu-border-strong: rgba(13, 27, 42, 0.14);
+  --eu-surface: rgba(255, 255, 255, 0.88);
+  --eu-surface-solid: #ffffff;
+  --eu-surface-soft: rgba(248, 251, 255, 0.9);
+  --eu-navy: #0d1b2a;
+  --eu-navy-2: #1a2e45;
+  --eu-gold: #c9963b;
+  --eu-gold-2: #e8b96a;
+  --eu-blue: #3b82f6;
+  --eu-green: #22c55e;
+  --eu-red: #ef4444;
+  --eu-amber: #f59e0b;
+  --eu-radius: 22px;
+  --eu-radius-sm: 14px;
+  --eu-shadow: 0 18px 52px rgba(13, 27, 42, 0.12);
+  --eu-shadow-soft: 0 10px 28px rgba(13, 27, 42, 0.08);
+  --eu-shadow-hover: 0 22px 58px rgba(13, 27, 42, 0.16);
+  --eu-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body[data-page^="account_"],
+body[data-page^="password_"],
+body[data-page^="socialaccount_"],
+body[data-page="auth_error"],
+body[data-page="signup_closed"],
+body[data-page="request_login_code"],
+body[data-page="verified_email_required"],
+body[data-page="payment"],
+body[data-page="payment_success"],
+body[data-page="invoice"],
+body[data-page="create_room"],
+body[data-page="join_room"],
+body[data-page="room"] {
+  color: var(--eu-ink);
+  background-color: var(--eu-bg) !important;
+}
+
+body[data-page^="account_"] .page-bg-overlay,
+body[data-page^="password_"] .page-bg-overlay,
+body[data-page^="socialaccount_"] .page-bg-overlay,
+body[data-page="auth_error"] .page-bg-overlay,
+body[data-page="signup_closed"] .page-bg-overlay,
+body[data-page="request_login_code"] .page-bg-overlay,
+body[data-page="verified_email_required"] .page-bg-overlay,
+body[data-page="payment"] .page-bg-overlay,
+body[data-page="payment_success"] .page-bg-overlay,
+body[data-page="invoice"] .page-bg-overlay,
+body[data-page="create_room"] .page-bg-overlay,
+body[data-page="join_room"] .page-bg-overlay,
+body[data-page="room"] .page-bg-overlay {
+  background:
+    radial-gradient(circle at 16% 0%, rgba(201, 150, 59, 0.1), transparent 28%),
+    radial-gradient(circle at 88% 8%, rgba(59, 130, 246, 0.08), transparent 30%),
+    linear-gradient(180deg, #f9fbff 0%, #f4f7fb 45%, #edf2f7 100%) !important;
+}
+
+body[data-page^="account_"] .page-bg-overlay::after,
+body[data-page^="password_"] .page-bg-overlay::after,
+body[data-page^="socialaccount_"] .page-bg-overlay::after,
+body[data-page="auth_error"] .page-bg-overlay::after,
+body[data-page="signup_closed"] .page-bg-overlay::after,
+body[data-page="request_login_code"] .page-bg-overlay::after,
+body[data-page="verified_email_required"] .page-bg-overlay::after,
+body[data-page="payment"] .page-bg-overlay::after,
+body[data-page="payment_success"] .page-bg-overlay::after,
+body[data-page="invoice"] .page-bg-overlay::after,
+body[data-page="create_room"] .page-bg-overlay::after,
+body[data-page="join_room"] .page-bg-overlay::after,
+body[data-page="room"] .page-bg-overlay::after {
+  background:
+    linear-gradient(rgba(13, 27, 42, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 27, 42, 0.02) 1px, transparent 1px) !important;
+  background-size: 34px 34px !important;
+  opacity: 0.7 !important;
+}
+
+body[data-page^="account_"] .se-main,
+body[data-page^="password_"] .se-main,
+body[data-page^="socialaccount_"] .se-main,
+body[data-page="auth_error"] .se-main,
+body[data-page="signup_closed"] .se-main,
+body[data-page="request_login_code"] .se-main,
+body[data-page="verified_email_required"] .se-main,
+body[data-page="payment"] .se-main,
+body[data-page="payment_success"] .se-main,
+body[data-page="invoice"] .se-main,
+body[data-page="create_room"] .se-main,
+body[data-page="join_room"] .se-main,
+body[data-page="room"] .se-main {
+  width: min(100%, 1240px) !important;
+  margin-inline: auto !important;
+  padding-top: 30px !important;
+}
+
+body[data-page^="account_"] .row.py-5,
+body[data-page^="password_"] .row.py-5,
+body[data-page^="socialaccount_"] .row.py-5,
+body[data-page="auth_error"] .row.py-5,
+body[data-page="signup_closed"] .row.py-5,
+body[data-page="request_login_code"] .row.py-5,
+body[data-page="verified_email_required"] .row.py-5 {
+  padding-top: 24px !important;
+  padding-bottom: 46px !important;
+}
+
+body[data-page^="account_"] :is(.account-card, .email-card),
+body[data-page^="password_"] :is(.account-card, .email-card),
+body[data-page^="socialaccount_"] .connections-card,
+body[data-page="auth_error"] .connections-card,
+body[data-page="signup_closed"] .account-card,
+body[data-page="request_login_code"] .account-card,
+body[data-page="verified_email_required"] .account-card,
+.se-payment-card,
+.invoice-card,
+.se-publish-form-card,
+.se-join-room-card,
+#withdraw-page-shell,
+.se-room-chat-card,
+.se-room-sidebar-card,
+.trade-panel,
+.adm-surface,
+.adm-table-surface,
+.adm-metric-card,
+.adm-page-hero,
+.ed-rooms-card,
+.ed-stat-card {
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255, 255, 255, 0.62) !important;
+  border-radius: var(--eu-radius) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 251, 255, 0.88)) !important;
+  box-shadow: var(--eu-shadow) !important;
+  backdrop-filter: blur(18px) saturate(1.18) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.18) !important;
+}
+
+body[data-page^="account_"] :is(.account-card, .email-card)::before,
+body[data-page^="password_"] :is(.account-card, .email-card)::before,
+body[data-page^="socialaccount_"] .connections-card::before,
+.se-payment-card::before,
+.invoice-card::before,
+.se-publish-form-card::before,
+.se-join-room-card::before,
+#withdraw-page-shell::before,
+.se-room-chat-card::before,
+.se-room-sidebar-card::before,
+.adm-surface::before,
+.adm-table-surface::before,
+.ed-rooms-card::before {
+  content: "";
+  position: absolute;
+  inset-inline: 22px;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232, 185, 106, 0.95), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+body[data-page^="account_"] :is(.account-card-header, .email-card-header),
+body[data-page^="password_"] .account-card-header,
+body[data-page^="socialaccount_"] .connections-header,
+.se-publish-form-hero,
+.se-join-room-hero,
+.se-payment-hero,
+.withdraw-shell-hero,
+.ed-header,
+.adm-page-hero.is-dark,
+.se-room-header {
+  isolation: isolate !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(232, 185, 106, 0.24), transparent 34%),
+    radial-gradient(circle at 88% 15%, rgba(59, 130, 246, 0.13), transparent 31%),
+    linear-gradient(135deg, var(--eu-navy) 0%, var(--eu-navy-2) 66%, #263f5b 100%) !important;
+  color: #fff !important;
+}
+
+body[data-page^="account_"] :is(.account-card-header, .email-card-header)::after,
+body[data-page^="password_"] .account-card-header::after,
+body[data-page^="socialaccount_"] .connections-header::after,
+.se-publish-form-hero::after,
+.se-join-room-hero::after,
+.se-payment-hero::after,
+.withdraw-shell-hero::after,
+.ed-header::after,
+.adm-page-hero.is-dark::after,
+.se-room-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(180deg, #000, transparent 82%);
+  -webkit-mask-image: linear-gradient(180deg, #000, transparent 82%);
+  pointer-events: none;
+}
+
+body[data-page^="account_"] :is(.account-card-icon, .email-card-icon),
+body[data-page^="password_"] .account-card-icon,
+body[data-page^="socialaccount_"] .connections-icon,
+.se-payment-hero-icon,
+.se-join-room-icon,
+.ed-header-icon,
+.room-type-mark {
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: linear-gradient(135deg, var(--eu-gold), var(--eu-gold-2)) !important;
+  color: var(--eu-navy) !important;
+  box-shadow: 0 14px 34px rgba(201, 150, 59, 0.28) !important;
+}
+
+body[data-page^="account_"] :is(.account-card-icon i, .email-card-icon i),
+body[data-page^="password_"] .account-card-icon i,
+body[data-page^="socialaccount_"] .connections-icon i,
+.se-payment-hero-icon i,
+.se-join-room-icon i,
+.room-type-mark i {
+  color: var(--eu-navy) !important;
+}
+
+body[data-page^="account_"] :is(.account-card-header h3, .email-card-header h3),
+body[data-page^="password_"] .account-card-header h3,
+body[data-page^="socialaccount_"] .connections-header h3,
+.se-publish-form-title,
+.se-payment-hero h1,
+.withdraw-shell-hero h1,
+.ed-title,
+.se-room-title {
+  color: #fff !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.18 !important;
+}
+
+body[data-page^="account_"] :is(.account-card-header p, .email-card-header p),
+body[data-page^="password_"] .account-card-header p,
+body[data-page^="socialaccount_"] .connections-header p,
+.se-publish-form-subtitle,
+.se-payment-hero p,
+.withdraw-shell-hero p,
+.ed-desc,
+.se-room-description {
+  color: rgba(255, 255, 255, 0.75) !important;
+  line-height: 1.85 !important;
+}
+
+body[data-page^="account_"] :is(.account-card-body, .email-card-body),
+body[data-page^="password_"] .account-card-body,
+body[data-page^="socialaccount_"] .connections-body,
+.se-publish-form-body,
+.invoice-card-body {
+  padding: 30px !important;
+}
+
+.form-control,
+.form-select,
+.se-publish-input,
+.se-field input,
+.se-field textarea,
+.pf-field input,
+.pf-field select,
+.pf-field textarea,
+.account-card-body .form-control,
+.email-card-body .form-control,
+.connections-body .form-control,
+.trade-form textarea,
+.se-msg-input {
+  min-height: 48px !important;
+  border: 1px solid rgba(13, 27, 42, 0.1) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: var(--eu-ink) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+.se-publish-input:focus,
+.se-field input:focus,
+.se-field textarea:focus,
+.pf-field input:focus,
+.pf-field select:focus,
+.pf-field textarea:focus,
+.account-card-body .form-control:focus,
+.email-card-body .form-control:focus,
+.connections-body .form-control:focus,
+.trade-form textarea:focus,
+.se-msg-input:focus {
+  border-color: rgba(201, 150, 59, 0.58) !important;
+  background: #fff !important;
+  box-shadow:
+    0 0 0 4px rgba(201, 150, 59, 0.12),
+    0 10px 24px rgba(13, 27, 42, 0.08) !important;
+  outline: none !important;
+}
+
+.btn,
+.se-primary-btn,
+.se-success-btn,
+.se-publish-primary-btn,
+.se-publish-secondary-link,
+.se-room-action-btn,
+.trade-btn,
+.ed-btn-enter,
+.ed-clear-filter,
+.ed-link-btn,
+.pf-btn-save,
+.pf-btn-cancel,
+.invoice-actions a,
+.invoice-actions button,
+.se-error-btn {
+  min-height: 44px !important;
+  border-radius: 14px !important;
+  font-weight: 850 !important;
+  letter-spacing: 0 !important;
+  transition:
+    transform 0.2s var(--eu-ease),
+    box-shadow 0.2s var(--eu-ease),
+    border-color 0.2s ease,
+    background 0.2s ease !important;
+}
+
+.btn-primary,
+.se-primary-btn,
+.se-success-btn,
+.se-publish-primary-btn,
+.ed-btn-enter,
+.pf-btn-save,
+.invoice-actions .btn-primary,
+.se-error-btn-primary {
+  border: 0 !important;
+  background: linear-gradient(135deg, var(--eu-gold), var(--eu-gold-2)) !important;
+  color: var(--eu-navy) !important;
+  box-shadow: 0 12px 28px rgba(201, 150, 59, 0.25) !important;
+}
+
+.btn-primary:hover,
+.se-primary-btn:hover,
+.se-success-btn:hover,
+.se-publish-primary-btn:hover,
+.ed-btn-enter:hover,
+.pf-btn-save:hover,
+.invoice-actions .btn-primary:hover,
+.se-error-btn-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 18px 38px rgba(201, 150, 59, 0.34) !important;
+}
+
+.btn-light,
+.btn-secondary,
+.btn-outline-primary,
+.se-publish-secondary-link,
+.se-room-action-btn,
+.trade-btn-light,
+.ed-clear-filter,
+.ed-link-btn,
+.pf-btn-cancel,
+.se-error-btn-secondary {
+  border: 1px solid var(--eu-border) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  color: var(--eu-ink) !important;
+  box-shadow: 0 8px 22px rgba(13, 27, 42, 0.07) !important;
+}
+
+.btn-light:hover,
+.btn-secondary:hover,
+.btn-outline-primary:hover,
+.se-publish-secondary-link:hover,
+.se-room-action-btn:hover,
+.trade-btn-light:hover,
+.ed-clear-filter:hover,
+.ed-link-btn:hover,
+.pf-btn-cancel:hover,
+.se-error-btn-secondary:hover {
+  border-color: rgba(201, 150, 59, 0.38) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 14px 30px rgba(13, 27, 42, 0.1) !important;
+}
+
+.btn-danger,
+.room-danger-btn {
+  background: linear-gradient(135deg, #ef4444, #c02626) !important;
+  color: #fff !important;
+  border: 0 !important;
+}
+
+.btn-success,
+.trade-btn-success {
+  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+  color: #fff !important;
+  border: 0 !important;
+}
+
+.email-list-box,
+.connections-list,
+.connections-status-card,
+.se-summary-meta,
+.se-total-box,
+.se-transfer-card,
+.se-price-box,
+.se-info-strip,
+.se-quiet-note,
+.trade-item-card,
+.withdraw-history-card,
+.ed-room-row,
+.adm-card-stack > *,
+.adm-summary-card,
+.invoice-meta,
+.invoice-total-card {
+  border: 1px solid var(--eu-border) !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(247, 250, 253, 0.84)) !important;
+  box-shadow: 0 10px 26px rgba(13, 27, 42, 0.06) !important;
+}
+
+.email-badge,
+.connections-status-value,
+.room-meta-chip,
+.ed-status-badge,
+.ed-count-chip,
+.withdraw-status-badge,
+.se-card-label,
+.sn-count-badge,
+.sn-total-badge,
+.sd-pill,
+.sr-chip {
+  border-radius: 999px !important;
+  letter-spacing: 0 !important;
+}
+
+.table,
+.invoice-card table,
+.adm-table-surface table {
+  vertical-align: middle !important;
+}
+
+.table thead th,
+.invoice-card table thead th,
+.adm-table-surface table thead th {
+  border: 0 !important;
+  background: rgba(13, 27, 42, 0.035) !important;
+  color: var(--eu-ink-2) !important;
+  font-size: 0.78rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+}
+
+.table tbody td,
+.invoice-card table tbody td,
+.adm-table-surface table tbody td {
+  border-color: rgba(13, 27, 42, 0.07) !important;
+  color: var(--eu-ink-2) !important;
+}
+
+body[data-page="payment"] .se-payment-page,
+body[data-page="payment_success"] .se-success-page,
+body[data-page="invoice"] .invoice-page {
+  width: min(100%, 1120px) !important;
+  margin-inline: auto !important;
+  padding: 18px 0 54px !important;
+}
+
+.se-payment-hero {
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) minmax(280px, 0.8fr) !important;
+  align-items: center !important;
+  gap: 18px !important;
+  padding: 28px !important;
+  border-radius: 28px !important;
+  box-shadow: var(--eu-shadow) !important;
+}
+
+.se-payment-overview,
+.se-payment-steps {
+  gap: 12px !important;
+}
+
+.se-step-card {
+  border: 1px solid var(--eu-border) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  box-shadow: var(--eu-shadow-soft) !important;
+}
+
+.se-step-card.is-active {
+  border-color: rgba(201, 150, 59, 0.42) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 238, 0.96), rgba(255, 255, 255, 0.88)) !important;
+}
+
+.se-method-tabs {
+  padding: 6px !important;
+  border-radius: 18px !important;
+  background: rgba(13, 27, 42, 0.045) !important;
+}
+
+.se-method-tab {
+  border-radius: 14px !important;
+  color: var(--eu-ink-2) !important;
+}
+
+.se-method-tab.is-active {
+  background: #fff !important;
+  color: var(--eu-ink) !important;
+  box-shadow: 0 8px 22px rgba(13, 27, 42, 0.1) !important;
+}
+
+.se-success-card,
+.se-success-panel {
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-radius: 28px !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(34, 197, 94, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 251, 255, 0.9)) !important;
+  box-shadow: var(--eu-shadow) !important;
+}
+
+.se-success-icon {
+  background: linear-gradient(135deg, #22c55e, #86efac) !important;
+  color: #052e16 !important;
+  box-shadow: 0 16px 36px rgba(34, 197, 94, 0.26) !important;
+}
+
+.invoice-card-header,
+.invoice-header,
+.invoice-title-block {
+  border-bottom-color: rgba(13, 27, 42, 0.08) !important;
+}
+
+.invoice-card-header {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(201, 150, 59, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 250, 253, 0.9)) !important;
+}
+
+.invoice-card h1,
+.invoice-card h2,
+.invoice-card h3 {
+  color: var(--eu-ink) !important;
+  font-weight: 900 !important;
+  line-height: 1.22 !important;
+  letter-spacing: 0 !important;
+}
+
+.invoice-status,
+.payment-status,
+.se-success-badge {
+  border-radius: 999px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+}
+
+body[data-page="create_room"] .se-publish-form-page,
+body[data-page="join_room"] .se-publish-form-page {
+  width: min(100%, 1120px) !important;
+  margin-inline: auto !important;
+}
+
+.se-publish-option-card {
+  border: 1px solid var(--eu-border) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  box-shadow: 0 8px 22px rgba(13, 27, 42, 0.06) !important;
+  transition: transform 0.2s var(--eu-ease), box-shadow 0.2s var(--eu-ease), border-color 0.2s ease !important;
+}
+
+.se-publish-option-card:hover,
+.se-publish-option-card:has(input:checked) {
+  transform: translateY(-2px) !important;
+  border-color: rgba(201, 150, 59, 0.42) !important;
+  box-shadow: 0 14px 34px rgba(13, 27, 42, 0.1) !important;
+}
+
+.se-publish-helper {
+  border: 1px solid rgba(201, 150, 59, 0.22) !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(135deg, rgba(201, 150, 59, 0.1), rgba(255, 255, 255, 0.78)) !important;
+}
+
+.se-join-room-input {
+  font-family: "Tajawal", "Manrope", ui-monospace, monospace !important;
+  letter-spacing: 0 !important;
+}
+
+html[dir="ltr"] .se-join-room-input {
+  letter-spacing: 0 !important;
+}
+
+body[data-page="room"] .room-shell {
+  width: min(100%, 1240px) !important;
+  margin-inline: auto !important;
+}
+
+.se-room-header {
+  padding: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: var(--eu-shadow) !important;
+}
+
+.se-room-meta {
+  gap: 8px !important;
+}
+
+.room-meta-chip {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  padding: 5px 11px !important;
+  font-weight: 850 !important;
+}
+
+.room-code-chip code {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #fff !important;
+  letter-spacing: 0 !important;
+}
+
+.se-room-chat-box {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(201, 150, 59, 0.06), transparent 28%),
+    linear-gradient(180deg, #f8fafc, #f2f5f9) !important;
+}
+
+.room-chat-head,
+.trade-panel-head {
+  border-bottom: 1px solid rgba(13, 27, 42, 0.08) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+}
+
+.room-role-badge,
+.trade-status,
+.trade-step span,
+.ed-live-badge,
+.adm-page-kicker {
+  border-radius: 999px !important;
+  letter-spacing: 0 !important;
+}
+
+.trade-step {
+  border: 1px solid var(--eu-border) !important;
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+}
+
+.trade-step.is-done {
+  border-color: rgba(34, 197, 94, 0.28) !important;
+  background: rgba(34, 197, 94, 0.08) !important;
+}
+
+body[data-page="admin"] .adm-shell {
+  gap: 24px !important;
+}
+
+body[data-page="admin"] .adm-sidebar {
+  top: calc(var(--navbar-h, 68px) + 18px) !important;
+}
+
+body[data-page="admin"] .adm-brand,
+body[data-page="admin"] .adm-side-section {
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  border-radius: 22px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 251, 255, 0.88)) !important;
+  box-shadow: var(--eu-shadow-soft) !important;
+  backdrop-filter: blur(16px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.12) !important;
+}
+
+.adm-side-nav a {
+  border-radius: 14px !important;
+}
+
+.adm-side-nav a.is-active {
+  background: linear-gradient(135deg, var(--eu-navy), var(--eu-navy-2)) !important;
+  color: #fff !important;
+  box-shadow: 0 12px 26px rgba(13, 27, 42, 0.16) !important;
+}
+
+.ed-header {
+  border-radius: 28px !important;
+  padding: 32px !important;
+}
+
+.ed-stats-grid {
+  gap: 14px !important;
+}
+
+.ed-room-row {
+  transition: transform 0.2s var(--eu-ease), box-shadow 0.2s var(--eu-ease), border-color 0.2s ease !important;
+}
+
+.ed-room-row:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(201, 150, 59, 0.26) !important;
+  box-shadow: var(--eu-shadow-soft) !important;
+}
+
+body[data-page="search"],
+body[data-page="support"],
+body[data-page="notifications"],
+body[data-page="chat_hub"],
+body[data-page="private_chat"],
+body[data-page="friends"],
+body[data-page="create_deal"],
+body[data-page="listings"] {
+  --sr-accent: var(--eu-gold);
+  --sr-purple: var(--eu-gold-2);
+  --sr-gold: var(--eu-gold-2);
+  --sr-gradient: linear-gradient(135deg, var(--eu-gold), var(--eu-gold-2));
+  --sd-accent: var(--eu-gold);
+  --sd-purple: var(--eu-gold-2);
+  --sd-gold: var(--eu-gold-2);
+  --sd-gradient: linear-gradient(135deg, var(--eu-gold), var(--eu-gold-2));
+  --sn-accent: var(--eu-gold);
+  --sn-accent-hover: var(--eu-gold-2);
+  --sn-gold: var(--eu-gold-2);
+  --sn-gradient: linear-gradient(135deg, var(--eu-gold), var(--eu-gold-2));
+  --cm-accent: var(--eu-gold);
+  --cm-purple: var(--eu-gold-2);
+  --cm-gold: var(--eu-gold-2);
+  --cm-gradient: linear-gradient(135deg, var(--eu-gold), var(--eu-gold-2));
+  --dl-accent: var(--eu-gold);
+  --dl-accent-2: var(--eu-gold-2);
+  --dl-warning: var(--eu-gold-2);
+  --dl-gradient: linear-gradient(135deg, var(--eu-gold), var(--eu-gold-2));
+}
+
+body[data-page="search"] :is(.sr-card, .sr-hero, .sr-result-card, .sr-empty, .sr-search-form),
+body[data-page="support"] :is(.sd-card, .sd-side-card, .sd-quick-card, .sd-stat, .sd-command-center, .sd-hero),
+body[data-page="notifications"] :is(.sn-card-shell, .sn-row, .sn-empty, .sn-filter-empty),
+body[data-page="chat_hub"] :is(.cm-panel, .cm-action-card),
+body[data-page="private_chat"] :is(.cm-panel, .cm-conversation-row, .se-msg-file),
+body[data-page="friends"] :is(.cm-panel, .cm-action-card, .cm-friend-card),
+body[data-page="create_deal"] :is(.dl-panel, .dl-type-card, .dl-chip-option span, .dl-upload-zone),
+body[data-page="listings"] :is(.dl-panel, .dl-card, .dl-filter-card) {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 18px 58px rgba(0, 0, 0, 0.28) !important;
+}
+
+body[data-page="search"] :is(.sr-btn-primary, .sr-tab.is-active, .sr-chip:hover),
+body[data-page="support"] :is(.sd-btn-primary, .sd-faq-item[open] summary),
+body[data-page="notifications"] :is(.sn-tab.is-active, .sn-mark-btn),
+body[data-page="chat_hub"] :is(.cm-btn-primary, .cm-live),
+body[data-page="private_chat"] :is(.se-bubble-mine, .se-chat-action-btn:hover),
+body[data-page="friends"] :is(.cm-btn-primary),
+body[data-page="create_deal"] :is(.dl-btn-primary, .dl-type-card:has(input:checked), .dl-chip-option input:checked + span),
+body[data-page="listings"] :is(.dl-btn-primary) {
+  background: linear-gradient(135deg, var(--eu-gold), var(--eu-gold-2)) !important;
+  color: var(--eu-navy) !important;
+}
+
+body[data-page="search"] :is(.sr-btn-primary i, .sr-tab.is-active i),
+body[data-page="support"] .sd-btn-primary i,
+body[data-page="notifications"] :is(.sn-tab.is-active svg, .sn-mark-btn svg),
+body[data-page="chat_hub"] .cm-btn-primary i,
+body[data-page="friends"] .cm-btn-primary i,
+body[data-page="create_deal"] :is(.dl-btn-primary i, .dl-type-card:has(input:checked) i),
+body[data-page="listings"] .dl-btn-primary i {
+  color: var(--eu-navy) !important;
+}
+
+body[data-page="search"] :is(.sr-page, .sr-page *),
+body[data-page="support"] :is(.sd-page, .sd-page *),
+body[data-page="notifications"] :is(.sn-simple-page, .sn-simple-page *),
+body[data-page="chat_hub"] :is(.cm-page, .cm-page *),
+body[data-page="private_chat"] :is(.cm-page, .cm-page *),
+body[data-page="friends"] :is(.cm-page, .cm-page *),
+body[data-page="create_deal"] :is(.dl-page, .dl-page *),
+body[data-page="listings"] :is(.dl-page, .dl-page *) {
+  letter-spacing: 0 !important;
+}
+
+body[data-page="403"],
+body[data-page="404"],
+body[data-page="500"],
+body[data-page="503"] {
+  --se-accent: var(--eu-gold);
+  --se-accent-2: var(--eu-gold-2);
+  --se-accent-3: #3b82f6;
+}
+
+body[data-page="403"] .se-main,
+body[data-page="404"] .se-main,
+body[data-page="500"] .se-main,
+body[data-page="503"] .se-main {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+}
+
+.se-error-shell {
+  font-family: inherit !important;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(201, 150, 59, 0.15), transparent 30%),
+    radial-gradient(circle at 88% 16%, rgba(59, 130, 246, 0.12), transparent 28%),
+    linear-gradient(180deg, #080a0f 0%, #0b0d12 58%, #06070a 100%) !important;
+}
+
+.se-error-card {
+  border-color: rgba(255, 255, 255, 0.11) !important;
+  border-radius: 28px !important;
+  background:
+    linear-gradient(180deg, rgba(20, 24, 34, 0.92), rgba(14, 17, 25, 0.9)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 30px 90px rgba(0, 0, 0, 0.42) !important;
+}
+
+.se-error-icon {
+  background: linear-gradient(135deg, var(--eu-gold), var(--eu-gold-2)) !important;
+  color: var(--eu-navy) !important;
+  box-shadow: 0 16px 38px rgba(201, 150, 59, 0.3) !important;
+}
+
+.se-error-title {
+  letter-spacing: 0 !important;
+}
+
+[class*="empty"],
+[class*="Empty"] {
+  text-wrap: pretty;
+}
+
+[aria-busy="true"],
+.htmx-request,
+.se-loading,
+.is-loading {
+  cursor: progress !important;
+}
+
+.sr-loading div,
+.sd-loading div,
+.sn-loading div {
+  background: linear-gradient(90deg, rgba(201, 150, 59, 0.12), rgba(232, 185, 106, 0.44), rgba(201, 150, 59, 0.12)) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .email-list-item,
+  .connections-item,
+  .se-step-card,
+  .se-publish-option-card,
+  .ed-stat-card,
+  .ed-room-row,
+  .sn-row,
+  .sd-ticket-row,
+  .sr-result-card,
+  .cm-conversation-row {
+    transition:
+      transform 0.2s var(--eu-ease),
+      box-shadow 0.2s var(--eu-ease),
+      border-color 0.2s ease,
+      background 0.2s ease !important;
+  }
+
+  .email-list-item:hover,
+  .connections-item:hover,
+  .sn-row:hover,
+  .sd-ticket-row:hover,
+  .sr-result-card:hover,
+  .cm-conversation-row:hover {
+    transform: translateY(-2px) !important;
+  }
+}
+
+@media (max-width: 992px) {
+  body[data-page="admin"] .adm-shell {
+    grid-template-columns: 1fr !important;
+  }
+
+  body[data-page="admin"] .adm-sidebar {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  .se-payment-hero {
+    grid-template-columns: auto minmax(0, 1fr) !important;
+  }
+
+  .se-payment-overview {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page^="account_"] .se-main,
+  body[data-page^="password_"] .se-main,
+  body[data-page^="socialaccount_"] .se-main,
+  body[data-page="auth_error"] .se-main,
+  body[data-page="signup_closed"] .se-main,
+  body[data-page="request_login_code"] .se-main,
+  body[data-page="verified_email_required"] .se-main,
+  body[data-page="payment"] .se-main,
+  body[data-page="payment_success"] .se-main,
+  body[data-page="invoice"] .se-main,
+  body[data-page="create_room"] .se-main,
+  body[data-page="join_room"] .se-main,
+  body[data-page="room"] .se-main {
+    padding-top: 16px !important;
+  }
+
+  body[data-page^="account_"] :is(.account-card-body, .email-card-body),
+  body[data-page^="password_"] .account-card-body,
+  body[data-page^="socialaccount_"] .connections-body,
+  .se-publish-form-body,
+  .invoice-card-body {
+    padding: 22px !important;
+  }
+
+  body[data-page^="account_"] :is(.account-card, .email-card),
+  body[data-page^="password_"] :is(.account-card, .email-card),
+  body[data-page^="socialaccount_"] .connections-card,
+  .se-payment-card,
+  .invoice-card,
+  .se-publish-form-card,
+  .se-join-room-card,
+  #withdraw-page-shell,
+  .se-room-chat-card,
+  .se-room-sidebar-card,
+  .trade-panel,
+  .adm-surface,
+  .adm-table-surface,
+  .adm-metric-card,
+  .adm-page-hero,
+  .ed-rooms-card,
+  .ed-stat-card {
+    border-radius: 18px !important;
+    box-shadow: 0 10px 28px rgba(13, 27, 42, 0.09) !important;
+  }
+
+  body[data-page^="account_"] :is(.account-card-header, .email-card-header),
+  body[data-page^="password_"] .account-card-header,
+  body[data-page^="socialaccount_"] .connections-header,
+  .se-publish-form-hero,
+  .se-join-room-hero,
+  .se-payment-hero,
+  .withdraw-shell-hero,
+  .ed-header,
+  .adm-page-hero.is-dark,
+  .se-room-header {
+    padding: 24px 20px !important;
+  }
+
+  .se-payment-hero {
+    grid-template-columns: 1fr !important;
+  }
+
+  .se-payment-hero-icon {
+    width: 58px !important;
+    height: 58px !important;
+  }
+
+  .se-payment-layout,
+  .se-form-grid,
+  .ed-room-row,
+  .ed-room-actions,
+  .room-header-main,
+  .se-room-actions {
+    grid-template-columns: 1fr !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .btn,
+  .se-primary-btn,
+  .se-success-btn,
+  .se-publish-primary-btn,
+  .se-room-action-btn,
+  .trade-btn,
+  .ed-btn-enter,
+  .pf-btn-save,
+  .pf-btn-cancel {
+    min-height: 48px !important;
+  }
+
+  .se-join-room-input {
+    letter-spacing: 0 !important;
+  }
+}
+
+@media (max-width: 560px) {
+  body[data-page^="account_"] .row > [class*="col-"],
+  body[data-page^="password_"] .row > [class*="col-"],
+  body[data-page^="socialaccount_"] .row > [class*="col-"] {
+    padding-inline: 10px !important;
+  }
+
+  .email-actions,
+  .se-error-actions,
+  .invoice-actions,
+  .pf-form-actions {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .se-error-card {
+    border-radius: 22px !important;
+  }
+
+  .room-code-chip code {
+    letter-spacing: 0 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .se-payment-card,
+  .invoice-card,
+  .se-publish-form-card,
+  .se-join-room-card,
+  #withdraw-page-shell,
+  .se-room-chat-card,
+  .se-room-sidebar-card,
+  .ed-room-row,
+  .sn-row,
+  .sd-ticket-row,
+  .sr-result-card,
+  .cm-conversation-row {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

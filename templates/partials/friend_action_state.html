@@ -1,0 +1,23 @@
+{% load site_i18n %}
+
+<div class="pf-action-btns pf-action-btns-secondary" id="friend-action-slot-{{ profile_user.id }}">
+  {% if is_friend %}
+    <button class="pf-btn-friend pf-btn-disabled" disabled>
+      <i class="fas fa-user-check"></i>
+      <span>{% t "friend.state.friends" %}</span>
+    </button>
+  {% elif request_sent %}
+    <button class="pf-btn-friend pf-btn-disabled" disabled>
+      <i class="fas fa-clock"></i>
+      <span>{% t "friend.state.request_sent" %}</span>
+    </button>
+  {% else %}
+    <form method="post" action="{% url 'send_friend_request' profile_user.id %}" class="pf-inline-form" data-async-form>
+      {% csrf_token %}
+      <button type="submit" class="pf-btn-friend">
+        <i class="fas fa-user-plus"></i>
+        <span>{% t "friend.state.add" %}</span>
+      </button>
+    </form>
+  {% endif %}
+</div>

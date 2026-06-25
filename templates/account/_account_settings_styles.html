@@ -1,0 +1,407 @@
+<style>
+  body[data-page="account_email"],
+  body[data-page="account_email_change"],
+  body[data-page="account_change_password"],
+  body[data-page="account_logout"] {
+    background: #f8fafc !important;
+    color: #0d1b2a !important;
+  }
+
+  body[data-page="account_email"] .page-bg-overlay,
+  body[data-page="account_email_change"] .page-bg-overlay,
+  body[data-page="account_change_password"] .page-bg-overlay,
+  body[data-page="account_logout"] .page-bg-overlay {
+    background:
+      radial-gradient(circle at 12% 3%, rgba(37, 99, 235, 0.08), transparent 28%),
+      radial-gradient(circle at 88% 0%, rgba(201, 150, 59, 0.11), transparent 25%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 48%, #ffffff 100%) !important;
+  }
+
+  body[data-page="account_email"] .email-card,
+  body[data-page="account_email_change"] .email-card,
+  body[data-page="account_change_password"] .account-card,
+  body[data-page="account_logout"] .logout-card {
+    border: 1px solid rgba(15, 23, 42, 0.09) !important;
+    border-radius: 24px !important;
+    background: rgba(255, 255, 255, 0.97) !important;
+    box-shadow: 0 22px 58px rgba(15, 23, 42, 0.12) !important;
+    overflow: hidden !important;
+    animation: accountSettingsIn 0.52s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  }
+
+  body[data-page="account_email"] .email-card-header,
+  body[data-page="account_email_change"] .email-card-header,
+  body[data-page="account_change_password"] .account-card-header,
+  body[data-page="account_logout"] .logout-header {
+    padding: 38px 32px 28px !important;
+    background:
+      radial-gradient(circle at 18% 10%, rgba(37, 99, 235, 0.1), transparent 32%),
+      radial-gradient(circle at 88% 10%, rgba(201, 150, 59, 0.13), transparent 28%),
+      linear-gradient(145deg, #ffffff 0%, #f5f8fd 100%) !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: none !important;
+    color: #0d1b2a !important;
+    overflow: hidden !important;
+  }
+
+  body[data-page="account_email"] .email-card-header::after,
+  body[data-page="account_email_change"] .email-card-header::after,
+  body[data-page="account_change_password"] .account-card-header::after,
+  body[data-page="account_logout"] .logout-header::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+
+  body[data-page="account_email"] .email-card-glow,
+  body[data-page="account_email_change"] .email-card-glow,
+  body[data-page="account_change_password"] .account-card-glow,
+  body[data-page="account_logout"] .logout-glow {
+    display: none !important;
+  }
+
+  body[data-page="account_email"] .email-card-icon,
+  body[data-page="account_email_change"] .email-card-icon,
+  body[data-page="account_change_password"] .account-card-icon,
+  body[data-page="account_logout"] .logout-icon {
+    position: relative;
+    z-index: 1;
+    width: 72px !important;
+    height: 72px !important;
+    border-radius: 20px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.1) !important;
+  }
+
+  body[data-page="account_email"] .email-card-icon i,
+  body[data-page="account_email_change"] .email-card-icon i,
+  body[data-page="account_change_password"] .account-card-icon i {
+    color: #2563eb !important;
+    font-size: 29px !important;
+  }
+
+  body[data-page="account_logout"] .logout-icon i {
+    color: #dc2626 !important;
+    font-size: 29px !important;
+  }
+
+  body[data-page="account_email"] .email-card-header h3,
+  body[data-page="account_email_change"] .email-card-header h3,
+  body[data-page="account_change_password"] .account-card-header h3,
+  body[data-page="account_logout"] .logout-header h3 {
+    position: relative;
+    z-index: 1;
+    color: #0d1b2a !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-size: clamp(1.35rem, 2vw, 1.75rem) !important;
+    line-height: 1.28 !important;
+    letter-spacing: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  body[data-page="account_email"] .email-card-header p,
+  body[data-page="account_email_change"] .email-card-header p,
+  body[data-page="account_change_password"] .account-card-header p,
+  body[data-page="account_logout"] .logout-header p {
+    position: relative;
+    z-index: 1;
+    color: #5b6b7f !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-size: 0.96rem !important;
+    line-height: 1.75 !important;
+    max-width: 36rem;
+    margin-inline: auto !important;
+  }
+
+  body[data-page="account_email"] .email-card-body,
+  body[data-page="account_email_change"] .email-card-body,
+  body[data-page="account_change_password"] .account-card-body,
+  body[data-page="account_logout"] .logout-body {
+    padding: 34px 32px !important;
+    background: #ffffff !important;
+  }
+
+  body[data-page="account_email"] .email-section-title,
+  body[data-page="account_email"] .email-form-label,
+  body[data-page="account_email_change"] .email-form-label,
+  body[data-page="account_change_password"] .account-card-label {
+    color: #26364a !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-weight: 800 !important;
+  }
+
+  body[data-page="account_email"] .email-list-box,
+  body[data-page="account_email"] .email-empty-box,
+  body[data-page="account_email_change"] .email-pending-box {
+    border: 1px solid rgba(15, 23, 42, 0.09) !important;
+    border-radius: 18px !important;
+    background: #f8fafc !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+  }
+
+  body[data-page="account_email"] .email-list-item {
+    min-height: 44px;
+    margin-bottom: 10px !important;
+  }
+
+  body[data-page="account_email"] .email-list-item:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  body[data-page="account_email"] .email-address,
+  body[data-page="account_email_change"] .email-pending-title,
+  body[data-page="account_email_change"] .email-pending-address {
+    color: #0d1b2a !important;
+    -webkit-text-fill-color: currentColor !important;
+    word-break: break-word;
+  }
+
+  body[data-page="account_email_change"] .email-pending-copy,
+  body[data-page="account_change_password"] .account-card-help {
+    color: #5b6b7f !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="account_email"] .email-badge,
+  body[data-page="account_email_change"] .email-badge {
+    border-radius: 999px !important;
+    padding: 4px 9px !important;
+    font-size: 0.72rem !important;
+    line-height: 1.2 !important;
+  }
+
+  body[data-page="account_email"] .email-badge.success {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+  }
+
+  body[data-page="account_email"] .email-badge.warning {
+    background: #fef3c7 !important;
+    color: #b45309 !important;
+  }
+
+  body[data-page="account_email"] .email-badge.primary {
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+  }
+
+  body[data-page="account_email"] .email-card-body .form-control,
+  body[data-page="account_email_change"] .email-card-body .form-control,
+  body[data-page="account_change_password"] .account-card-body .form-control,
+  body[data-page="account_change_password"] .account-card-body input[type="password"] {
+    min-height: 52px !important;
+    width: 100% !important;
+    border: 1px solid rgba(15, 23, 42, 0.1) !important;
+    border-radius: 15px !important;
+    background: #f8fafc !important;
+    color: #0d1b2a !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+  }
+
+  body[data-page="account_email"] .email-card-body .form-control:focus,
+  body[data-page="account_email_change"] .email-card-body .form-control:focus,
+  body[data-page="account_change_password"] .account-card-body .form-control:focus,
+  body[data-page="account_change_password"] .account-card-body input[type="password"]:focus {
+    background: #ffffff !important;
+    border-color: rgba(37, 99, 235, 0.62) !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12) !important;
+    outline: 0 !important;
+  }
+
+  body[data-page="account_email"] .email-main-btn,
+  body[data-page="account_email_change"] .email-main-btn,
+  body[data-page="account_change_password"] .account-card-btn {
+    min-height: 52px !important;
+    border: 0 !important;
+    border-radius: 15px !important;
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-weight: 800 !important;
+    box-shadow: 0 14px 28px rgba(37, 99, 235, 0.24) !important;
+    transition: transform 0.22s ease, box-shadow 0.22s ease !important;
+  }
+
+  body[data-page="account_email"] .email-main-btn:hover,
+  body[data-page="account_email_change"] .email-main-btn:hover,
+  body[data-page="account_change_password"] .account-card-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 34px rgba(37, 99, 235, 0.28) !important;
+  }
+
+  body[data-page="account_email"] .email-actions .btn,
+  body[data-page="account_email_change"] .email-pending-actions .btn {
+    min-height: 46px !important;
+    border-radius: 14px !important;
+    font-weight: 800 !important;
+    box-shadow: none !important;
+  }
+
+  body[data-page="account_email"] .email-actions .btn-light,
+  body[data-page="account_email_change"] .email-pending-actions .btn-light {
+    border: 1px solid rgba(15, 23, 42, 0.1) !important;
+    background: #ffffff !important;
+    color: #1d4ed8 !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="account_email"] .email-actions .btn-danger,
+  body[data-page="account_email_change"] .email-pending-actions .btn-danger {
+    border: 1px solid rgba(220, 38, 38, 0.16) !important;
+    background: #fff1f2 !important;
+    color: #be123c !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="account_email"] .email-radio {
+    accent-color: #2563eb;
+  }
+
+  body[data-page="account_logout"] .logout-btn {
+    min-height: 52px !important;
+    border: 0 !important;
+    border-radius: 15px !important;
+    background: #dc2626 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-weight: 800 !important;
+    box-shadow: 0 14px 28px rgba(220, 38, 38, 0.22) !important;
+    transition: transform 0.22s ease, box-shadow 0.22s ease !important;
+  }
+
+  body[data-page="account_logout"] .logout-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 34px rgba(220, 38, 38, 0.26) !important;
+  }
+
+  body[data-page="account_logout"] .logout-cancel a {
+    color: #5b6b7f !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="account_logout"] .logout-cancel a:hover {
+    color: #0d1b2a !important;
+  }
+
+  body[data-page="account_email"] .email-add-section {
+    border-top-color: rgba(15, 23, 42, 0.09) !important;
+  }
+
+  body[data-page="account_email"] .email-field-error,
+  body[data-page="account_email_change"] .email-field-error,
+  body[data-page="account_email_change"] .email-error-box,
+  body[data-page="account_change_password"] .account-card-error,
+  body[data-page="account_change_password"] .account-card-field-error {
+    color: #dc2626 !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="account_email_change"] .email-error-box,
+  body[data-page="account_change_password"] .account-card-error {
+    border: 1px solid rgba(220, 38, 38, 0.16) !important;
+    border-radius: 15px !important;
+    background: #fff1f2 !important;
+  }
+
+  @media (max-width: 575.98px) {
+    body[data-page="account_email"] .email-card-header,
+    body[data-page="account_email_change"] .email-card-header,
+    body[data-page="account_change_password"] .account-card-header,
+    body[data-page="account_logout"] .logout-header {
+      padding: 30px 22px 24px !important;
+    }
+
+    body[data-page="account_email"] .email-card-body,
+    body[data-page="account_email_change"] .email-card-body,
+    body[data-page="account_change_password"] .account-card-body,
+    body[data-page="account_logout"] .logout-body {
+      padding: 28px 22px !important;
+    }
+
+    body[data-page="account_email"] .email-actions,
+    body[data-page="account_email_change"] .email-pending-actions {
+      display: grid !important;
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @keyframes accountSettingsIn {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  /* Unified dark account settings finish. */
+  body[data-page="account_email"],
+  body[data-page="account_email_change"],
+  body[data-page="account_change_password"],
+  body[data-page="account_logout"] {
+    background:
+      radial-gradient(circle at 16% -6%, rgba(115, 210, 255, 0.15), transparent 30rem),
+      radial-gradient(circle at 86% 5%, rgba(244, 201, 93, 0.14), transparent 28rem),
+      linear-gradient(135deg, #05070d, #0a1018) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="account_email"] :is(.email-card, .account-card, .logout-card, .settings-card),
+  body[data-page="account_email_change"] :is(.email-card, .account-card, .logout-card, .settings-card),
+  body[data-page="account_change_password"] :is(.email-card, .account-card, .logout-card, .settings-card),
+  body[data-page="account_logout"] :is(.email-card, .account-card, .logout-card, .settings-card) {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.082), rgba(255, 255, 255, 0.046)) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+    box-shadow: var(--seu-shadow-soft) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  body[data-page="account_email"] :is(.email-card-header, .account-card-header, .logout-header),
+  body[data-page="account_email_change"] :is(.email-card-header, .account-card-header, .logout-header),
+  body[data-page="account_change_password"] :is(.email-card-header, .account-card-header, .logout-header),
+  body[data-page="account_logout"] :is(.email-card-header, .account-card-header, .logout-header) {
+    background:
+      radial-gradient(circle at 18% 12%, rgba(115, 210, 255, 0.16), transparent 22rem),
+      radial-gradient(circle at 88% 10%, rgba(244, 201, 93, 0.18), transparent 20rem),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.045)) !important;
+    border-color: var(--seu-border) !important;
+  }
+
+  body[data-page="account_email"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="account_email_change"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="account_change_password"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="account_logout"] :is(h1, h2, h3, h4, h5, h6, strong) {
+    color: var(--seu-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="account_email"] :is(p, small, .text-muted),
+  body[data-page="account_email_change"] :is(p, small, .text-muted),
+  body[data-page="account_change_password"] :is(p, small, .text-muted),
+  body[data-page="account_logout"] :is(p, small, .text-muted) {
+    color: var(--seu-muted) !important;
+  }
+
+  body[data-page="account_email"] :is(input, select, textarea, .form-control),
+  body[data-page="account_email_change"] :is(input, select, textarea, .form-control),
+  body[data-page="account_change_password"] :is(input, select, textarea, .form-control),
+  body[data-page="account_logout"] :is(input, select, textarea, .form-control) {
+    background: rgba(255, 255, 255, 0.065) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="account_email"] :is(.email-error-box, .account-card-error),
+  body[data-page="account_email_change"] :is(.email-error-box, .account-card-error),
+  body[data-page="account_change_password"] :is(.email-error-box, .account-card-error) {
+    background: rgba(255, 107, 124, 0.15) !important;
+    border-color: rgba(255, 107, 124, 0.34) !important;
+    color: #ffd1d7 !important;
+  }
+</style>

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{% t "account.verification_sent.title" %}{% endblock %}
+{% block page_type %}account_verification_sent{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+  <div class="col-lg-6 col-md-8">
+    <div class="card border-0 verify-email-card">
+      <div class="verify-email-header">
+        <div class="verify-email-glow"></div>
+        <div class="verify-email-icon">
+          <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" class="se-brand-logo-panel" width="520" height="150" decoding="async">
+        </div>
+        <h3>{% t "account.verification_sent.header" %}</h3>
+        <p>{% t "account.verification_sent.sub" %}</p>
+      </div>
+
+      <div class="card-body verify-email-body">
+        <div class="verify-email-note">
+          <i class="fas fa-envelope-open-text"></i>
+          <span>{% t "account.verification_sent.body" %}</span>
+        </div>
+
+        <p class="verify-email-help">{% t "account.verification_sent.note" %}</p>
+
+        <a href="{% url 'account_login' %}" class="btn btn-primary w-100 verify-email-btn">
+          <i class="fas fa-arrow-left"></i>
+          {% t "account.verification_sent.back_login" %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .verify-email-card {
+    border-radius: 24px !important;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(13, 27, 42, 0.15) !important;
+  }
+  .verify-email-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 40px 32px 28px;
+    text-align: center;
+    position: relative;
+  }
+  .verify-email-glow {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 150, 59, .18) 0%, transparent 70%);
+  }
+  .verify-email-icon {
+    width: 88px;
+    height: 88px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 20px rgba(201,150,59,0.2);
+  }
+  .verify-email-header h3 {
+    color: #fff;
+    font-weight: 800;
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+  }
+  .verify-email-header p {
+    color: rgba(255,255,255,0.7);
+    margin: 0;
+  }
+  .verify-email-body {
+    padding: 36px 32px !important;
+  }
+  .verify-email-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(201,150,59,0.08);
+    border: 1px solid rgba(201,150,59,0.18);
+    color: var(--text-primary);
+    margin-bottom: 16px;
+  }
+  .verify-email-note i {
+    color: var(--gold-dark);
+    margin-top: 3px;
+  }
+  .verify-email-help {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+  .verify-email-btn {
+    padding: 13px !important;
+    border-radius: 12px !important;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    border: none;
+  }
+</style>
+{% include "account/_auth_status_styles.html" %}
+{% endblock %}

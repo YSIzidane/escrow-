@@ -1,0 +1,1035 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% t "escrow.dash.title" %}{% endblock %}
+{% block page_type %}admin{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_control.css' %}?v=20260507a">{% endblock %}
+
+{% block content %}
+<div class="adm-shell">
+  {% include "partials/admin_control_sidebar.html" %}
+  <section class="adm-main">
+    <div class="ed-container">
+
+      <!-- Header -->
+      <div class="ed-header">
+        <div class="ed-header-bg"></div>
+        <div class="ed-orb ed-orb-1"></div>
+        <div class="ed-orb ed-orb-2"></div>
+
+        <div class="ed-header-content">
+          <div class="ed-header-left">
+            <div class="ed-header-icon">
+              <i class="fas fa-vault"></i>
+            </div>
+            <div>
+              <div class="ed-subtitle">{% t "escrow.dash.subtitle" %}</div>
+              <h1 class="ed-title">{% t "escrow.dash.main_title" %}</h1>
+            </div>
+          </div>
+          <!-- Live Indicator -->
+          <div class="ed-live-badge">
+            <div class="ed-live-dot"></div>
+            <span>{{ stats.held|default:"0" }} {% t "escrow.dash.active_rooms" %}</span>
+          </div>
+        </div>
+        <p class="ed-desc">{% t "escrow.dash.desc" %}</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="ed-stats-grid">
+
+        <a href="{% url 'escrow_dashboard' %}" class="ed-stat-card {% if not status_filter %}active{% endif %}">
+          <div class="ed-stat-content">
+            <div>
+              <div class="ed-stat-label">{% t "escrow.dash.total_rooms" %}</div>
+              <div class="ed-stat-val ed-val-navy">{{ stats.total|default:"0" }}</div>
+            </div>
+            <div class="ed-stat-icon ed-icon-navy"><i class="fas fa-door-open"></i></div>
+          </div>
+        </a>
+
+        <a href="?status=escrow_held"
+          class="ed-stat-card {% if status_filter == 'escrow_held' %}active-gold{% endif %}">
+          <div class="ed-stat-content">
+            <div>
+              <div class="ed-stat-label">{% t "escrow.dash.held_in_escrow" %}</div>
+              <div class="ed-stat-val ed-val-gold">{{ stats.held|default:"0" }}</div>
+            </div>
+            <div class="ed-stat-icon ed-icon-gold"><i class="fas fa-lock"></i></div>
+          </div>
+        </a>
+
+        <a href="?status=released" class="ed-stat-card {% if status_filter == 'released' %}active-success{% endif %}">
+          <div class="ed-stat-content">
+            <div>
+              <div class="ed-stat-label">{% t "escrow.dash.released" %}</div>
+              <div class="ed-stat-val ed-val-success">{{ stats.released|default:"0" }}</div>
+            </div>
+            <div class="ed-stat-icon ed-icon-success"><i class="fas fa-check-circle"></i></div>
+          </div>
+        </a>
+
+        <a href="?status=refunded" class="ed-stat-card {% if status_filter == 'refunded' %}active-danger{% endif %}">
+          <div class="ed-stat-content">
+            <div>
+              <div class="ed-stat-label">{% t "escrow.dash.refunded" %}</div>
+              <div class="ed-stat-val ed-val-danger">{{ stats.refunded|default:"0" }}</div>
+            </div>
+            <div class="ed-stat-icon ed-icon-danger"><i class="fas fa-undo"></i></div>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- Rooms List -->
+      <div class="ed-rooms-card">
+        <div class="ed-rooms-header">
+          <div class="ed-rooms-title">
+            <i class="fas fa-list"></i>
+            <span>
+              {% if status_filter == 'escrow_held' %}{% t "escrow.dash.filter_held" %}
+              {% elif status_filter == 'released' %}{% t "escrow.dash.filter_released" %}
+              {% elif status_filter == 'refunded' %}{% t "escrow.dash.filter_refunded" %}
+              {% else %}{% t "escrow.dash.filter_all" %}
+              {% endif %}
+            </span>
+            <span class="ed-count-chip">{{ rooms|length }}</span>
+          </div>
+          {% if status_filter %}
+          <a href="{% url 'escrow_dashboard' %}" class="ed-clear-filter">
+            <i class="fas fa-times"></i> {% t "escrow.dash.clear_filter" %}
+          </a>
+          {% endif %}
+        </div>
+
+        {% if rooms %}
+        <div class="ed-rooms-list">
+          {% for room in rooms %}
+          {% with payment=room.deal.payment %}
+
+          <div class="ed-room-row">
+
+            <!-- Deal Info -->
+            <div class="ed-room-info">
+              <!-- Icon -->
+              <div class="ed-room-icon 
+            {% if payment and payment.status == 'escrow_held' %}ed-icon-bg-gold
+            {% elif payment and payment.status == 'released' %}ed-icon-bg-success
+            {% elif payment and payment.status == 'refunded' %}ed-icon-bg-danger
+            {% else %}ed-icon-bg-navy{% endif %}">
+
+                {% if payment and payment.status == 'escrow_held' %}<i class="fas fa-lock ed-text-gold"></i>
+                {% elif payment and payment.status == 'released' %}<i class="fas fa-check-circle ed-text-success"></i>
+                {% elif payment and payment.status == 'refunded' %}<i class="fas fa-undo ed-text-danger"></i>
+                {% else %}<i class="fas fa-clock ed-text-light"></i>{% endif %}
+              </div>
+
+              <!-- Details -->
+              <div class="ed-room-details">
+                <div class="ed-room-title">{{ room.deal.product_title|truncatechars:45 }}</div>
+                <div class="ed-room-meta">
+                  <span><i class="fas fa-hashtag"></i> {% t "escrow.dash.deal_tag" %} #{{ room.deal.id }}</span>
+                  <span><i class="fas fa-user-tag"></i> {{ room.deal.buyer.username|default:"—" }}</span>
+                  <span><i class="fas fa-store"></i> {{ room.deal.seller.username }}</span>
+                  <span><i class="fas fa-clock"></i> {{ room.created_at|timesince }} {% t "escrow.dash.ago" %}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Amounts & Actions -->
+            <div class="ed-room-actions">
+
+              {% if payment %}
+              <div class="ed-room-amount">
+                <div class="ed-amount-val 
+              {% if payment.status == 'escrow_held' %}ed-text-gold
+              {% elif payment.status == 'released' %}ed-text-success
+              {% elif payment.status == 'refunded' %}ed-text-danger
+              {% else %}ed-text-gray{% endif %}">
+                  <span class="ed-currency">$</span>{{ payment.amount }}
+                </div>
+                <div class="ed-amount-lbl">
+                  {% if payment.status == 'escrow_held' %}{% t "escrow.dash.badge_held" %}
+                  {% elif payment.status == 'released' %}{% t "escrow.dash.badge_released" %}
+                  {% elif payment.status == 'refunded' %}{% t "escrow.dash.badge_refunded" %}
+                  {% else %}{% t "escrow.dash.badge_pending" %}{% endif %}
+                </div>
+              </div>
+
+              <div class="ed-status-badge 
+            {% if payment.status == 'escrow_held' %}ed-badge-gold
+            {% elif payment.status == 'released' %}ed-badge-success
+            {% elif payment.status == 'refunded' %}ed-badge-danger
+            {% else %}ed-badge-gray{% endif %}">
+                {{ payment.get_status_display }}
+              </div>
+              {% else %}
+              <div class="ed-status-badge ed-badge-gray">
+                {% t "escrow.dash.no_payment" %}
+              </div>
+              {% endif %}
+
+              <div class="ed-msg-count" title="{% t 'escrow.dash.messages_title' %}">
+                <i class="fas fa-comments"></i>
+                <span>{{ room.messages.count }}</span>
+              </div>
+
+              <a href="{% url 'escrow_room' room.deal.id %}" class="ed-btn-enter">
+                <span>{% t "escrow.dash.enter_room" %}</span>
+                <i class="fas fa-arrow-left"></i>
+              </a>
+
+            </div>
+          </div>
+
+          {% endwith %}
+          {% endfor %}
+        </div>
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="ed-empty-state">
+          <img src="{% static 'images/dashboard_empty_state.webp' %}" alt="No Rooms" class="ed-empty-state-img" loading="lazy" decoding="async" width="720" height="480">
+          <div class="ed-empty-title">{% t "escrow.dash.no_rooms" %}</div>
+          <div class="ed-empty-sub">
+            {% if status_filter %}{% t "escrow.dash.no_rooms_filter" %} <a href="{% url 'escrow_dashboard' %}">{% t
+              "escrow.dash.view_all" %}</a>
+            {% else %}{% t "escrow.dash.no_rooms_desc" %}{% endif %}
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+
+      <!-- Quick Links -->
+      <div class="ed-quick-links">
+        {% if user.is_staff %}
+        <a href="{% url 'staff_dashboard' %}" class="ed-link-btn">
+          <i class="fas fa-headset"></i> {% t "escrow.dash.support_tickets" %}
+        </a>
+        {% endif %}
+        <a href="{% url 'listings' %}" class="ed-link-btn">
+          <i class="fas fa-handshake"></i> {% t "escrow.dash.all_deals" %}
+        </a>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<style>
+  /* ══════════════════════════════════════
+   User Dashboard — Glassmorphism UI
+══════════════════════════════════════ */
+  .ed-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 0 60px;
+  }
+
+  /* ── Header ── */
+  .ed-header {
+    background: linear-gradient(135deg, var(--navy) 0%, #1A2E45 100%);
+    border-radius: 28px;
+    padding: 36px 40px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(13, 27, 42, 0.15);
+    animation: fadeUp .5s ease both;
+  }
+
+  .ed-header-bg {
+    position: absolute;
+    inset: 0;
+    background: url("{% static 'images/dashboard_header_bg.webp' %}") center/cover no-repeat;
+    opacity: 0.6;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 0;
+    animation: slowZoom 20s infinite alternate ease-in-out;
+  }
+
+  @keyframes slowZoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.1); }
+  }
+
+  .ed-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    pointer-events: none;
+  }
+
+  .ed-orb-1 {
+    width: 250px;
+    height: 250px;
+    top: -80px;
+    right: -80px;
+    background: radial-gradient(circle, rgba(201, 150, 59, 0.15) 0%, transparent 70%);
+  }
+
+  .ed-orb-2 {
+    width: 180px;
+    height: 180px;
+    bottom: -50px;
+    left: -50px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+  }
+
+  .ed-header-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .ed-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .ed-header-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: var(--navy);
+    box-shadow: 0 8px 24px rgba(201, 150, 59, 0.3);
+  }
+
+  .ed-subtitle {
+    font-size: .75rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .ed-title {
+    color: white;
+    font-weight: 900;
+    margin: 0;
+    font-size: 1.7rem;
+    letter-spacing: -0.5px;
+  }
+
+  .ed-live-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    padding: 10px 20px;
+    backdrop-filter: blur(12px);
+  }
+
+  .ed-live-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 12px #22c55e;
+    animation: pulse 2s infinite;
+  }
+
+  .ed-live-badge span {
+    font-size: .85rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 700;
+  }
+
+  .ed-desc {
+    position: relative;
+    z-index: 1;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0 0 72px;
+    font-size: .9rem;
+    max-width: 500px;
+    line-height: 1.6;
+  }
+
+  /* ── Stats Grid ── */
+  .ed-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .ed-stat-card {
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 20px;
+    padding: 24px;
+    border: 2px solid transparent;
+    box-shadow: 0 12px 32px rgba(13, 27, 42, 0.05);
+    transition: all .4s cubic-bezier(.34, 1.56, .64, 1);
+    animation: fadeUp .5s .1s ease both;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ed-stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 48px rgba(13, 27, 42, 0.1);
+  }
+
+  .ed-stat-card.active {
+    border-color: var(--navy);
+    background: white;
+    box-shadow: 0 16px 40px rgba(13, 27, 42, 0.08);
+  }
+
+  .ed-stat-card.active-gold {
+    border-color: var(--gold);
+    background: white;
+    box-shadow: 0 16px 40px rgba(201, 150, 59, 0.15);
+  }
+
+  .ed-stat-card.active-success {
+    border-color: #16a34a;
+    background: white;
+    box-shadow: 0 16px 40px rgba(22, 163, 74, 0.15);
+  }
+
+  .ed-stat-card.active-danger {
+    border-color: #dc2626;
+    background: white;
+    box-shadow: 0 16px 40px rgba(220, 38, 38, 0.15);
+  }
+
+  .ed-stat-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .ed-stat-label {
+    font-size: .8rem;
+    color: var(--text-secondary);
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .ed-stat-val {
+    font-size: 2.2rem;
+    font-weight: 900;
+    font-family: 'Tajawal', sans-serif;
+    line-height: 1;
+  }
+
+  .ed-val-navy {
+    color: var(--navy);
+  }
+
+  .ed-val-gold {
+    color: var(--gold-dark);
+  }
+
+  .ed-val-success {
+    color: #16a34a;
+  }
+
+  .ed-val-danger {
+    color: #dc2626;
+  }
+
+  .ed-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+  }
+
+  .ed-icon-navy {
+    background: rgba(13, 27, 42, 0.06);
+    color: var(--navy);
+  }
+
+  .ed-icon-gold {
+    background: rgba(201, 150, 59, 0.15);
+    color: var(--gold-dark);
+  }
+
+  .ed-icon-success {
+    background: rgba(22, 163, 74, 0.12);
+    color: #16a34a;
+  }
+
+  .ed-icon-danger {
+    background: rgba(220, 38, 38, 0.12);
+    color: #dc2626;
+  }
+
+  /* ── Rooms Card ── */
+  .ed-rooms-card {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 16px 48px rgba(13, 27, 42, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    animation: fadeUp .5s .2s ease both;
+  }
+
+  .ed-rooms-header {
+    background: linear-gradient(135deg, var(--navy), #1A2E45);
+    padding: 20px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .ed-rooms-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+
+  .ed-rooms-title i {
+    color: var(--gold);
+  }
+
+  .ed-count-chip {
+    background: rgba(201, 150, 59, 0.25);
+    color: var(--gold-light);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: .8rem;
+    font-weight: 800;
+    margin-left: 8px;
+  }
+
+  .ed-clear-filter {
+    font-size: .8rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    transition: color .2s;
+  }
+
+  .ed-clear-filter:hover {
+    color: white;
+  }
+
+  /* ── Room Row ── */
+  .ed-rooms-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ed-room-row {
+    padding: 24px 28px;
+    border-bottom: 1px solid #F0F4F8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    transition: all .3s ease;
+  }
+
+  .ed-room-row:hover {
+    background: #FAFCFF;
+  }
+
+  .ed-room-row:last-child {
+    border-bottom: none;
+  }
+
+  .ed-room-info {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ed-room-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+
+  .ed-icon-bg-gold {
+    background: rgba(201, 150, 59, 0.12);
+  }
+
+  .ed-icon-bg-success {
+    background: rgba(22, 163, 74, 0.12);
+  }
+
+  .ed-icon-bg-danger {
+    background: rgba(220, 38, 38, 0.12);
+  }
+
+  .ed-icon-bg-navy {
+    background: rgba(13, 27, 42, 0.06);
+  }
+
+  .ed-text-gold {
+    color: var(--gold-dark);
+  }
+
+  .ed-text-success {
+    color: #16a34a;
+  }
+
+  .ed-text-danger {
+    color: #dc2626;
+  }
+
+  .ed-text-gray {
+    color: var(--text-secondary);
+  }
+
+  .ed-text-light {
+    color: #A0AEC0;
+  }
+
+  .ed-room-details {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .ed-room-title {
+    font-weight: 900;
+    color: var(--navy);
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    text-decoration: none;
+  }
+
+  .ed-room-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: .78rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+
+  .ed-room-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .ed-room-meta i {
+    color: var(--gold);
+    font-size: .7rem;
+  }
+
+  .ed-room-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+
+  .ed-room-amount {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .ed-amount-val {
+    font-size: 1.3rem;
+    font-weight: 900;
+    font-family: 'Tajawal', sans-serif;
+    line-height: 1.1;
+  }
+
+  .ed-currency {
+    font-size: .8rem;
+    opacity: .7;
+    margin-right: 2px;
+  }
+
+  .ed-amount-lbl {
+    font-size: .7rem;
+    color: var(--text-light);
+    font-weight: 700;
+    margin-top: 3px;
+  }
+
+  .ed-status-badge {
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-size: .75rem;
+    font-weight: 800;
+    border: 1px solid transparent;
+  }
+
+  .ed-badge-gold {
+    background: rgba(201, 150, 59, 0.1);
+    color: var(--gold-dark);
+    border-color: rgba(201, 150, 59, 0.3);
+  }
+
+  .ed-badge-success {
+    background: rgba(22, 163, 74, 0.1);
+    color: #16a34a;
+    border-color: rgba(22, 163, 74, 0.3);
+  }
+
+  .ed-badge-danger {
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
+    border-color: rgba(220, 38, 38, 0.3);
+  }
+
+  .ed-badge-gray {
+    background: #F0F4F8;
+    color: var(--text-secondary);
+    border-color: #D5DDE8;
+  }
+
+  .ed-msg-count {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #F8FAFB;
+    border-radius: 10px;
+    border: 1px solid #E0E8F0;
+    color: var(--navy);
+    font-weight: 800;
+    font-size: .8rem;
+  }
+
+  .ed-msg-count i {
+    color: var(--text-light);
+    font-size: .8rem;
+  }
+
+  .ed-btn-enter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--navy);
+    text-decoration: none;
+    border-radius: 14px;
+    font-weight: 900;
+    font-size: .85rem;
+    box-shadow: 0 4px 16px rgba(201, 150, 59, 0.3);
+    transition: all .3s cubic-bezier(.34, 1.56, .64, 1);
+  }
+
+  .ed-btn-enter:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(201, 150, 59, 0.45);
+    color: var(--navy);
+  }
+
+  /* ── Empty State ── */
+  .ed-empty-state {
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .ed-empty-state-img {
+    width: 160px;
+    height: auto;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 15px 25px rgba(13, 27, 42, 0.15));
+    animation: floatAnim 4s ease-in-out infinite;
+  }
+
+  @keyframes floatAnim {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+    100% { transform: translateY(0); }
+  }
+
+  .ed-empty-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+
+  .ed-empty-sub {
+    font-size: .9rem;
+    color: var(--text-light);
+    font-weight: 600;
+  }
+
+  .ed-empty-sub a {
+    color: var(--gold-dark);
+    text-decoration: none;
+    font-weight: 800;
+  }
+
+  /* ── Quick Links ── */
+  .ed-quick-links {
+    display: flex;
+    gap: 14px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    animation: fadeUp .5s .3s ease both;
+  }
+
+  .ed-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: white;
+    color: var(--navy);
+    text-decoration: none;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: .9rem;
+    box-shadow: 0 4px 12px rgba(13, 27, 42, 0.06);
+    border: 1px solid #E0E8F0;
+    transition: all .3s ease;
+  }
+
+  .ed-link-btn:hover {
+    background: #F8FAFB;
+    border-color: var(--gold);
+    color: var(--gold-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(13, 27, 42, 0.1);
+  }
+
+  @media (max-width: 900px) {
+    .ed-container {
+      padding-top: 16px;
+      padding-bottom: 28px;
+    }
+
+    .ed-stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ed-header-content {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .ed-desc {
+      margin-left: 0;
+      margin-top: 10px;
+    }
+
+    .ed-header {
+      padding: 28px 24px;
+      border-radius: 24px;
+      margin-bottom: 22px;
+    }
+
+    .ed-rooms-header {
+      padding: 16px 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .ed-room-row {
+      padding: 18px 18px 20px;
+      align-items: flex-start;
+    }
+
+    .ed-room-actions {
+      width: 100%;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid #F0F4F8;
+    }
+
+    .ed-room-amount {
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .ed-btn-enter {
+      min-height: 48px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .ed-header {
+      padding: 24px 18px;
+      border-radius: 22px;
+    }
+
+    .ed-header-left {
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .ed-header-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      font-size: 1.15rem;
+    }
+
+    .ed-title {
+      font-size: 1.35rem;
+      line-height: 1.35;
+    }
+
+    .ed-desc {
+      font-size: .84rem;
+      line-height: 1.8;
+      max-width: none;
+    }
+
+    .ed-live-badge {
+      width: 100%;
+      justify-content: center;
+      padding: 10px 14px;
+    }
+
+    .ed-stats-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .ed-stat-card {
+      padding: 18px 18px 16px;
+      border-radius: 18px;
+    }
+
+    .ed-stat-val {
+      font-size: 1.9rem;
+    }
+
+    .ed-rooms-card {
+      border-radius: 20px;
+    }
+
+    .ed-rooms-title {
+      font-size: .94rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ed-room-row {
+      padding: 16px;
+      gap: 14px;
+    }
+
+    .ed-room-info {
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .ed-room-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      font-size: 1rem;
+    }
+
+    .ed-room-title {
+      white-space: normal;
+      font-size: .96rem;
+      line-height: 1.55;
+    }
+
+    .ed-room-meta {
+      gap: 8px 12px;
+      font-size: .74rem;
+    }
+
+    .ed-room-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .ed-room-amount {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 0;
+      align-items: center;
+    }
+
+    .ed-status-badge,
+    .ed-msg-count,
+    .ed-btn-enter {
+      width: 100%;
+      text-align: center;
+      justify-content: center;
+    }
+
+    .ed-btn-enter {
+      grid-column: 1 / -1;
+    }
+
+    .ed-quick-links {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .ed-link-btn {
+      justify-content: center;
+      min-height: 48px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .ed-room-actions {
+      grid-template-columns: 1fr;
+    }
+
+    .ed-room-amount {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .ed-status-badge,
+    .ed-msg-count,
+    .ed-btn-enter {
+      grid-column: 1;
+    }
+  }
+</style>
+{% include "partials/_admin_light_styles.html" %}
+{% endblock %}

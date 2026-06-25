@@ -1,0 +1,3119 @@
+/* Deal and Escrow premium fintech interface */
+:root {
+  --dx-bg: #08090d;
+  --dx-bg-2: #0d0f16;
+  --dx-surface: rgba(17, 20, 28, 0.82);
+  --dx-surface-2: rgba(23, 27, 38, 0.92);
+  --dx-card: rgba(255, 255, 255, 0.075);
+  --dx-card-2: rgba(255, 255, 255, 0.105);
+  --dx-border: rgba(255, 255, 255, 0.1);
+  --dx-border-2: rgba(255, 255, 255, 0.18);
+  --dx-text: #f7f8fb;
+  --dx-text-2: #cbd3df;
+  --dx-muted: #8f9aac;
+  --dx-gold: #c9963b;
+  --dx-gold-2: #e8b96a;
+  --dx-indigo: #6366f1;
+  --dx-indigo-2: #8b8df8;
+  --dx-success: #22c55e;
+  --dx-danger: #ef4444;
+  --dx-warning: #f59e0b;
+  --dx-info: #38bdf8;
+  --dx-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+  --dx-shadow-soft: 0 18px 46px rgba(0, 0, 0, 0.25);
+  --dx-radius: 22px;
+  --dx-radius-sm: 14px;
+  --dx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body[data-page="deal_detail"],
+body[data-page="escrow_room"] {
+  background:
+    linear-gradient(135deg, rgba(99, 102, 241, 0.12), transparent 34%),
+    linear-gradient(225deg, rgba(201, 150, 59, 0.1), transparent 30%),
+    linear-gradient(180deg, var(--dx-bg) 0%, var(--dx-bg-2) 48%, #08090d 100%) !important;
+  color: var(--dx-text) !important;
+  color-scheme: dark;
+}
+
+body[data-page="deal_detail"] .page-bg-overlay,
+body[data-page="deal_detail"] .page-bg-overlay::after,
+body[data-page="escrow_room"] .page-bg-overlay,
+body[data-page="escrow_room"] .page-bg-overlay::after,
+body[data-page="deal_detail"] .pv-page-decor-topleft {
+  display: none !important;
+}
+
+body[data-page="deal_detail"] .se-main,
+body[data-page="escrow_room"] .se-main {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 24px 0 72px !important;
+  color: var(--dx-text) !important;
+}
+
+body[data-page="deal_detail"] .se-navbar,
+body[data-page="escrow_room"] .se-navbar {
+  background: rgba(8, 9, 13, 0.84) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.25) !important;
+}
+
+.dx-page,
+.er-container {
+  position: relative;
+  width: min(1180px, calc(100% - 40px));
+  margin-inline: auto;
+}
+
+.dx-page::before,
+.er-container::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.38;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 62px 62px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.86), transparent 70%);
+}
+
+body[data-page="deal_detail"] .se-detail-breadcrumb {
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: 18px !important;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--dx-muted) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+body[data-page="deal_detail"] .se-detail-breadcrumb a,
+body[data-page="deal_detail"] .se-detail-breadcrumb span,
+body[data-page="deal_detail"] .se-detail-breadcrumb i {
+  color: rgba(247, 248, 251, 0.72) !important;
+}
+
+body[data-page="deal_detail"] .se-detail-breadcrumb a:hover {
+  color: var(--dx-gold-2) !important;
+}
+
+.dx-hero {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.38fr);
+  gap: 24px;
+  align-items: stretch;
+  margin-bottom: 18px;
+  padding: clamp(24px, 4vw, 42px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 30px;
+  background:
+    linear-gradient(135deg, rgba(7, 8, 12, 0.88), rgba(13, 15, 22, 0.72)),
+    url("../images/brand/dark-section-bg.webp") center/cover no-repeat;
+  box-shadow: var(--dx-shadow);
+  isolation: isolate;
+}
+
+.dx-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(110deg, rgba(201, 150, 59, 0.2), transparent 42%),
+    linear-gradient(250deg, rgba(99, 102, 241, 0.18), transparent 44%);
+}
+
+.dx-hero-main {
+  min-width: 0;
+}
+
+.dx-hero-topline,
+.dx-trust-row,
+.dx-meta-grid,
+.dx-money-state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.dx-pill,
+.dx-trust-row span,
+.dx-meta-grid span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.065);
+  color: rgba(247, 248, 251, 0.8);
+  font-size: 0.8rem;
+  font-weight: 850;
+  line-height: 1.2;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dx-pill-secure,
+.dx-trust-row span:first-child {
+  border-color: rgba(232, 185, 106, 0.22);
+  background: rgba(201, 150, 59, 0.1);
+  color: var(--dx-gold-2);
+}
+
+.dx-pill-status i {
+  color: var(--dx-info);
+}
+
+.dx-status-completed .dx-pill-status i {
+  color: var(--dx-success);
+}
+
+.dx-status-disputed .dx-pill-status i,
+.dx-status-cancelled .dx-pill-status i {
+  color: var(--dx-danger);
+}
+
+.dx-hero h1 {
+  width: min(820px, 100%);
+  margin: 18px 0 0;
+  color: #fff !important;
+  font-size: clamp(2rem, 5vw, 4.2rem);
+  font-weight: 950;
+  line-height: 1.04;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.dx-hero-sub {
+  width: min(760px, 100%);
+  margin: 14px 0 0;
+  color: rgba(235, 239, 247, 0.76) !important;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+.dx-meta-grid {
+  margin-top: 18px;
+}
+
+.dx-meta-grid strong,
+.dx-trust-row strong {
+  color: #fff;
+  font-weight: 950;
+}
+
+.dx-meta-grid i,
+.dx-trust-row i {
+  color: var(--dx-gold-2);
+}
+
+.dx-trust-row {
+  margin-top: 16px;
+}
+
+.dx-amount-card {
+  align-self: stretch;
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.075);
+  box-shadow: 0 22px 62px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.dx-amount-card > span,
+.dx-money-breakdown span {
+  color: var(--dx-muted);
+  font-size: 0.8rem;
+  font-weight: 850;
+}
+
+.dx-amount-card > strong {
+  color: #fff;
+  font-size: clamp(2.1rem, 5vw, 3.45rem);
+  font-weight: 950;
+  line-height: 1;
+}
+
+.dx-money-state {
+  width: fit-content;
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.1);
+  color: #b7f7c8;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.dx-money-state i {
+  color: var(--dx-success);
+}
+
+.dx-money-breakdown {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.dx-money-breakdown div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dx-money-breakdown strong {
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 950;
+  text-align: end;
+}
+
+.dx-progress-panel {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.dx-progress-step {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--dx-border);
+  border-radius: var(--dx-radius);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.045));
+  box-shadow: var(--dx-shadow-soft);
+  transition: transform 0.24s var(--dx-ease), border-color 0.24s ease, background 0.24s ease;
+}
+
+.dx-progress-step:hover {
+  transform: translateY(-3px);
+  border-color: rgba(232, 185, 106, 0.24);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.055));
+}
+
+.dx-progress-step > span {
+  position: absolute;
+  inset-inline-end: 16px;
+  top: 14px;
+  color: rgba(247, 248, 251, 0.2);
+  font-size: 1.2rem;
+  font-weight: 950;
+}
+
+.dx-progress-step i {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.075);
+  color: var(--dx-muted);
+}
+
+.dx-progress-step strong,
+.dx-progress-step small {
+  display: block;
+}
+
+.dx-progress-step strong {
+  margin-top: 14px;
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 950;
+  line-height: 1.35;
+}
+
+.dx-progress-step small {
+  margin-top: 6px;
+  color: var(--dx-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.55;
+}
+
+.dx-progress-step.is-active {
+  border-color: rgba(232, 185, 106, 0.38);
+  background: linear-gradient(180deg, rgba(201, 150, 59, 0.18), rgba(255, 255, 255, 0.055));
+}
+
+.dx-progress-step.is-active i {
+  background: linear-gradient(135deg, var(--dx-gold), var(--dx-gold-2));
+  color: #10131b;
+  box-shadow: 0 12px 26px rgba(201, 150, 59, 0.24);
+}
+
+.dx-progress-step.is-complete i {
+  background: rgba(34, 197, 94, 0.16);
+  color: #8df7aa;
+}
+
+.dx-progress-step.is-disputed {
+  border-color: rgba(239, 68, 68, 0.34);
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.14), rgba(255, 255, 255, 0.045));
+}
+
+.dx-progress-step.is-disputed i {
+  background: rgba(239, 68, 68, 0.16);
+  color: #fca5a5;
+}
+
+.dx-intel-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.dx-intel-card,
+body[data-page="deal_detail"] .se-gallery-card,
+body[data-page="deal_detail"] .se-product-card,
+body[data-page="deal_detail"] .se-comments-card,
+body[data-page="deal_detail"] .se-deal-chat-card,
+body[data-page="deal_detail"] .se-seller-card,
+body[data-page="deal_detail"] .se-deal-info-card,
+body[data-page="deal_detail"] .se-review-card,
+body[data-page="deal_detail"] .se-owner-actions,
+body[data-page="deal_detail"] .se-share-card,
+body[data-page="deal_detail"] .se-buy-box,
+body[data-page="escrow_room"] .er-chat-card,
+body[data-page="escrow_room"] .er-admin-card,
+body[data-page="escrow_room"] .er-guide-card,
+.er-command-card,
+.er-room-timeline {
+  border: 1px solid var(--dx-border) !important;
+  border-radius: var(--dx-radius) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.045)) !important;
+  color: var(--dx-text) !important;
+  box-shadow: var(--dx-shadow-soft) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.dx-intel-card {
+  min-width: 0;
+  padding: 20px;
+}
+
+.dx-card-head,
+.er-command-card > .er-command-icon,
+body[data-page="deal_detail"] .se-section-head-title,
+body[data-page="deal_detail"] .se-deal-chat-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dx-card-head i,
+.er-command-icon,
+body[data-page="deal_detail"] .se-section-mini-title i {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 13px;
+  background: rgba(201, 150, 59, 0.14);
+  color: var(--dx-gold-2) !important;
+}
+
+.dx-card-head h2 {
+  margin: 0;
+  color: #fff !important;
+  font-size: 0.98rem;
+  font-weight: 950;
+}
+
+.dx-people-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.dx-people-row div {
+  min-width: 0;
+  padding: 13px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.dx-people-row img,
+.dx-empty-avatar {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(232, 185, 106, 0.28);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--dx-gold-2);
+}
+
+.dx-people-row span:not(.dx-empty-avatar),
+.dx-people-row strong {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dx-people-row span:not(.dx-empty-avatar) {
+  margin-top: 9px;
+  color: var(--dx-muted);
+  font-size: 0.74rem;
+  font-weight: 850;
+}
+
+.dx-people-row strong {
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 950;
+}
+
+.dx-check-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.dx-check-list span {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: var(--dx-text-2);
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.65;
+}
+
+.dx-check-list i {
+  margin-top: 0.28em;
+  color: var(--dx-success);
+}
+
+.dx-activity-feed {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.dx-activity-feed div {
+  position: relative;
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  gap: 10px;
+  padding: 9px 0;
+}
+
+.dx-activity-feed div > span {
+  width: 10px;
+  height: 10px;
+  margin-top: 0.35em;
+  border-radius: 50%;
+  background: var(--dx-gold-2);
+  box-shadow: 0 0 0 5px rgba(201, 150, 59, 0.12);
+}
+
+.dx-activity-feed div.is-danger > span {
+  background: var(--dx-danger);
+  box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.13);
+}
+
+.dx-activity-feed div.is-success > span {
+  background: var(--dx-success);
+  box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.13);
+}
+
+.dx-activity-feed strong {
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 950;
+}
+
+.dx-activity-feed small {
+  grid-column: 2;
+  color: var(--dx-muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+body[data-page="deal_detail"] .row.g-4 {
+  align-items: start !important;
+}
+
+body[data-page="deal_detail"] .card,
+body[data-page="deal_detail"] .card-body,
+body[data-page="escrow_room"] .card,
+body[data-page="escrow_room"] .card-body {
+  color: var(--dx-text) !important;
+}
+
+body[data-page="deal_detail"] .se-product-title,
+body[data-page="deal_detail"] .se-section-mini-title,
+body[data-page="deal_detail"] .se-seller-name,
+body[data-page="deal_detail"] .se-info-val,
+body[data-page="deal_detail"] .se-comment-author-name,
+body[data-page="deal_detail"] .se-reply-name,
+body[data-page="deal_detail"] .se-buy-mini-flow-text,
+body[data-page="deal_detail"] .se-escrow-title,
+body[data-page="deal_detail"] .se-deal-card h3 {
+  color: #fff !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body[data-page="deal_detail"] .se-product-meta,
+body[data-page="deal_detail"] .se-product-desc,
+body[data-page="deal_detail"] .se-product-price-sub,
+body[data-page="deal_detail"] .se-banner-sub,
+body[data-page="deal_detail"] .se-comment-time,
+body[data-page="deal_detail"] .se-comment-text,
+body[data-page="deal_detail"] .se-reply-text,
+body[data-page="deal_detail"] .se-deal-info-row span:first-child,
+body[data-page="deal_detail"] .se-buy-guarantee,
+body[data-page="deal_detail"] .se-buy-price-label,
+body[data-page="deal_detail"] .se-buy-inline-hint,
+body[data-page="deal_detail"] .se-escrow-sub,
+body[data-page="deal_detail"] .se-seller-stats,
+body[data-page="deal_detail"] .se-char-hint {
+  color: var(--dx-text-2) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body[data-page="deal_detail"] .se-product-price,
+body[data-page="deal_detail"] .se-buy-price,
+body[data-page="deal_detail"] .se-escrow-amount {
+  color: var(--dx-gold-2) !important;
+}
+
+body[data-page="deal_detail"] .se-product-divider,
+body[data-page="deal_detail"] .se-buy-divider,
+body[data-page="deal_detail"] .se-replies-wrap {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body[data-page="deal_detail"] .se-product-top,
+body[data-page="deal_detail"] .se-buy-mini-flow,
+body[data-page="deal_detail"] .se-deal-stepper,
+body[data-page="deal_detail"] .se-collapse-box,
+body[data-page="deal_detail"] .se-deal-info-row,
+body[data-page="deal_detail"] .se-login-prompt,
+body[data-page="deal_detail"] .se-comment-textarea,
+body[data-page="deal_detail"] .se-reply-textarea,
+body[data-page="deal_detail"] .se-deal-msg-input,
+body[data-page="deal_detail"] .se-deal-attach-btn {
+  background: rgba(255, 255, 255, 0.055) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--dx-text) !important;
+}
+
+body[data-page="deal_detail"] .se-gallery-main {
+  background: rgba(8, 9, 13, 0.84) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body[data-page="deal_detail"] .se-gallery-main img {
+  height: min(440px, 48vw);
+  object-fit: contain;
+}
+
+body[data-page="deal_detail"] .se-gallery-thumb {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+body[data-page="deal_detail"] .se-gallery-thumb.active,
+body[data-page="deal_detail"] .se-gallery-thumb:hover {
+  border-color: var(--dx-gold-2) !important;
+  box-shadow: 0 0 0 3px rgba(201, 150, 59, 0.16) !important;
+}
+
+body[data-page="deal_detail"] .se-section-head,
+body[data-page="deal_detail"] .se-deal-chat-head,
+body[data-page="deal_detail"] .se-owner-actions-header {
+  background:
+    linear-gradient(135deg, rgba(201, 150, 59, 0.16), rgba(99, 102, 241, 0.12)),
+    rgba(255, 255, 255, 0.055) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body[data-page="deal_detail"] .se-deal-chat-box {
+  height: 430px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.02)) !important;
+}
+
+body[data-page="deal_detail"] .se-deal-chat-input-wrap,
+body[data-page="deal_detail"] .se-comments-card .card-body {
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body[data-page="deal_detail"] .se-dm-bubble-mine,
+body[data-page="escrow_room"] .er-msg-me {
+  background: linear-gradient(135deg, var(--dx-gold), var(--dx-gold-2)) !important;
+  color: #10131b !important;
+  box-shadow: 0 14px 32px rgba(201, 150, 59, 0.22) !important;
+}
+
+body[data-page="deal_detail"] .se-dm-bubble-other,
+body[data-page="deal_detail"] .comment-item,
+body[data-page="deal_detail"] .reply-item,
+body[data-page="escrow_room"] .er-msg-other {
+  background: rgba(255, 255, 255, 0.075) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--dx-text) !important;
+  box-shadow: none !important;
+}
+
+body[data-page="deal_detail"] .comment-item,
+body[data-page="deal_detail"] .reply-item {
+  padding: 16px;
+  border-radius: 18px;
+  margin-bottom: 12px;
+}
+
+body[data-page="deal_detail"] .se-deal-chat-empty,
+body[data-page="deal_detail"] .se-no-comments,
+body[data-page="escrow_room"] .er-chat-empty {
+  color: var(--dx-muted) !important;
+}
+
+body[data-page="deal_detail"] .se-comment-submit-btn,
+body[data-page="deal_detail"] .se-buy-main-btn,
+body[data-page="deal_detail"] .se-deal-send-btn,
+body[data-page="deal_detail"] .btn-primary,
+body[data-page="deal_detail"] .btn-success,
+body[data-page="escrow_room"] .er-chat-submit,
+body[data-page="escrow_room"] .er-btn-success {
+  background: linear-gradient(135deg, var(--dx-gold), var(--dx-gold-2)) !important;
+  border-color: rgba(232, 185, 106, 0.35) !important;
+  color: #10131b !important;
+  font-weight: 950 !important;
+  box-shadow: 0 14px 32px rgba(201, 150, 59, 0.22) !important;
+}
+
+body[data-page="deal_detail"] .btn-outline-primary,
+body[data-page="deal_detail"] .btn-outline-secondary,
+body[data-page="deal_detail"] .se-owner-btn-edit,
+body[data-page="deal_detail"] .se-seller-icon-btn,
+body[data-page="escrow_room"] .er-btn-view {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: var(--dx-text) !important;
+  box-shadow: none !important;
+}
+
+body[data-page="deal_detail"] .btn-outline-danger,
+body[data-page="deal_detail"] .se-owner-btn-delete,
+body[data-page="escrow_room"] .er-btn-danger {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.24) !important;
+  color: #fecaca !important;
+}
+
+body[data-page="deal_detail"] .se-buy-box {
+  top: 92px;
+}
+
+body[data-page="deal_detail"] .se-buy-status-success,
+body[data-page="deal_detail"] .se-status-completed {
+  background: rgba(34, 197, 94, 0.12) !important;
+  color: #8df7aa !important;
+}
+
+body[data-page="deal_detail"] .se-buy-status-danger,
+body[data-page="deal_detail"] .se-status-disputed {
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #fca5a5 !important;
+}
+
+body[data-page="deal_detail"] .se-buy-status-info,
+body[data-page="deal_detail"] .se-status-info {
+  background: rgba(56, 189, 248, 0.12) !important;
+  color: #bae6fd !important;
+}
+
+body[data-page="deal_detail"] .se-buy-status-neutral,
+body[data-page="deal_detail"] .se-type-chip-fixed,
+body[data-page="deal_detail"] .se-type-chip-auction,
+body[data-page="deal_detail"] .se-buy-chip {
+  background: rgba(201, 150, 59, 0.12) !important;
+  color: var(--dx-gold-2) !important;
+}
+
+body[data-page="deal_detail"] .se-info-banner,
+body[data-page="deal_detail"] .se-escrow-status-box,
+body[data-page="escrow_room"] .er-admin-alert {
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-radius: 16px !important;
+}
+
+body[data-page="deal_detail"] .se-banner-danger,
+body[data-page="deal_detail"] .se-collapse-danger {
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+body[data-page="deal_detail"] input,
+body[data-page="deal_detail"] textarea,
+body[data-page="deal_detail"] select,
+body[data-page="escrow_room"] input,
+body[data-page="escrow_room"] textarea,
+body[data-page="escrow_room"] select {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: var(--dx-text) !important;
+  box-shadow: none !important;
+}
+
+body[data-page="deal_detail"] input::placeholder,
+body[data-page="deal_detail"] textarea::placeholder,
+body[data-page="escrow_room"] input::placeholder,
+body[data-page="escrow_room"] textarea::placeholder {
+  color: rgba(247, 248, 251, 0.48) !important;
+}
+
+body[data-page="deal_detail"] input:focus,
+body[data-page="deal_detail"] textarea:focus,
+body[data-page="escrow_room"] input:focus,
+body[data-page="escrow_room"] textarea:focus {
+  border-color: rgba(232, 185, 106, 0.45) !important;
+  box-shadow: 0 0 0 4px rgba(201, 150, 59, 0.13) !important;
+}
+
+/* Escrow room */
+.er-container {
+  max-width: 1180px !important;
+  padding: 0 0 64px !important;
+}
+
+body[data-page="escrow_room"] .er-header {
+  position: relative;
+  overflow: hidden;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center !important;
+  gap: 24px !important;
+  margin-bottom: 18px !important;
+  padding: clamp(24px, 4vw, 42px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 30px !important;
+  background:
+    linear-gradient(135deg, rgba(7, 8, 12, 0.9), rgba(13, 15, 22, 0.74)),
+    url("../images/brand/room-bg.webp") center/cover no-repeat !important;
+  box-shadow: var(--dx-shadow) !important;
+}
+
+body[data-page="escrow_room"] .er-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(110deg, rgba(201, 150, 59, 0.18), transparent 42%),
+    linear-gradient(250deg, rgba(99, 102, 241, 0.18), transparent 44%);
+}
+
+body[data-page="escrow_room"] .er-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+body[data-page="escrow_room"] .er-badge-pulse span {
+  color: var(--dx-gold-2) !important;
+  letter-spacing: 0;
+}
+
+body[data-page="escrow_room"] .er-title {
+  color: #fff !important;
+  font-size: clamp(1.55rem, 4vw, 3rem) !important;
+  font-weight: 950 !important;
+  line-height: 1.1 !important;
+  letter-spacing: 0 !important;
+}
+
+body[data-page="escrow_room"] .er-meta,
+body[data-page="escrow_room"] .er-meta span {
+  color: rgba(235, 239, 247, 0.74) !important;
+}
+
+body[data-page="escrow_room"] .er-meta strong {
+  color: #fff !important;
+}
+
+body[data-page="escrow_room"] .er-status-box {
+  min-width: 230px;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  box-shadow: 0 22px 62px rgba(0, 0, 0, 0.24);
+}
+
+body[data-page="escrow_room"] .er-status-val {
+  color: #fff !important;
+  font-size: 2.1rem !important;
+}
+
+body[data-page="escrow_room"] .er-status-lbl,
+body[data-page="escrow_room"] .er-status-sub {
+  color: var(--dx-text-2) !important;
+}
+
+.er-task-center,
+.er-activity-card {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 26px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.045)),
+    rgba(12, 14, 21, 0.78);
+  box-shadow: var(--dx-shadow-soft);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.er-task-center {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 330px);
+  gap: 18px;
+  margin-bottom: 14px;
+  padding: 18px;
+}
+
+.er-task-main,
+.er-evidence-panel {
+  min-width: 0;
+}
+
+.er-task-topline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 16px;
+}
+
+.er-task-topline span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--dx-text-2);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.er-task-topline strong,
+.er-task-heading h3,
+.er-panel-title span,
+.er-activity-item strong {
+  color: #fff;
+}
+
+.er-task-heading {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.er-task-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: rgba(201, 150, 59, 0.15);
+  color: var(--dx-gold-2);
+  font-size: 1.35rem;
+}
+
+.er-task-success .er-task-icon {
+  background: rgba(34, 197, 94, 0.14);
+  color: var(--dx-success);
+}
+
+.er-task-danger .er-task-icon {
+  background: rgba(239, 68, 68, 0.14);
+  color: var(--dx-danger);
+}
+
+.er-task-info .er-task-icon {
+  background: rgba(56, 189, 248, 0.14);
+  color: var(--dx-info);
+}
+
+.er-task-heading h3 {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.6vw, 1.85rem);
+  font-weight: 950;
+  line-height: 1.18;
+}
+
+.er-task-heading p {
+  margin: 8px 0 0;
+  color: var(--dx-text-2);
+  line-height: 1.8;
+  font-size: 0.94rem;
+}
+
+.er-deadline-card {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid rgba(232, 185, 106, 0.18);
+  border-radius: 18px;
+  background: rgba(201, 150, 59, 0.085);
+}
+
+.er-deadline-card.is-overdue {
+  border-color: rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.09);
+}
+
+.er-deadline-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.er-deadline-row span,
+.er-deadline-card small {
+  color: var(--dx-text-2);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.er-deadline-row strong {
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 950;
+}
+
+.er-deadline-track {
+  height: 8px;
+  overflow: hidden;
+  margin-top: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.er-deadline-track span {
+  display: block;
+  width: var(--deadline-progress);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--dx-gold), var(--dx-gold-2));
+}
+
+.er-deadline-card.is-overdue .er-deadline-track span {
+  background: linear-gradient(90deg, #dc2626, var(--dx-danger));
+}
+
+.er-task-actions {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.er-primary-action,
+.er-secondary-danger {
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 0;
+  border-radius: 16px;
+  padding: 0 18px;
+  background: linear-gradient(135deg, var(--dx-gold), var(--dx-gold-2));
+  color: #11131b !important;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 950;
+  text-decoration: none !important;
+  cursor: pointer;
+  box-shadow: 0 14px 34px rgba(201, 150, 59, 0.2);
+  transition: transform 0.2s var(--dx-ease), box-shadow 0.2s var(--dx-ease), filter 0.2s ease;
+}
+
+.er-primary-action:hover,
+.er-secondary-danger:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  box-shadow: 0 18px 42px rgba(201, 150, 59, 0.25);
+}
+
+.er-primary-success {
+  background: linear-gradient(135deg, #16a34a, var(--dx-success));
+  color: #fff !important;
+}
+
+.er-primary-danger,
+.er-secondary-danger {
+  background: linear-gradient(135deg, #dc2626, var(--dx-danger));
+  color: #fff !important;
+}
+
+.er-inline-task-form,
+.er-dispute-form {
+  display: grid;
+  gap: 12px;
+}
+
+.er-inline-task-form-compact {
+  max-width: 440px;
+}
+
+.er-inline-task-form label,
+.er-dispute-form label {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+}
+
+.er-inline-task-form label span,
+.er-dispute-form label span {
+  color: var(--dx-text-2);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.er-inline-task-form input,
+.er-dispute-form input,
+.er-dispute-form textarea {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.065);
+  color: var(--dx-text);
+  padding: 0 14px;
+  font: inherit;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.er-dispute-form textarea {
+  min-height: 94px;
+  padding: 12px 14px;
+  resize: vertical;
+}
+
+.er-dispute-drawer {
+  border: 1px solid rgba(239, 68, 68, 0.18);
+  border-radius: 18px;
+  background: rgba(239, 68, 68, 0.07);
+  overflow: hidden;
+}
+
+.er-dispute-drawer summary {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 14px;
+  color: #fecaca;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.er-dispute-form {
+  padding: 0 14px 14px;
+}
+
+.er-evidence-panel {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.er-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.9rem;
+  font-weight: 950;
+}
+
+.er-panel-title i {
+  color: var(--dx-gold-2);
+}
+
+.er-evidence-list,
+.er-activity-list {
+  display: grid;
+  gap: 10px;
+}
+
+.er-evidence-item,
+.er-evidence-empty {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--dx-text-2);
+  font-size: 0.84rem;
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.er-evidence-item:hover {
+  color: #fff;
+  border-color: rgba(232, 185, 106, 0.24);
+}
+
+.er-evidence-item i {
+  color: var(--dx-info);
+}
+
+.er-evidence-item span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.er-evidence-item small {
+  color: var(--dx-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.er-evidence-item.is-danger i {
+  color: var(--dx-danger);
+}
+
+.er-evidence-item.is-archived {
+  opacity: 0.64;
+}
+
+.er-evidence-empty {
+  color: var(--dx-muted);
+}
+
+.er-activity-card {
+  margin-bottom: 18px;
+  padding: 18px;
+}
+
+.er-activity-list {
+  margin-top: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.er-activity-item {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.er-activity-dot {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--dx-gold-2);
+}
+
+.er-activity-item.is-danger .er-activity-dot {
+  color: var(--dx-danger);
+  background: rgba(239, 68, 68, 0.13);
+}
+
+.er-activity-item.is-success .er-activity-dot {
+  color: var(--dx-success);
+  background: rgba(34, 197, 94, 0.13);
+}
+
+.er-activity-item strong {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 0.84rem;
+  font-weight: 950;
+}
+
+.er-activity-item small {
+  display: block;
+  margin-top: 5px;
+  color: var(--dx-muted);
+  font-size: 0.73rem;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+body[data-page="escrow_room"] .er-guide-strip {
+  margin-bottom: 14px !important;
+}
+
+body[data-page="escrow_room"] .er-guide-card {
+  padding: 20px !important;
+}
+
+body[data-page="escrow_room"] .er-guide-label,
+.er-command-card span {
+  color: var(--dx-gold-2) !important;
+  font-size: 0.76rem;
+  font-weight: 950;
+}
+
+body[data-page="escrow_room"] .er-guide-title,
+.er-command-card strong {
+  color: #fff !important;
+  font-weight: 950 !important;
+}
+
+body[data-page="escrow_room"] .er-guide-text,
+.er-command-card p {
+  color: var(--dx-text-2) !important;
+  line-height: 1.8;
+}
+
+.er-command-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.er-command-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  padding: 20px;
+}
+
+.er-command-icon {
+  margin-bottom: 2px;
+}
+
+.er-command-card p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.er-room-timeline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 14px;
+}
+
+.er-room-timeline div {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 0 12px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.er-room-timeline span {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--dx-muted);
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.055);
+  color: #0b0d12;
+  font-size: 0.82rem;
+}
+
+.er-room-timeline strong {
+  color: var(--dx-text-2);
+  font-size: 0.84rem;
+  font-weight: 950;
+}
+
+.er-room-timeline .is-active span {
+  background: var(--dx-gold-2);
+  box-shadow: 0 0 0 5px rgba(201, 150, 59, 0.14);
+}
+
+.er-room-timeline .is-done span {
+  background: var(--dx-success);
+  box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.13);
+}
+
+.er-room-timeline .is-danger span {
+  background: var(--dx-danger);
+  box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.13);
+}
+
+body[data-page="escrow_room"] .er-layout {
+  gap: 20px !important;
+}
+
+body[data-page="escrow_room"] .er-layout.has-admin {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 370px) !important;
+}
+
+body[data-page="escrow_room"] .er-chat-card {
+  min-height: 560px !important;
+  overflow: hidden !important;
+}
+
+body[data-page="escrow_room"] .er-chat-head,
+body[data-page="escrow_room"] .er-chat-footer {
+  background: rgba(255, 255, 255, 0.055) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body[data-page="escrow_room"] .er-chat-icon {
+  background: rgba(201, 150, 59, 0.14) !important;
+  color: var(--dx-gold-2) !important;
+  box-shadow: none !important;
+}
+
+body[data-page="escrow_room"] .er-chat-name,
+body[data-page="escrow_room"] .er-actions-title,
+body[data-page="escrow_room"] .er-admin-total span,
+body[data-page="escrow_room"] .er-admin-row strong {
+  color: #fff !important;
+}
+
+body[data-page="escrow_room"] .er-chat-sub,
+body[data-page="escrow_room"] .er-admin-row span,
+body[data-page="escrow_room"] .er-time {
+  color: var(--dx-muted) !important;
+}
+
+body[data-page="escrow_room"] .er-chat-body {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.02)) !important;
+  scrollbar-color: rgba(232, 185, 106, 0.28) transparent !important;
+}
+
+body[data-page="escrow_room"] .er-msg-admin {
+  background: rgba(99, 102, 241, 0.14) !important;
+  border: 1px solid rgba(139, 141, 248, 0.24);
+  color: #e0e7ff !important;
+}
+
+body[data-page="escrow_room"] .er-msg-author {
+  color: var(--dx-gold-2) !important;
+}
+
+body[data-page="escrow_room"] .er-chat-form {
+  background: rgba(255, 255, 255, 0.065) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: none !important;
+}
+
+body[data-page="escrow_room"] .er-admin-head {
+  background:
+    linear-gradient(135deg, rgba(201, 150, 59, 0.16), rgba(99, 102, 241, 0.12)),
+    rgba(255, 255, 255, 0.055) !important;
+  color: rgba(247, 248, 251, 0.78) !important;
+  letter-spacing: 0 !important;
+}
+
+body[data-page="escrow_room"] .er-admin-body,
+body[data-page="escrow_room"] .er-admin-actions {
+  background: transparent !important;
+}
+
+body[data-page="escrow_room"] .er-admin-row,
+body[data-page="escrow_room"] .er-admin-total {
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+body[data-page="escrow_room"] .er-admin-row:last-child,
+body[data-page="escrow_room"] .er-admin-total:last-child {
+  border-bottom: 0;
+}
+
+body[data-page="escrow_room"] .er-mono {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: var(--dx-text-2) !important;
+}
+
+body[data-page="escrow_room"] .er-admin-divider {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+body[data-page="escrow_room"] .er-btn-warning {
+  background: linear-gradient(135deg, var(--dx-warning), #fbbf24) !important;
+  color: #10131b !important;
+}
+
+body[data-page="escrow_room"] .er-btn-dark {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: var(--dx-text) !important;
+}
+
+/* Confirmation modal and micro interactions */
+.dx-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.dx-confirm-modal {
+  width: min(420px, 100%);
+  padding: 22px;
+  border: 1px solid var(--dx-border-2);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(24, 28, 39, 0.98), rgba(14, 16, 24, 0.98));
+  color: var(--dx-text);
+  box-shadow: var(--dx-shadow);
+  transform: translateY(8px) scale(0.98);
+  animation: dxConfirmIn 0.22s var(--dx-ease) both;
+}
+
+@keyframes dxConfirmIn {
+  to { transform: none; }
+}
+
+.dx-confirm-modal h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 950;
+}
+
+.dx-confirm-modal p {
+  margin: 10px 0 0;
+  color: var(--dx-text-2);
+  line-height: 1.8;
+}
+
+.dx-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.dx-confirm-actions button {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.dx-confirm-cancel {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--dx-text);
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.dx-confirm-ok {
+  background: linear-gradient(135deg, var(--dx-gold), var(--dx-gold-2));
+  color: #10131b;
+}
+
+.dx-reveal {
+  animation: dxReveal 0.58s var(--dx-ease) both;
+}
+
+@keyframes dxReveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+[data-dx-tooltip] {
+  position: relative;
+}
+
+[data-dx-tooltip]::after {
+  content: attr(data-dx-tooltip);
+  position: absolute;
+  inset-inline-start: 50%;
+  bottom: calc(100% + 9px);
+  z-index: 30;
+  max-width: 220px;
+  padding: 7px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(10, 12, 18, 0.96);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.45;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  white-space: normal;
+}
+
+[data-dx-tooltip]:hover::after,
+[data-dx-tooltip]:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+html[dir="rtl"] [data-dx-tooltip]::after {
+  transform: translateX(50%) translateY(4px);
+}
+
+html[dir="rtl"] [data-dx-tooltip]:hover::after,
+html[dir="rtl"] [data-dx-tooltip]:focus-visible::after {
+  transform: translateX(50%) translateY(0);
+}
+
+@media (max-width: 1100px) {
+  .dx-hero,
+  .dx-intel-grid,
+  .er-task-center,
+  body[data-page="escrow_room"] .er-header,
+  body[data-page="escrow_room"] .er-layout.has-admin {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dx-progress-panel,
+  .er-command-grid,
+  .er-room-timeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .er-activity-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dx-amount-card,
+  body[data-page="escrow_room"] .er-status-box {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="deal_detail"] .se-main,
+  body[data-page="escrow_room"] .se-main {
+    padding: 14px 0 calc(96px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .dx-page,
+  .er-container {
+    width: min(100% - 24px, 1180px);
+  }
+
+  .dx-hero,
+  body[data-page="escrow_room"] .er-header {
+    padding: 22px !important;
+    border-radius: 24px !important;
+  }
+
+  .dx-hero h1 {
+    font-size: clamp(1.65rem, 10vw, 2.35rem);
+  }
+
+  .dx-meta-grid,
+  .dx-trust-row,
+  .dx-hero-topline {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .dx-pill,
+  .dx-meta-grid span,
+  .dx-trust-row span {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .dx-progress-panel,
+  .dx-people-row,
+  .er-command-grid,
+  .er-room-timeline,
+  .er-activity-list {
+    grid-template-columns: 1fr;
+  }
+
+  .dx-progress-step,
+  .dx-intel-card,
+  .er-command-card,
+  .er-task-center,
+  .er-activity-card {
+    padding: 18px;
+  }
+
+  .er-task-heading {
+    grid-template-columns: 1fr;
+  }
+
+  .er-task-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+  }
+
+  .er-deadline-row {
+    display: grid;
+  }
+
+  body[data-page="deal_detail"] .se-mobile-fold-summary {
+    background: rgba(255, 255, 255, 0.075) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--dx-text) !important;
+    box-shadow: var(--dx-shadow-soft) !important;
+  }
+
+  body[data-page="deal_detail"] .se-mobile-fold-title i,
+  body[data-page="deal_detail"] .se-mobile-fold-meta {
+    color: var(--dx-gold-2) !important;
+  }
+
+  body[data-page="deal_detail"] .se-gallery-main img {
+    height: 250px;
+  }
+
+  body[data-page="deal_detail"] .se-deal-chat-box {
+    height: min(430px, 62vh);
+  }
+
+  body[data-page="escrow_room"] .er-chat-card {
+    min-height: 430px !important;
+  }
+
+  body[data-page="escrow_room"] .er-chat-body {
+    padding: 16px 14px !important;
+  }
+
+  .dx-confirm-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .dx-confirm-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .dx-page,
+  .er-container {
+    width: min(100% - 20px, 1180px);
+  }
+
+  .dx-hero,
+  body[data-page="escrow_room"] .er-header {
+    padding: 18px !important;
+    border-radius: 20px !important;
+  }
+
+  .dx-amount-card,
+  .dx-progress-step,
+  .dx-intel-card,
+  .er-command-card,
+  .er-task-center,
+  .er-evidence-panel,
+  .er-activity-card {
+    border-radius: 18px !important;
+  }
+
+  body[data-page="deal_detail"] .se-gallery-main img {
+    height: 210px;
+  }
+}
+
+/* Marketplace-aligned deal detail and auction refresh */
+body[data-page="deal_detail"],
+body[data-page="deal_auction"] {
+  --dx-bg: #0b0d12;
+  --dx-bg-2: #08090d;
+  --dx-surface: rgba(17, 20, 28, 0.92);
+  --dx-surface-2: rgba(22, 26, 35, 0.94);
+  --dx-card: rgba(255, 255, 255, 0.055);
+  --dx-card-2: rgba(255, 255, 255, 0.075);
+  --dx-border: rgba(255, 255, 255, 0.08);
+  --dx-border-2: rgba(255, 255, 255, 0.14);
+  --dx-text: #f4f4f5;
+  --dx-text-2: #c7ced8;
+  --dx-muted: #9099a8;
+  --dx-gold: #5b62e8;
+  --dx-gold-2: #818cf8;
+  --dx-indigo: #6366f1;
+  --dx-indigo-2: #8b8df8;
+  --dx-gradient: linear-gradient(135deg, #5b62e8 0%, #6366f1 100%);
+  --dx-panel-bg:
+    linear-gradient(180deg, rgba(18, 23, 34, 0.94), rgba(16, 20, 29, 0.92));
+  --dx-field-bg: rgba(28, 33, 40, 0.86);
+  --dx-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+  --dx-shadow-soft: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background:
+    linear-gradient(90deg, rgba(11, 13, 18, 0.9) 0%, rgba(11, 13, 18, 0.66) 50%, rgba(11, 13, 18, 0.42) 100%),
+    linear-gradient(180deg, rgba(11, 13, 18, 0.02), rgba(11, 13, 18, 0.66)),
+    url("../images/visuals/network-wave-v2.webp") center / cover fixed no-repeat !important;
+  color: var(--dx-text) !important;
+  color-scheme: dark;
+}
+
+body[data-page="deal_detail"] .page-bg-overlay,
+body[data-page="deal_auction"] .page-bg-overlay,
+body[data-page="deal_detail"] .page-bg-overlay::after,
+body[data-page="deal_auction"] .page-bg-overlay::after,
+body[data-page="deal_auction"] .pv-page-decor-topleft {
+  display: none !important;
+}
+
+body[data-page="deal_detail"] .se-main,
+body[data-page="deal_auction"] .se-main {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+body[data-page="deal_detail"] .se-navbar,
+body[data-page="deal_auction"] .se-navbar {
+  background: rgba(11, 13, 18, 0.92) !important;
+  border-bottom: 1px solid var(--dx-border) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(20px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.5) !important;
+}
+
+body[data-page="deal_detail"] .se-nav-links a,
+body[data-page="deal_detail"] .se-lang-btn,
+body[data-page="deal_detail"] .se-notif-btn,
+body[data-page="deal_detail"] .se-user-btn,
+body[data-page="deal_detail"] .se-mobile-search-btn,
+body[data-page="deal_detail"] .se-mob-toggle,
+body[data-page="deal_auction"] .se-nav-links a,
+body[data-page="deal_auction"] .se-lang-btn,
+body[data-page="deal_auction"] .se-notif-btn,
+body[data-page="deal_auction"] .se-user-btn,
+body[data-page="deal_auction"] .se-mobile-search-btn,
+body[data-page="deal_auction"] .se-mob-toggle {
+  border: 1px solid var(--dx-border) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: var(--dx-text) !important;
+  box-shadow: none !important;
+}
+
+body[data-page="deal_detail"] .se-nav-links a:hover,
+body[data-page="deal_detail"] .se-nav-links a.active,
+body[data-page="deal_auction"] .se-nav-links a:hover,
+body[data-page="deal_auction"] .se-nav-links a.active {
+  border-color: rgba(99, 102, 241, 0.36) !important;
+  background: rgba(99, 102, 241, 0.1) !important;
+  color: #fff !important;
+}
+
+body[data-page="deal_detail"] .se-footer,
+body[data-page="deal_detail"] .se-bottom-nav,
+body[data-page="deal_detail"] .se-chat-fab,
+body[data-page="deal_auction"] .se-footer,
+body[data-page="deal_auction"] .se-bottom-nav,
+body[data-page="deal_auction"] .se-chat-fab {
+  display: none !important;
+}
+
+body[data-page="deal_detail"] .dx-page,
+body[data-page="deal_auction"] .se-auction-shell {
+  box-sizing: border-box;
+  width: min(100%, 1180px) !important;
+  margin: 0 auto !important;
+  padding: 34px 20px 78px !important;
+  color: var(--dx-text) !important;
+  font-family: "Cairo", "Manrope", system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+body[data-page="deal_detail"] .dx-page::before,
+body[data-page="deal_auction"] .se-auction-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.85;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: linear-gradient(180deg, #000 0%, transparent 76%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 76%);
+}
+
+body[data-page="deal_detail"] .se-detail-breadcrumb,
+body[data-page="deal_auction"] .se-auction-breadcrumb {
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: 16px !important;
+  padding: 8px 12px !important;
+  border: 1px solid var(--dx-border) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  color: var(--dx-muted) !important;
+  box-shadow: var(--dx-shadow-soft) !important;
+  backdrop-filter: blur(16px) saturate(1.08);
+  -webkit-backdrop-filter: blur(16px) saturate(1.08);
+}
+
+body[data-page="deal_detail"] .se-detail-breadcrumb a,
+body[data-page="deal_detail"] .se-detail-breadcrumb span,
+body[data-page="deal_detail"] .se-detail-breadcrumb i,
+body[data-page="deal_auction"] .se-auction-breadcrumb a,
+body[data-page="deal_auction"] .se-auction-breadcrumb span,
+body[data-page="deal_auction"] .se-auction-breadcrumb i {
+  color: rgba(244, 244, 245, 0.74) !important;
+}
+
+body[data-page="deal_detail"] .se-detail-breadcrumb a:hover,
+body[data-page="deal_auction"] .se-auction-breadcrumb a:hover {
+  color: var(--dx-indigo-2) !important;
+}
+
+body[data-page="deal_detail"] .dx-hero,
+body[data-page="deal_auction"] .se-auction-hero {
+  min-height: 178px;
+  margin-bottom: 16px !important;
+  padding: clamp(22px, 3.4vw, 34px) !important;
+  border: 1px solid var(--dx-border) !important;
+  border-radius: 24px !important;
+  background:
+    linear-gradient(135deg, rgba(99, 102, 241, 0.12), transparent 42%),
+    var(--dx-panel-bg) !important;
+  box-shadow: var(--dx-shadow-soft) !important;
+  overflow: hidden;
+}
+
+body[data-page="deal_detail"] .dx-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 390px);
+  gap: 20px;
+  align-items: stretch;
+}
+
+body[data-page="deal_detail"] .dx-hero::before {
+  display: none;
+}
+
+body[data-page="deal_detail"] .dx-hero-side {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: minmax(190px, auto) auto;
+  gap: 12px;
+}
+
+body[data-page="deal_detail"] .dx-hero-media {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 210px;
+  aspect-ratio: 16 / 11;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--dx-border);
+  border-radius: 20px;
+  background:
+    linear-gradient(135deg, rgba(99, 102, 241, 0.16), rgba(255, 255, 255, 0.04)),
+    rgba(255, 255, 255, 0.045);
+  color: var(--dx-text);
+  cursor: zoom-in;
+}
+
+body[data-page="deal_detail"] button.dx-hero-media {
+  font: inherit;
+}
+
+body[data-page="deal_detail"] .dx-hero-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 240ms ease, opacity 180ms ease;
+}
+
+body[data-page="deal_detail"] .dx-hero-media:hover img {
+  transform: scale(1.025);
+  opacity: 0.93;
+}
+
+body[data-page="deal_detail"] .dx-hero-media > span {
+  position: absolute;
+  inset-inline-end: 12px;
+  bottom: 12px;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--dx-border-2);
+  border-radius: 50%;
+  background: rgba(11, 13, 18, 0.72);
+  color: #fff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+body[data-page="deal_detail"] .dx-hero-media-empty {
+  display: grid;
+  place-items: center;
+  cursor: default;
+}
+
+body[data-page="deal_detail"] .dx-hero-media-empty i {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  border: 1px solid rgba(99, 102, 241, 0.28);
+  border-radius: 18px;
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--dx-indigo-2);
+  font-size: 1.35rem;
+}
+
+body[data-page="deal_detail"] .dx-pill,
+body[data-page="deal_detail"] .dx-trust-row span,
+body[data-page="deal_detail"] .dx-meta-grid span,
+body[data-page="deal_auction"] .se-auction-badge,
+body[data-page="deal_auction"] .se-auction-meta-chip,
+body[data-page="deal_auction"] .se-auction-seller {
+  min-height: 34px;
+  border: 1px solid var(--dx-border) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  color: var(--dx-text-2) !important;
+  font-weight: 800 !important;
+}
+
+body[data-page="deal_detail"] .dx-pill-secure,
+body[data-page="deal_detail"] .dx-trust-row span:first-child,
+body[data-page="deal_auction"] .se-auction-badge-gold {
+  border-color: rgba(99, 102, 241, 0.26) !important;
+  background: rgba(99, 102, 241, 0.11) !important;
+  color: var(--dx-indigo-2) !important;
+}
+
+body[data-page="deal_detail"] .dx-pill i,
+body[data-page="deal_detail"] .dx-meta-grid i,
+body[data-page="deal_detail"] .dx-trust-row i,
+body[data-page="deal_auction"] .se-auction-badge i,
+body[data-page="deal_auction"] .se-auction-meta i {
+  color: var(--dx-indigo-2) !important;
+}
+
+body[data-page="deal_detail"] .dx-hero h1,
+body[data-page="deal_auction"] .se-auction-title {
+  max-width: 840px;
+  margin: 12px 0 8px !important;
+  color: #fff !important;
+  font-size: 3rem !important;
+  font-weight: 800 !important;
+  line-height: 1.12 !important;
+  letter-spacing: 0 !important;
+}
+
+body[data-page="deal_detail"] .dx-hero-sub,
+body[data-page="deal_auction"] .se-auction-hero-sub,
+body[data-page="deal_auction"] .se-auction-state-text {
+  color: var(--dx-muted) !important;
+  font-size: 0.96rem !important;
+  line-height: 1.9 !important;
+}
+
+body[data-page="deal_detail"] .dx-amount-card,
+body[data-page="deal_auction"] .se-auction-hero-side {
+  align-self: stretch;
+  padding: 18px !important;
+  border: 1px solid var(--dx-border) !important;
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(16px) saturate(1.08);
+  -webkit-backdrop-filter: blur(16px) saturate(1.08);
+}
+
+body[data-page="deal_detail"] .dx-amount-card > strong,
+body[data-page="deal_auction"] .se-auction-hero-price {
+  color: #fff !important;
+  font-size: 2.75rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+
+body[data-page="deal_detail"] .dx-money-state,
+body[data-page="deal_auction"] .se-auction-badge-success {
+  background: rgba(52, 211, 153, 0.09) !important;
+  border-color: rgba(52, 211, 153, 0.22) !important;
+  color: #b7f7d8 !important;
+}
+
+body[data-page="deal_auction"] .se-auction-badge-danger {
+  background: rgba(248, 113, 113, 0.1) !important;
+  border-color: rgba(248, 113, 113, 0.24) !important;
+  color: #fecaca !important;
+}
+
+body[data-page="deal_detail"] .dx-money-breakdown div,
+body[data-page="deal_auction"] .se-auction-stat,
+body[data-page="deal_auction"] .se-auction-owner-grid div {
+  border: 1px solid var(--dx-border) !important;
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+}
+
+body[data-page="deal_detail"] .dx-progress-panel {
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+body[data-page="deal_detail"] .dx-progress-step,
+body[data-page="deal_detail"] .dx-intel-card,
+body[data-page="deal_detail"] .se-gallery-card,
+body[data-page="deal_detail"] .se-product-card,
+body[data-page="deal_detail"] .se-comments-card,
+body[data-page="deal_detail"] .se-deal-chat-card,
+body[data-page="deal_detail"] .se-seller-card,
+body[data-page="deal_detail"] .se-deal-info-card,
+body[data-page="deal_detail"] .se-review-card,
+body[data-page="deal_detail"] .se-owner-actions,
+body[data-page="deal_detail"] .se-share-card,
+body[data-page="deal_detail"] .se-buy-box,
+body[data-page="deal_auction"] .se-auction-card,
+body[data-page="deal_auction"] .se-auction-sidebar-card,
+body[data-page="deal_auction"] .se-share-card {
+  border: 1px solid var(--dx-border) !important;
+  border-radius: 24px !important;
+  background: var(--dx-panel-bg) !important;
+  color: var(--dx-text) !important;
+  box-shadow: var(--dx-shadow-soft) !important;
+  backdrop-filter: blur(16px) saturate(1.08);
+  -webkit-backdrop-filter: blur(16px) saturate(1.08);
+}
+
+body[data-page="deal_detail"] .dx-progress-step:hover {
+  border-color: var(--dx-border-2);
+  background:
+    linear-gradient(135deg, rgba(99, 102, 241, 0.1), transparent 42%),
+    var(--dx-panel-bg) !important;
+}
+
+body[data-page="deal_detail"] .dx-progress-step.is-active {
+  border-color: rgba(99, 102, 241, 0.44) !important;
+  background: rgba(99, 102, 241, 0.12) !important;
+}
+
+body[data-page="deal_detail"] .dx-progress-step.is-active i,
+body[data-page="deal_detail"] .se-comment-submit-btn,
+body[data-page="deal_detail"] .se-buy-main-btn,
+body[data-page="deal_detail"] .se-deal-send-btn,
+body[data-page="deal_detail"] .btn-primary,
+body[data-page="deal_auction"] .se-auction-submit-btn,
+body[data-page="deal_auction"] .btn-primary {
+  background: var(--dx-gradient) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+body[data-page="deal_detail"] .dx-progress-step.is-complete i,
+body[data-page="deal_auction"] .se-auction-accept-btn,
+body[data-page="deal_auction"] .btn-success {
+  background: rgba(52, 211, 153, 0.14) !important;
+  color: #b7f7d8 !important;
+  border-color: rgba(52, 211, 153, 0.22) !important;
+  box-shadow: none !important;
+}
+
+body[data-page="deal_detail"] .dx-intel-grid {
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+body[data-page="deal_detail"] .dx-card-head i,
+body[data-page="deal_detail"] .se-section-mini-title i,
+body[data-page="deal_auction"] .se-auction-section-title i,
+body[data-page="deal_auction"] .se-auction-state-icon {
+  border: 1px solid rgba(99, 102, 241, 0.24) !important;
+  background: rgba(99, 102, 241, 0.11) !important;
+  color: var(--dx-indigo-2) !important;
+}
+
+body[data-page="deal_detail"] .dx-card-head h2,
+body[data-page="deal_detail"] .se-product-title,
+body[data-page="deal_detail"] .se-section-mini-title,
+body[data-page="deal_detail"] .se-seller-name,
+body[data-page="deal_detail"] .se-info-val,
+body[data-page="deal_detail"] .se-comment-author-name,
+body[data-page="deal_detail"] .se-reply-name,
+body[data-page="deal_detail"] .se-buy-mini-flow-text,
+body[data-page="deal_detail"] .se-escrow-title,
+body[data-page="deal_detail"] .se-share-preview-title,
+body[data-page="deal_auction"] .se-auction-section-title,
+body[data-page="deal_auction"] .se-auction-stat-value,
+body[data-page="deal_auction"] .se-auction-bid-user,
+body[data-page="deal_auction"] .se-auction-state-title,
+body[data-page="deal_auction"] .se-auction-owner-grid strong,
+body[data-page="deal_auction"] .se-share-preview-title {
+  color: #fff !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body[data-page="deal_detail"] .se-product-meta,
+body[data-page="deal_detail"] .se-product-desc,
+body[data-page="deal_detail"] .se-product-price-sub,
+body[data-page="deal_detail"] .se-banner-sub,
+body[data-page="deal_detail"] .se-comment-time,
+body[data-page="deal_detail"] .se-comment-text,
+body[data-page="deal_detail"] .se-reply-text,
+body[data-page="deal_detail"] .se-deal-info-row span:first-child,
+body[data-page="deal_detail"] .se-buy-guarantee,
+body[data-page="deal_detail"] .se-buy-price-label,
+body[data-page="deal_detail"] .se-buy-inline-hint,
+body[data-page="deal_detail"] .se-escrow-sub,
+body[data-page="deal_detail"] .se-seller-stats,
+body[data-page="deal_detail"] .se-char-hint,
+body[data-page="deal_detail"] .se-share-sub,
+body[data-page="deal_detail"] .se-share-preview-text,
+body[data-page="deal_auction"] .se-auction-description,
+body[data-page="deal_auction"] .se-auction-stat-label,
+body[data-page="deal_auction"] .se-auction-bid-message,
+body[data-page="deal_auction"] .se-auction-bid-time,
+body[data-page="deal_auction"] .se-auction-owner-label,
+body[data-page="deal_auction"] .se-auction-owner-grid span,
+body[data-page="deal_auction"] .se-share-sub,
+body[data-page="deal_auction"] .se-share-preview-text {
+  color: var(--dx-muted) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body[data-page="deal_detail"] .se-product-price,
+body[data-page="deal_detail"] .se-buy-price,
+body[data-page="deal_detail"] .se-escrow-amount,
+body[data-page="deal_auction"] .se-auction-bid-amount,
+body[data-page="deal_auction"] .se-auction-owner-note strong {
+  color: var(--dx-indigo-2) !important;
+}
+
+body[data-page="deal_detail"] .se-product-top,
+body[data-page="deal_detail"] .se-buy-mini-flow,
+body[data-page="deal_detail"] .se-deal-stepper,
+body[data-page="deal_detail"] .se-collapse-box,
+body[data-page="deal_detail"] .se-deal-info-row,
+body[data-page="deal_detail"] .se-login-prompt,
+body[data-page="deal_detail"] .se-comment-textarea,
+body[data-page="deal_detail"] .se-reply-textarea,
+body[data-page="deal_detail"] .se-deal-msg-input,
+body[data-page="deal_detail"] .se-deal-attach-btn,
+body[data-page="deal_detail"] .se-share-preview,
+body[data-page="deal_detail"] .se-share-link-input,
+body[data-page="deal_auction"] .se-auction-bid-item,
+body[data-page="deal_auction"] .se-auction-input,
+body[data-page="deal_auction"] .se-auction-textarea,
+body[data-page="deal_auction"] .se-share-preview,
+body[data-page="deal_auction"] .se-share-link-input {
+  border: 1px solid var(--dx-border) !important;
+  background: var(--dx-field-bg) !important;
+  color: var(--dx-text) !important;
+  box-shadow: none !important;
+}
+
+body[data-page="deal_detail"] .se-section-head,
+body[data-page="deal_detail"] .se-deal-chat-head,
+body[data-page="deal_detail"] .se-owner-actions-header,
+body[data-page="deal_auction"] .se-auction-section-head,
+body[data-page="deal_auction"] .se-auction-sidebar-head,
+body[data-page="deal_auction"] .se-auction-modal-head {
+  background:
+    linear-gradient(135deg, rgba(99, 102, 241, 0.16), rgba(255, 255, 255, 0.045)) !important;
+  border-bottom: 1px solid var(--dx-border) !important;
+  color: var(--dx-text) !important;
+}
+
+body[data-page="deal_detail"] .se-gallery-main,
+body[data-page="deal_auction"] .se-auction-main-image {
+  border: 1px solid var(--dx-border) !important;
+  border-radius: 20px !important;
+  background: rgba(8, 9, 13, 0.84) !important;
+}
+
+body[data-page="deal_detail"] .se-gallery-main img,
+body[data-page="deal_auction"] .se-auction-main-image img {
+  object-fit: contain !important;
+  background: rgba(8, 9, 13, 0.84);
+}
+
+body[data-page="deal_auction"] .se-auction-main-image img {
+  height: min(390px, 48vw) !important;
+}
+
+body[data-page="deal_auction"] .se-auction-thumb {
+  border-color: var(--dx-border) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+}
+
+body[data-page="deal_auction"] .se-auction-thumb.is-active,
+body[data-page="deal_auction"] .se-auction-thumb:hover,
+body[data-page="deal_detail"] .se-gallery-thumb.active,
+body[data-page="deal_detail"] .se-gallery-thumb:hover {
+  border-color: rgba(129, 140, 248, 0.72) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.16) !important;
+}
+
+body[data-page="deal_detail"] .comment-item,
+body[data-page="deal_detail"] .reply-item,
+body[data-page="deal_detail"] .se-dm-bubble-other {
+  background: rgba(255, 255, 255, 0.055) !important;
+  border: 1px solid var(--dx-border) !important;
+  color: var(--dx-text) !important;
+  box-shadow: none !important;
+}
+
+body[data-page="deal_detail"] .se-dm-bubble-mine {
+  background: var(--dx-gradient) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+body[data-page="deal_detail"] .btn-outline-primary,
+body[data-page="deal_detail"] .btn-outline-secondary,
+body[data-page="deal_detail"] .se-owner-btn-edit,
+body[data-page="deal_detail"] .se-seller-icon-btn,
+body[data-page="deal_detail"] .se-share-copy-btn,
+body[data-page="deal_detail"] .se-share-action,
+body[data-page="deal_auction"] .btn-outline-primary,
+body[data-page="deal_auction"] .btn-outline-secondary,
+body[data-page="deal_auction"] .se-auction-state-btn,
+body[data-page="deal_auction"] .se-share-copy-btn,
+body[data-page="deal_auction"] .se-share-action {
+  border: 1px solid var(--dx-border) !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  color: var(--dx-text-2) !important;
+  box-shadow: none !important;
+}
+
+body[data-page="deal_detail"] .btn-outline-primary:hover,
+body[data-page="deal_detail"] .btn-outline-secondary:hover,
+body[data-page="deal_detail"] .se-share-copy-btn:hover,
+body[data-page="deal_detail"] .se-share-action:hover,
+body[data-page="deal_auction"] .btn-outline-primary:hover,
+body[data-page="deal_auction"] .btn-outline-secondary:hover,
+body[data-page="deal_auction"] .se-share-copy-btn:hover,
+body[data-page="deal_auction"] .se-share-action:hover {
+  border-color: rgba(99, 102, 241, 0.38) !important;
+  background: rgba(99, 102, 241, 0.1) !important;
+  color: #fff !important;
+}
+
+body[data-page="deal_detail"] .btn-outline-danger,
+body[data-page="deal_detail"] .se-owner-btn-delete,
+body[data-page="deal_auction"] .btn-outline-danger {
+  border-color: rgba(248, 113, 113, 0.24) !important;
+  background: rgba(248, 113, 113, 0.1) !important;
+  color: #fecaca !important;
+}
+
+body[data-page="deal_detail"] .se-buy-status-neutral,
+body[data-page="deal_detail"] .se-type-chip-fixed,
+body[data-page="deal_detail"] .se-type-chip-auction,
+body[data-page="deal_detail"] .se-buy-chip,
+body[data-page="deal_detail"] .se-share-kicker,
+body[data-page="deal_auction"] .se-share-kicker {
+  background: rgba(99, 102, 241, 0.11) !important;
+  color: var(--dx-indigo-2) !important;
+}
+
+body[data-page="deal_detail"] .se-share-action i,
+body[data-page="deal_detail"] .se-share-copy-btn i,
+body[data-page="deal_auction"] .se-share-action i,
+body[data-page="deal_auction"] .se-share-copy-btn i {
+  color: var(--dx-indigo-2) !important;
+}
+
+body[data-page="deal_auction"] .se-auction-modal-body,
+body[data-page="deal_auction"] .se-image-viewer-content,
+body[data-page="deal_detail"] .se-image-viewer-content {
+  background: #08090d !important;
+}
+
+body[data-page="deal_auction"] input,
+body[data-page="deal_auction"] textarea,
+body[data-page="deal_auction"] select {
+  background: var(--dx-field-bg) !important;
+  border: 1px solid var(--dx-border) !important;
+  color: var(--dx-text) !important;
+  box-shadow: none !important;
+}
+
+body[data-page="deal_auction"] input::placeholder,
+body[data-page="deal_auction"] textarea::placeholder {
+  color: rgba(244, 244, 245, 0.42) !important;
+}
+
+body[data-page="deal_auction"] input:focus,
+body[data-page="deal_auction"] textarea:focus,
+body[data-page="deal_detail"] input:focus,
+body[data-page="deal_detail"] textarea:focus {
+  border-color: rgba(99, 102, 241, 0.52) !important;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.13) !important;
+}
+
+body[data-page="deal_auction"] .se-auction-label {
+  color: var(--dx-text-2) !important;
+}
+
+body[data-page="deal_auction"] .se-auction-bid-rank,
+body[data-page="deal_detail"] .se-count-chip,
+body[data-page="deal_auction"] .se-auction-section-head span {
+  background: rgba(99, 102, 241, 0.12) !important;
+  color: var(--dx-indigo-2) !important;
+}
+
+body[data-page="deal_detail"] .se-mobile-fold-summary,
+body[data-page="deal_auction"] .se-auction-mobile-fold-summary {
+  border: 1px solid var(--dx-border) !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  color: var(--dx-text) !important;
+  box-shadow: var(--dx-shadow-soft) !important;
+}
+
+body[data-page="deal_auction"] .se-auction-mobile-fold {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Simplified deal surface: calmer background, fewer summary layers */
+body[data-page="deal_detail"],
+body[data-page="deal_auction"] {
+  background-color: #05070d !important;
+  background-image:
+    linear-gradient(180deg, rgba(5, 7, 13, 0.54) 0%, rgba(5, 7, 13, 0.78) 48%, #05070d 100%),
+    linear-gradient(90deg, rgba(5, 7, 13, 0.86) 0%, rgba(5, 7, 13, 0.48) 46%, rgba(5, 7, 13, 0.82) 100%),
+    url("../images/brand/hero-premium-bg.png") !important;
+  background-position: center top !important;
+  background-size: max(1440px, 100vw) auto !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+}
+
+html body[data-page="deal_detail"],
+html body[data-page="deal_auction"],
+body[data-page="deal_detail"] .se-main,
+body[data-page="deal_auction"] .se-main {
+  background-color: #05070d !important;
+  background-image:
+    linear-gradient(180deg, rgba(5, 7, 13, 0.54) 0%, rgba(5, 7, 13, 0.78) 48%, #05070d 100%),
+    linear-gradient(90deg, rgba(5, 7, 13, 0.86) 0%, rgba(5, 7, 13, 0.48) 46%, rgba(5, 7, 13, 0.82) 100%),
+    url("../images/brand/hero-premium-bg.png") !important;
+  background-position: center top !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+}
+
+body[data-page="deal_detail"] .dx-page::before,
+body[data-page="deal_auction"] .se-auction-shell::before {
+  display: none !important;
+}
+
+body[data-page="deal_detail"] .dx-progress-panel,
+body[data-page="deal_detail"] .dx-intel-grid {
+  display: none !important;
+}
+
+body[data-page="deal_detail"] .dx-hero {
+  grid-template-columns: minmax(0, 0.92fr) minmax(320px, 440px);
+  min-height: 0;
+  margin-bottom: 18px !important;
+  padding: clamp(18px, 3vw, 28px) !important;
+  background:
+    linear-gradient(180deg, rgba(18, 23, 34, 0.9), rgba(16, 20, 29, 0.88)) !important;
+}
+
+body[data-page="deal_detail"] .dx-hero-main {
+  display: grid;
+  align-content: center;
+  min-height: 100%;
+}
+
+body[data-page="deal_detail"] .dx-hero h1 {
+  max-width: 720px;
+  margin-top: 14px !important;
+  font-size: 2.55rem !important;
+  line-height: 1.16 !important;
+}
+
+body[data-page="deal_detail"] .dx-hero-sub {
+  max-width: 620px;
+  margin-top: 8px !important;
+  font-size: 0.9rem !important;
+  line-height: 1.8 !important;
+}
+
+body[data-page="deal_detail"] .dx-trust-row {
+  display: none !important;
+}
+
+body[data-page="deal_detail"] .dx-meta-grid {
+  margin-top: 14px !important;
+}
+
+body[data-page="deal_detail"] .dx-hero-side {
+  grid-template-rows: minmax(230px, 1fr) auto;
+}
+
+body[data-page="deal_detail"] .dx-hero-media {
+  min-height: 250px;
+  border-radius: 18px;
+}
+
+body[data-page="deal_detail"] .dx-amount-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 14px 16px !important;
+  border-radius: 18px !important;
+}
+
+body[data-page="deal_detail"] .dx-amount-card > span,
+body[data-page="deal_detail"] .dx-amount-card > strong {
+  grid-column: 1;
+}
+
+body[data-page="deal_detail"] .dx-amount-card > strong {
+  font-size: 2.1rem !important;
+}
+
+body[data-page="deal_detail"] .dx-money-state {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  margin: 0;
+}
+
+body[data-page="deal_detail"] .dx-money-breakdown {
+  display: none !important;
+}
+
+body[data-page="deal_detail"] .se-product-top,
+body[data-page="deal_detail"] .se-product-divider,
+body[data-page="deal_detail"] .se-deal-stepper {
+  display: none !important;
+}
+
+body[data-page="deal_detail"] .se-product-card .card-body {
+  padding: 22px !important;
+}
+
+body[data-page="deal_detail"] .se-product-desc {
+  font-size: 0.94rem;
+  line-height: 1.9;
+}
+
+body[data-page="deal_detail"] .se-gallery-card {
+  margin-bottom: 16px !important;
+}
+
+body[data-page="deal_detail"] .se-gallery-main img {
+  height: min(320px, 40vw) !important;
+}
+
+body[data-page="deal_detail"] .se-gallery-thumbs {
+  display: flex !important;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+
+body[data-page="deal_detail"] .se-gallery-thumb {
+  width: 92px !important;
+  height: 66px !important;
+  flex: 0 0 auto;
+  border-radius: 12px !important;
+}
+
+body[data-page="deal_detail"] .se-sidebar-stack {
+  gap: 14px;
+}
+
+body[data-page="deal_detail"] .se-buy-box {
+  padding: 18px !important;
+}
+
+body[data-page="deal_detail"] .se-buy-guarantees,
+body[data-page="deal_detail"] .se-buy-mini-flow {
+  display: none !important;
+}
+
+body[data-page="deal_detail"] .se-buy-divider {
+  margin: 14px 0 !important;
+}
+
+body[data-page="deal_detail"] .se-comments-card,
+body[data-page="deal_detail"] .se-deal-chat-card,
+body[data-page="deal_detail"] .se-seller-card,
+body[data-page="deal_detail"] .se-deal-info-card,
+body[data-page="deal_detail"] .se-share-card,
+body[data-page="deal_auction"] .se-auction-card,
+body[data-page="deal_auction"] .se-auction-sidebar-card,
+body[data-page="deal_auction"] .se-share-card {
+  background: rgba(17, 20, 28, 0.86) !important;
+}
+
+body[data-page="deal_auction"] .se-auction-hero {
+  background:
+    linear-gradient(180deg, rgba(18, 23, 34, 0.9), rgba(16, 20, 29, 0.88)) !important;
+}
+
+@media (max-width: 1100px) {
+  body[data-page="deal_detail"] .dx-hero {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="deal_detail"] .dx-hero-side {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.42fr);
+    grid-template-rows: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="deal_detail"],
+  body[data-page="deal_auction"] {
+    background-attachment: scroll !important;
+  }
+
+  body[data-page="deal_detail"] .dx-page,
+  body[data-page="deal_auction"] .se-auction-shell {
+    padding: 22px 12px 58px !important;
+  }
+
+  body[data-page="deal_detail"] .dx-hero,
+  body[data-page="deal_auction"] .se-auction-hero {
+    border-radius: 20px !important;
+    padding: 20px !important;
+  }
+
+  body[data-page="deal_detail"] .dx-hero-side {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="deal_detail"] .dx-hero-media {
+    min-height: 220px;
+  }
+
+  body[data-page="deal_detail"] .dx-hero h1,
+  body[data-page="deal_auction"] .se-auction-title {
+    font-size: 1.78rem !important;
+  }
+
+  body[data-page="deal_detail"] .dx-amount-card {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="deal_detail"] .dx-money-state {
+    grid-column: auto;
+    grid-row: auto;
+    width: 100%;
+    justify-content: center;
+  }
+
+  body[data-page="deal_auction"] .se-auction-main-image img {
+    height: 240px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  body[data-page="deal_detail"] .dx-page,
+  body[data-page="deal_auction"] .se-auction-shell {
+    padding-inline: 10px !important;
+  }
+
+  body[data-page="deal_detail"] .dx-hero,
+  body[data-page="deal_auction"] .se-auction-hero,
+  body[data-page="deal_detail"] .dx-progress-step,
+  body[data-page="deal_detail"] .dx-intel-card,
+  body[data-page="deal_detail"] .se-buy-box,
+  body[data-page="deal_auction"] .se-auction-card,
+  body[data-page="deal_auction"] .se-auction-sidebar-card {
+    border-radius: 18px !important;
+  }
+
+  body[data-page="deal_detail"] .dx-hero-media,
+  body[data-page="deal_auction"] .se-auction-main-image img {
+    min-height: 190px;
+    height: 190px !important;
+  }
+}
+
+/* Deal detail layout refinement */
+body[data-page="deal_detail"] {
+  --dx-gold: #d4a047;
+  --dx-gold-2: #f1c873;
+  --dx-indigo: #3b82f6;
+  --dx-indigo-2: #8ec5ff;
+  --dx-mint: #6ee7b7;
+  --dx-gradient: linear-gradient(135deg, #d4a047 0%, #3b82f6 100%);
+  --dx-panel-bg:
+    linear-gradient(180deg, rgba(25, 28, 36, 0.94), rgba(15, 18, 25, 0.9));
+}
+
+body[data-page="deal_detail"] .dx-page {
+  width: min(1240px, calc(100% - 48px)) !important;
+  padding: 30px 0 82px !important;
+}
+
+body[data-page="deal_detail"] .se-detail-breadcrumb {
+  margin-bottom: 14px !important;
+}
+
+body[data-page="deal_detail"] .dx-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(330px, 430px) !important;
+  gap: 22px !important;
+  margin-bottom: 18px !important;
+  padding: 26px !important;
+  border-radius: 22px !important;
+}
+
+body[data-page="deal_detail"] .dx-hero-main {
+  align-content: center !important;
+}
+
+body[data-page="deal_detail"] .dx-hero h1 {
+  max-width: 760px !important;
+  font-size: 2.45rem !important;
+  font-weight: 850 !important;
+  line-height: 1.14 !important;
+}
+
+body[data-page="deal_detail"] .dx-hero-sub {
+  max-width: 650px !important;
+  font-size: 0.94rem !important;
+}
+
+body[data-page="deal_detail"] .dx-meta-grid {
+  gap: 8px !important;
+}
+
+body[data-page="deal_detail"] .dx-hero-side {
+  grid-template-rows: minmax(230px, 1fr) auto !important;
+  gap: 12px !important;
+}
+
+body[data-page="deal_detail"] .dx-hero-media {
+  min-height: 246px !important;
+  border-radius: 18px !important;
+  background: #0b0e15 !important;
+}
+
+body[data-page="deal_detail"] .dx-hero-media img {
+  object-fit: contain !important;
+  padding: 8px;
+}
+
+body[data-page="deal_detail"] .dx-amount-card {
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 8px 14px !important;
+  padding: 16px !important;
+  border-radius: 18px !important;
+}
+
+body[data-page="deal_detail"] .dx-amount-card > strong {
+  font-size: 2.25rem !important;
+}
+
+body[data-page="deal_detail"] .dx-money-state {
+  grid-column: 2 !important;
+  grid-row: 1 / span 2 !important;
+  white-space: normal !important;
+}
+
+body[data-page="deal_detail"] .dx-progress-panel {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  margin: 0 0 22px !important;
+}
+
+body[data-page="deal_detail"] .dx-progress-step {
+  min-height: 142px;
+  padding: 16px !important;
+  border-radius: 18px !important;
+}
+
+body[data-page="deal_detail"] .dx-progress-step i {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+}
+
+body[data-page="deal_detail"] .dx-progress-step strong {
+  margin-top: 12px !important;
+  font-size: 0.9rem !important;
+}
+
+body[data-page="deal_detail"] .dx-progress-step small {
+  font-size: 0.74rem !important;
+}
+
+body[data-page="deal_detail"] .dx-intel-grid {
+  display: none !important;
+}
+
+body[data-page="deal_detail"] .dx-page > .row.g-4 {
+  --bs-gutter-x: 0;
+  --bs-gutter-y: 0;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 390px);
+  gap: 24px;
+  align-items: start !important;
+  margin: 0 !important;
+}
+
+body[data-page="deal_detail"] .dx-page > .row.g-4 > .col-lg-8,
+body[data-page="deal_detail"] .dx-page > .row.g-4 > .se-detail-side-col {
+  width: auto !important;
+  max-width: none !important;
+  padding: 0 !important;
+}
+
+body[data-page="deal_detail"] .dx-page > .row.g-4 > .col-lg-8 {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+body[data-page="deal_detail"] .dx-page > .row.g-4 > .col-lg-8 > .card,
+body[data-page="deal_detail"] .dx-page > .row.g-4 > .col-lg-8 > .se-mobile-fold {
+  margin-bottom: 0 !important;
+}
+
+body[data-page="deal_detail"] .se-sidebar-stack {
+  position: sticky;
+  top: 94px;
+  display: grid !important;
+  gap: 14px !important;
+  max-height: calc(100vh - 112px);
+  overflow: auto;
+  padding: 0 2px 4px;
+  scrollbar-width: thin;
+}
+
+body[data-page="deal_detail"] .se-sidebar-stack > * {
+  margin-bottom: 0 !important;
+}
+
+body[data-page="deal_detail"] .se-buy-box {
+  position: relative !important;
+  top: auto !important;
+  padding: 18px !important;
+  border-radius: 18px !important;
+}
+
+body[data-page="deal_detail"] .se-buy-price-section {
+  align-items: center !important;
+}
+
+body[data-page="deal_detail"] .se-buy-price {
+  font-size: 2.15rem !important;
+}
+
+body[data-page="deal_detail"] .se-buy-status-pill {
+  min-height: 36px !important;
+  padding: 7px 12px !important;
+  font-size: 0.74rem !important;
+}
+
+body[data-page="deal_detail"] .se-buy-box-container {
+  gap: 9px !important;
+}
+
+body[data-page="deal_detail"] .se-buy-main-btn {
+  min-height: 48px;
+}
+
+body[data-page="deal_detail"] .se-gallery-card,
+body[data-page="deal_detail"] .se-product-card,
+body[data-page="deal_detail"] .se-comments-card,
+body[data-page="deal_detail"] .se-deal-chat-card,
+body[data-page="deal_detail"] .se-seller-card,
+body[data-page="deal_detail"] .se-deal-info-card,
+body[data-page="deal_detail"] .se-share-card,
+body[data-page="deal_detail"] .se-owner-actions {
+  border-radius: 18px !important;
+}
+
+body[data-page="deal_detail"] .se-gallery-card .card-body,
+body[data-page="deal_detail"] .se-product-card .card-body,
+body[data-page="deal_detail"] .se-comments-card .card-body,
+body[data-page="deal_detail"] .se-seller-card .card-body,
+body[data-page="deal_detail"] .se-deal-info-card .card-body {
+  padding: 20px !important;
+}
+
+body[data-page="deal_detail"] .se-product-card {
+  order: 1;
+}
+
+body[data-page="deal_detail"] .se-gallery-card {
+  order: 0;
+}
+
+body[data-page="deal_detail"] .se-mobile-primary-slot {
+  order: 2;
+}
+
+body[data-page="deal_detail"] .se-mobile-fold-comments {
+  order: 3;
+}
+
+body[data-page="deal_detail"] .se-mobile-fold-chat {
+  order: 4;
+}
+
+body[data-page="deal_detail"] .se-section-head,
+body[data-page="deal_detail"] .se-deal-chat-head,
+body[data-page="deal_detail"] .se-owner-actions-header {
+  min-height: 52px;
+  padding: 14px 18px !important;
+}
+
+body[data-page="deal_detail"] .se-section-head-title,
+body[data-page="deal_detail"] .se-deal-chat-title,
+body[data-page="deal_detail"] .se-section-mini-title {
+  font-size: 0.9rem !important;
+}
+
+body[data-page="deal_detail"] .se-product-desc {
+  max-width: 76ch;
+  font-size: 0.95rem !important;
+  line-height: 1.95 !important;
+}
+
+body[data-page="deal_detail"] .se-gallery-main {
+  border-radius: 14px !important;
+}
+
+body[data-page="deal_detail"] .se-gallery-main img {
+  height: 360px !important;
+  object-fit: contain !important;
+}
+
+body[data-page="deal_detail"] .se-gallery-thumbs {
+  padding-top: 10px !important;
+}
+
+body[data-page="deal_detail"] .se-gallery-thumb {
+  width: 84px !important;
+  height: 64px !important;
+}
+
+body[data-page="deal_detail"] .se-comment-form {
+  padding: 14px;
+  border: 1px solid var(--dx-border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body[data-page="deal_detail"] .comment-item,
+body[data-page="deal_detail"] .reply-item {
+  border-radius: 14px !important;
+}
+
+body[data-page="deal_detail"] .se-deal-chat-box {
+  height: min(520px, 58vh) !important;
+  min-height: 360px;
+}
+
+body[data-page="deal_detail"] .se-deal-chat-form {
+  min-height: 46px;
+}
+
+body[data-page="deal_detail"] .se-seller-profile {
+  align-items: center !important;
+}
+
+body[data-page="deal_detail"] .se-deal-info-row {
+  gap: 12px;
+}
+
+body[data-page="deal_detail"] .se-deal-info-row .se-info-val {
+  text-align: end;
+}
+
+@media (max-width: 1100px) {
+  body[data-page="deal_detail"] .dx-page {
+    width: min(100% - 32px, 980px) !important;
+  }
+
+  body[data-page="deal_detail"] .dx-hero {
+    grid-template-columns: 1fr !important;
+  }
+
+  body[data-page="deal_detail"] .dx-hero-side {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 360px) !important;
+    grid-template-rows: auto !important;
+  }
+
+  body[data-page="deal_detail"] .dx-page > .row.g-4 {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="deal_detail"] .se-sidebar-stack {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body[data-page="deal_detail"] .se-buy-box {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="deal_detail"] .dx-page {
+    width: 100% !important;
+    padding: 18px 12px 64px !important;
+  }
+
+  body[data-page="deal_detail"] .dx-hero {
+    padding: 18px !important;
+    border-radius: 18px !important;
+  }
+
+  body[data-page="deal_detail"] .dx-hero h1 {
+    font-size: 1.62rem !important;
+  }
+
+  body[data-page="deal_detail"] .dx-hero-side {
+    grid-template-columns: 1fr !important;
+  }
+
+  body[data-page="deal_detail"] .dx-hero-media {
+    min-height: 216px !important;
+  }
+
+  body[data-page="deal_detail"] .dx-amount-card {
+    grid-template-columns: 1fr !important;
+  }
+
+  body[data-page="deal_detail"] .dx-money-state {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    width: 100%;
+    justify-content: center;
+  }
+
+  body[data-page="deal_detail"] .dx-progress-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    margin-bottom: 18px !important;
+  }
+
+  body[data-page="deal_detail"] .dx-progress-step {
+    min-height: 124px;
+    padding: 14px !important;
+  }
+
+  body[data-page="deal_detail"] .se-sidebar-stack {
+    display: block !important;
+  }
+
+  body[data-page="deal_detail"] .se-gallery-main img,
+  body[data-page="deal_detail"] .se-deal-chat-box {
+    height: 300px !important;
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 430px) {
+  body[data-page="deal_detail"] .dx-page {
+    padding-inline: 10px !important;
+  }
+
+  body[data-page="deal_detail"] .dx-hero h1 {
+    font-size: 1.42rem !important;
+  }
+
+  body[data-page="deal_detail"] .dx-progress-panel {
+    grid-template-columns: 1fr !important;
+  }
+
+  body[data-page="deal_detail"] .dx-progress-step {
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dx-reveal,
+  .dx-confirm-modal,
+  body[data-page="deal_detail"] *,
+  body[data-page="escrow_room"] * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

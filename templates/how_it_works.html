@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% t "guide.title" %}{% endblock %}
+{% block page_type %}guide{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/site_info.css' %}?v=20260508a">
+{% endblock %}
+{% block late_css %}
+  <link rel="stylesheet" href="{% static 'css/info_pages.css' %}?v=20260523s">
+  <link rel="stylesheet" href="{% static 'css/info_pages_premium.css' %}?v=20260523a">
+{% endblock %}
+
+{% block content %}
+<div class="info-premium-page info-guide-page" dir="{{ current_dir }}">
+  <div class="info-shell">
+    <section class="info-hero info-hero-guide si-reveal" aria-labelledby="guide-title">
+      <div class="info-hero-copy">
+        <span class="info-pill">
+          <i class="fas fa-compass" aria-hidden="true"></i>
+          {% t "guide.badge" %}
+        </span>
+        <h1 id="guide-title">{% t "guide.hero_title" %}</h1>
+        <p>{% t "guide.hero_text" %}</p>
+        <div class="info-hero-actions">
+          <a href="{% url 'listings' %}" class="info-btn info-btn-primary">
+            <i class="fas fa-layer-group" aria-hidden="true"></i>
+            <span>{% t "guide.browse" %}</span>
+          </a>
+          <a href="{% url 'create_ticket' %}?mode=report" class="info-btn info-btn-secondary">
+            <i class="fas fa-flag" aria-hidden="true"></i>
+            <span>{% t "guide.report" %}</span>
+          </a>
+        </div>
+      </div>
+
+      <aside class="guide-hero-console" aria-label="{% if current_language == 'ar' %}ملخص مسار الصفقة{% else %}Deal flow summary{% endif %}">
+        <div class="guide-console-top" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="guide-console-row is-active">
+          <i class="fas fa-plus" aria-hidden="true"></i>
+          <span>{% t "guide.step1_title" %}</span>
+        </div>
+        <div class="guide-console-row">
+          <i class="fas fa-file-signature" aria-hidden="true"></i>
+          <span>{% t "guide.step2_title" %}</span>
+        </div>
+        <div class="guide-console-row">
+          <i class="fas fa-vault" aria-hidden="true"></i>
+          <span>{% t "guide.step3_title" %}</span>
+        </div>
+        <div class="guide-console-row">
+          <i class="fas fa-circle-check" aria-hidden="true"></i>
+          <span>{% t "guide.step4_title" %}</span>
+        </div>
+        <p>{% t "guide.hero_note" %}</p>
+      </aside>
+    </section>
+
+    <section class="info-metrics si-reveal" aria-label="{% if current_language == 'ar' %}ملخص سريع{% else %}Quick overview{% endif %}">
+      <article class="info-metric">
+        <span><i class="fas fa-route" aria-hidden="true"></i></span>
+        <strong>4</strong>
+        <p>{% if current_language == 'ar' %}خطوات واضحة من بداية الصفقة حتى الإغلاق{% else %}Clear steps from deal start to close{% endif %}</p>
+      </article>
+      <article class="info-metric">
+        <span><i class="fas fa-shield-halved" aria-hidden="true"></i></span>
+        <strong>{% if current_language == 'ar' %}آمن{% else %}Secure{% endif %}</strong>
+        <p>{% if current_language == 'ar' %}توثيق المحادثات والمدفوعات داخل المنصة{% else %}Chats and payments stay documented inside the platform{% endif %}</p>
+      </article>
+      <article class="info-metric">
+        <span><i class="fas fa-receipt" aria-hidden="true"></i></span>
+        <strong>{{ fee_rate_percent }}%</strong>
+        <p>{% t "guide.fees_item_1_after" %}</p>
+      </article>
+    </section>
+
+    <section class="guide-section-head si-reveal">
+      <span class="info-pill info-pill-muted"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>{% if current_language == 'ar' %}مسار الاستخدام{% else %}Onboarding flow{% endif %}</span>
+      <h2>{% if current_language == 'ar' %}ابدأ الصفقة بثقة، خطوة بخطوة{% else %}Start a deal with confidence, step by step{% endif %}</h2>
+      <p>{% if current_language == 'ar' %}كل مرحلة مصممة لتقليل الغموض وحفظ الأدلة المهمة قبل أن تتحول المشكلة إلى نزاع.{% else %}Each stage is designed to reduce ambiguity and preserve the important proof before an issue becomes a dispute.{% endif %}</p>
+    </section>
+
+    <section class="guide-flow" aria-label="{% if current_language == 'ar' %}خطوات الاستخدام{% else %}Usage steps{% endif %}">
+      <article class="guide-step si-reveal si-d1">
+        <div class="guide-step-index">01</div>
+        <div class="guide-step-icon"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
+        <h3>{% t "guide.step1_title" %}</h3>
+        <p>{% t "guide.step1_text" %}</p>
+      </article>
+      <article class="guide-step si-reveal si-d2">
+        <div class="guide-step-index">02</div>
+        <div class="guide-step-icon"><i class="fas fa-file-signature" aria-hidden="true"></i></div>
+        <h3>{% t "guide.step2_title" %}</h3>
+        <p>{% t "guide.step2_text" %}</p>
+      </article>
+      <article class="guide-step si-reveal si-d3">
+        <div class="guide-step-index">03</div>
+        <div class="guide-step-icon"><i class="fas fa-vault" aria-hidden="true"></i></div>
+        <h3>{% t "guide.step3_title" %}</h3>
+        <p>{% t "guide.step3_text" %}</p>
+      </article>
+      <article class="guide-step si-reveal si-d4">
+        <div class="guide-step-index">04</div>
+        <div class="guide-step-icon"><i class="fas fa-scale-balanced" aria-hidden="true"></i></div>
+        <h3>{% t "guide.step4_title" %}</h3>
+        <p>{% t "guide.step4_text" %}</p>
+      </article>
+    </section>
+
+    <section class="guide-media-panel si-reveal" aria-label="{% if current_language == 'ar' %}مساحة شرح مستقبلية{% else %}Future walkthrough area{% endif %}">
+      <div class="guide-media-copy">
+        <span class="info-pill info-pill-muted"><i class="fas fa-play" aria-hidden="true"></i>{% if current_language == 'ar' %}شرح مرئي{% else %}Visual walkthrough{% endif %}</span>
+        <h2>{% if current_language == 'ar' %}جاهزة لإضافة فيديو أو صور شرح لاحقا{% else %}Ready for a future video or guided screenshots{% endif %}</h2>
+        <p>{% if current_language == 'ar' %}تم تجهيز هذا القسم ليحمل فيديو تعليمي، صور خطوات، أو معاينة تفاعلية بدون تغيير بنية الصفحة لاحقا.{% else %}This section is prepared for a tutorial video, step screenshots, or an interactive preview without changing the page structure later.{% endif %}</p>
+      </div>
+      <div class="guide-video-frame" aria-hidden="true">
+        <div class="guide-video-toolbar">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="guide-play-button"><i class="fas fa-play" aria-hidden="true"></i></div>
+      </div>
+    </section>
+
+    <section class="guide-details-grid">
+      <article class="guide-detail-panel si-reveal si-d1">
+        <span class="info-pill info-pill-muted"><i class="fas fa-building-columns" aria-hidden="true"></i>{% t "guide.ccp_kicker" %}</span>
+        <h2>{% t "guide.ccp_title" %}</h2>
+        <div class="guide-check-list">
+          <div><i class="fas fa-arrow-right-arrow-left" aria-hidden="true"></i><span>{% t "guide.ccp_item_1" %}</span></div>
+          <div><i class="fas fa-file-arrow-up" aria-hidden="true"></i><span>{% t "guide.ccp_item_2" %}</span></div>
+          <div><i class="fas fa-user-shield" aria-hidden="true"></i><span>{% t "guide.ccp_item_3" %}</span></div>
+        </div>
+      </article>
+
+      <article class="guide-detail-panel si-reveal si-d2">
+        <span class="info-pill info-pill-muted"><i class="fas fa-percent" aria-hidden="true"></i>{% t "guide.fees_kicker" %}</span>
+        <h2>{% t "guide.fees_title" %}</h2>
+        <div class="guide-check-list">
+          <div><i class="fas fa-receipt" aria-hidden="true"></i><span>{% t "guide.fees_item_1_before" %} {{ fee_rate_percent }}% {% t "guide.fees_item_1_after" %}</span></div>
+          <div><i class="fas fa-people-arrows" aria-hidden="true"></i><span>{% t "guide.fees_item_2" %}</span></div>
+          <div><i class="fas fa-file-invoice-dollar" aria-hidden="true"></i><span>{% t "guide.fees_item_3" %}</span></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="guide-warning-panel si-reveal">
+      <div class="guide-warning-head">
+        <span class="info-pill info-pill-muted"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i>{% t "guide.warning_kicker" %}</span>
+        <h2>{% if current_language == 'ar' %}تفاصيل صغيرة تمنع مشاكل كبيرة{% else %}Small habits that prevent large problems{% endif %}</h2>
+      </div>
+      <div class="guide-warning-grid">
+        <div class="guide-warning-item si-reveal si-d1">
+          <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+          <span>{% t "guide.warning_1" %}</span>
+        </div>
+        <div class="guide-warning-item si-reveal si-d2">
+          <i class="fas fa-file-shield" aria-hidden="true"></i>
+          <span>{% t "guide.warning_2" %}</span>
+        </div>
+        <div class="guide-warning-item si-reveal si-d3">
+          <i class="fas fa-user-check" aria-hidden="true"></i>
+          <span>{% t "guide.warning_3" %}</span>
+        </div>
+        <div class="guide-warning-item si-reveal si-d4">
+          <i class="fas fa-flag" aria-hidden="true"></i>
+          <span>{% t "guide.warning_4" %}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("si-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: "0px 0px -30px 0px", threshold: 0.08 });
+
+  document.querySelectorAll(".si-reveal").forEach(function (el) {
+    observer.observe(el);
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,1 @@
+{% if current_language == 'ar' %}تم تغيير البريد الإلكتروني لحسابك في SafouaneEscrow{% else %}Your SafouaneEscrow email address was changed{% endif %}

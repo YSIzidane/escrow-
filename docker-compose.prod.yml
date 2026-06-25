@@ -1,0 +1,92 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    command: ["web"]
+    env_file:
+      - .env.production
+    volumes:
+      - static_files:/app/staticfiles
+      - media_files:/app/media
+    ports:
+      - "8000:8000"
+    environment:
+      DB_USE_POOL: "True"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "/app/docker/healthcheck.py"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+  celery_worker:
+    build: .
+    command: ["celery-worker"]
+    env_file:
+      - .env.production
+    volumes:
+      - media_files:/app/media
+    environment:
+      DB_USE_POOL: "False"
+      CELERY_LOG_LEVEL: warning
+      CELERY_WORKER_CONCURRENCY: "4"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  celery_beat:
+    build: .
+    command: ["celery-beat"]
+    env_file:
+      - .env.production
+    environment:
+      DB_USE_POOL: "False"
+      CELERY_LOG_LEVEL: warning
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    env_file:
+      - .env.production
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    env_file:
+      - .env.production
+    command: sh -c 'exec redis-server --requirepass "$$REDIS_PASSWORD"'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_files:
+  media_files:

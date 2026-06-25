@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{% t "support.my_tickets.header" %} - Safouane{% endblock %}
+{% block page_type %}support{% endblock %}
+{% block nav_support %}active{% endblock %}
+
+{% block meta %}
+{{ block.super }}
+{% endblock %}
+
+{% block late_css %}
+<link rel="stylesheet" href="{% static 'css/support_dark.css' %}?v=20260523b">
+{% endblock %}
+
+{% block content %}
+<main class="sd-page sd-bg-support" dir="{{ current_dir }}">
+  <section class="sd-shell" aria-labelledby="support-title">
+    <header class="sd-hero sd-support-hero">
+      <div class="sd-hero-copy">
+        <span class="sd-kicker">
+          <i class="fas fa-shield-halved" aria-hidden="true"></i>
+          {% t "support.center_kicker" %}
+        </span>
+        <h1 id="support-title">{% t "support.center_title" %}</h1>
+        <p>{% t "support.center_sub" %}</p>
+      </div>
+
+      <div class="sd-actions">
+        <a href="{% url 'create_ticket' %}" class="sd-btn sd-btn-primary">
+          <i class="fas fa-plus" aria-hidden="true"></i>
+          <span>{% t "support.my_tickets.open_ticket" %}</span>
+        </a>
+        <a href="{% url 'create_ticket' %}?mode=report" class="sd-btn sd-btn-ghost">
+          <i class="fas fa-flag" aria-hidden="true"></i>
+          <span>{% t "support.report.submit" %}</span>
+        </a>
+      </div>
+    </header>
+
+    <section class="sd-command-center" aria-label="{% if current_language == 'ar' %}بحث ومساعدة سريعة{% else %}Search and quick help{% endif %}">
+      <div class="sd-search-box">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input
+          id="supportSearch"
+          type="search"
+          autocomplete="off"
+          placeholder="{% t 'support.filter.search_placeholder' %}"
+          data-sd-ticket-search
+        >
+      </div>
+      <div class="sd-command-meta">
+        <span><i class="fas fa-lock" aria-hidden="true"></i>{% if current_language == 'ar' %}الردود والمرفقات محفوظة داخل التذكرة{% else %}Replies and attachments stay inside the ticket{% endif %}</span>
+      </div>
+    </section>
+
+    <section class="sd-quick-grid" aria-label="{% if current_language == 'ar' %}مساعدة سريعة{% else %}Quick help{% endif %}">
+      <a href="{% url 'create_ticket' %}?category=payment" class="sd-quick-card">
+        <span><i class="fas fa-credit-card" aria-hidden="true"></i></span>
+        <strong>{% t "support.create.cat_payment" %}</strong>
+        <small>{% if current_language == 'ar' %}مدفوعات، CCP، إثبات تحويل، أو تحرير مبلغ.{% else %}Payments, CCP, transfer proof, or fund release.{% endif %}</small>
+      </a>
+      <a href="{% url 'create_ticket' %}?category=deal" class="sd-quick-card">
+        <span><i class="fas fa-handshake" aria-hidden="true"></i></span>
+        <strong>{% t "support.create.cat_deal" %}</strong>
+        <small>{% if current_language == 'ar' %}صفقة متأخرة، نزاع، أو اتفاق يحتاج مراجعة.{% else %}Delayed deal, dispute, or agreement review.{% endif %}</small>
+      </a>
+      <a href="{% url 'create_ticket' %}?category=account" class="sd-quick-card">
+        <span><i class="fas fa-user-shield" aria-hidden="true"></i></span>
+        <strong>{% t "support.create.cat_account" %}</strong>
+        <small>{% if current_language == 'ar' %}تسجيل الدخول، التوثيق، أو بيانات الحساب.{% else %}Login, verification, or account information.{% endif %}</small>
+      </a>
+      <a href="{% url 'how_it_works' %}" class="sd-quick-card">
+        <span><i class="fas fa-compass" aria-hidden="true"></i></span>
+        <strong>{% t "guide.title" %}</strong>
+        <small>{% if current_language == 'ar' %}راجع خطوات الاستخدام قبل فتح طلب جديد.{% else %}Review the flow before opening a new request.{% endif %}</small>
+      </a>
+    </section>
+
+    <section class="sd-stats" aria-label="{% t 'support.summary_label' %}">
+      <article class="sd-stat">
+        <span class="sd-stat-icon"><i class="fas fa-ticket" aria-hidden="true"></i></span>
+        <strong>{{ ticket_stats.total|default:0 }}</strong>
+        <span>{% t "support.total_tickets" %}</span>
+      </article>
+      <article class="sd-stat">
+        <span class="sd-stat-icon"><i class="fas fa-inbox" aria-hidden="true"></i></span>
+        <strong>{{ ticket_stats.open|default:0 }}</strong>
+        <span>{% t "support.stat.open" %}</span>
+      </article>
+      <article class="sd-stat">
+        <span class="sd-stat-icon"><i class="fas fa-arrows-rotate" aria-hidden="true"></i></span>
+        <strong>{{ ticket_stats.in_progress|default:0 }}</strong>
+        <span>{% t "support.stat.in_progress" %}</span>
+      </article>
+      <article class="sd-stat">
+        <span class="sd-stat-icon"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+        <strong>{{ ticket_stats.urgent|default:0 }}</strong>
+        <span>{% t "support.stat.urgent" %}</span>
+      </article>
+    </section>
+
+    <div class="sd-layout">
+      <section class="sd-card sd-main-card" aria-labelledby="ticket-list-title">
+        <div class="sd-card-head">
+          <div>
+            <h2 id="ticket-list-title">{% t "support.my_tickets.header" %}</h2>
+            <p>{% t "support.my_tickets.list_sub" %}</p>
+          </div>
+          <span class="sd-soft-pill">
+            <i class="fas fa-filter" aria-hidden="true"></i>
+            {% if current_language == 'ar' %}فلترة مباشرة{% else %}Live filter{% endif %}
+          </span>
+        </div>
+
+        {% if tickets %}
+        <div class="sd-ticket-list" role="list" data-sd-ticket-list>
+          {% for ticket in tickets %}
+          <a
+            href="{% url 'ticket_detail' ticket.id %}"
+            class="sd-ticket-row sd-ticket-{{ ticket.status }}"
+            role="listitem"
+            data-sd-ticket-row
+            data-ticket-search="{{ ticket.subject }} {{ ticket.ticket_number }} {{ ticket.category }} {{ ticket.status }} {% choice_label "support.category" ticket.category %} {% choice_label "support.status" ticket.status %}"
+          >
+            <span class="sd-ticket-icon" aria-hidden="true">
+              <i class="fas {% if ticket.status == 'open' %}fa-inbox{% elif ticket.status == 'in_progress' %}fa-arrows-rotate{% elif ticket.status == 'resolved' %}fa-circle-check{% else %}fa-lock{% endif %}"></i>
+            </span>
+            <span class="sd-ticket-main">
+              <strong>{{ ticket.subject }}</strong>
+              <span class="sd-meta-line">
+                <span><i class="fas fa-hashtag" aria-hidden="true"></i>{{ ticket.ticket_number }}</span>
+                <span><i class="fas fa-tag" aria-hidden="true"></i>{% choice_label "support.category" ticket.category %}</span>
+                <span><i class="fas fa-clock" aria-hidden="true"></i>{{ ticket.created_at|date:"d/m/Y H:i" }}</span>
+                <span><i class="fas fa-reply" aria-hidden="true"></i>{{ ticket.reply_count }} {% t "support.my_tickets.reply" %}</span>
+              </span>
+            </span>
+            <span class="sd-pill sd-pill-{{ ticket.status }}">{% choice_label "support.status" ticket.status %}</span>
+          </a>
+          {% endfor %}
+        </div>
+        <section class="sd-empty sd-empty-small sd-search-empty" data-sd-search-empty hidden>
+          <span class="sd-empty-icon"><i class="fas fa-search" aria-hidden="true"></i></span>
+          <h2>{% if current_language == 'ar' %}لا توجد نتائج مطابقة{% else %}No matching tickets{% endif %}</h2>
+          <p>{% if current_language == 'ar' %}جرّب رقم التذكرة، نوع المشكلة، أو كلمة من العنوان.{% else %}Try a ticket number, category, or a word from the subject.{% endif %}</p>
+        </section>
+        {% else %}
+        <section class="sd-empty">
+          <span class="sd-empty-icon"><i class="fas fa-headset" aria-hidden="true"></i></span>
+          <h2>{% t "support.my_tickets.empty_title" %}</h2>
+          <p>{% t "support.my_tickets.empty_sub" %}</p>
+          <a href="{% url 'create_ticket' %}" class="sd-btn sd-btn-primary">
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <span>{% t "support.my_tickets.open_ticket" %}</span>
+          </a>
+        </section>
+        {% endif %}
+      </section>
+
+      <aside class="sd-side-stack" aria-label="{% t 'support.info_label' %}">
+        <section class="sd-side-card sd-status-card">
+          <span class="sd-live">
+            <i aria-hidden="true"></i>
+            {% t "support.live_center" %}
+          </span>
+          <h2>{% t "support.speed_title" %}</h2>
+          <p>{% t "support.speed_sub" %}</p>
+          <div class="sd-status-track" aria-label="{% if current_language == 'ar' %}حالة معالجة الطلبات{% else %}Request status flow{% endif %}">
+            <span><i class="fas fa-inbox" aria-hidden="true"></i>{% t "support.status.open" %}</span>
+            <span><i class="fas fa-arrows-rotate" aria-hidden="true"></i>{% t "support.status.in_progress" %}</span>
+            <span><i class="fas fa-circle-check" aria-hidden="true"></i>{% t "support.status.resolved" %}</span>
+          </div>
+        </section>
+
+        <section class="sd-side-card sd-faq-card" aria-labelledby="support-faq-title">
+          <h2 id="support-faq-title">{% if current_language == 'ar' %}أسئلة شائعة{% else %}FAQ{% endif %}</h2>
+          <div class="sd-faq-list">
+            <details class="sd-faq-item" open>
+              <summary>{% if current_language == 'ar' %}متى يصلني الرد؟{% else %}When will I get a reply?{% endif %}</summary>
+              <p>{% if current_language == 'ar' %}تبدأ المراجعة من أحدث المعلومات داخل التذكرة. إضافة رقم الصفقة ومرفق واضح يساعدان على تسريع الرد.{% else %}Review starts from the latest information in the ticket. Adding a deal number and a clear attachment helps speed up the reply.{% endif %}</p>
+            </details>
+            <details class="sd-faq-item">
+              <summary>{% if current_language == 'ar' %}متى أستخدم البلاغ بدل التذكرة؟{% else %}When should I use a report instead of a ticket?{% endif %}</summary>
+              <p>{% if current_language == 'ar' %}استخدم البلاغ عند وجود احتيال، طلب دفع خارج المنصة، إساءة، أو سلوك يحتاج مراجعة إدارية مباشرة.{% else %}Use a report for fraud, off-platform payment requests, abuse, or behavior that needs direct admin review.{% endif %}</p>
+            </details>
+            <details class="sd-faq-item">
+              <summary>{% if current_language == 'ar' %}هل المرفقات خاصة؟{% else %}Are attachments private?{% endif %}</summary>
+              <p>{% if current_language == 'ar' %}نعم، تبقى المرفقات داخل مسار التذكرة ولا تُعرض في صفحات عامة.{% else %}Yes. Attachments remain inside the ticket flow and are not shown on public pages.{% endif %}</p>
+            </details>
+          </div>
+        </section>
+
+        <section class="sd-side-card sd-contact-card">
+          <h2>{% t "support.two_paths" %}</h2>
+          <div class="sd-mini-list">
+            <a href="{% url 'create_ticket' %}">
+              <i class="fas fa-ticket" aria-hidden="true"></i>
+              <span>{% t "support.need_help_path" %}</span>
+            </a>
+            <a href="{% url 'create_ticket' %}?mode=report">
+              <i class="fas fa-flag" aria-hidden="true"></i>
+              <span>{% t "support.report_path" %}</span>
+            </a>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/support_dark.js' %}?v=20260523b"></script>
+{% endblock %}

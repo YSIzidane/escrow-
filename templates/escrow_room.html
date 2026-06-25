@@ -1,0 +1,876 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% t "escrow.room.title" %} #{{ deal.id }}{% endblock %}
+{% block page_type %}escrow_room{% endblock %}
+{% block late_css %}
+<link rel="stylesheet" href="{% static 'css/deal_escrow_premium.css' %}?v=20260525a">
+{% endblock %}
+
+{% block content %}
+<div class="er-container">
+
+  <!-- Header -->
+  <div class="er-header">
+    <div class="er-header-info">
+      <div class="er-badge-pulse">
+        <div class="er-dot"></div>
+        <span>{% t "escrow.room.protected_room" %}</span>
+      </div>
+      <h2 class="er-title">{{ deal.product_title|truncatechars:45 }}</h2>
+      <div class="er-meta">
+        <span><i class="fas fa-user"></i> {% t "escrow.room.buyer" %} <strong>{{ deal.buyer.username|default:"—" }}</strong></span>
+        <span><i class="fas fa-store"></i> {% t "escrow.room.seller" %} <strong>{{ deal.seller.username }}</strong></span>
+      </div>
+    </div>
+
+    <!-- حالة الدفع -->
+    <div class="er-payment-status">
+      {% if payment %}
+        {% if payment.status == 'escrow_held' %}
+          <div class="er-status-box er-status-gold">
+            <div class="er-status-lbl">{% t "escrow.room.held_amount" %}</div>
+            <div class="er-status-val">${{ payment.amount }}</div>
+            <div class="er-status-sub">{% t "escrow.room.in_escrow" %}</div>
+          </div>
+        {% elif payment.status == 'released' %}
+          <div class="er-status-box er-status-success">
+            <div class="er-status-lbl">{% t "escrow.room.amount" %}</div>
+            <div class="er-status-val">${{ payment.amount }}</div>
+            <div class="er-status-sub">{% t "escrow.room.released_seller" %}</div>
+          </div>
+        {% elif payment.status == 'refunded' %}
+          <div class="er-status-box er-status-danger">
+            <div class="er-status-lbl">{% t "escrow.room.amount" %}</div>
+            <div class="er-status-val">${{ payment.amount }}</div>
+            <div class="er-status-sub">{% t "escrow.room.refunded_buyer" %}</div>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <section class="er-task-center er-task-{{ room_action.tone }} dx-reveal" aria-label="{% if current_language == 'ar' %}الإجراء المطلوب الآن{% else %}Current deal task{% endif %}">
+    <div class="er-task-main">
+      <div class="er-task-topline">
+        <span><i class="fas fa-wave-square" aria-hidden="true"></i> {% if current_language == 'ar' %}الحالة الحالية{% else %}Current status{% endif %}: <strong>{{ engine_state }}</strong></span>
+        <span><i class="fas fa-user-shield" aria-hidden="true"></i> {{ actor_role_label }}</span>
+      </div>
+      <div class="er-task-heading">
+        <div class="er-task-icon"><i class="fas {{ room_action.icon }}" aria-hidden="true"></i></div>
+        <div>
+          <h3>{{ room_action.title }}</h3>
+          <p>{{ room_action.body }}</p>
+        </div>
+      </div>
+
+      {% if room_deadline.active %}
+      <div class="er-deadline-card {% if room_deadline.is_overdue %}is-overdue{% endif %}" style="--deadline-progress: {{ room_deadline.progress }}%;">
+        <div class="er-deadline-row">
+          <span><i class="fas fa-hourglass-half" aria-hidden="true"></i> {{ room_deadline.label }}</span>
+          <strong>{{ room_deadline.remaining_label }}</strong>
+        </div>
+        <div class="er-deadline-track"><span></span></div>
+        <small>{{ room_deadline.due_at|date:"d/m/Y H:i" }}</small>
+      </div>
+      {% endif %}
+
+      <div class="er-task-actions">
+        {% if room_action.kind == "link" %}
+          <a href="{{ room_action.href }}" class="er-primary-action">
+            <i class="fas {{ room_action.icon }}" aria-hidden="true"></i>
+            {{ room_action.button }}
+          </a>
+        {% elif room_action.kind == "delivery_form" %}
+          <form method="post" enctype="multipart/form-data" class="er-inline-task-form">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="mark_shipped">
+            <label>
+              <span>{% if current_language == 'ar' %}رقم التتبع أو وصف التسليم{% else %}Tracking number or delivery note{% endif %}</span>
+              <input type="text" name="tracking_number" placeholder="{% if current_language == 'ar' %}مثال: DHL-123 أو تم إرسال بيانات الحساب{% else %}Example: DHL-123 or account details sent{% endif %}">
+            </label>
+            <label>
+              <span>{% if current_language == 'ar' %}إثبات التسليم{% else %}Delivery proof{% endif %}</span>
+              <input type="file" name="shipping_proof" accept=".jpg,.jpeg,.png,.webp,.pdf">
+            </label>
+            <button type="submit" class="er-primary-action">
+              <i class="fas fa-truck-fast" aria-hidden="true"></i>
+              {{ room_action.button }}
+            </button>
+          </form>
+        {% elif room_action.kind == "confirm_form" %}
+          <form method="post" class="er-inline-task-form er-inline-task-form-compact" onsubmit="return confirm('{% if current_language == 'ar' %}هل تؤكد الاستلام وتحرير المبلغ للبائع؟{% else %}Confirm receipt and release funds to the seller?{% endif %}');">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="confirm_delivery">
+            <button type="submit" class="er-primary-action er-primary-success">
+              <i class="fas fa-circle-check" aria-hidden="true"></i>
+              {{ room_action.button }}
+            </button>
+          </form>
+        {% elif room_action.kind == "admin_review" %}
+          <a href="#erAdminPanel" class="er-primary-action er-primary-danger">
+            <i class="fas fa-scale-balanced" aria-hidden="true"></i>
+            {{ room_action.button }}
+          </a>
+        {% endif %}
+
+        {% if payment and payment.status == 'escrow_held' and deal.status != 'disputed' and deal.status != 'completed' and deal.status != 'cancelled' and not is_admin %}
+        <details class="er-dispute-drawer">
+          <summary><i class="fas fa-triangle-exclamation" aria-hidden="true"></i> {% if current_language == 'ar' %}فتح نزاع{% else %}Open dispute{% endif %}</summary>
+          <form method="post" enctype="multipart/form-data" class="er-dispute-form">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="open_dispute">
+            <label>
+              <span>{% if current_language == 'ar' %}سبب النزاع{% else %}Dispute reason{% endif %}</span>
+              <textarea name="dispute_reason" rows="3" required placeholder="{% if current_language == 'ar' %}اكتب ما حدث بوضوح حتى تتمكن الإدارة من المراجعة بسرعة{% else %}Explain clearly what happened so the admin team can review quickly{% endif %}"></textarea>
+            </label>
+            <label>
+              <span>{% if current_language == 'ar' %}إرفاق دليل{% else %}Attach evidence{% endif %}</span>
+              <input type="file" name="dispute_evidence" accept=".jpg,.jpeg,.png,.webp,.pdf">
+            </label>
+            <button type="submit" class="er-secondary-danger">
+              <i class="fas fa-scale-balanced" aria-hidden="true"></i>
+              {% if current_language == 'ar' %}إرسال النزاع للمراجعة{% else %}Submit dispute for review{% endif %}
+            </button>
+          </form>
+        </details>
+        {% endif %}
+      </div>
+    </div>
+
+    <aside class="er-evidence-panel" aria-label="{% if current_language == 'ar' %}الأدلة والملفات{% else %}Evidence and files{% endif %}">
+      <div class="er-panel-title">
+        <i class="fas fa-folder-shield" aria-hidden="true"></i>
+        <span>{% if current_language == 'ar' %}الأدلة الحالية{% else %}Current evidence{% endif %}</span>
+      </div>
+      <div class="er-evidence-list">
+        {% for evidence in room_evidence %}
+        <a href="{{ evidence.url }}" target="_blank" rel="noopener" class="er-evidence-item {% if evidence.is_archived %}is-archived{% endif %}">
+          <i class="fas fa-file-shield" aria-hidden="true"></i>
+          <span>
+            {{ evidence.label }}
+            <small>SHA-256 {{ evidence.hash }} · {{ evidence.uploader }} · {{ evidence.created_at|date:"d/m/Y H:i" }}</small>
+          </span>
+        </a>
+        {% endfor %}
+        {% if not room_evidence and deal.shipping_proof %}
+        <a href="{{ deal.shipping_proof.url }}" target="_blank" rel="noopener" class="er-evidence-item">
+          <i class="fas fa-file-shield" aria-hidden="true"></i>
+          <span>{% if current_language == 'ar' %}إثبات التسليم{% else %}Delivery proof{% endif %}</span>
+        </a>
+        {% endif %}
+        {% if not room_evidence and deal.dispute_evidence %}
+        <a href="{{ deal.dispute_evidence.url }}" target="_blank" rel="noopener" class="er-evidence-item is-danger">
+          <i class="fas fa-file-circle-exclamation" aria-hidden="true"></i>
+          <span>{% if current_language == 'ar' %}دليل النزاع{% else %}Dispute evidence{% endif %}</span>
+        </a>
+        {% endif %}
+        {% if deal.tracking_number %}
+        <div class="er-evidence-item">
+          <i class="fas fa-barcode" aria-hidden="true"></i>
+          <span>{{ deal.tracking_number }}</span>
+        </div>
+        {% endif %}
+        {% if not room_evidence and not deal.shipping_proof and not deal.dispute_evidence and not deal.tracking_number %}
+        <div class="er-evidence-empty">
+          {% if current_language == 'ar' %}لا توجد أدلة مرفوعة بعد.{% else %}No evidence has been uploaded yet.{% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </aside>
+  </section>
+
+  <div class="er-guide-strip">
+    {% if not payment %}
+      <div class="er-guide-card">
+        <div class="er-guide-label">{% t "escrow.room.guide_label" %}</div>
+        <div class="er-guide-title">{% t "escrow.room.no_payment_title" %}</div>
+        <div class="er-guide-text">{% t "escrow.room.no_payment_text" %}</div>
+      </div>
+    {% elif payment.status == 'escrow_held' %}
+      <div class="er-guide-card">
+        <div class="er-guide-label">{% t "escrow.room.guide_label" %}</div>
+        <div class="er-guide-title">{% t "escrow.room.held_title" %}</div>
+        {% if user == deal.seller and not deal.seller_shipped %}
+          <div class="er-guide-text">{% t "escrow.room.held_seller_text" %}</div>
+        {% elif user == deal.buyer and deal.status == 'shipped' %}
+          <div class="er-guide-text">{% t "escrow.room.held_buyer_text" %}</div>
+        {% else %}
+          <div class="er-guide-text">{% t "escrow.room.held_general_text" %}</div>
+        {% endif %}
+      </div>
+    {% elif payment.status == 'released' %}
+      <div class="er-guide-card er-guide-card-success">
+        <div class="er-guide-label">{% t "escrow.room.guide_label" %}</div>
+        <div class="er-guide-title">{% t "escrow.room.released_title" %}</div>
+        <div class="er-guide-text">{% t "escrow.room.released_text" %}</div>
+      </div>
+    {% elif payment.status == 'refunded' %}
+      <div class="er-guide-card er-guide-card-danger">
+        <div class="er-guide-label">{% t "escrow.room.guide_label" %}</div>
+        <div class="er-guide-title">{% t "escrow.room.refunded_title" %}</div>
+        <div class="er-guide-text">{% t "escrow.room.refunded_text" %}</div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="er-command-grid dx-reveal" aria-label="{% if current_language == 'ar' %}ملخص غرفة الضمان{% else %}Escrow room summary{% endif %}">
+    <article class="er-command-card">
+      <div class="er-command-icon"><i class="fas fa-shield-halved" aria-hidden="true"></i></div>
+      <span>{% if current_language == 'ar' %}الحماية{% else %}Protection{% endif %}</span>
+      <strong>{% if current_language == 'ar' %}اتصال موثق ومراقب{% else %}Documented secure channel{% endif %}</strong>
+      <p>{% if current_language == 'ar' %}كل رسالة داخل الغرفة تبقى مرتبطة بسجل الصفقة ويمكن الرجوع إليها عند المراجعة.{% else %}Every message stays attached to the deal record for review when needed.{% endif %}</p>
+    </article>
+    <article class="er-command-card">
+      <div class="er-command-icon"><i class="fas fa-users" aria-hidden="true"></i></div>
+      <span>{% if current_language == 'ar' %}الأطراف{% else %}Parties{% endif %}</span>
+      <strong>{{ deal.buyer.username|default:"-" }} / {{ deal.seller.username }}</strong>
+      <p>{% if current_language == 'ar' %}المشتري والبائع والإدارة عند الحاجة في مساحة واحدة واضحة.{% else %}Buyer, seller, and admin review when needed in one clear workspace.{% endif %}</p>
+    </article>
+    <article class="er-command-card">
+      <div class="er-command-icon"><i class="fas fa-receipt" aria-hidden="true"></i></div>
+      <span>{% if current_language == 'ar' %}الدفع{% else %}Payment{% endif %}</span>
+      <strong>{% if payment %}{{ payment.get_status_display }}{% else %}{% if current_language == 'ar' %}لم يبدأ بعد{% else %}Not started{% endif %}{% endif %}</strong>
+      <p>{% if payment %}{% if current_language == 'ar' %}آخر تحديث:{% else %}Last update:{% endif %} {{ payment.updated_at|date:"d/m/Y H:i" }}{% else %}{% if current_language == 'ar' %}أكمل الدفع حتى تبدأ حماية الضمان الفعلية.{% else %}Complete payment to activate full escrow protection.{% endif %}{% endif %}</p>
+    </article>
+  </div>
+
+  <div class="er-room-timeline dx-reveal" aria-label="{% if current_language == 'ar' %}مسار غرفة الضمان{% else %}Escrow room timeline{% endif %}">
+    {% for step in room_steps %}
+    <div class="{% if step.status %}is-{{ step.status }}{% endif %}">
+      <span><i class="fas {{ step.icon }}" aria-hidden="true"></i></span>
+      <strong>{{ step.label }}</strong>
+    </div>
+    {% endfor %}
+  </div>
+
+  <section class="er-activity-card dx-reveal" aria-label="{% if current_language == 'ar' %}سجل الصفقة{% else %}Deal activity{% endif %}">
+    <div class="er-panel-title">
+      <i class="fas fa-timeline" aria-hidden="true"></i>
+      <span>{% if current_language == 'ar' %}سجل الصفقة{% else %}Deal timeline{% endif %}</span>
+    </div>
+    <div class="er-activity-list">
+      {% for item in room_activity %}
+      <div class="er-activity-item is-{{ item.tone }}">
+        <span class="er-activity-dot"><i class="fas {{ item.icon }}" aria-hidden="true"></i></span>
+        <div>
+          <strong>{{ item.label }}</strong>
+          <small>{{ item.actor }} · {{ item.role }} · {{ item.created_at|date:"d/m/Y H:i" }}</small>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="er-layout {% if is_admin %}has-admin{% endif %}">
+
+    <!-- منطقة الدردشة -->
+    <div class="er-chat-card">
+
+      <!-- رأس الدردشة -->
+      <div class="er-chat-head">
+        <div class="er-chat-icon"><i class="fas fa-comments"></i></div>
+        <div>
+          <div class="er-chat-name">{% t "escrow.room.chat_talk" %}</div>
+          <div class="er-chat-sub">{% t "escrow.room.chat_members" %}</div>
+        </div>
+      </div>
+
+      <!-- الرسائل -->
+      <div id="chatBox" class="er-chat-body">
+        {% for msg in messages_list %}
+          {% if msg.is_admin %}
+            <div class="er-msg-admin-wrap">
+                <div class="er-msg-admin">
+                 <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" class="se-brand-logo-admin-note" width="520" height="150" loading="lazy" decoding="async">{{ msg.text }}
+                <div class="er-time">{{ msg.created_at|date:"H:i" }}</div>
+              </div>
+            </div>
+          {% elif msg.sender == request.user %}
+            <div class="er-msg-me-wrap">
+              <div class="er-msg-me">
+                {{ msg.text }}
+                <div class="er-time">{{ msg.created_at|date:"H:i" }}</div>
+              </div>
+            </div>
+          {% else %}
+            <div class="er-msg-other-wrap">
+              <img src="{{ msg.sender.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ msg.sender.username }}" class="er-msg-avatar" loading="lazy" decoding="async" width="38" height="38">
+              <div class="er-msg-other">
+                <div class="er-msg-author">{{ msg.sender.username }}</div>
+                {{ msg.text }}
+                <div class="er-time">{{ msg.created_at|date:"H:i" }}</div>
+              </div>
+            </div>
+          {% endif %}
+        {% empty %}
+          <div class="er-chat-empty">
+            <i class="fas fa-comments"></i>
+            <div>{% t "escrow.room.no_messages" %}</div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Scroll to Bottom -->
+      <button class="er-scroll-bottom" id="erScrollBtn" onclick="chatBox.scrollTop=chatBox.scrollHeight" title="{% t 'escrow.room.latest_messages' %}">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+
+      <!-- حقل الإرسال -->
+      {% if payment and payment.status != 'refunded' %}
+      <div class="er-chat-footer">
+        <form method="post" class="er-chat-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="send_message">
+          <input type="text" name="text" placeholder="{% t 'escrow.room.write_message' %}" autocomplete="off" autocapitalize="sentences" inputmode="text" enterkeyhint="send" spellcheck="true" class="er-chat-input" required>
+          <button type="submit" class="er-chat-submit">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+      {% else %}
+      <div class="er-chat-closed">
+        <i class="fas fa-lock"></i> {% t "escrow.room.room_closed" %}
+      </div>
+      {% endif %}
+
+    </div><!-- /chat -->
+
+    <!-- لوحة الأدمن -->
+    {% if is_admin %}
+    <div class="er-admin-panel" id="erAdminPanel">
+
+      <!-- معلومات الصفقة -->
+      <div class="er-admin-card">
+        <div class="er-admin-head">{% t "escrow.room.admin_panel" %}</div>
+        <div class="er-admin-body">
+          <div class="er-admin-row">
+            <span>{% t "escrow.room.deal_number" %}</span>
+            <strong>#{{ deal.id }}</strong>
+          </div>
+          <div class="er-admin-row">
+            <span>{% t "escrow.room.deal_status" %}</span>
+            <strong>{{ deal.get_status_display }}</strong>
+          </div>
+          {% if payment %}
+          <div class="er-admin-row">
+            <span>{% t "escrow.room.payment_status" %}</span>
+            <strong>{{ payment.get_status_display }}</strong>
+          </div>
+          <div class="er-admin-row">
+            <span>{% t "escrow.room.transaction_id" %}</span>
+            <span class="er-mono">{{ payment.transaction_id }}</span>
+          </div>
+          <div class="er-admin-divider"></div>
+          <div class="er-admin-total">
+            <span>{% t "escrow.room.admin_amount" %}</span>
+            <strong>${{ payment.amount }}</strong>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- أزرار الإدارة -->
+      {% if deal.status != 'completed' and deal.status != 'cancelled' %}
+      <div class="er-admin-card er-admin-actions">
+        <div class="er-actions-title"><i class="fas fa-tools"></i> {% t "escrow.room.admin_actions" %}</div>
+
+        {% if can_run_finance_actions %}
+        <!-- تحرير للبائع -->
+        <form method="post" onsubmit="return confirm('{% t 'escrow.room.confirm_release' %}');" data-async-form>
+          {% csrf_token %}
+          <input type="hidden" name="action" value="release">
+          <button type="submit" class="er-btn er-btn-success">
+            <i class="fas fa-check-circle"></i> {% t "escrow.room.release_to_seller" %} {% if payment %}{{ payment.amount }}{% else %}{{ deal.price }}{% endif %}
+          </button>
+        </form>
+
+        <!-- استرداد للمشتري -->
+        <form method="post" onsubmit="return confirm('{% t 'escrow.room.confirm_refund' %}');" data-async-form>
+          {% csrf_token %}
+          <input type="hidden" name="action" value="refund">
+          <button type="submit" class="er-btn er-btn-warning" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: var(--navy); box-shadow: 0 4px 16px rgba(245,158,11,0.25);">
+            <i class="fas fa-undo"></i> {% t "escrow.room.refund_to_buyer" %}
+          </button>
+        </form>
+        {% endif %}
+
+        <!-- إلغاء الصفقة -->
+        {% if can_run_operations_actions or can_run_finance_actions %}
+        <form method="post" onsubmit="return confirm('{% t 'escrow.room.confirm_cancel' %}');" data-async-form>
+          {% csrf_token %}
+          <input type="hidden" name="action" value="cancel_deal">
+          <button type="submit" class="er-btn er-btn-danger">
+            <i class="fas fa-times-circle"></i> {% t "escrow.room.cancel_deal" %}
+          </button>
+        </form>
+        {% else %}
+        <div class="er-admin-alert" style="padding:14px;font-size:.82rem;">
+          <i class="fas fa-eye"></i>
+          {% if current_language == 'ar' %}صلاحيتك هنا للمراجعة وقراءة الأدلة فقط. القرارات المالية تحتاج مسؤول مالية.{% else %}Your access here is review-only. Financial decisions require a finance admin.{% endif %}
+        </div>
+        {% endif %}
+      </div>
+
+      {% elif deal.status == 'cancelled' %}
+      <div class="er-admin-alert er-alert-danger">
+        <i class="fas fa-times-circle"></i> {% t "escrow.room.deal_cancelled" %}
+      </div>
+
+      {% elif payment and payment.status == 'released' %}
+      <div class="er-admin-alert er-alert-success">
+        <i class="fas fa-check-circle"></i> {% t "escrow.room.already_released" %}
+      </div>
+
+      {% elif payment and payment.status == 'refunded' %}
+      <div class="er-admin-alert er-alert-danger">
+        <i class="fas fa-undo"></i> {% t "escrow.room.already_refunded" %}
+      </div>
+      {% endif %}
+
+      <!-- رابط الصفقة -->
+      <a href="{% url 'deal_detail' deal.id %}" class="er-btn er-btn-view">
+        <i class="fas fa-external-link-alt"></i> {% t "escrow.room.view_deal" %}
+      </a>
+
+      <!-- زر حذف الغرفة -->
+      {% if payment %}
+        {% if can_run_operations_actions %}
+        {% if payment.status == 'released' or payment.status == 'refunded' %}
+        <form method="post" onsubmit="return confirm('{% t 'escrow.room.confirm_delete' %}');" data-async-form>
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete_room">
+          <button type="submit" class="er-btn er-btn-dark">
+            <i class="fas fa-trash-alt"></i> {% t "escrow.room.delete_room" %}
+          </button>
+        </form>
+        {% endif %}
+        {% endif %}
+      {% endif %}
+
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<style>
+/* ══════════════════════════════════════
+   Escrow Room — Modern Chat UI
+══════════════════════════════════════ */
+.er-container { max-width: 960px; margin: 0 auto; padding: 24px 0 60px; }
+.er-header-info{flex:1;min-width:0}
+.er-payment-status{display:flex;align-items:center;margin-inline-start:auto}
+
+/* ── Header ── */
+.er-header {
+  background: linear-gradient(135deg, rgba(13, 27, 42, 0.95) 0%, rgba(26, 46, 69, 0.9) 100%), url("{% static 'images/brand/room-bg.webp' %}") center/cover no-repeat;
+  border-radius: 24px; padding: 24px 32px; margin-bottom: 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 20px; box-shadow: 0 16px 40px rgba(13,27,42,0.1);
+  animation: fadeUp .4s ease both;
+}
+.er-badge-pulse { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.er-dot { width: 10px; height: 10px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 12px #22c55e; animation: pulse 2s infinite; }
+.er-badge-pulse span { font-size: .75rem; color: rgba(255,255,255,0.6); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.er-title { color: white; font-weight: 900; margin: 0 0 8px; font-size: 1.4rem; letter-spacing: 0; }
+.er-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: .85rem; color: rgba(255,255,255,0.6); }
+.er-meta span { display: flex; align-items: center; gap: 6px; }
+.er-meta i { color: var(--gold); font-size: .75rem; }
+.er-meta strong { color: white; font-weight: 800; }
+
+.er-status-box { border-radius: 16px; padding: 12px 24px; text-align: center; border: 1.5px solid transparent; backdrop-filter: blur(10px); }
+.er-status-gold { background: rgba(201,150,59,0.15); border-color: rgba(201,150,59,0.3); }
+.er-status-success { background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.3); }
+.er-status-danger { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); }
+.er-status-lbl { font-size: .7rem; font-weight: 700; opacity: 0.7; margin-bottom: 2px; }
+.er-status-val { font-size: 1.6rem; font-weight: 900; font-family: 'Tajawal', sans-serif; line-height: 1.1; }
+.er-status-sub { font-size: .75rem; font-weight: 700; margin-top: 4px; }
+.er-status-gold .er-status-lbl, .er-status-gold .er-status-sub { color: var(--gold); }
+.er-status-gold .er-status-val { color: var(--gold-light); }
+.er-status-success .er-status-lbl, .er-status-success .er-status-sub { color: #22c55e; }
+.er-status-success .er-status-val { color: #4ade80; }
+.er-status-danger .er-status-lbl, .er-status-danger .er-status-sub { color: #ef4444; }
+.er-status-danger .er-status-val { color: #f87171; }
+
+.er-guide-strip { margin-bottom: 20px; }
+.er-guide-card {
+  background: linear-gradient(135deg, #FFFFFF, #F8FBFF);
+  border: 1px solid #E4ECF4;
+  border-radius: 20px;
+  padding: 18px 20px;
+  box-shadow: 0 10px 28px rgba(13,27,42,0.05);
+}
+.er-guide-card-success { border-color: rgba(34,197,94,0.22); background: linear-gradient(135deg, #F8FFF9, #F2FCF4); }
+.er-guide-card-danger { border-color: rgba(239,68,68,0.22); background: linear-gradient(135deg, #FFF8F8, #FFF3F3); }
+.er-guide-label { font-size: .75rem; font-weight: 900; color: var(--gold-dark); margin-bottom: 6px; }
+.er-guide-title { font-size: 1.05rem; font-weight: 900; color: var(--navy); margin-bottom: 6px; }
+.er-guide-text { font-size: .88rem; color: var(--text-secondary); font-weight: 600; line-height: 1.8; }
+
+/* ── Layout ── */
+.er-layout { display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start; }
+.er-layout.has-admin { grid-template-columns: 1fr 340px; }
+
+/* ── Chat Container ── */
+.er-chat-card {
+  background: rgba(255,255,255,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border-radius: 28px; box-shadow: 0 20px 50px rgba(13,27,42,0.06);
+  border: 1px solid rgba(255,255,255,0.6);
+  display: flex; flex-direction: column;
+  height: calc(var(--se-app-vh) - 220px);
+  min-height: 400px; overflow: hidden;
+  animation: fadeUp .5s .1s ease both;
+}
+@media (min-width: 769px) {
+  .er-chat-card { height: 680px; }
+}
+/* Scroll to Bottom */
+.er-scroll-bottom {
+  position: sticky; bottom: 12px; align-self: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy); border: none; cursor: pointer;
+  display: none; align-items: center; justify-content: center;
+  font-size: 1rem; box-shadow: 0 4px 16px rgba(201,150,59,0.4);
+  transition: all .3s cubic-bezier(.34,1.56,.64,1); z-index: 10;
+}
+.er-scroll-bottom.visible { display: flex; }
+.er-scroll-bottom:hover { transform: scale(1.15); }
+.er-chat-head {
+  padding: 20px 24px; border-bottom: 1px solid rgba(0,0,0,0.04);
+  display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.6);
+}
+.er-chat-icon {
+  width: 44px; height: 44px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--navy), #1A2E45);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; color: var(--gold); box-shadow: 0 4px 12px rgba(13,27,42,0.1);
+}
+.er-chat-name { font-weight: 900; font-size: 1rem; color: var(--navy); margin-bottom: 2px; }
+.er-chat-sub { font-size: .78rem; color: var(--text-secondary); font-weight: 600; }
+
+/* ── Chat Messages ── */
+.er-chat-body {
+  flex: 1; overflow-y: auto; padding: 24px;
+  display: flex; flex-direction: column; gap: 16px;
+  background: linear-gradient(180deg, rgba(248,250,251,0.5), rgba(240,244,248,0.5));
+  scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.1) transparent;
+}
+.er-chat-body::-webkit-scrollbar { width: 6px; }
+.er-chat-body::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 4px; }
+
+/* Admin Msg */
+.er-msg-admin-wrap { text-align: center; margin: 10px 0; }
+.er-msg-admin {
+  display: inline-block; background: linear-gradient(135deg, #1A2E45, var(--navy));
+  color: white; border-radius: 16px; padding: 10px 20px; font-size: .85rem; font-weight: 700;
+  max-width: 80%; box-shadow: 0 8px 24px rgba(13,27,42,0.15); line-height: 1.5;
+}
+  .er-msg-admin img { margin-left: 8px; vertical-align: middle; }
+
+/* Me Msg */
+.er-msg-me-wrap { display: flex; justify-content: flex-end; }
+.er-msg-me {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy); border-radius: 20px 20px 4px 20px;
+  padding: 12px 18px; max-width: 75%; font-size: .9rem; font-weight: 700;
+  box-shadow: 0 8px 24px rgba(201,150,59,0.25); line-height: 1.5;
+  position: relative; margin-left: auto;
+}
+.er-msg-me .er-time { font-size: .65rem; color: rgba(13,27,42,0.5); margin-top: 6px; text-align: right; font-weight: 800; }
+
+/* Other Msg */
+.er-msg-other-wrap { display: flex; justify-content: flex-start; gap: 12px; align-items: flex-end; }
+.er-msg-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 12px rgba(13,27,42,0.08); border: 2px solid white; flex-shrink: 0; }
+.er-msg-other {
+  background: white; color: var(--navy); border-radius: 20px 20px 20px 4px;
+  padding: 12px 18px; max-width: 75%; font-size: .9rem; font-weight: 600;
+  box-shadow: 0 8px 24px rgba(13,27,42,0.06); line-height: 1.5;
+  border: 1px solid rgba(0,0,0,0.02);
+}
+.er-msg-author { font-size: .7rem; color: var(--gold-dark); font-weight: 800; margin-bottom: 4px; }
+.er-msg-other .er-time { font-size: .65rem; color: var(--text-light); margin-top: 6px; text-align: left; font-weight: 700; }
+
+/* Empty Chat */
+.er-chat-empty { text-align: center; padding: 60px 20px; color: var(--text-light); }
+.er-chat-empty i { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.3; }
+.er-chat-empty div { font-size: .9rem; font-weight: 600; }
+
+/* ── Chat Input ── */
+.er-chat-footer { padding: 20px 24px; background: rgba(255,255,255,0.7); border-top: 1px solid rgba(0,0,0,0.04); }
+.er-chat-form {
+  display: flex; gap: 12px; align-items: center; background: white;
+  padding: 6px; border-radius: 30px; box-shadow: 0 8px 24px rgba(13,27,42,0.05);
+  border: 1.5px solid transparent; transition: border-color .3s;
+}
+.er-chat-form:focus-within { border-color: rgba(201,150,59,0.4); }
+.er-chat-input {
+  flex: 1; border: none; outline: none; padding: 12px 20px;
+  background: transparent; font-family: 'Cairo', sans-serif;
+  font-size: 16px; color: var(--navy); font-weight: 600;
+}
+.er-chat-input::placeholder { color: #A0AEC0; font-weight: 400; }
+.er-chat-submit {
+  width: 46px; height: 46px; border-radius: 50%; border: none;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 4px 12px rgba(201,150,59,0.3); flex-shrink: 0;
+}
+.er-chat-submit:hover { transform: scale(1.1); box-shadow: 0 8px 20px rgba(201,150,59,0.4); }
+.er-chat-submit i { font-size: 1rem; margin-left: -2px; }
+
+.er-chat-closed {
+  padding: 16px; background: #FEF2F2; border-top: 1px solid #FECACA;
+  text-align: center; font-size: .88rem; color: #991B1B; font-weight: 800;
+}
+
+/* ── Admin Panel ── */
+.er-admin-panel { display: flex; flex-direction: column; gap: 20px; animation: fadeUp .5s .2s ease both; }
+.er-admin-card {
+  background: white; border-radius: 20px; box-shadow: 0 12px 32px rgba(13,27,42,0.06);
+  border: 1px solid rgba(0,0,0,0.03); overflow: hidden;
+}
+.er-admin-head { background: linear-gradient(135deg, var(--navy), #1A2E45); padding: 16px 20px; font-size: .8rem; color: rgba(255,255,255,0.7); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.er-admin-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.er-admin-row { display: flex; justify-content: space-between; align-items: center; font-size: .85rem; }
+.er-admin-row span { color: var(--text-secondary); font-weight: 600; }
+.er-admin-row strong { color: var(--navy); font-weight: 800; }
+.er-mono { font-family: monospace; font-size: .75rem!important; padding: 2px 6px; background: #F0F4F8; border-radius: 4px; font-weight: 700; color: var(--navy); }
+.er-admin-divider { height: 1px; background: #F0F4F8; margin: 4px 0; }
+.er-admin-total { display: flex; justify-content: space-between; align-items: center; font-size: .95rem; }
+.er-admin-total span { font-weight: 800; color: var(--navy); }
+.er-admin-total strong { font-weight: 900; color: var(--gold-dark); font-size: 1.2rem; }
+
+.er-admin-actions { padding: 20px; }
+.er-actions-title { font-size: .9rem; font-weight: 800; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.er-actions-title i { color: var(--gold); }
+
+.er-btn {
+  width: 100%; padding: 14px; border: none; border-radius: 14px;
+  font-family: 'Cairo', sans-serif; font-size: .9rem; font-weight: 800;
+  cursor: pointer; transition: all .3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px;
+}
+.er-btn:last-child { margin-bottom: 0; }
+.er-btn-success { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; box-shadow: 0 4px 16px rgba(34,197,94,0.25); }
+.er-btn-success:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(34,197,94,0.35); }
+.er-btn-danger { background: linear-gradient(135deg, #dc2626, #ef4444); color: white; box-shadow: 0 4px 16px rgba(239,68,68,0.25); }
+.er-btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(239,68,68,0.35); }
+.er-btn-view { background: #F0F4F8; color: var(--navy); text-decoration: none; border: 1px solid #E0E8F0; }
+.er-btn-view:hover { background: white; border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(13,27,42,0.06); color: var(--navy); }
+.er-btn-dark { background: linear-gradient(135deg, #374151, #4B5563); color: white; box-shadow: 0 4px 16px rgba(55,65,81,0.2); }
+.er-btn-dark:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(55,65,81,0.3); }
+
+.er-admin-alert { border-radius: 16px; padding: 20px; text-align: center; font-size: .9rem; font-weight: 800; border: 1.5px solid transparent; }
+.er-admin-alert i { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+.er-alert-success { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; }
+.er-alert-danger { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
+
+@media(max-width:900px) {
+  .er-container { padding: 16px 0 28px; }
+  .er-layout.has-admin { grid-template-columns: 1fr; }
+  .er-header { flex-direction: column; align-items: flex-start; padding: 22px 20px; border-radius: 22px; }
+  .er-payment-status { width: 100%; display: flex; }
+  .er-status-box { width: 100%; }
+  .er-chat-card { min-height: 340px; }
+  .er-chat-body { padding: 16px 14px; }
+  .er-chat-footer { padding: 14px; }
+  .er-admin-panel { gap: 16px; }
+}
+
+@media(max-width:640px) {
+  .er-title { font-size: 1.16rem; line-height: 1.55; }
+  .er-meta { gap: 10px; font-size: .8rem; }
+  .er-guide-card { padding: 16px 16px 18px; border-radius: 18px; }
+  .er-guide-title { font-size: .97rem; }
+  .er-guide-text { font-size: .84rem; line-height: 1.75; }
+  .er-chat-card { border-radius: 22px; min-height: 320px; }
+  .er-chat-head { padding: 16px 16px 14px; }
+  .er-chat-icon { width: 40px; height: 40px; border-radius: 12px; }
+  .er-chat-name { font-size: .94rem; }
+  .er-chat-sub { font-size: .74rem; }
+  .er-msg-admin { max-width: 92%; padding: 10px 14px; font-size: .8rem; }
+  .er-msg-me,
+  .er-msg-other { max-width: 86%; padding: 11px 14px; font-size: .84rem; }
+  .er-msg-avatar { width: 32px; height: 32px; }
+  .er-chat-footer { padding: 12px; }
+  .er-chat-form { gap: 8px; padding: 5px 5px 5px 10px; }
+  .er-chat-input { padding: 12px 8px; font-size: 16px; }
+  .er-chat-submit { width: 44px; height: 44px; }
+  .er-admin-card { border-radius: 18px; }
+  .er-admin-head { padding: 14px 16px; font-size: .76rem; }
+  .er-admin-body,
+  .er-admin-actions { padding: 16px; }
+  .er-admin-row { gap: 10px; align-items: flex-start; }
+  .er-admin-row strong,
+  .er-admin-row span { text-align: left; }
+}
+
+@media(max-width:420px) {
+  .er-header { padding: 20px 16px; border-radius: 20px; }
+  .er-badge-pulse span { font-size: .68rem; letter-spacing: .6px; }
+  .er-status-box { padding: 12px 16px; border-radius: 14px; }
+  .er-status-val { font-size: 1.35rem; }
+  .er-chat-card { min-height: 300px; border-radius: 20px; }
+  .er-chat-body { padding: 14px 12px; gap: 12px; }
+  .er-msg-other-wrap { gap: 8px; }
+  .er-msg-me,
+  .er-msg-other { max-width: 90%; font-size: .82rem; }
+  .er-chat-empty { padding: 48px 16px; }
+  .er-btn { min-height: 50px; padding: 13px 12px; font-size: .84rem; }
+  .er-admin-alert { padding: 16px; font-size: .84rem; }
+}
+</style>
+{% include "partials/_rooms_light_styles.html" %}
+<link rel="stylesheet" href="{% static 'css/deal_escrow_premium.css' %}?v=20260525a">
+
+<script>
+  const chatBox = document.getElementById('chatBox');
+  const erChatCard = document.querySelector('.er-chat-card');
+  const erChatHead = document.querySelector('.er-chat-head');
+  const erChatFooter = document.querySelector('.er-chat-footer');
+  const erChatInput = document.querySelector('.er-chat-input');
+  if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, function(char) {
+      return ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      })[char];
+    });
+  }
+
+  // Scroll-to-Bottom Button
+  const erScrollBtn = document.getElementById('erScrollBtn');
+  if (chatBox && erScrollBtn) {
+    chatBox.addEventListener('scroll', function() {
+      const nearBottom = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight < 150;
+      erScrollBtn.classList.toggle('visible', !nearBottom);
+    });
+  }
+  function smartScrollEscrow() {
+    if (!chatBox) return;
+    const near = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight < 200;
+    if (near) chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  function viewportHeight() {
+    return window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  }
+
+  function resizeEscrowChatLayout() {
+    if (!erChatCard || !chatBox || !erChatHead) return;
+
+    const cardTop = Math.max(erChatCard.getBoundingClientRect().top, 0);
+    const minCardHeight = window.innerWidth <= 900 ? 340 : 520;
+    const reservedBottom = window.innerWidth <= 900 ? 10 : 18;
+    const cardHeight = Math.max(viewportHeight() - cardTop - reservedBottom, minCardHeight);
+    const footerHeight = erChatFooter ? erChatFooter.offsetHeight : 0;
+    const bodyHeight = Math.max(cardHeight - erChatHead.offsetHeight - footerHeight, window.innerWidth <= 900 ? 180 : 260);
+
+    erChatCard.style.height = `${cardHeight}px`;
+    chatBox.style.height = `${bodyHeight}px`;
+  }
+
+  function keepEscrowComposerVisible() {
+    if (!erChatFooter) return;
+    window.setTimeout(() => {
+      erChatFooter.scrollIntoView({ block: 'end', inline: 'nearest' });
+      smartScrollEscrow();
+    }, 180);
+  }
+
+  // ══ WebSocket Connection ══
+  const wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+  const wsUrl = `${wsScheme}://${window.location.host}/ws/escrow/{{ deal.id }}/`;
+  let escrowWS;
+  let reconnectTimer;
+
+  function connectEscrowWS() {
+    escrowWS = new WebSocket(wsUrl);
+
+    escrowWS.onopen = () => {
+      clearTimeout(reconnectTimer);
+    };
+
+    escrowWS.onmessage = (event) => {
+      const msg = JSON.parse(event.data);
+      if (msg.type !== 'chat_message') return;
+
+      const div = document.createElement('div');
+      const safeText = escapeHtml(msg.text);
+      const safeTime = escapeHtml(msg.time);
+      const safeUsername = escapeHtml(msg.username);
+      const safeAvatar = escapeHtml(msg.avatar);
+
+      if (msg.is_admin) {
+        div.className = "er-msg-admin-wrap";
+        div.innerHTML = `<div class="er-msg-admin"><img src="/static/images/brand/logo-black-small.webp" alt="Saf" class="se-brand-logo-admin-note" width="520" height="150" loading="lazy" decoding="async">${safeText}<div class="er-time">${safeTime}</div></div>`;
+      } else if (msg.is_me) {
+        div.className = "er-msg-me-wrap";
+        div.innerHTML = `<div class="er-msg-me">${safeText}<div class="er-time">${safeTime}</div></div>`;
+      } else {
+        div.className = "er-msg-other-wrap";
+        div.innerHTML = `<img src="${safeAvatar}" alt="${safeUsername}" class="er-msg-avatar"><div class="er-msg-other"><div class="er-msg-author">${safeUsername}</div>${safeText}<div class="er-time">${safeTime}</div></div>`;
+      }
+
+      chatBox.appendChild(div);
+      smartScrollEscrow();
+    };
+
+    escrowWS.onclose = () => {
+      clearTimeout(reconnectTimer);
+      reconnectTimer = setTimeout(connectEscrowWS, document.hidden ? 12000 : 5000);
+    };
+  }
+
+  connectEscrowWS();
+
+  // ══ إرسال الرسائل (WebSocket مع Fallback للـ POST العادي) ══
+  const chatForm = document.querySelector('.er-chat-form');
+  if (chatForm) {
+    chatForm.addEventListener('submit', function(e) {
+      const input = this.querySelector('.er-chat-input');
+      const text = input.value.trim();
+      
+      if (!text) {
+        e.preventDefault();
+        return;
+      }
+      
+      // إذا كان الاتصال متاحاً، أرسل عبر WebSocket لمنع إعادة تحميل الصفحة
+      if (escrowWS && escrowWS.readyState === WebSocket.OPEN) {
+        e.preventDefault();
+        escrowWS.send(JSON.stringify({ text: text }));
+        input.value = '';
+        window.setTimeout(() => input.focus(), 0);
+      }
+      // إذا لم يكن متاحاً، سيتم تنفيذ Form Submit العادي (POST)
+    });
+  }
+  erChatInput?.addEventListener('focus', function() {
+    resizeEscrowChatLayout();
+    keepEscrowComposerVisible();
+  });
+
+  erChatInput?.addEventListener('click', function() {
+    window.setTimeout(() => {
+      resizeEscrowChatLayout();
+      keepEscrowComposerVisible();
+    }, 120);
+  });
+
+  window.addEventListener('resize', resizeEscrowChatLayout);
+  window.addEventListener('orientationchange', resizeEscrowChatLayout);
+  window.visualViewport?.addEventListener('resize', resizeEscrowChatLayout);
+  window.visualViewport?.addEventListener('scroll', resizeEscrowChatLayout);
+  resizeEscrowChatLayout();
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script defer src="{% static 'js/deal_escrow_premium.js' %}?v=20260523b"></script>
+{% endblock %}

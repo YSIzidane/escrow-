@@ -1,0 +1,10 @@
+{
+  "venvPath": ".",
+  "executionEnvironments": [
+    {
+      "root": ".",
+      "extraPaths": ["."]
+    }
+  ],
+  "reportMissingImports": "warning"
+}

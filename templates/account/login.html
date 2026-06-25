@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load static site_i18n i18n account socialaccount allauth %}
+
+{% block title %}{% t "login.title" %} - SafouaneEscrow{% endblock %}
+{% block page_type %}login{% endblock %}
+
+{% block meta %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+<main class="saas-login-container">
+  <!-- Left Side: Login Form -->
+  <section class="saas-login-form-section">
+    <div class="saas-form-wrapper">
+      <div class="saas-brand-mobile">
+        <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" width="520" height="150" decoding="async" fetchpriority="high">
+      </div>
+
+      <header class="saas-form-header">
+        <div class="saas-badge saas-secure-badge">
+          <i class="fas fa-shield-halved"></i> {% t "login.secure_badge" %}
+        </div>
+        <h1>{% t "login.heading" %}</h1>
+        <p>{% t "login.subtitle" %}</p>
+      </header>
+
+      {% if redirect_field_value %}
+      <div class="saas-return-note">
+        <div class="saas-note-icon"><i class="fas fa-arrow-rotate-left"></i></div>
+        <div>
+          <strong>{% t "login.return_notice_title" %}</strong>
+          <p>
+            {% if '/pay/' in redirect_field_value %}
+            {% t "login.return_notice_buy" %}
+            {% elif '/escrow/' in redirect_field_value or '/rooms/' in redirect_field_value or '/chat/' in redirect_field_value %}
+            {% t "login.return_notice_room" %}
+            {% elif '/staff/' in redirect_field_value or '/admin-panel/' in redirect_field_value or '/admin/' in redirect_field_value %}
+            {% t "login.return_notice_admin" %}
+            {% else %}
+            {% t "login.return_notice_default" %}
+            {% endif %}
+          </p>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if form.non_field_errors %}
+      <div class="saas-alert saas-alert-error" role="alert" aria-live="assertive">
+        <i class="fas fa-circle-exclamation"></i>
+        <span>{{ form.non_field_errors.0 }}</span>
+      </div>
+      {% elif form.errors %}
+      <div class="saas-alert saas-alert-error" role="alert" aria-live="assertive">
+        <i class="fas fa-circle-exclamation"></i>
+        <span>{% t "login.invalid_credentials" %}</span>
+      </div>
+      {% endif %}
+
+      <form method="post" id="loginForm" action="{% url 'account_login' %}" class="saas-form" novalidate>
+        {% csrf_token %}
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+        {% endif %}
+
+        <div class="saas-input-group">
+          <label for="id_login">{% t "login.email" %}</label>
+          <div style="position: relative; width: 100%;">
+            <input type="email" name="login" id="id_login" placeholder="{% t 'login.email_placeholder' %}" value="{{ form.login.value|default:'' }}" required autofocus autocomplete="email" style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; color: white; font-size: 14px; outline: none;" onfocus="this.style.border = '1px solid #4f8ef7'; this.style.boxShadow = '0 0 0 3px rgba(79,142,247,0.15)';" onblur="this.style.border = '1px solid rgba(255,255,255,0.14)'; this.style.boxShadow = 'none';">
+            <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); cursor: default; display: flex; align-items: center;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+            </span>
+          </div>
+          {% if form.login.errors %}
+          <small class="saas-field-error" id="login-error">{{ form.login.errors.0 }}</small>
+          {% endif %}
+        </div>
+
+        <div class="saas-input-group">
+          <div class="saas-label-row">
+            <label for="passwordInput">{% t "login.password" %}</label>
+          </div>
+          <div style="position: relative; width: 100%;">
+            <input type="password" name="password" id="passwordInput" placeholder="{% t 'login.password_placeholder' %}" required autocomplete="current-password" style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; color: white; font-size: 14px; outline: none;" onfocus="this.style.border = '1px solid #4f8ef7'; this.style.boxShadow = '0 0 0 3px rgba(79,142,247,0.15)';" onblur="this.style.border = '1px solid rgba(255,255,255,0.14)'; this.style.boxShadow = 'none';">
+            <span data-password-toggle="passwordInput" role="button" tabindex="0" aria-label="{% t 'login.toggle_password' %}" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </span>
+          </div>
+          {% if form.password.errors %}
+          <small class="saas-field-error" id="password-error">{{ form.password.errors.0 }}</small>
+          {% endif %}
+        </div>
+
+        <div class="saas-form-options">
+          <label class="saas-checkbox saas-remember-toggle">
+            <input type="checkbox" name="remember" id="id_remember" {% if form.remember.value or request.POST.remember %}checked{% endif %}>
+            <span class="checkmark"></span>
+            <span class="label-text">{% t "login.remember_me" %}</span>
+          </label>
+          <a href="{% url 'account_reset_password' %}" class="saas-forgot-link">{% t "login.forgot_password" %}</a>
+        </div>
+
+        <button type="submit" class="saas-submit-btn" id="loginBtn">
+          <span>{% t "login.submit" %}</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+
+      {% get_providers as socialaccount_providers %}
+      {% if socialaccount_providers %}
+      <div class="saas-divider">
+        <span>{% t "login.or_continue_with" %}</span>
+      </div>
+
+      <div class="saas-social-login">
+        {% for provider in socialaccount_providers %}
+        {% if provider.id == "google" %}
+        <a href="{% if redirect_field_value %}{% provider_login_url provider.id process='login' next=redirect_field_value %}{% else %}{% provider_login_url provider.id process='login' %}{% endif %}" class="saas-social-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+          </svg>
+          <span>{% t "login.continue_with_google" %}</span>
+        </a>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <footer class="saas-form-footer">
+        <p>{% t "login.no_account" %} <a href="{% url 'account_signup' %}{% if redirect_field_value %}?{{ redirect_field_name }}={{ redirect_field_value|urlencode }}{% endif %}" data-auth-switch>{% t "login.register_now" %}</a></p>
+      </footer>
+
+      <div class="saas-security-note saas-trust-strip" aria-label="{% t 'account.trust_signals' %}">
+        <span class="trust-item"><i class="fas fa-lock" aria-hidden="true"></i><span>{% t "login.trust_encrypted" %}</span></span>
+        <span class="trust-item"><i class="fas fa-vault" aria-hidden="true"></i><span>{% t "login.trust_funds" %}</span></span>
+        <span class="trust-item"><i class="fas fa-circle-check" aria-hidden="true"></i><span>{% t "login.trust_monitoring" %}</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Right Side: Visual Section -->
+  <section class="saas-login-visual">
+    <div class="visual-background">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="grid-overlay"></div>
+
+      <div class="abstract-ring ring-1"></div>
+      <div class="abstract-ring ring-2"></div>
+    </div>
+
+    <div class="visual-overlay"></div>
+
+    <div class="visual-content">
+      <div class="visual-badge">{% t "login.visual_badge" %}</div>
+      <h2><span class="hero-headline-line">{% t "login.visual_title_1" %}</span><br><span class="highlight hero-headline-line hero-headline-delay">{% t "login.visual_title_2" %}</span></h2>
+      <p>{% t "login.visual_body" %}</p>
+    </div>
+  </section>
+</main>
+
+{% include "account/_auth_pages_shared.html" %}
+
+<style>
+  /* ── Login-Specific Overrides ─── */
+
+  /* Navbar: Hide login button (we're on login), show register CTA */
+  body[data-page="login"] .se-nav-auth .se-btn-login { display: none !important; }
+
+  body[data-page="login"] .se-btn-register {
+    background: linear-gradient(135deg, var(--saas-accent), var(--saas-accent-hover)) !important;
+    border: 1px solid rgba(14,165,255,0.32) !important;
+    color: #fff !important;
+    box-shadow: 0 12px 26px rgba(37,99,235,0.22) !important;
+  }
+  body[data-page="login"] .se-btn-register:hover {
+    background: linear-gradient(135deg, #38BDF8, #4338CA) !important;
+    transform: translateY(-1px) !important;
+  }
+</style>
+
+<script>
+  // Password toggle
+  document.querySelectorAll("[data-password-toggle]").forEach((button) => {
+    button.addEventListener("click", function () {
+      const input = document.getElementById(this.dataset.passwordToggle);
+      if (!input) return;
+
+      const shouldShow = input.type === "password";
+      input.type = shouldShow ? "text" : "password";
+      this.setAttribute("aria-pressed", String(shouldShow));
+    });
+  });
+
+  // Login form loading state
+  const loginForm = document.getElementById("loginForm");
+  if (loginForm) {
+    loginForm.addEventListener("submit", function () {
+      const btn = document.getElementById("loginBtn");
+      if (!btn) return;
+      btn.disabled = true;
+      btn.style.opacity = "0.8";
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm" style="margin-inline-end: 8px; width: 1.1rem; height: 1.1rem;"></span> {% t "login.loading" %}';
+    });
+  }
+</script>
+{% endblock %}

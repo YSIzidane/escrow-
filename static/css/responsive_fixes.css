@@ -1,0 +1,779 @@
+/* ============================================================
+   SafouaneEscrow — Responsive & Overflow Fixes v1.0
+   يصلح مشاكل الخروج عن الإطار ويحسن تجربة الهاتف والبيسي
+   يُضاف بعد improvements.css
+   ============================================================ */
+
+/* ══════════════════════════════════════════════════════════════
+   1. GLOBAL OVERFLOW PREVENTION
+══════════════════════════════════════════════════════════════ */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Prevent any element from causing horizontal scroll */
+img, video, iframe, embed, object, svg, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ensure text doesn't break out of containers */
+h1, h2, h3, h4, h5, h6, p, span, a, li, td, th, label, div {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2. MAIN CONTENT — Safe Padding
+══════════════════════════════════════════════════════════════ */
+.se-main {
+  padding-left: max(12px, env(safe-area-inset-left));
+  padding-right: max(12px, env(safe-area-inset-right));
+  overflow-x: clip;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3. HERO SECTION — Fix overflow & edge bleed
+══════════════════════════════════════════════════════════════ */
+
+/* Fix negative margins causing horizontal overflow */
+.se2-hero {
+  margin-left: 0;
+  margin-right: 0;
+  margin-left: calc(-1 * max(12px, env(safe-area-inset-left)));
+  margin-right: calc(-1 * max(12px, env(safe-area-inset-right)));
+  width: auto;
+  overflow: hidden; /* Clip all glows/particles */
+}
+
+/* Contain glow effects to prevent overflow */
+.se2-hero-glow {
+  contain: layout;
+}
+
+.hero {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4. HERO INNER — Better sizing
+══════════════════════════════════════════════════════════════ */
+.se2-hero-inner {
+  max-width: min(850px, calc(100vw - 40px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5. ACTION BUTTONS — Prevent overflow on hero
+══════════════════════════════════════════════════════════════ */
+.se2-actions {
+  max-width: 100%;
+}
+
+.se2-actions a {
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.se2-btn-play {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6. STATS BAR — Prevent edge overflow
+══════════════════════════════════════════════════════════════ */
+.se2-statsbar {
+  max-width: calc(100vw - 32px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.se2-sbar-num {
+  word-break: break-word;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7. DEALS GRID — Prevent card overflow
+══════════════════════════════════════════════════════════════ */
+.se2-deals-grid {
+  overflow: hidden;
+}
+
+.se2-deal-card {
+  min-width: 0; /* Prevent flex/grid children from overflowing */
+}
+
+.se2-deal-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.se2-deal-body {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   8. HOW IT WORKS — Fix step overflow
+══════════════════════════════════════════════════════════════ */
+.se2-how-section {
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.se2-steps {
+  overflow: hidden;
+}
+
+.se2-step p {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   9. CTA SECTION — Fix button & text overflow
+══════════════════════════════════════════════════════════════ */
+.se2-cta {
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.se2-cta-inner {
+  max-width: 100%;
+}
+
+.se2-cta-title {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.se2-cta-btns {
+  max-width: 100%;
+}
+
+.se2-cta-btns a {
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   10. SECTIONS — Constrain widths
+══════════════════════════════════════════════════════════════ */
+.se2-section {
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.se2-section-head {
+  padding: 0 8px;
+}
+
+.se2-view-all {
+  padding: 0 8px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   11. NAVBAR — Better mobile fit (overflow-x only, keep dropdown visible)
+══════════════════════════════════════════════════════════════ */
+.se-navbar {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.se-navbar-inner {
+  max-width: 100%;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   11b. NAVBAR OVERFLOW PREVENTION
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 576px) {
+  .se-navbar-inner > * {
+    flex-shrink: 1 !important; /* Allow items to shrink to fit screen */
+  }
+  
+  .se-logo {
+    min-width: 0;
+    margin-inline-end: 0 !important; /* Remove margin that pushes content out */
+    flex-shrink: 2 !important; /* Allow logo to shrink more than buttons */
+  }
+  
+  .se-logo-img {
+    max-width: 100%;
+    height: auto;
+    max-height: 38px; /* Slightly smaller on mobile to ensure fit */
+  }
+  
+  .se-user-btn {
+    min-width: 0;
+    padding: 4px 8px !important;
+  }
+  
+  .se-lang-btn, .se-notif-btn, .se-mob-toggle {
+    min-width: 34px !important;
+  }
+  
+  .se-navbar-inner {
+    padding: 0 10px !important;
+    gap: 4px !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   12. FOOTER — Contain text
+══════════════════════════════════════════════════════════════ */
+.se-footer {
+  overflow: hidden;
+}
+
+.se-footer-links {
+  flex-wrap: wrap;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   13. FORMS & TABLES — Prevent overflow
+══════════════════════════════════════════════════════════════ */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+input, textarea, select {
+  max-width: 100%;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   14. CARDS — General overflow safety
+══════════════════════════════════════════════════════════════ */
+.card,
+.se-deal-card,
+.se2-deal-card {
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.card-body {
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   15. MOBILE RESPONSIVE IMPROVEMENTS
+══════════════════════════════════════════════════════════════ */
+
+/* ── Very small phones (≤ 380px) ── */
+@media (max-width: 380px) {
+  .se2-hero-inner {
+    padding: 28px 14px;
+    border-radius: 16px;
+    margin-top: 10px;
+  }
+
+  .se2-title {
+    font-size: 1.8rem !important;
+    letter-spacing: -1px;
+  }
+
+  .se2-desc {
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .se2-badge {
+    font-size: 0.72rem;
+    padding: 6px 14px;
+  }
+
+  .se2-btn-primary {
+    padding: 12px 20px;
+    font-size: 0.92rem;
+  }
+
+  .se2-btn-secondary {
+    padding: 10px 18px;
+    font-size: 0.92rem;
+  }
+
+  .se2-section-title {
+    font-size: 1.4rem !important;
+  }
+
+  .se2-section-sub {
+    font-size: 0.82rem;
+  }
+
+  .se2-cta {
+    padding: 28px 14px;
+    border-radius: 16px;
+  }
+
+  .se2-cta-title {
+    font-size: 1.4rem;
+  }
+
+  .se2-cta-btns {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .se2-cta-btns a {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .se2-how-section {
+    padding: 36px 16px;
+    border-radius: 16px;
+  }
+
+  .se-main {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .se-content-glass {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  /* Smaller buttons in hero */
+  .se2-btn-play {
+    flex-direction: row;
+    gap: 8px;
+    font-size: 0.88rem;
+  }
+
+  .se2-play-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ── Standard phones (≤ 576px) ── */
+@media (max-width: 576px) {
+  .se-main {
+    padding: 10px 10px 42px;
+  }
+
+  .se2-hero {
+    min-height: 80vh;
+    padding-bottom: 36px;
+  }
+
+  .se2-hero-inner {
+    padding: 32px 18px;
+    border-radius: 18px;
+  }
+
+  .se2-title {
+    font-size: 2rem;
+    margin-bottom: 16px;
+  }
+
+  .se2-desc {
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+
+  /* Buttons stack full width */
+  .se2-actions {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .se2-actions a {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+  }
+
+  .se2-btn-play {
+    justify-content: center;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  /* Stats bar compact */
+  .se2-statsbar {
+    margin: -20px 10px 32px;
+    border-radius: 16px;
+  }
+
+  .se2-statsbar-inner {
+    padding: 16px;
+  }
+
+  /* Section titles smaller */
+  .se2-section-title {
+    font-size: 1.5rem;
+    padding: 0 4px;
+  }
+
+  .se2-section-sub {
+    font-size: 0.85rem;
+    padding: 0 4px;
+  }
+
+  /* Deal cards: horizontal layout */
+  .se2-deal-card {
+    border-radius: 14px;
+  }
+
+  .se2-deal-img-wrap {
+    width: 100px;
+  }
+
+  .se2-deal-body {
+    padding: 10px;
+  }
+
+  .se2-deal-footer {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .se2-deal-price {
+    font-size: 0.95rem;
+  }
+
+  .se2-deal-seller span {
+    font-size: 0.68rem;
+  }
+
+  /* CTA section */
+  .se2-cta {
+    padding: 32px 18px;
+    border-radius: 18px;
+  }
+
+  .se2-cta-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .se2-cta-title {
+    font-size: 1.5rem;
+  }
+
+  .se2-cta-btns {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .se2-cta-btns a {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* How it works */
+  .se2-how-section {
+    padding: 40px 18px;
+    border-radius: 18px;
+    margin-bottom: 40px;
+  }
+
+  .se2-step-icon {
+    width: 64px;
+    height: 64px;
+    font-size: 1.4rem;
+  }
+
+  .se2-step h3 {
+    font-size: 0.88rem;
+  }
+
+  .se2-step p {
+    font-size: 0.78rem;
+  }
+
+  .se2-step-connector {
+    padding-top: 0;
+  }
+
+  .se2-step-connector span {
+    width: 2px;
+    height: 24px;
+  }
+
+  /* View all button */
+  .se2-view-all-btn {
+    padding: 11px 24px;
+    font-size: 0.85rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Footer */
+  .se-footer {
+    padding: 18px 14px;
+  }
+
+  .se-footer-brand {
+    font-size: 0.8rem;
+  }
+
+  .se-footer-links {
+    gap: 10px;
+  }
+
+  .se-footer-links a {
+    font-size: 0.75rem;
+  }
+}
+
+/* ── Tablets (577px — 768px) ── */
+@media (min-width: 577px) and (max-width: 768px) {
+  .se-main {
+    padding: 18px 16px 48px;
+  }
+
+  .se2-hero-inner {
+    padding: 40px 28px;
+    max-width: 600px;
+  }
+
+  .se2-title {
+    font-size: 2.4rem;
+  }
+
+  .se2-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .se2-actions a {
+    flex: 0 0 auto;
+  }
+
+  .se2-statsbar {
+    max-width: 90%;
+  }
+
+  .se2-cta-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 24px;
+  }
+
+  .se2-cta-btns {
+    justify-content: center;
+  }
+}
+
+/* ── Desktop improvements (≥ 769px) ── */
+@media (min-width: 769px) {
+  .se-main {
+    padding: 24px 20px 60px;
+  }
+
+  .se2-hero-inner {
+    max-width: min(850px, calc(100vw - 80px));
+  }
+
+  .se2-statsbar {
+    max-width: min(1050px, calc(100vw - 60px));
+  }
+
+  /* Ensure CTA stays in bounds */
+  .se2-cta {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* ── Large desktop (≥ 1200px) ── */
+@media (min-width: 1200px) {
+  .se-main {
+    padding: 28px 24px 60px;
+  }
+
+  .se2-hero-inner {
+    max-width: 850px;
+  }
+
+  .se2-statsbar {
+    max-width: 1050px;
+  }
+
+  .se2-deals-grid {
+    gap: 24px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   16. SPECIFIC PAGE FIXES
+══════════════════════════════════════════════════════════════ */
+
+/* Profile page cards overflow */
+.se-content-glass {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Chat messages overflow */
+.message p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Support ticket text overflow */
+.se-product-title,
+.se-dr-title {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Admin dashboard stats */
+.se-dr-stats {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Ensure deal detail page buttons don't overflow */
+.se-buy-box {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.se-buy-box .btn {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* Filter panel on deals page */
+.se-filter-panel {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   17. TOUCH DEVICE OPTIMIZATIONS
+══════════════════════════════════════════════════════════════ */
+@media (hover: none) and (pointer: coarse) {
+  /* Disable hover transforms on touch */
+  .se2-deal-card:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(13, 27, 42, .05);
+  }
+
+  .se2-sbar-item:hover {
+    transform: none;
+  }
+
+  .se2-step:hover .se2-step-icon {
+    transform: none;
+    background: rgba(255, 255, 255, .05);
+    color: var(--gold-light);
+    box-shadow: none;
+  }
+
+  /* Better tap targets */
+  .se2-btn-primary,
+  .se2-btn-secondary,
+  .se2-view-all-btn,
+  .se2-btn-cta-main,
+  .se2-btn-cta-ghost {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Active state feedback */
+  .se2-btn-primary:active,
+  .se2-btn-secondary:active,
+  .se2-view-all-btn:active {
+    transform: scale(0.97);
+    transition: transform 0.1s;
+  }
+
+  .se2-deal-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   18. LANDSCAPE MOBILE
+══════════════════════════════════════════════════════════════ */
+@media (max-height: 500px) and (orientation: landscape) {
+  .se2-hero {
+    min-height: 100vh;
+    padding-bottom: 20px;
+  }
+
+  .se2-hero-inner {
+    padding: 24px 20px;
+    margin-top: 10px;
+  }
+
+  .se2-title {
+    font-size: 1.8rem;
+  }
+
+  .se2-desc {
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+  }
+
+  .se2-scroll-indicator {
+    display: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   19. SAFE AREA (notch devices)
+══════════════════════════════════════════════════════════════ */
+@supports (padding: max(0px)) {
+  .se-navbar-inner {
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
+  }
+
+  .se-footer {
+    padding-left: max(24px, env(safe-area-inset-left));
+    padding-right: max(24px, env(safe-area-inset-right));
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+
+  .se-bottom-nav {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   20. ANIMATION PERFORMANCE
+══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .se2-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

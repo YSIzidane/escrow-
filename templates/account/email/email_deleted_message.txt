@@ -1,0 +1,15 @@
+{% extends "account/email/base_message.txt" %}
+
+{% block content %}
+{% if current_language == 'ar' %}
+تم حذف عنوان البريد التالي من حسابك:
+{{ deleted_email }}
+
+إذا لم تكن أنت من قام بذلك، غيّر كلمة المرور فورًا.
+{% else %}
+The following email address was removed from your account:
+{{ deleted_email }}
+
+If you did not make this change, reset your password immediately.
+{% endif %}
+{% endblock %}

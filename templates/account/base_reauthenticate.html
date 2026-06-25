@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}{% if current_language == "ar" %}تأكيد الوصول{% else %}Confirm Access{% endif %}{% endblock %}
+{% block page_type %}account_reauthenticate{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5 auth-shell">
+  <div class="col-lg-5 col-md-7">
+    <div class="card border-0 auth-card">
+      <div class="auth-card-header">
+        <div class="auth-card-badge">
+          <i class="fas fa-lock"></i>
+          {% if current_language == "ar" %}خطوة حماية{% else %}Protected step{% endif %}
+        </div>
+
+        <div class="auth-card-icon">
+          <i class="fas fa-user-shield"></i>
+        </div>
+
+        <h3>{% if current_language == "ar" %}تأكيد الوصول للحساب{% else %}Confirm access to your account{% endif %}</h3>
+        <p>{% if current_language == "ar" %}أعد التحقق من هويتك لحماية الإعدادات والعمليات الحساسة داخل الحساب.{% else %}Reauthenticate to protect sensitive settings and important account actions.{% endif %}</p>
+      </div>
+
+      <div class="card-body auth-card-body">
+        {% block reauthenticate_content %}{% endblock %}
+
+        {% if reauthentication_alternatives %}
+        <div class="auth-alt-section">
+          <div class="auth-alt-title">{% if current_language == "ar" %}خيارات بديلة{% else %}Alternative options{% endif %}</div>
+          <div class="auth-alt-actions">
+            {% for alt in reauthentication_alternatives %}
+            <a href="{{ alt.url }}" class="btn auth-alt-btn">{{ alt.description }}</a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include "account/_auth_shell_styles.html" %}
+{% endblock %}

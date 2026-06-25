@@ -1,0 +1,99 @@
+{% load static site_i18n %}
+
+<div class="cm-friends-layout">
+  <section class="cm-panel cm-friends-panel">
+    <header class="cm-panel-head">
+      <div>
+        <h2>{% t "friends.list_title" %}</h2>
+        <p>{% t "friends.list_sub" %}</p>
+      </div>
+      <label class="cm-search cm-search-inline" for="friendSearch">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input
+          id="friendSearch"
+          type="search"
+          placeholder="{% t 'friends.search_placeholder' %}"
+          data-cm-filter-input
+          data-cm-filter-target="#friendsGrid"
+          data-cm-filter-item=".cm-friend-card"
+        >
+      </label>
+    </header>
+
+    {% if friends %}
+    <div class="cm-friends-grid" id="friendsGrid">
+      {% for friend in friends %}
+      <article class="cm-friend-card" data-cm-filter-name="{{ friend.username|lower }}">
+        <span class="cm-presence" aria-hidden="true"></span>
+        <img class="cm-avatar-lg" src="{{ friend.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ friend.username }}" loading="lazy">
+        <div class="cm-friend-main">
+          <strong>{{ friend.username }}{% verification_badge friend.profile %}</strong>
+          <span>{{ friend.published_deals_count|default:0 }} {% t "friends.published_deals" %}</span>
+        </div>
+        <div class="cm-card-actions">
+          <a href="{% url 'private_chat' friend.id %}" class="cm-btn cm-btn-primary">
+            <i class="fas fa-comment" aria-hidden="true"></i>
+            <span>{% t "friends.chat" %}</span>
+          </a>
+          <a href="{% url 'user_profile' friend.id %}" class="cm-icon-action" aria-label="{% t 'private_chat.view_profile' %}">
+            <i class="fas fa-user" aria-hidden="true"></i>
+          </a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <section class="cm-empty">
+      <span class="cm-empty-icon"><i class="fas fa-user-friends" aria-hidden="true"></i></span>
+      <h2>{% t "friends.no_friends" %}</h2>
+      <p>{% t "friends.no_friends_sub" %}</p>
+      <a href="{% url 'search' %}" class="cm-btn cm-btn-primary">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <span>{% t "friends.search_btn" %}</span>
+      </a>
+    </section>
+    {% endif %}
+  </section>
+
+  <aside class="cm-side-stack" aria-label="{% t 'friends.incoming_requests' %}">
+    {% if pending_requests %}
+    <section class="cm-panel cm-requests-panel">
+      <header class="cm-panel-head">
+        <div>
+          <h2>{% t "friends.incoming_requests" %}</h2>
+          <p>{% t "friends.incoming_sub" %}</p>
+        </div>
+        <span class="cm-soft-pill">{{ pending_requests.count }}</span>
+      </header>
+
+      <div class="cm-request-list">
+        {% for req in pending_requests %}
+        <article class="cm-request-row">
+          <img src="{{ req.from_user.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ req.from_user.username }}" loading="lazy">
+          <span>
+            <strong>{{ req.from_user.username }}{% verification_badge req.from_user.profile %}</strong>
+            <small>{% t "friends.wants_to_add" %}</small>
+          </span>
+          <form method="post" action="{% url 'accept_friend_request' req.id %}" data-async-form>
+            {% csrf_token %}
+            <button type="submit" class="cm-btn cm-btn-primary">
+              <i class="fas fa-check" aria-hidden="true"></i>
+              <span>{% t "friends.accept" %}</span>
+            </button>
+          </form>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <section class="cm-panel cm-side-card">
+      <span class="cm-live">
+        <i aria-hidden="true"></i>
+        {% t "friends.safe_network" %}
+      </span>
+      <h2>{% t "friends.when_add_title" %}</h2>
+      <p>{% t "friends.when_add_sub" %}</p>
+    </section>
+  </aside>
+</div>

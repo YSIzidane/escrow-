@@ -1,0 +1,160 @@
+{% load site_i18n %}
+
+<div class="dl-results-head">
+  <div>
+    {% if deals %}
+      <strong>{{ deals.paginator.count }}</strong>
+      <span>{% t "deals.available_now" %}</span>
+      {% if search_query %}
+        <small>{% t "deals.for_search" %} "{{ search_query }}"</small>
+      {% endif %}
+    {% else %}
+      <strong>0</strong>
+      <span>{% t "deals.no_results" %}</span>
+    {% endif %}
+  </div>
+  <span class="dl-safe-chip">
+    <i class="fas fa-lock" aria-hidden="true"></i>
+    {% t "deals.safe_chip" %}
+  </span>
+</div>
+
+{% if deals %}
+<div class="dl-deals-grid" id="dealsGrid">
+  {% for deal in deals %}
+  <article class="dl-deal-card" style="--dl-delay: {{ forloop.counter0 }};">
+    <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="dl-deal-media" aria-label="{{ deal.product_title }}">
+      {% if deal.images.exists %}
+        <img src="{{ deal.images.first.image|file_url:'images/brand/deal-placeholder.webp' }}" alt="{{ deal.product_title }}" loading="lazy" decoding="async" width="640" height="420" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw">
+      {% else %}
+        <span class="dl-deal-fallback">
+          <i class="fas fa-image" aria-hidden="true"></i>
+        </span>
+      {% endif %}
+      <span class="dl-badge dl-badge-top">
+        {% if deal.is_auction %}
+          <i class="fas fa-gavel" aria-hidden="true"></i>{% t "deals.auction" %}
+        {% else %}
+          <i class="fas fa-tag" aria-hidden="true"></i>{% t "deals.fixed_price" %}
+        {% endif %}
+      </span>
+    </a>
+
+    <div class="dl-deal-body">
+      <div class="dl-deal-meta">
+        <span class="dl-category">
+          {% if deal.category == 'games' %}<i class="fas fa-gamepad" aria-hidden="true"></i>{% t "category.games" %}
+          {% elif deal.category == 'accounts' %}<i class="fas fa-user-circle" aria-hidden="true"></i>{% t "category.accounts" %}
+          {% elif deal.category == 'services' %}<i class="fas fa-screwdriver-wrench" aria-hidden="true"></i>{% t "category.services" %}
+          {% elif deal.category == 'electronics' %}<i class="fas fa-mobile-screen" aria-hidden="true"></i>{% t "category.electronics" %}
+          {% elif deal.category == 'digital' %}<i class="fas fa-cloud-arrow-down" aria-hidden="true"></i>{% t "category.digital" %}
+          {% elif deal.category == 'physical' %}<i class="fas fa-box" aria-hidden="true"></i>{% t "category.physical" %}
+          {% else %}<i class="fas fa-layer-group" aria-hidden="true"></i>{% t "category.other" %}
+          {% endif %}
+        </span>
+        <span class="dl-status {% if deal.status == 'new' %}is-live{% else %}is-reserved{% endif %}">
+          {% if deal.status == 'new' %}{% t "deals.available" %}{% else %}{% t "deals.reserved" %}{% endif %}
+        </span>
+      </div>
+
+      <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="dl-deal-title">
+        {{ deal.product_title|truncatechars:58 }}
+      </a>
+      <p>{{ deal.product_description|truncatechars:92 }}</p>
+
+      <div class="dl-price-row">
+        <div>
+          {% if deal.is_auction %}
+            <small>{% t "deals.starts_from" %}</small>
+            <strong>${{ deal.starting_price }}</strong>
+          {% else %}
+            <small>{% t "deals.fixed_price" %}</small>
+            <strong>${{ deal.price }}</strong>
+          {% endif %}
+        </div>
+        {% if deal.is_auction and deal.auction_ends_at %}
+        <time
+          class="dl-countdown"
+          data-auction-end="{{ deal.auction_ends_at|date:'c' }}"
+          data-ended-text="{% t 'deal.auction.ended' %}"
+          data-day-label="{% t 'deal.auction.day' %}"
+          data-hour-label="{% t 'deal.auction.hour_short' %}"
+        >
+          <i class="fas fa-clock" aria-hidden="true"></i>
+        </time>
+        {% endif %}
+      </div>
+
+      {% if deal.is_auction %}
+      <div class="dl-bid-line">
+        {% if deal.bids.exists %}
+          <i class="fas fa-arrow-trend-up" aria-hidden="true"></i>
+          {% t "deals.highest_bid" %} ${{ deal.bids.first.amount }}
+        {% else %}
+          <i class="fas fa-circle-dot" aria-hidden="true"></i>
+          {% t "deals.no_bids" %}
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <div class="dl-card-footer">
+        <a href="{% url 'user_profile' deal.seller.id %}" class="dl-seller">
+          <img src="{{ deal.seller.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ deal.seller.username }}" loading="lazy">
+          <span>
+            <b>{{ deal.seller.username }}</b>
+            <small>
+              {% if deal.seller.received_reviews.exists %}
+                {{ deal.seller.received_reviews.count }} {% t "deals.ratings_count" %}
+              {% else %}
+                {% t "deals.new_seller" %}
+              {% endif %}
+            </small>
+          </span>
+        </a>
+        <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="dl-icon-link" aria-label="{% t 'deals.quick_view' %}">
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if deals.has_other_pages %}
+<nav class="dl-pagination" aria-label="{% t "deals.pagination_label" %}">
+  {% if deals.has_previous %}
+    <a href="?page={{ deals.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" hx-get="?page={{ deals.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" hx-push-url="true" hx-target="#deals-container">
+      <i class="fas fa-chevron-right" aria-hidden="true"></i>
+    </a>
+  {% endif %}
+
+  {% for num in deals.paginator.page_range %}
+    {% if deals.number == num %}
+      <span class="is-active">{{ num }}</span>
+    {% else %}
+      <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" hx-get="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" hx-push-url="true" hx-target="#deals-container">{{ num }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if deals.has_next %}
+    <a href="?page={{ deals.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" hx-get="?page={{ deals.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" hx-push-url="true" hx-target="#deals-container">
+      <i class="fas fa-chevron-left" aria-hidden="true"></i>
+    </a>
+  {% endif %}
+</nav>
+{% endif %}
+
+{% if not deals %}
+<div class="dl-empty">
+  <span><i class="fas fa-magnifying-glass" aria-hidden="true"></i></span>
+  <h2>{% t "deals.no_matching_deals" %}</h2>
+  <p>{% t "deals.try_filters" %}</p>
+  <div>
+    <a href="{% url 'listings' %}" class="dl-btn dl-btn-ghost">{% t "deals.show_all" %}</a>
+    {% if user.is_authenticated %}
+    <a href="{% url 'create_deal' %}" class="dl-btn dl-btn-primary">{% t "deals.add_deal" %}</a>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

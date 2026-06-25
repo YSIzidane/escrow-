@@ -1,0 +1,603 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% t "admin.dash.title" %} - {% t "site.name" %}{% endblock %}
+{% block page_type %}admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/admin_control.css' %}?v=20260508a">{% endblock %}
+
+{% block content %}
+<div class="adm-shell adm-dashboard adm-dashboard-pro">
+  {% include "partials/admin_control_sidebar.html" %}
+
+  <section class="adm-main" aria-labelledby="admin-dashboard-title">
+    <header class="adm-command-hero">
+      <div class="adm-command-copy">
+        <span class="adm-page-kicker">
+          <i class="fas fa-chart-line"></i>
+          {% t "admin.dash.operations_center" %}
+        </span>
+        <h1 class="adm-page-heading" id="admin-dashboard-title">{% t "admin.dash.title" %}</h1>
+        <p>{% t "admin.dash.command_intro" %}</p>
+      </div>
+
+      <div class="adm-command-panel" aria-label="{% t 'admin.dash.review_priority' %}">
+        <div class="adm-command-panel-head">
+          <span>{% t "admin.dash.today_focus" %}</span>
+          <strong>{{ urgent_tickets|default:0|add:disputed_deals|default:0 }}</strong>
+        </div>
+        <div class="adm-focus-stack">
+          <div><span>{% t "admin.dash.urgent" %}</span><strong>{{ urgent_tickets|default:0 }}</strong></div>
+          <div><span>{% t "admin.dash.ongoing_disputes" %}</span><strong>{{ disputed_deals|default:0 }}</strong></div>
+          <div><span>{% t "admin.dash.withdrawal_requests" %}</span><strong>{{ pending_withdrawals|default:0 }}</strong></div>
+          <div><span>{% t "admin.dash.kyc_requests" %}</span><strong>{{ pending_kyc|default:0 }}</strong></div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="adm-action-strip" aria-label="{% t 'admin.dash.admin_shortcuts' %}">
+      {% if has_security_access %}
+      <a href="{% url 'admin_security_reports' %}" class="adm-action-chip">
+        <i class="fas fa-user-shield"></i>
+        <span>{% t "admin.dash.security_center" %}</span>
+      </a>
+      {% endif %}
+      {% if has_support_access %}
+      <a href="{% url 'staff_dashboard' %}" class="adm-action-chip">
+        <i class="fas fa-headset"></i>
+        <span>{% t "admin.dash.support_tickets" %}</span>
+      </a>
+      <a href="{% url 'admin_rooms_list' %}" class="adm-action-chip">
+        <i class="fas fa-people-arrows"></i>
+        <span>{% t "admin.dash.private_rooms" %}</span>
+      </a>
+      {% endif %}
+      {% if has_operations_access %}
+      <a href="{% url 'escrow_dashboard' %}" class="adm-action-chip">
+        <i class="fas fa-vault"></i>
+        <span>{% t "admin.dash.escrow_rooms" %}</span>
+      </a>
+      <a href="{% url 'admin_kyc_list' %}" class="adm-action-chip">
+        <i class="fas fa-id-card"></i>
+        <span>{% t "admin.dash.kyc_requests" %}</span>
+      </a>
+      {% endif %}
+      {% if has_finance_access %}
+      <a href="{% url 'admin_withdrawals_list' %}" class="adm-action-chip is-strong">
+        <i class="fas fa-money-bill-transfer"></i>
+        <span>{% t "admin.dash.withdrawal_requests" %}</span>
+      </a>
+      <a href="{% url 'staff_pending_payments' %}" class="adm-action-chip">
+        <i class="fas fa-receipt"></i>
+        <span>{% t "admin.dash.payment_review" %}</span>
+      </a>
+      {% endif %}
+    </nav>
+
+    <section class="adm-pro-kpis" aria-label="{% t 'admin.dash.platform_summary' %}">
+      <article class="adm-pro-kpi">
+        <i class="fas fa-users"></i>
+        <span>{% t "admin.dash.total_users" %}</span>
+        <strong>{{ total_users|default:0 }}</strong>
+        <small>+{{ new_users_week|default:0 }} {% t "admin.dash.this_week" %}</small>
+      </article>
+      <article class="adm-pro-kpi">
+        <i class="fas fa-handshake"></i>
+        <span>{% t "admin.dash.active_deals" %}</span>
+        <strong>{{ active_deals|default:0 }}</strong>
+        <small>{{ completed_deals|default:0 }} {% t "admin.dash.completed" %}</small>
+      </article>
+      <article class="adm-pro-kpi">
+        <i class="fas fa-vault"></i>
+        <span>{% t "admin.dash.held_escrow" %}</span>
+        <strong>${{ escrow_held|default:0 }}</strong>
+        <small>{% t "admin.dash.currently_protected" %}</small>
+      </article>
+      <article class="adm-pro-kpi">
+        <i class="fas fa-coins"></i>
+        <span>{% t "admin.dash.total_commission" %}</span>
+        <strong>${{ total_commission|default:0 }}</strong>
+        <small>{% t "admin.dash.released_earnings" %}</small>
+      </article>
+      <article class="adm-pro-kpi is-warning">
+        <i class="fas fa-ticket"></i>
+        <span>{% t "admin.dash.open_tickets" %}</span>
+        <strong>{{ open_tickets|default:0 }}</strong>
+        <small>{{ urgent_tickets|default:0 }} {% t "admin.dash.urgent" %}</small>
+      </article>
+      <article class="adm-pro-kpi is-danger">
+        <i class="fas fa-triangle-exclamation"></i>
+        <span>{% t "admin.dash.ongoing_disputes" %}</span>
+        <strong>{{ disputed_deals|default:0 }}</strong>
+        <small>{% t "admin.dash.needs_review" %}</small>
+      </article>
+    </section>
+
+    <section class="adm-priority-board">
+      <div class="adm-section-head">
+        <div>
+          <h2 class="adm-panel-title">{% t "admin.dash.attention_now" %}</h2>
+          <p class="adm-subtle">{% t "admin.dash.attention_hint" %}</p>
+        </div>
+      </div>
+
+      <div class="adm-priority-grid">
+        {% if has_security_access %}
+        <a href="{% url 'admin_security_reports' %}" class="adm-priority-card is-danger">
+          <i class="fas fa-user-shield"></i>
+          <span>{% t "admin.dash.reports_disputes" %}</span>
+          <strong>{{ disputed_deals|default:0 }}</strong>
+        </a>
+        {% endif %}
+        {% if has_operations_access %}
+        <a href="{% url 'admin_kyc_list' %}" class="adm-priority-card">
+          <i class="fas fa-id-card"></i>
+          <span>{% t "admin.dash.kyc_requests" %}</span>
+          <strong>{{ pending_kyc|default:0 }}</strong>
+        </a>
+        {% endif %}
+        {% if has_finance_access %}
+        <a href="{% url 'admin_withdrawals_list' %}" class="adm-priority-card is-warning">
+          <i class="fas fa-money-check-dollar"></i>
+          <span>{% t "admin.dash.withdrawal_requests" %}</span>
+          <strong>{{ pending_withdrawals|default:0 }}</strong>
+        </a>
+        <a href="{% url 'staff_pending_payments' %}" class="adm-priority-card">
+          <i class="fas fa-receipt"></i>
+          <span>{% t "admin.dash.payments_awaiting_review" %}</span>
+          <strong>{{ pending_manual_payments|default:0 }}</strong>
+        </a>
+        {% endif %}
+        {% if has_support_access %}
+        <a href="{% url 'admin_rooms_list' %}" class="adm-priority-card">
+          <i class="fas fa-comments"></i>
+          <span>{% t "admin.dash.private_rooms" %}</span>
+          <strong>{{ active_private_rooms|default:0 }}</strong>
+        </a>
+        {% endif %}
+      </div>
+    </section>
+
+    <div class="adm-workspace-grid">
+      <article class="adm-panel adm-panel--wide">
+        <div class="adm-section-head">
+          <div>
+            <h2 class="adm-panel-title">{% t "admin.dash.recent_deals" %}</h2>
+            <p class="adm-subtle">{% t "admin.dash.recent_deals_hint" %}</p>
+          </div>
+          <a href="{% url 'listings' %}" class="adm-link-inline">{% t "admin.dash.view_all" %}</a>
+        </div>
+        <div class="adm-table-wrap">
+          <table class="adm-table adm-modern-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>{% t "admin.dash.product" %}</th>
+                <th>{% t "admin.dash.seller" %}</th>
+                <th>{% t "admin.dash.buyer" %}</th>
+                <th>{% t "admin.dash.status" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for deal in recent_deals %}
+              <tr>
+                <td data-label="#">#{{ deal.id }}</td>
+                <td data-label="{% t 'admin.dash.product' %}">
+                  <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="adm-table-link">{{ deal.product_title|truncatechars:42 }}</a>
+                </td>
+                <td data-label="{% t 'admin.dash.seller' %}">{{ deal.seller.username }}</td>
+                <td data-label="{% t 'admin.dash.buyer' %}">{% if deal.buyer %}{{ deal.buyer.username }}{% else %}-{% endif %}</td>
+                <td data-label="{% t 'admin.dash.status' %}"><span class="adm-status adm-status-{{ deal.status }}">{{ deal.get_status_display }}</span></td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="5" class="adm-empty-row">{% t "admin.dash.no_deals_yet" %}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <aside class="adm-side-workspace">
+        <article class="adm-panel">
+          <div class="adm-section-head">
+            <h2 class="adm-panel-title">{% t "admin.dash.recent_tickets" %}</h2>
+            {% if has_support_access %}<a href="{% url 'staff_dashboard' %}" class="adm-link-inline">{% t "admin.dash.view_all" %}</a>{% endif %}
+          </div>
+          <div class="adm-compact-list">
+            {% for ticket in recent_tickets %}
+            <a href="{% if has_support_access %}{% url 'staff_ticket_detail' ticket.id %}{% else %}#{% endif %}" class="adm-list-row">
+              <div>
+                <strong>{{ ticket.subject|truncatechars:54 }}</strong>
+                <span>{{ ticket.user.username }} - {{ ticket.ticket_number }}</span>
+              </div>
+              <em class="adm-status adm-status-ticket-{{ ticket.status }}">{{ ticket.get_status_display }}</em>
+            </a>
+            {% empty %}
+            <div class="adm-empty-state">{% t "admin.dash.no_tickets" %}</div>
+            {% endfor %}
+          </div>
+        </article>
+
+        <article class="adm-panel">
+          <div class="adm-section-head">
+            <h2 class="adm-panel-title">{% t "admin.dash.system_readiness" %}</h2>
+          </div>
+          <div class="adm-check-list">
+            {% for item in system_checks|slice:":4" %}
+            <div class="adm-check-row">
+              <div>
+                <strong>{{ item.label }}</strong>
+                <span>{{ item.value }}</span>
+              </div>
+              <span class="adm-check-status {% if item.ok %}is-ok{% else %}is-warn{% endif %}">
+                {% if item.ok %}{% t "admin.dash.ready" %}{% else %}{% t "admin.dash.review" %}{% endif %}
+              </span>
+            </div>
+            {% endfor %}
+          </div>
+        </article>
+      </aside>
+    </div>
+
+    <div class="adm-lower-grid">
+      <article class="adm-panel">
+        <div class="adm-section-head">
+          <h2 class="adm-panel-title">{% t "admin.dash.security_posture" %}</h2>
+        </div>
+        <div class="adm-check-list">
+          {% for item in security_checks|slice:":5" %}
+          <div class="adm-check-row">
+            <div>
+              <strong>{{ item.label }}</strong>
+              <span>{{ item.value }}</span>
+            </div>
+            <span class="adm-check-status {% if item.ok %}is-ok{% else %}is-warn{% endif %}">
+              {% if item.ok %}{% t "admin.dash.ready" %}{% else %}{% t "admin.dash.review" %}{% endif %}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+      </article>
+
+      <article class="adm-panel">
+        <div class="adm-section-head">
+          <h2 class="adm-panel-title">{% t "admin.dash.latest_admin_actions" %}</h2>
+        </div>
+        <div class="adm-compact-list">
+          {% for action in recent_admin_actions|slice:":5" %}
+          <div class="adm-list-row">
+            <div>
+              <strong>{{ action.get_action_display }}</strong>
+              <span>{% if action.actor %}{{ action.actor.username }}{% else %}{% t "admin.dash.unknown_actor" %}{% endif %}</span>
+            </div>
+            <time>{{ action.created_at|date:"d/m H:i" }}</time>
+          </div>
+          {% empty %}
+          <div class="adm-empty-state">{% t "admin.dash.no_admin_actions" %}</div>
+          {% endfor %}
+        </div>
+      </article>
+
+      <article class="adm-panel">
+        <div class="adm-section-head">
+          <h2 class="adm-panel-title">{% t "admin.dash.recent_finance_reviews" %}</h2>
+        </div>
+        <div class="adm-compact-list">
+          {% for audit in recent_payment_audits|slice:":5" %}
+          <div class="adm-list-row">
+            <div>
+              <strong>{{ audit.get_action_display }}</strong>
+              <span>{% if audit.admin %}{{ audit.admin.username }}{% else %}-{% endif %}</span>
+            </div>
+            <time>{{ audit.created_at|date:"d/m H:i" }}</time>
+          </div>
+          {% empty %}
+          <div class="adm-empty-state">{% t "admin.dash.no_finance_reviews" %}</div>
+          {% endfor %}
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+
+{% include "partials/_admin_light_styles.html" %}
+<style>
+  body[data-page="admin"] .adm-dashboard-pro {
+    --dash-line: rgba(15, 23, 42, 0.09);
+    --dash-muted: #64748b;
+    --dash-ink: #0f172a;
+    --dash-blue: #2563eb;
+    --dash-surface: rgba(255, 255, 255, 0.97);
+    gap: 24px;
+  }
+
+  body[data-page="admin"] .adm-command-hero,
+  body[data-page="admin"] .adm-action-strip,
+  body[data-page="admin"] .adm-pro-kpi,
+  body[data-page="admin"] .adm-priority-board,
+  body[data-page="admin"] .adm-panel {
+    border: 1px solid var(--dash-line) !important;
+    background: var(--dash-surface) !important;
+    border-radius: 22px !important;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.07) !important;
+  }
+
+  body[data-page="admin"] .adm-command-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(290px, 380px);
+    gap: 24px;
+    align-items: stretch;
+    padding: clamp(20px, 3vw, 30px);
+    background:
+      radial-gradient(circle at 8% 8%, rgba(37, 99, 235, 0.12), transparent 30%),
+      radial-gradient(circle at 90% 0%, rgba(201, 150, 59, 0.12), transparent 26%),
+      linear-gradient(135deg, #ffffff, #f8fbff) !important;
+  }
+
+  body[data-page="admin"] .adm-command-copy {
+    display: grid;
+    align-content: center;
+  }
+
+  body[data-page="admin"] .adm-command-copy p {
+    max-width: 760px;
+    margin: 12px 0 0;
+    color: var(--dash-muted) !important;
+    font-weight: 600;
+    line-height: 1.8;
+  }
+
+  body[data-page="admin"] .adm-command-panel {
+    padding: 18px;
+    border-radius: 18px;
+    background: #0f172a;
+    color: #ffffff;
+    display: grid;
+    gap: 16px;
+  }
+
+  body[data-page="admin"] .adm-command-panel-head,
+  body[data-page="admin"] .adm-focus-stack div,
+  body[data-page="admin"] .adm-section-head,
+  body[data-page="admin"] .adm-list-row,
+  body[data-page="admin"] .adm-check-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  body[data-page="admin"] .adm-command-panel-head span,
+  body[data-page="admin"] .adm-focus-stack span {
+    color: rgba(255, 255, 255, 0.72) !important;
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  body[data-page="admin"] .adm-command-panel-head strong {
+    color: #ffffff !important;
+    font-size: 2.4rem;
+    line-height: 1;
+  }
+
+  body[data-page="admin"] .adm-focus-stack {
+    display: grid;
+    gap: 8px;
+  }
+
+  body[data-page="admin"] .adm-focus-stack div {
+    padding: 10px 12px;
+    border-radius: 13px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  body[data-page="admin"] .adm-focus-stack strong {
+    color: #ffffff !important;
+    font-size: 1rem;
+  }
+
+  body[data-page="admin"] .adm-action-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  body[data-page="admin"] .adm-action-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 42px;
+    padding: 0 14px;
+    border-radius: 14px;
+    background: #f8fafc;
+    color: #1e293b !important;
+    text-decoration: none;
+    font-weight: 900;
+  }
+
+  body[data-page="admin"] .adm-action-chip i {
+    color: var(--dash-blue) !important;
+  }
+
+  body[data-page="admin"] .adm-action-chip.is-strong {
+    background: #eff6ff;
+    color: #1d4ed8 !important;
+  }
+
+  body[data-page="admin"] .adm-pro-kpis {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  body[data-page="admin"] .adm-pro-kpi {
+    min-width: 0;
+    padding: 16px;
+    display: grid;
+    gap: 8px;
+  }
+
+  body[data-page="admin"] .adm-pro-kpi i {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: #eff6ff;
+    color: var(--dash-blue) !important;
+  }
+
+  body[data-page="admin"] .adm-pro-kpi.is-warning i { background: #fef3c7; color: #b45309 !important; }
+  body[data-page="admin"] .adm-pro-kpi.is-danger i { background: #ffe4e6; color: #be123c !important; }
+
+  body[data-page="admin"] .adm-pro-kpi span,
+  body[data-page="admin"] .adm-pro-kpi small {
+    color: var(--dash-muted) !important;
+    font-weight: 800;
+  }
+
+  body[data-page="admin"] .adm-pro-kpi strong {
+    color: var(--dash-ink) !important;
+    font-size: clamp(1.35rem, 2.4vw, 2rem);
+    line-height: 1;
+  }
+
+  body[data-page="admin"] .adm-priority-board,
+  body[data-page="admin"] .adm-panel {
+    padding: 18px;
+  }
+
+  body[data-page="admin"] .adm-priority-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  body[data-page="admin"] .adm-priority-card {
+    min-height: 118px;
+    display: grid;
+    align-content: space-between;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--dash-line);
+    border-radius: 18px;
+    background: #f8fafc;
+    color: var(--dash-ink) !important;
+    text-decoration: none;
+  }
+
+  body[data-page="admin"] .adm-priority-card i {
+    color: var(--dash-blue) !important;
+    font-size: 1.1rem;
+  }
+
+  body[data-page="admin"] .adm-priority-card span {
+    color: #334155 !important;
+    font-size: 0.86rem;
+    font-weight: 900;
+    line-height: 1.5;
+  }
+
+  body[data-page="admin"] .adm-priority-card strong {
+    color: var(--dash-ink) !important;
+    font-size: 1.85rem;
+    line-height: 1;
+  }
+
+  body[data-page="admin"] .adm-priority-card.is-danger { background: #fff1f2; }
+  body[data-page="admin"] .adm-priority-card.is-warning { background: #fffbeb; }
+
+  body[data-page="admin"] .adm-workspace-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.55fr);
+    gap: 16px;
+  }
+
+  body[data-page="admin"] .adm-side-workspace,
+  body[data-page="admin"] .adm-lower-grid,
+  body[data-page="admin"] .adm-compact-list,
+  body[data-page="admin"] .adm-check-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  body[data-page="admin"] .adm-lower-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  body[data-page="admin"] .adm-modern-table th {
+    background: #f8fafc !important;
+  }
+
+  body[data-page="admin"] .adm-modern-table td,
+  body[data-page="admin"] .adm-modern-table th {
+    padding: 15px 14px;
+  }
+
+  body[data-page="admin"] .adm-list-row,
+  body[data-page="admin"] .adm-check-row {
+    padding: 12px 13px;
+    border: 1px solid var(--dash-line);
+    border-radius: 15px;
+    background: #f8fafc;
+    color: var(--dash-ink) !important;
+    text-decoration: none;
+  }
+
+  body[data-page="admin"] .adm-list-row strong,
+  body[data-page="admin"] .adm-check-row strong {
+    color: var(--dash-ink) !important;
+    font-size: 0.88rem;
+  }
+
+  body[data-page="admin"] .adm-list-row span,
+  body[data-page="admin"] .adm-list-row time,
+  body[data-page="admin"] .adm-check-row span {
+    color: var(--dash-muted) !important;
+    font-size: 0.77rem;
+  }
+
+  body[data-page="admin"] .adm-list-row em {
+    flex: 0 0 auto;
+    font-style: normal;
+  }
+
+  body[data-page="admin"] .adm-check-status {
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 900;
+  }
+
+  body[data-page="admin"] .adm-check-status.is-ok { background: #dcfce7; color: #15803d !important; }
+  body[data-page="admin"] .adm-check-status.is-warn { background: #fef3c7; color: #b45309 !important; }
+
+  @media (max-width: 1320px) {
+    body[data-page="admin"] .adm-pro-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    body[data-page="admin"] .adm-priority-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 1100px) {
+    body[data-page="admin"] .adm-command-hero,
+    body[data-page="admin"] .adm-workspace-grid,
+    body[data-page="admin"] .adm-lower-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    body[data-page="admin"] .adm-pro-kpis,
+    body[data-page="admin"] .adm-priority-grid {
+      grid-template-columns: 1fr;
+    }
+
+    body[data-page="admin"] .adm-section-head,
+    body[data-page="admin"] .adm-list-row,
+    body[data-page="admin"] .adm-check-row {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>
+{% endblock %}

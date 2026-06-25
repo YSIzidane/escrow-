@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+{% load site_i18n %}
+
+{% block title %}{% t "account.email.title" %}{% endblock %}
+{% block page_type %}account_email{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+  <div class="col-lg-6 col-md-8">
+    <div class="card border-0 email-card">
+      <div class="email-card-header">
+        <div class="email-card-glow"></div>
+        <div class="email-card-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <h3>{% t "account.email.header" %}</h3>
+        <p>{% t "account.email.sub" %}</p>
+      </div>
+
+      <div class="card-body email-card-body">
+        {% if emailaddresses %}
+        <p class="email-section-title">{% t "account.email.current" %}</p>
+        <form action="{% url 'account_email' %}" class="email_list" method="post">
+          {% csrf_token %}
+          <div class="email-list-box">
+            {% for emailaddress in emailaddresses %}
+            <div class="form-check email-list-item">
+              <input id="email_radio_{{ forloop.counter }}" type="radio" name="email" {% if emailaddress.primary or emailaddresses|length == 1 %}checked="checked"{% endif %} value="{{ emailaddress.email }}"
+                class="form-check-input email-radio">
+              <label for="email_radio_{{ forloop.counter }}" class="form-check-label email-label-wrap">
+                <span class="email-address">{{ emailaddress.email }}</span>
+                {% if emailaddress.verified %}
+                <span class="email-badge success">{% t "account.email.verified" %}</span>
+                {% else %}
+                <span class="email-badge warning">{% t "account.email.pending" %}</span>
+                {% endif %}
+                {% if emailaddress.primary %}
+                <span class="email-badge primary">{% t "account.email.primary" %}</span>
+                {% endif %}
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="email-actions">
+            <button class="btn btn-light" type="submit" name="action_primary">{% t "account.email.make_primary" %}</button>
+            <button class="btn btn-light" type="submit" name="action_send">{% t "account.email.resend" %}</button>
+            <button class="btn btn-danger" type="submit" name="action_remove" onclick="return confirm('{% t 'account.email.remove_confirm' %}')">{% t "account.email.remove" %}</button>
+          </div>
+        </form>
+        {% else %}
+        <div class="email-empty-box">
+          {% t "account.email.empty" %}
+        </div>
+        {% endif %}
+
+        {% if can_add_email %}
+        <div class="email-add-section">
+          <p class="email-section-title">{% t "account.email.add_header" %}</p>
+          <form method="post" action="{% url 'account_email' %}">
+            {% csrf_token %}
+            {% for field in form %}
+            {% if field.field.widget.input_type != "hidden" %}
+            <div class="mb-3">
+              <label class="form-label email-form-label">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}<small class="email-field-error">{{ field.errors.0 }}</small>{% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+            <button name="action_add" type="submit" class="btn btn-primary w-100 email-main-btn">{% t "account.email.add_submit" %}</button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .email-card {
+    border-radius: 24px !important;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(13, 27, 42, 0.15) !important;
+  }
+
+  .email-card-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 40px 32px 28px;
+    text-align: center;
+    position: relative;
+  }
+
+  .email-card-glow {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 150, 59, .18) 0%, transparent 70%);
+  }
+
+  .email-card-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 20px rgba(201, 150, 59, 0.2);
+  }
+
+  .email-card-icon i {
+    color: var(--gold);
+    font-size: 28px;
+  }
+
+  .email-card-header h3 {
+    color: white;
+    font-weight: 800;
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+  }
+
+  .email-card-header p {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .email-card-body {
+    padding: 40px 32px !important;
+  }
+
+  .email-section-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+  }
+
+  .email-list-box {
+    background: rgba(201, 150, 59, 0.03);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .email-list-item {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+  }
+
+  .email-radio {
+    margin-top: 0;
+    margin-inline-end: 12px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
+  .email-label-wrap {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .email-address {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .email-badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .email-badge.success {
+    background: #d1fae5;
+    color: #059669;
+  }
+
+  .email-badge.warning {
+    background: #fef3c7;
+    color: #d97706;
+  }
+
+  .email-badge.primary {
+    background: rgba(201, 150, 59, 0.15);
+    color: var(--gold-dark);
+  }
+
+  .email-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .email-actions button {
+    flex: 1;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .email-empty-box {
+    background: rgba(201, 150, 59, 0.08);
+    border: 1px solid rgba(201, 150, 59, 0.2);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  .email-add-section {
+    border-top: 1px solid var(--border-light);
+    padding-top: 24px;
+  }
+
+  .email-form-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .email-card-body .form-control {
+    border: 1px solid var(--border-light) !important;
+    border-radius: 10px !important;
+    padding: 12px 14px !important;
+    font-size: 0.95rem !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .email-card-body .form-control:focus {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 3px rgba(201, 150, 59, 0.1) !important;
+  }
+
+  .email-field-error {
+    color: #ef4444;
+  }
+
+  .email-main-btn {
+    padding: 12px !important;
+    border-radius: 10px;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    border: none;
+  }
+</style>
+{% include "account/_account_settings_styles.html" %}
+{% endblock %}

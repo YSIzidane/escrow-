@@ -1,0 +1,2374 @@
+{% extends "base.html" %}
+{% load static site_i18n l10n %}
+{% block title %}{{ deal.product_title }}{% t "deal_detail.title_suffix" %}{% endblock %}
+{% block page_type %}deal_detail{% endblock %}
+{% block meta_description %}{{ share_description }}{% endblock %}
+{% block canonical_url %}{{ share_url }}{% endblock %}
+{% block og_type %}product{% endblock %}
+{% block og_title %}{{ share_title }}{% endblock %}
+{% block og_description %}{{ share_description }}{% endblock %}
+{% block og_url %}{{ share_url }}{% endblock %}
+{% block og_image %}{{ share_image_url }}{% endblock %}
+{% block og_image_alt %}{{ deal.product_title }}{% endblock %}
+{% block twitter_title %}{{ share_title }}{% endblock %}
+{% block twitter_description %}{{ share_description }}{% endblock %}
+{% block twitter_image %}{{ share_image_url }}{% endblock %}
+{% block meta %}
+{% if share_price %}
+<meta property="product:price:amount" content="{{ share_price|unlocalize }}">
+<meta property="product:price:currency" content="USD">
+{% endif %}
+{% endblock %}
+{% block late_css %}
+<link rel="stylesheet" href="{% static 'css/deal_escrow_premium.css' %}?v=20260525g">
+{% endblock %}
+
+{% block content %}
+<div class="pv-page-decor-topleft">
+  <picture>
+    <source media="(max-width: 768px), (pointer: coarse)" srcset="{% static 'images/brand/hero-fluid-mobile.webp' %}" type="image/webp">
+    <img src="{% static 'images/brand/hero-fluid.webp' %}" alt="" loading="lazy" decoding="async" fetchpriority="low" width="1024" height="1024">
+  </picture>
+</div>
+<div class="dx-page">
+
+  
+  <nav class="se-detail-breadcrumb" style="margin-bottom:18px;display:flex;align-items:center;gap:6px;font-size:.82rem;" aria-label="{% t 'ui.breadcrumb' %}">
+    <a href="{% url 'home' %}" style="color:var(--text-secondary);text-decoration:none;font-weight:600;transition:color .2s;" class="se-bc-link">
+      <i class="fas fa-home" style="font-size:11px;margin-left:4px;"></i>{% t "deal.detail.breadcrumb_home" %}
+    </a>
+    <i class="fas fa-chevron-{% if request.LANGUAGE_CODE == 'en' %}right{% else %}left{% endif %}" style="font-size:9px;color:#C8D3DF;"></i>
+    <a href="{% url 'listings' %}" style="color:var(--text-secondary);text-decoration:none;font-weight:600;transition:color .2s;" class="se-bc-link">{% t "deal.detail.breadcrumb_deals" %}</a>
+    <i class="fas fa-chevron-{% if request.LANGUAGE_CODE == 'en' %}right{% else %}left{% endif %}" style="font-size:9px;color:#C8D3DF;"></i>
+    <span style="color:var(--navy);font-weight:700;">{{ deal.product_title|truncatechars:35 }}</span>
+  </nav>
+
+  <section class="dx-hero dx-status-{{ deal.status }} dx-reveal" aria-labelledby="dxDealTitle">
+    <div class="dx-hero-main">
+      <div class="dx-hero-topline">
+        <span class="dx-pill dx-pill-secure">
+          <i class="fas fa-shield-halved" aria-hidden="true"></i>
+          {% if current_language == 'ar' %}صفقة محمية بالضمان{% else %}Escrow protected deal{% endif %}
+        </span>
+        <span class="dx-pill dx-pill-status">
+          <i class="fas {% if deal.status == 'completed' %}fa-circle-check{% elif deal.status == 'disputed' %}fa-triangle-exclamation{% elif deal.status == 'cancelled' %}fa-circle-xmark{% else %}fa-circle-dot{% endif %}" aria-hidden="true"></i>
+          {{ deal.get_status_display }}
+        </span>
+      </div>
+
+      <h1 id="dxDealTitle">{{ deal.product_title }}</h1>
+      <p class="dx-hero-sub">
+        {% if current_language == 'ar' %}
+        مساحة صفقة آمنة تجمع الاتفاق، الدفع، التسليم، المحادثات، والنزاعات في واجهة واحدة واضحة.
+        {% else %}
+        A secure deal workspace for agreement, payment, delivery, conversation, and dispute handling in one clear interface.
+        {% endif %}
+      </p>
+
+      <div class="dx-meta-grid" aria-label="{% if current_language == 'ar' %}معلومات الصفقة{% else %}Deal metadata{% endif %}">
+        <span><i class="fas fa-hashtag" aria-hidden="true"></i>{% if current_language == 'ar' %}رقم الصفقة{% else %}Deal ID{% endif %} <strong>#{{ deal.id }}</strong></span>
+        <span><i class="fas fa-calendar" aria-hidden="true"></i>{% if current_language == 'ar' %}تاريخ الإنشاء{% else %}Created{% endif %} <strong>{{ deal.created_at|date:"d/m/Y" }}</strong></span>
+        <span><i class="fas {% if deal.is_auction %}fa-gavel{% else %}fa-tag{% endif %}" aria-hidden="true"></i>{% if current_language == 'ar' %}النوع{% else %}Type{% endif %} <strong>{% if deal.is_auction %}{% t 'deal.detail.type_auction' %}{% else %}{% t 'deal.detail.type_fixed' %}{% endif %}</strong></span>
+      </div>
+
+      <div class="dx-trust-row">
+        <span><i class="fas fa-lock" aria-hidden="true"></i>{% if current_language == 'ar' %}محادثة موثقة{% else %}Documented chat{% endif %}</span>
+        <span><i class="fas fa-vault" aria-hidden="true"></i>{% if current_language == 'ar' %}دفع محمي{% else %}Protected payment{% endif %}</span>
+        <span><i class="fas fa-scale-balanced" aria-hidden="true"></i>{% if current_language == 'ar' %}مسار نزاع واضح{% else %}Clear dispute path{% endif %}</span>
+      </div>
+    </div>
+
+    <div class="dx-hero-side">
+      {% if deal.images.exists %}
+      <button type="button" class="dx-hero-media" onclick="openImageModal(document.getElementById('mainImage')?.src || this.querySelector('img').src)" aria-label="{% if current_language == 'ar' %}عرض صورة الصفقة{% else %}View deal image{% endif %}">
+        <img src="{{ deal.images.first.image|file_url:'images/brand/deal-placeholder.webp' }}"
+             alt="{{ deal.product_title }}"
+             decoding="async"
+             fetchpriority="high"
+             width="720"
+             height="520">
+        <span><i class="fas fa-up-right-and-down-left-from-center" aria-hidden="true"></i></span>
+      </button>
+      {% else %}
+      <div class="dx-hero-media dx-hero-media-empty" aria-hidden="true">
+        <i class="fas fa-shield-halved"></i>
+      </div>
+      {% endif %}
+
+      <aside class="dx-amount-card" aria-label="{% if current_language == 'ar' %}مبلغ الصفقة{% else %}Deal amount{% endif %}">
+        <span>{% if deal.is_auction %}{% t 'deal.detail.start_price' %}{% else %}{% t 'deal.detail.final_price_escrow' %}{% endif %}</span>
+        <strong>${% if deal.is_auction %}{{ deal.starting_price }}{% else %}{{ deal.price }}{% endif %}</strong>
+        <div class="dx-money-state">
+          {% if deal.payment %}
+          <i class="fas fa-building-columns" aria-hidden="true"></i>
+          <span>{{ deal.payment.get_status_display }}</span>
+          {% else %}
+          <i class="fas fa-hourglass-half" aria-hidden="true"></i>
+          <span>{% if current_language == 'ar' %}بانتظار بدء الدفع{% else %}Awaiting payment start{% endif %}</span>
+          {% endif %}
+        </div>
+        <div class="dx-money-breakdown">
+          <div>
+            <span>{% if current_language == 'ar' %}رسوم المنصة{% else %}Platform fee{% endif %}</span>
+            <strong>{% if deal.payment %}${{ deal.payment.fee_amount }}{% else %}{% if current_language == 'ar' %}تُحسب عند الدفع{% else %}Calculated at checkout{% endif %}{% endif %}</strong>
+          </div>
+          <div>
+            <span>{% if current_language == 'ar' %}صافي البائع{% else %}Seller net{% endif %}</span>
+            <strong>{% if deal.payment %}${{ deal.payment.net_amount }}{% else %}-{% endif %}</strong>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="dx-progress-panel dx-reveal" aria-label="{% if current_language == 'ar' %}مراحل الصفقة{% else %}Deal progress{% endif %}">
+    <article class="dx-progress-step {% if deal.status != 'new' %}is-complete{% else %}is-active{% endif %}">
+      <span>01</span>
+      <i class="fas fa-file-signature" aria-hidden="true"></i>
+      <strong>{% if current_language == 'ar' %}الاتفاق{% else %}Agreement{% endif %}</strong>
+      <small>{% t "deal.detail.step_pending" %}</small>
+    </article>
+    <article class="dx-progress-step {% if deal.status == 'reserved' %}is-active{% elif deal.status == 'shipped' or deal.status == 'completed' or deal.status == 'disputed' %}is-complete{% endif %}">
+      <span>02</span>
+      <i class="fas fa-vault" aria-hidden="true"></i>
+      <strong>{% if current_language == 'ar' %}الضمان{% else %}Escrow{% endif %}</strong>
+      <small>{% t "deal.detail.step_escrow_funded" %}</small>
+    </article>
+    <article class="dx-progress-step {% if deal.status == 'shipped' %}is-active{% elif deal.status == 'completed' or deal.status == 'disputed' %}is-complete{% endif %}">
+      <span>03</span>
+      <i class="fas fa-truck-fast" aria-hidden="true"></i>
+      <strong>{% if current_language == 'ar' %}التسليم{% else %}Delivery{% endif %}</strong>
+      <small>{% t "deal.detail.step_shipped" %}</small>
+    </article>
+    <article class="dx-progress-step {% if deal.status == 'disputed' %}is-disputed{% elif deal.status == 'completed' %}is-complete{% endif %}">
+      <span>04</span>
+      <i class="fas {% if deal.status == 'disputed' %}fa-scale-balanced{% else %}fa-circle-check{% endif %}" aria-hidden="true"></i>
+      <strong>{% if deal.status == 'disputed' %}{% t "deal.detail.step_disputed" %}{% else %}{% t "deal.detail.step_completed" %}{% endif %}</strong>
+      <small>{% if current_language == 'ar' %}الإغلاق المالي{% else %}Financial close{% endif %}</small>
+    </article>
+  </section>
+
+  <section class="dx-intel-grid dx-reveal" aria-label="{% if current_language == 'ar' %}ملخص الصفقة{% else %}Deal intelligence summary{% endif %}">
+    <article class="dx-intel-card">
+      <div class="dx-card-head">
+        <i class="fas fa-users" aria-hidden="true"></i>
+        <h2>{% if current_language == 'ar' %}المشاركون{% else %}Participants{% endif %}</h2>
+      </div>
+      <div class="dx-people-row">
+        <div>
+          <img src="{{ deal.seller.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ deal.seller.username }}" loading="lazy">
+          <span>{% t 'deal.detail.seller' %}</span>
+          <strong>{{ deal.seller.username }}</strong>
+        </div>
+        <div>
+          {% if deal.buyer %}
+          <img src="{{ deal.buyer.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ deal.buyer.username }}" loading="lazy">
+          <span>{% t 'deal.detail.buyer' %}</span>
+          <strong>{{ deal.buyer.username }}</strong>
+          {% else %}
+          <span class="dx-empty-avatar"><i class="fas fa-user-clock" aria-hidden="true"></i></span>
+          <span>{% t 'deal.detail.buyer' %}</span>
+          <strong>{% if current_language == 'ar' %}لم يتم التعيين{% else %}Not assigned{% endif %}</strong>
+          {% endif %}
+        </div>
+      </div>
+    </article>
+
+    <article class="dx-intel-card">
+      <div class="dx-card-head">
+        <i class="fas fa-shield-halved" aria-hidden="true"></i>
+        <h2>{% if current_language == 'ar' %}الحماية{% else %}Protection{% endif %}</h2>
+      </div>
+      <div class="dx-check-list">
+        <span><i class="fas fa-check" aria-hidden="true"></i>{% if current_language == 'ar' %}الدفع لا يُحرر قبل الإغلاق{% else %}Funds are not released before close{% endif %}</span>
+        <span><i class="fas fa-check" aria-hidden="true"></i>{% if current_language == 'ar' %}كل الرسائل مرتبطة بالصفقة{% else %}All messages stay attached to the deal{% endif %}</span>
+        <span><i class="fas fa-check" aria-hidden="true"></i>{% if current_language == 'ar' %}رفع الأدلة متاح عند النزاع{% else %}Evidence upload is available for disputes{% endif %}</span>
+      </div>
+    </article>
+
+    <article class="dx-intel-card dx-activity-card">
+      <div class="dx-card-head">
+        <i class="fas fa-wave-square" aria-hidden="true"></i>
+        <h2>{% if current_language == 'ar' %}النشاط{% else %}Activity{% endif %}</h2>
+      </div>
+      <div class="dx-activity-feed">
+        <div><span></span><strong>{% if current_language == 'ar' %}تم إنشاء الصفقة{% else %}Deal created{% endif %}</strong><small>{{ deal.created_at|date:"d/m/Y H:i" }}</small></div>
+        {% if deal.buyer %}<div><span></span><strong>{% if current_language == 'ar' %}تم تعيين المشتري{% else %}Buyer assigned{% endif %}</strong><small>{{ deal.buyer.username }}</small></div>{% endif %}
+        {% if deal.payment %}<div><span></span><strong>{% if current_language == 'ar' %}تم إنشاء سجل الدفع{% else %}Payment record created{% endif %}</strong><small>{{ deal.payment.created_at|date:"d/m/Y H:i" }}</small></div>{% endif %}
+        {% if deal.seller_shipped %}<div><span></span><strong>{% if current_language == 'ar' %}البائع أكد التسليم{% else %}Seller marked delivery{% endif %}</strong><small>{{ deal.tracking_number|default:"-" }}</small></div>{% endif %}
+        {% if deal.status == 'disputed' %}<div class="is-danger"><span></span><strong>{% if current_language == 'ar' %}تم فتح نزاع{% else %}Dispute opened{% endif %}</strong><small>{{ deal.updated_at|date:"d/m/Y H:i" }}</small></div>{% elif deal.status == 'completed' %}<div class="is-success"><span></span><strong>{% if current_language == 'ar' %}اكتملت الصفقة{% else %}Deal completed{% endif %}</strong><small>{{ deal.updated_at|date:"d/m/Y H:i" }}</small></div>{% endif %}
+      </div>
+    </article>
+  </section>
+
+  <div class="row g-4" style="align-items:flex-start;">
+
+    
+    <div class="col-lg-8">
+
+      
+      {% if deal.images.count > 1 %}
+      <div class="card border-0 mb-4 se-gallery-card">
+        <div class="card-body p-3">
+
+          
+          <div class="se-gallery-main" onclick="openImageModal(this.querySelector('img').src)">
+            <img id="mainImage"
+                 src="{{ deal.images.first.image|file_url:'images/brand/deal-placeholder.webp' }}"
+                 alt="{{ deal.product_title }}"
+                 decoding="async"
+                 fetchpriority="high"
+                 width="960"
+                 height="640">
+            <div class="se-gallery-zoom-hint"><i class="fas fa-search-plus"></i></div>
+          </div>
+
+          
+          {% if deal.images.count > 1 %}
+          <div class="se-gallery-thumbs">
+            {% for img in deal.images.all %}
+            <img src="{{ img.image|file_url:'images/brand/deal-placeholder.webp' }}" loading="lazy" decoding="async" width="96" height="72"
+                 onclick="switchMain(this)"
+                 class="se-gallery-thumb {% if forloop.first %}active{% endif %}"
+                 alt="{{ deal.product_title }} {{ forloop.counter }}">
+            {% endfor %}
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+      {% endif %}
+
+      
+      <div class="card border-0 mb-4 se-product-card">
+        <div class="card-body p-4">
+          
+          <div class="se-product-top">
+            <div class="se-product-title-wrap">
+              <h1 class="se-product-title">{{ deal.product_title }}</h1>
+              <div class="se-product-meta">
+                <span><i class="fas fa-clock"></i> {% t 'deal.detail.posted_ago' %} {{ deal.created_at|timesince }} {% t 'deal.detail.ago' %}</span>
+                <span><i class="fas fa-eye"></i> #{{ deal.id }}</span>
+                {% if deal.is_auction %}
+                <span class="se-type-chip-auction"><i class="fas fa-gavel"></i> {% t 'deal.detail.type_auction' %}</span>
+                {% else %}
+                <span class="se-type-chip-fixed"><i class="fas fa-tag"></i> {% t 'deal.detail.type_fixed' %}</span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="se-product-price-box">
+              <div class="se-product-price">
+                ${{ deal.price }}
+              </div>
+              <div class="se-product-price-sub">
+                {% if deal.is_auction %}{% t 'deal.detail.start_price' %}{% else %}{% t 'deal.detail.final_price' %}{% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="se-product-divider"></div>
+
+          
+          {% if deal.status != 'new' %}
+          <div class="se-deal-stepper mt-4 mb-5">
+            <div class="se-stepper-track">
+              
+              <div class="se-step {% if deal.status != 'new' %}se-step-completed{% else %}se-step-active{% endif %}">
+                <div class="se-step-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                <div class="se-step-label">{% t "deal.detail.step_pending" %}</div>
+              </div>
+              <div class="se-step-connector {% if deal.status != 'new' %}se-connector-active{% endif %}"></div>
+
+              
+              <div class="se-step {% if deal.status == 'reserved' %}se-step-active{% elif deal.status == 'shipped' or deal.status == 'completed' or deal.status == 'disputed' %}se-step-completed{% endif %}">
+                <div class="se-step-icon"><i class="fas fa-vault"></i></div>
+                <div class="se-step-label">{% t "deal.detail.step_escrow_funded" %}</div>
+              </div>
+              <div class="se-step-connector {% if deal.status == 'shipped' or deal.status == 'completed' or deal.status == 'disputed' %}se-connector-active{% endif %}"></div>
+
+              
+              <div class="se-step {% if deal.status == 'shipped' %}se-step-active{% elif deal.status == 'completed' or deal.status == 'disputed' %}se-step-completed{% endif %}">
+                <div class="se-step-icon"><i class="fas fa-shipping-fast"></i></div>
+                <div class="se-step-label">{% t "deal.detail.step_shipped" %}</div>
+              </div>
+              <div class="se-step-connector {% if deal.status == 'completed' %}se-connector-active{% endif %}"></div>
+
+              
+              <div class="se-step {% if deal.status == 'completed' %}se-step-active se-step-completed{% elif deal.status == 'disputed' %}se-step-disputed{% endif %}">
+                <div class="se-step-icon">
+                  {% if deal.status == 'disputed' %}<i class="fas fa-exclamation-triangle"></i>
+                  {% else %}<i class="fas fa-check-double"></i>{% endif %}
+                </div>
+                <div class="se-step-label">
+                  {% if deal.status == 'disputed' %}
+                    {% t "deal.detail.step_disputed" %}
+                  {% else %}
+                    {% t "deal.detail.step_completed" %}
+                  {% endif %}
+                </div>
+              </div>
+
+            </div>
+          </div>
+          {% endif %}
+
+          
+          <h5 class="se-section-mini-title">
+            <i class="fas fa-align-left"></i> {% t 'deal.detail.desc_title' %}
+          </h5>
+          <div class="se-product-desc">{{ deal.product_description }}</div>
+
+          
+          {% if deal.seller_shipped and deal.tracking_number %}
+          <div class="se-info-banner se-banner-success mt-4">
+            <div class="se-banner-icon"><i class="fas fa-shipping-fast"></i></div>
+            <div>
+              <div class="se-banner-title">{% t 'deal.detail.shipped_title' %}</div>
+              <div class="se-banner-sub">{% t 'deal.detail.track_num' %} <strong>{{ deal.tracking_number }}</strong></div>
+            </div>
+          </div>
+          {% endif %}
+
+          
+          {% if deal.status == 'disputed' and deal.dispute_reason %}
+          <div class="se-info-banner se-banner-danger mt-4">
+            <div class="se-banner-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div>
+              <div class="se-banner-title">{% t 'deal.detail.dispute_title' %}</div>
+              <div class="se-banner-sub">{{ deal.dispute_reason }}</div>
+            </div>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+
+      <div id="dealMobilePrimarySlot" class="se-mobile-primary-slot"></div>
+
+      
+      <details class="se-mobile-fold se-mobile-fold-comments" data-mobile-fold open>
+      <summary class="se-mobile-fold-summary">
+        <span class="se-mobile-fold-title"><i class="fas fa-comments"></i> {% t 'deal.detail.comments' %}</span>
+        {% if comments %}
+        <span class="se-mobile-fold-meta">{{ comments|length }}</span>
+        {% endif %}
+      </summary>
+      <div class="se-mobile-fold-panel">
+      <div class="card border-0 mb-4 se-comments-card">
+
+        
+        <div class="se-section-head">
+          <h5 class="se-section-head-title">
+            <i class="fas fa-comments"></i> {% t 'deal.detail.comments' %}
+          </h5>
+          {% if comments %}
+          <span class="se-count-chip">{{ comments|length }}</span>
+          {% endif %}
+        </div>
+
+        <div class="card-body p-4">
+
+          
+          {% if user.is_authenticated %}
+          <form method="post" class="se-comment-form mb-4" id="commentForm" data-skip-global-ajax="true">
+            {% csrf_token %}
+            <input type="hidden" name="add_comment" value="1">
+            <div class="se-comment-input-row">
+              <img src="{{ user.profile.avatar|file_url:'images/default_avatar.jpg' }}" loading="lazy"
+                   class="se-comment-avatar" alt="{{ user.username }}">
+              <div class="se-comment-field-wrap">
+                <textarea name="comment_text" rows="2"
+                          class="form-control se-comment-textarea"
+                          placeholder="{% t 'deal.detail.comment_ph' %}"
+                          required maxlength="1000"></textarea>
+                <div class="se-comment-form-footer">
+                  <span class="se-char-hint">{% t 'deal.detail.max_chars' %}</span>
+                  <button type="submit" class="se-comment-submit-btn">
+                    <i class="fas fa-paper-plane"></i> {% t 'deal.detail.publish' %}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+          {% else %}
+          <div class="se-login-prompt mb-4">
+            <i class="fas fa-lock"></i>
+            <a href="{% url 'login' %}">{% t 'deal.detail.login' %}</a> {% t 'deal.detail.to_comment' %}
+          </div>
+          {% endif %}
+
+          
+          <div id="commentsList">
+          {% if comments %}
+            {% for comment in comments %}
+            <div class="comment-item" id="comment-{{ comment.id }}">
+              <div class="se-comment-header">
+                <div class="se-comment-author">
+                  <img src="{{ comment.author.profile.avatar|file_url:'images/default_avatar.jpg' }}" loading="lazy"
+                       class="se-comment-author-avatar" alt="{{ comment.author.username }}">
+                  <div>
+                    <div class="se-comment-author-name">{{ comment.author.username }}</div>
+                    <div class="se-comment-time">{{ comment.created_at|timesince }} {% t 'deal.detail.ago' %}</div>
+                  </div>
+                </div>
+                {% if user == comment.author %}
+                <form method="post" action="{% url 'delete_comment' comment.id %}"
+                      onsubmit="return confirm('{% t 'deal.detail.delete_confirm' %}')">
+                  {% csrf_token %}
+                  <button type="submit" class="se-delete-comment-btn" title="{% t 'deal.detail.delete_comment' %}">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </form>
+                {% endif %}
+              </div>
+              <p class="se-comment-text">{{ comment.text }}</p>
+
+              
+              {% if comment.replies.exists %}
+              <div class="se-replies-wrap">
+                {% for reply in comment.replies.all %}
+                <div class="reply-item">
+                  <div class="se-reply-header">
+                    <img src="{{ reply.author.profile.avatar|file_url:'images/default_avatar.jpg' }}" loading="lazy"
+                         class="se-reply-avatar" alt="{{ reply.author.username }}">
+                    <span class="se-reply-name">{{ reply.author.username }}</span>
+                    <span class="se-reply-time">{{ reply.created_at|timesince }} {% t 'deal.detail.ago' %}</span>
+                  </div>
+                  <p class="se-reply-text">{{ reply.text }}</p>
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+
+              
+              {% if user.is_authenticated %}
+              <button onclick="toggleReply({{ comment.id }})" class="se-reply-toggle-btn">
+                <i class="fas fa-reply"></i> {% t 'deal.detail.reply' %}
+              </button>
+              <div id="reply-form-{{ comment.id }}" style="display:none;" class="se-reply-form-wrap">
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="add_comment" value="1">
+                  <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                  <div class="se-reply-input-row">
+                    <textarea name="comment_text" rows="2" class="form-control se-reply-textarea"
+                              placeholder="{% t 'deal.detail.reply_ph' %}" maxlength="1000"></textarea>
+                    <button type="submit" class="se-reply-submit-btn">{% t 'deal.detail.send' %}</button>
+                  </div>
+                </form>
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          {% else %}
+          <div class="se-no-comments">
+            <i class="fas fa-comment-slash"></i>
+            <div>{% t 'deal.detail.no_comments' %}</div>
+          </div>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+      </div>
+      </details>
+
+      
+      {% if is_party %}
+      <details class="se-mobile-fold se-mobile-fold-chat" data-mobile-fold open>
+      <summary class="se-mobile-fold-summary">
+        <span class="se-mobile-fold-title"><i class="fas fa-lock"></i> {% t 'deal.detail.chat_title' %}</span>
+        {% if deal_messages %}
+        <span class="se-mobile-fold-meta">{{ deal_messages|length }}</span>
+        {% endif %}
+      </summary>
+      <div class="se-mobile-fold-panel">
+      <div class="card border-0 se-deal-chat-card">
+        <div class="se-deal-chat-head">
+          <h5 class="se-deal-chat-title">
+            <i class="fas fa-lock"></i> {% t 'deal.detail.chat_title' %}
+            <span class="se-deal-chat-hint">{% t 'deal.detail.chat_hint' %}</span>
+          </h5>
+        </div>
+        <div class="card-body p-0">
+
+          
+          <div id="dealChatBox" class="se-deal-chat-box">
+            {% if deal_messages %}
+              {% for msg in deal_messages %}
+              
+              <div class="se-deal-msg-row {% if msg.sender == user %}se-dm-mine{% else %}se-dm-other{% endif %}" data-msg-id="{{ msg.id }}">
+
+                {% if msg.sender != user %}
+                <img src="{{ msg.sender.profile.avatar|file_url:'images/default_avatar.jpg' }}" loading="lazy"
+                     class="se-deal-msg-avatar" alt="{{ msg.sender.username }}">
+                {% endif %}
+
+                <div class="se-deal-msg-content">
+                  <div class="se-deal-msg-bubble {% if msg.sender == user %}se-dm-bubble-mine{% else %}se-dm-bubble-other{% endif %}">
+                    {% if msg.text %}{{ msg.text }}{% endif %}
+                    {% if msg.file %}
+                    <a href="{% url 'deal_message_attachment' msg.id %}" target="_blank" class="se-deal-file-link">
+                      <i class="fas fa-paperclip"></i> {% t 'deal.detail.attached_file' %}
+                    </a>
+                    {% endif %}
+                  </div>
+                  <div class="se-deal-msg-time {% if msg.sender == user %}se-dm-time-mine{% endif %}">
+                    {{ msg.created_at|date:"H:i" }}
+                  </div>
+                </div>
+
+                {% if msg.sender == user %}
+                <img src="{{ user.profile.avatar|file_url:'images/default_avatar.jpg' }}" loading="lazy"
+                     class="se-deal-msg-avatar" alt="{{ user.username }}">
+                {% endif %}
+
+              </div>
+              {% endfor %}
+            {% else %}
+            <div class="se-deal-chat-empty">
+              <i class="fas fa-comments"></i>
+              <div>{% t 'deal.detail.start_chat' %}</div>
+            </div>
+            {% endif %}
+          </div>
+
+          
+          <div class="se-deal-chat-input-wrap">
+            <form method="post" enctype="multipart/form-data" id="dealMsgForm" data-skip-global-ajax="true">
+              {% csrf_token %}
+              <div class="se-deal-chat-form">
+                <label for="dealFileInput" class="se-deal-attach-btn" title="{% t 'deal.detail.attached_file' %}">
+                  <i class="fas fa-paperclip"></i>
+                </label>
+                <input type="file" name="file" id="dealFileInput" style="display:none;">
+                <input type="text" name="message" id="dealMsgInput"
+                       class="form-control se-deal-msg-input"
+                       placeholder="{% t 'deal.detail.msg_ph' %}" autocomplete="off" maxlength="2000">
+                <button type="submit" class="btn btn-success se-deal-send-btn">
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      </div>
+      </details>
+      {% endif %}
+
+    </div>
+
+    
+    <div class="col-lg-4 se-detail-side-col">
+
+      <div class="se-sidebar-stack">
+
+      <div id="dealActionsDock"></div>
+      
+      <div class="se-buy-box" style="animation:fadeInUp .5s .15s ease both;" id="dealActions">
+
+        <div class="se-buy-topline">
+          <span class="se-buy-chip {% if deal.is_auction %}se-buy-chip-auction{% else %}se-buy-chip-fixed{% endif %}">
+            {% if deal.is_auction %}
+            <i class="fas fa-gavel"></i> {% t 'deal.detail.type_auction' %}
+            {% else %}
+            <i class="fas fa-tag"></i> {% t 'deal.detail.type_fixed' %}
+            {% endif %}
+          </span>
+          <span class="se-buy-chip se-buy-chip-muted">#{{ deal.id }}</span>
+        </div>
+
+        <div class="se-buy-price-section">
+          <div>
+            <div class="se-buy-price-label se-buy-price-label-top">
+              {% if deal.is_auction %}{% t 'deal.detail.start_price' %}{% else %}{% t 'deal.detail.final_price_escrow' %}{% endif %}
+            </div>
+            <div class="se-buy-price">${{ deal.price }}</div>
+          </div>
+          <div class="se-buy-status-pill
+            {% if deal.status == 'completed' %}se-buy-status-success
+            {% elif deal.status == 'disputed' %}se-buy-status-danger
+            {% elif deal.status == 'reserved' or deal.status == 'shipped' %}se-buy-status-info
+            {% else %}se-buy-status-neutral{% endif %}">
+            {{ deal.get_status_display }}
+          </div>
+        </div>
+
+        <div class="se-buy-divider"></div>
+
+        
+        <div class="se-buy-guarantees">
+          <div class="se-buy-guarantee">
+            <div class="se-buy-guarantee-icon" style="background:var(--success-light); height: 28px; width: auto; padding: 0 8px; border-radius: 8px; display: flex; align-items: center;">
+              <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" class="se-brand-logo-badge" width="520" height="150" loading="lazy" decoding="async">
+            </div>
+            <span>{% t 'deal.detail.guarantee1' %}</span>
+          </div>
+          <div class="se-buy-guarantee">
+            <div class="se-buy-guarantee-icon" style="background:var(--info-light);">
+              <i class="fas fa-headset" style="color:var(--info);"></i>
+            </div>
+            <span>{% t 'deal.detail.guarantee2' %}</span>
+          </div>
+          <div class="se-buy-guarantee">
+            <div class="se-buy-guarantee-icon" style="background:var(--warning-light);">
+              <i class="fas fa-star" style="color:var(--warning);"></i>
+            </div>
+            <span>{% t 'deal.detail.guarantee3' %}</span>
+          </div>
+        </div>
+
+        <div class="se-buy-mini-flow">
+          <div class="se-buy-mini-flow-label">{% t "deal.detail.quick_summary" %}</div>
+          {% if deal.status == 'new' %}
+          <div class="se-buy-mini-flow-text">{% t "deal.detail.flow_new" %}</div>
+          {% elif deal.status == 'reserved' and user == deal.buyer %}
+          <div class="se-buy-mini-flow-text">{% t "deal.detail.flow_reserved_buyer" %}</div>
+          {% elif deal.status == 'reserved' and user == deal.seller %}
+          <div class="se-buy-mini-flow-text">{% t "deal.detail.flow_reserved_seller" %}</div>
+          {% elif deal.status == 'shipped' and user == deal.buyer %}
+          <div class="se-buy-mini-flow-text">{% t "deal.detail.flow_shipped_buyer" %}</div>
+          {% elif deal.status == 'completed' %}
+          <div class="se-buy-mini-flow-text">{% t "deal.detail.flow_completed" %}</div>
+          {% elif deal.status == 'disputed' %}
+          <div class="se-buy-mini-flow-text">{% t "deal.detail.flow_disputed" %}</div>
+          {% else %}
+          <div class="se-buy-mini-flow-text">{% t "deal.detail.flow_default" %}</div>
+          {% endif %}
+        </div>
+
+        <div class="se-buy-divider"></div>
+
+        <div class="se-buy-box-container">
+        {% if user.is_authenticated %}
+
+          {% if user != deal.seller and user != deal.buyer and deal.status == 'new' %}
+          
+          <a href="{% url 'create_payment' deal.id %}" class="btn btn-primary w-100 se-buy-main-btn mb-2 se-buy-box-btn"
+             style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;">
+            <i class="fas fa-lock"></i> {% t 'deal.detail.buy_escrow' %}
+          </a>
+          <div class="se-buy-inline-hint">
+            <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" class="se-brand-logo-badge" width="520" height="150" loading="lazy" decoding="async">
+            <span>{% t 'deal.detail.buy_hint' %}</span>
+          </div>
+
+          {% elif deal.status == 'reserved' and user == deal.buyer %}
+          
+          {% if deal.payment.status == 'escrow_held' %}
+          <div class="se-escrow-status-box">
+            <div class="se-escrow-icon"><i class="fas fa-vault"></i></div>
+            <div>
+              <div class="se-escrow-title">{% t 'deal.detail.escrow_held' %}</div>
+              <div class="se-escrow-amount">${{ deal.payment.amount }}</div>
+              <div class="se-escrow-sub">{% t 'deal.detail.escrow_held_sub' %}</div>
+            </div>
+          </div>
+          {% endif %}
+
+          {% elif deal.status == 'reserved' and user == deal.seller and not deal.seller_shipped %}
+          
+          <button onclick="toggleSection('shipSection')"
+                  class="btn btn-success w-100 se-buy-main-btn mb-2">
+            <i class="fas fa-shipping-fast"></i> {% t 'deal.detail.confirm_ship' %}
+          </button>
+          <div id="shipSection" class="se-collapse-box" style="display:none;">
+            <form method="post" enctype="multipart/form-data" data-async-form data-refresh-target=".se-product-card">
+              {% csrf_token %}
+              <div class="mb-2">
+                <label class="form-label se-form-label-sm">{% t 'deal.detail.track_input' %}</label>
+                <input type="text" name="tracking_number" class="form-control form-control-sm"
+                       placeholder="{% t 'deal.detail.track_ph' %}">
+              </div>
+              <div class="mb-3">
+                <label class="form-label se-form-label-sm">{% t 'deal.detail.proof_img' %}</label>
+                <input type="file" name="shipping_proof" class="form-control form-control-sm">
+              </div>
+              <button type="submit" name="mark_shipped" class="btn btn-success w-100">
+                <i class="fas fa-check"></i> {% t 'deal.detail.confirm_send' %}
+              </button>
+            </form>
+          </div>
+
+          {% elif deal.status == 'shipped' and user == deal.buyer and not deal.buyer_confirmed %}
+          
+          {% if deal.payment.status == 'escrow_held' %}
+          <div class="se-escrow-status-box se-escrow-warning">
+            <div class="se-escrow-icon"><i class="fas fa-shipping-fast"></i></div>
+            <div>
+              <div class="se-escrow-title">{% t 'deal.detail.on_the_way' %}</div>
+              <div class="se-escrow-amount">${{ deal.payment.amount }}</div>
+              <div class="se-escrow-sub">{% t 'deal.detail.held_sub2' %}</div>
+            </div>
+          </div>
+          {% endif %}
+          
+          <button onclick="SE.confirm('{% t 'deal.detail.confirm_delivery_q' %}',()=>document.getElementById('confirmDeliveryForm').submit())"
+                  class="btn btn-success w-100 se-buy-main-btn mb-2">
+            <i class="fas fa-check-circle"></i> {% t 'deal.detail.confirm_receipt' %}
+          </button>
+          <form id="confirmDeliveryForm" method="post" style="display:none;" data-async-form data-refresh-target=".se-product-card">
+            {% csrf_token %}
+            <input type="hidden" name="confirm_delivery" value="1">
+          </form>
+          
+          <button onclick="toggleSection('disputeSection')"
+                  class="btn btn-outline-danger w-100 mb-2" style="font-size:.85rem!important;">
+            <i class="fas fa-exclamation-triangle"></i> {% t 'deal.detail.open_dispute' %}
+          </button>
+          <div id="disputeSection" class="se-collapse-box se-collapse-danger" style="display:none;">
+            <form method="post" enctype="multipart/form-data" data-async-form data-refresh-target=".se-product-card">
+              {% csrf_token %}
+              <div class="mb-2">
+                <label class="form-label se-form-label-sm" style="color:var(--danger);">{% t 'deal.detail.dispute_reason' %}</label>
+                <textarea name="dispute_reason" rows="3" class="form-control form-control-sm"
+                          required placeholder="{% t 'deal.detail.dispute_ph' %}"></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label se-form-label-sm" style="color:var(--danger);">{% t 'deal.detail.evidence' %}</label>
+                <input type="file" name="dispute_evidence" class="form-control form-control-sm">
+              </div>
+              <button type="submit" name="open_dispute" class="btn btn-danger w-100">
+                <i class="fas fa-gavel"></i> {% t 'deal.detail.submit_dispute' %}
+              </button>
+            </form>
+          </div>
+
+          {% elif deal.status == 'completed' %}
+          <div class="se-status-banner se-status-completed">
+            <i class="fas fa-check-double"></i>
+            <span>{% t 'deal.detail.deal_completed' %}</span>
+          </div>
+          {% if deal.payment.status == 'released' %}
+          <div style="display:flex;align-items:center;gap:8px;margin-top:10px;padding:10px 14px;background:rgba(14,124,90,0.08);border-radius:10px;border:1px solid rgba(14,124,90,0.2);">
+            <i class="fas fa-check-circle" style="color:var(--success);"></i>
+            <span style="font-size:.8rem;color:var(--success);font-weight:700;">{% t 'deal.detail.released_to_seller' %}{{ deal.payment.amount }}{% t 'deal.detail.released_to_seller2' %}</span>
+          </div>
+          {% endif %}
+
+          
+          {% if user == deal.buyer and not user_has_reviewed %}
+          <div class="card border-0 mt-3 se-review-card" style="background:#fff9f0;border:1px solid #ffeeba!important;">
+            <div class="card-body p-3">
+              <h6 style="color:#856404;font-size:.85rem;font-weight:800;margin-bottom:12px;">
+                <i class="fas fa-star" style="color:var(--gold);"></i> {% t 'deal.detail.rate_seller' %}
+              </h6>
+              <form action="{% url 'create_review' deal.id %}" method="post" data-async-form data-refresh-target=".se-review-card">
+                {% csrf_token %}
+                <div class="se-stars-input mb-3">
+                  {% for i in "54321" %}
+                  <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}" required>
+                  <label for="star{{ i }}"><i class="fas fa-star"></i></label>
+                  {% endfor %}
+                </div>
+                <textarea name="comment" class="form-control form-control-sm mb-2" rows="2" placeholder="{% t 'deal.detail.rate_ph' %}"></textarea>
+                <button type="submit" class="btn btn-warning btn-sm w-100" style="font-weight:700;">
+                  {% t 'deal.detail.submit_rating' %}
+                </button>
+              </form>
+            </div>
+          </div>
+          <style>
+            .se-stars-input { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 4px; }
+            .se-stars-input input { display: none; }
+            .se-stars-input label { font-size: 1.2rem; color: #ddd; cursor: pointer; transition: color .2s; }
+            .se-stars-input input:checked ~ label,
+            .se-stars-input label:hover,
+            .se-stars-input label:hover ~ label { color: var(--gold); }
+          </style>
+          {% endif %}
+
+          {% elif deal.status == 'disputed' %}
+          <div class="se-status-banner se-status-disputed">
+            <i class="fas fa-balance-scale"></i>
+            <span>{% t 'deal.detail.reviewing_dispute' %}</span>
+          </div>
+
+          {% else %}
+          <div class="se-status-banner se-status-info">
+            <i class="fas fa-hourglass-half"></i>
+            <span>{% t 'deal.detail.reserved_now' %}</span>
+          </div>
+          {% endif %}
+
+          {% if deal.escrow_room and user.is_authenticated %}
+          {% if user == deal.buyer or user == deal.seller or user.is_staff %}
+          <a href="{% url 'escrow_room' deal.id %}" class="btn btn-outline-primary w-100 mt-2" style="font-weight:800;border-radius:12px;">
+            <i class="fas fa-lock" style="margin-left:6px;"></i> {% t "deal.detail.enter_deal_room" %}
+          </a>
+          {% endif %}
+          {% endif %}
+
+          {% if deal.payment and deal.payment.invoice %}
+          <a href="{% url 'invoice_detail' deal.payment.invoice.id %}" class="btn btn-outline-secondary w-100 mt-2" style="font-weight:800;border-radius:12px;">
+            <i class="fas fa-file-invoice-dollar" style="margin-left:6px;"></i>
+            {% if current_language == 'ar' %}تحميل الفاتورة{% else %}Download invoice{% endif %}
+          </a>
+          {% endif %}
+
+        {% else %}
+        
+        <a href="{% url 'login' %}" class="btn btn-primary w-100 se-buy-main-btn se-buy-box-btn">
+          <i class="fas fa-sign-in-alt"></i> {% t 'deal.detail.login_to_buy' %}
+        </a>
+        {% endif %}
+        </div>
+
+      </div>
+
+      
+      {% if user == deal.seller and deal.status == 'new' %}
+      <details class="se-mobile-fold se-mobile-fold-owner" data-mobile-fold open>
+      <summary class="se-mobile-fold-summary">
+        <span class="se-mobile-fold-title"><i class="fas fa-cog"></i> {% t 'deal.detail.manage_offer' %}</span>
+      </summary>
+      <div class="se-mobile-fold-panel">
+      <div class="se-owner-actions" style="animation:fadeInUp .5s .25s ease both;">
+        <div class="se-owner-actions-header">
+          <i class="fas fa-cog"></i> {% t 'deal.detail.manage_offer' %}
+        </div>
+        <div class="se-owner-actions-body">
+          
+          <a href="{% url 'create_deal' %}?edit={{ deal.id }}"
+             class="se-owner-btn se-owner-btn-edit">
+            <i class="fas fa-edit"></i>
+            {% t 'deal.detail.edit_offer' %}
+          </a>
+          
+          <button type="button"
+                  class="se-owner-btn se-owner-btn-delete"
+                  onclick="confirmDeleteDeal()">
+            <i class="fas fa-trash-alt"></i>
+            {% t 'deal.detail.delete_offer' %}
+          </button>
+        </div>
+        <div class="se-owner-actions-note">
+          <i class="fas fa-info-circle"></i>
+          {% t 'deal.detail.edit_delete_note' %}
+        </div>
+      </div>
+
+      
+      <form id="deleteDealForm" method="post"
+            action="{% url 'delete_deal' deal.id %}"
+            style="display:none;" data-async-form>
+        {% csrf_token %}
+        <input type="hidden" name="confirm_delete" value="1">
+      </form>
+      </div>
+      </details>
+      {% endif %}
+
+      <details class="se-mobile-fold se-mobile-fold-share" data-mobile-fold open>
+        <summary class="se-mobile-fold-summary">
+          <span class="se-mobile-fold-title"><i class="fas fa-share-nodes"></i> {% t "share.title" %}</span>
+        </summary>
+        <div class="se-mobile-fold-panel">
+      {% include "partials/share_panel.html" %}
+        </div>
+      </details>
+
+      
+      <details class="se-mobile-fold se-mobile-fold-seller" data-mobile-fold open>
+        <summary class="se-mobile-fold-summary">
+          <span class="se-mobile-fold-title"><i class="fas fa-store"></i> {% t 'deal.detail.seller' %}</span>
+        </summary>
+        <div class="se-mobile-fold-panel">
+      <div class="card border-0 se-seller-card">
+        <div class="card-body p-4">
+          <h6 class="se-section-mini-title mb-3">
+            <i class="fas fa-store"></i> {% t 'deal.detail.seller' %}
+          </h6>
+          <div class="se-seller-profile">
+            <img src="{{ deal.seller.profile.avatar|file_url:'images/default_avatar.jpg' }}" loading="lazy"
+                 class="se-seller-avatar" alt="{{ deal.seller.username }}">
+            <div class="se-seller-info">
+              <div class="se-seller-name">{{ deal.seller.username }}</div>
+              <div class="se-seller-stats">
+                {% if deal.seller.received_reviews.exists %}
+                <span><i class="fas fa-star" style="color:var(--gold);font-size:10px;"></i>
+                  {{ deal.seller.received_reviews.count }} {% t 'deal.detail.reviews' %}</span>
+                {% else %}
+                <span><i class="fas fa-user-plus" style="font-size:10px;"></i> {% t 'deal.detail.new_member' %}</span>
+                {% endif %}
+                <span><i class="fas fa-handshake" style="font-size:10px;"></i>
+                  {{ deal.seller.seller_deals.count }} {% t 'deal.detail.deals_count' %}</span>
+              </div>
+            </div>
+          </div>
+          <div class="se-seller-btns mt-3">
+            {% if user.is_authenticated and user != deal.seller %}
+              {% if is_friend_with_seller %}
+              <a href="{% url 'private_chat' deal.seller.id %}" class="btn btn-primary se-seller-btn">
+                <i class="fas fa-comment"></i> {% t 'deal.detail.message' %}
+              </a>
+              {% elif friend_request_sent %}
+              <button disabled class="btn btn-secondary se-seller-btn" style="opacity:.7;">
+                <i class="fas fa-clock"></i> {% t 'deal.detail.req_sent' %}
+              </button>
+              {% else %}
+              <a href="{% url 'send_friend_request' deal.seller.id %}" class="btn btn-outline-primary se-seller-btn">
+                <i class="fas fa-user-plus"></i> {% t 'deal.detail.add_friend' %}
+              </a>
+              {% endif %}
+            {% endif %}
+            <a href="{% url 'user_profile' deal.seller.id %}" class="btn btn-outline-secondary se-seller-icon-btn">
+              <i class="fas fa-user"></i>
+            </a>
+          </div>
+          {% if user.is_authenticated %}
+          <a href="{% url 'create_ticket' %}?mode=report&deal_id={{ deal.id }}&reported_user_id={{ deal.seller.id }}" class="btn btn-outline-danger w-100 mt-3" style="border-radius:12px;font-weight:800;">
+            <i class="fas fa-flag" style="margin-left:6px;"></i>
+            {% t "deal.detail.report_seller" %}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+        </div>
+      </details>
+
+      
+      <details class="se-mobile-fold se-mobile-fold-info" data-mobile-fold open>
+        <summary class="se-mobile-fold-summary">
+          <span class="se-mobile-fold-title"><i class="fas fa-info-circle"></i> {% t 'deal.detail.deal_details' %}</span>
+          <span class="se-mobile-fold-meta">#{{ deal.id }}</span>
+        </summary>
+        <div class="se-mobile-fold-panel">
+      <div class="card border-0 se-deal-info-card">
+        <div class="card-body p-4">
+          <h6 class="se-section-mini-title mb-3">
+            <i class="fas fa-info-circle"></i> {% t 'deal.detail.deal_details' %}
+          </h6>
+          <div class="se-deal-info-list">
+            <div class="se-deal-info-row">
+              <span>{% t 'deal.detail.deal_num' %}</span>
+              <span class="se-info-val">#{{ deal.id }}</span>
+            </div>
+            <div class="se-deal-info-row">
+              <span>{% t 'deal.detail.publish_date' %}</span>
+              <span class="se-info-val">{{ deal.created_at|date:"d/m/Y" }}</span>
+            </div>
+            <div class="se-deal-info-row">
+              <span>{% t 'deal.detail.type' %}</span>
+              <span class="se-info-val">{% if deal.is_auction %}{% t 'deal.detail.type_auction' %}{% else %}{% t 'deal.detail.type_fixed' %}{% endif %}</span>
+            </div>
+            <div class="se-deal-info-row">
+              <span>{% t 'deal.detail.status' %}</span>
+              <span class="se-info-val se-info-status
+                {% if deal.status == 'completed' %}se-info-green
+                {% elif deal.status == 'disputed' %}se-info-red
+                {% elif deal.status == 'reserved' or deal.status == 'shipped' %}se-info-blue
+                {% else %}se-info-gold{% endif %}">
+                {{ deal.get_status_display }}
+              </span>
+            </div>
+            {% if deal.buyer %}
+            <div class="se-deal-info-row">
+              <span>{% t 'deal.detail.buyer' %}</span>
+              <span class="se-info-val">{{ deal.buyer.username }}</span>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+            
+            {% if deal.escrow_room and user.is_authenticated %}
+              {% if user == deal.buyer or user == deal.seller or user.is_staff %}
+              <div class="se-deal-info-row" style="background:linear-gradient(135deg,rgba(201,150,59,0.08),rgba(201,150,59,0.04));border:1.5px solid rgba(201,150,59,0.2);">
+                <span style="font-weight:700;color:var(--navy);">
+                  <i class="fas fa-lock" style="color:var(--gold);margin-left:4px;"></i>{% t 'deal.detail.escrow_room' %}
+                </span>
+                <a href="{% url 'escrow_room' deal.id %}"
+                   style="font-size:.8rem;font-weight:700;color:var(--gold-dark);text-decoration:none;display:flex;align-items:center;gap:4px;">
+                  <span>{% t 'deal.detail.enter_room' %}</span>
+                  <i class="fas fa-arrow-left" style="font-size:.7rem;"></i>
+                </a>
+              </div>
+              {% endif %}
+            {% endif %}
+        </div>
+      </div>
+      </details>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="se-image-viewer-modal" id="imgModal" tabindex="-1" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="se-image-viewer-dialog">
+    <div class="se-image-viewer-content" style="border-radius:16px;overflow:hidden;border:none;">
+      <div class="se-image-viewer-head" style="background:var(--navy);border:none;padding:12px 20px;">
+        <h6 class="modal-title" style="color:white;font-weight:700;">{{ deal.product_title }}</h6>
+        <button type="button" class="btn-close btn-close-white se-image-viewer-header-close" onclick="closeImageModal()" aria-label="{% if current_language == 'ar' %}إغلاق الصورة{% else %}Close image{% endif %}"></button>
+      </div>
+      <button type="button" class="se-image-viewer-close" onclick="closeImageModal()" aria-label="{% if current_language == 'ar' %}إغلاق الصورة{% else %}Close image{% endif %}">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="se-image-viewer-body text-center p-0" style="background:#0D1B2A;">
+        <img id="modalImg" src="" style="max-height:80vh;max-width:100%;object-fit:contain;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Breadcrumb */
+.se-bc-link:hover { color:var(--gold-dark) !important; }
+
+/* Gallery */
+.se-gallery-card { border-radius:20px!important; }
+.se-gallery-main {
+  position:relative; border-radius:14px; overflow:hidden;
+  background:var(--navy); cursor:zoom-in; margin-bottom:10px;
+}
+.se-gallery-main img {
+  width:100%; height:380px; object-fit:contain; display:block;
+  transition:transform .4s ease;
+}
+.se-gallery-main:hover img { transform:scale(1.03); }
+.se-gallery-status { position:absolute; top:14px; right:14px; }
+.se-gal-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  border-radius:20px; padding:5px 14px;
+  font-size:.78rem; font-weight:700; backdrop-filter:blur(8px);
+}
+.se-gal-available  { background:rgba(14,124,90,.85);  color:white; }
+.se-gal-reserved   { background:rgba(36,113,163,.85); color:white; }
+.se-gal-completed  { background:rgba(13,27,42,.85);   color:var(--gold); }
+.se-gal-disputed   { background:rgba(192,57,43,.85);  color:white; }
+.se-gal-shipped    { background:rgba(230,126,34,.85); color:white; }
+.se-gallery-zoom-hint {
+  position:absolute; bottom:14px; left:14px;
+  width:32px; height:32px; border-radius:8px;
+  background:rgba(255,255,255,.2); backdrop-filter:blur(8px);
+  color:white; display:flex; align-items:center; justify-content:center;
+  font-size:.8rem; opacity:0; transition:opacity .3s;
+}
+.se-gallery-main:hover .se-gallery-zoom-hint { opacity:1; }
+.se-gallery-thumbs {
+  display:flex; gap:8px; overflow-x:auto; padding:2px 2px;
+  scrollbar-width:thin;
+}
+.se-gallery-thumb {
+  width:76px; height:76px; object-fit:cover;
+  border-radius:10px; cursor:pointer; flex-shrink:0;
+  border:2px solid var(--border-light); transition:all .2s;
+}
+.se-gallery-thumb:hover, .se-gallery-thumb.active {
+  border-color:var(--gold); box-shadow:0 0 0 2px rgba(201,150,59,.2);
+}
+.se-image-viewer-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2055 !important;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(2, 6, 15, .88);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+}
+.se-image-viewer-modal.is-open {
+  display: flex;
+  opacity: 1;
+  pointer-events: auto;
+}
+.se-image-viewer-dialog {
+  width: min(1100px, calc(100vw - 24px));
+  max-width: none;
+  margin: 0;
+}
+.se-image-viewer-content {
+  position: relative;
+  width: 100%;
+  background: #07111f !important;
+  box-shadow: 0 28px 80px rgba(0,0,0,.48);
+}
+.se-image-viewer-close {
+  position: absolute;
+  top: 12px;
+  inset-inline-end: 12px;
+  z-index: 12;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  background: rgba(3,8,18,.82);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 14px 34px rgba(0,0,0,.32);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.se-image-viewer-close:hover {
+  background: rgba(201,150,59,.95);
+  color: #0D1B2A;
+}
+.se-image-viewer-close:active {
+  transform: scale(.96);
+}
+.se-image-viewer-body {
+  min-height: min(68vh, 720px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.se-image-viewer-modal img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(82vh, 820px);
+  display: block;
+}
+@media (max-width:768px) {
+  .se-gallery-main img { height:240px; }
+  .se-gallery-thumb { width:60px; height:60px; }
+  .se-image-viewer-modal {
+    padding: 0;
+  }
+  .se-image-viewer-dialog {
+    width: 100vw;
+    height: 100dvh;
+    margin: 0;
+  }
+  .se-image-viewer-content {
+    min-height: 100dvh;
+    border-radius: 0 !important;
+  }
+  .se-image-viewer-header-close {
+    display: none;
+  }
+  .se-image-viewer-close {
+    top: max(12px, env(safe-area-inset-top));
+    inset-inline-end: max(12px, env(safe-area-inset-right));
+  }
+  .se-image-viewer-head {
+    padding-inline-end: 68px !important;
+  }
+  .se-image-viewer-body {
+    min-height: calc(100dvh - 56px);
+    padding: 0;
+  }
+  .se-image-viewer-modal img {
+    max-height: calc(100dvh - 76px) !important;
+    max-width: 100vw !important;
+  }
+}
+@media (max-width:576px) {
+  .se-gallery-main img { height:190px; }
+}
+
+/* Product Card */
+.se-product-card { border-radius:20px!important; }
+.se-product-top {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  gap:16px; flex-wrap:wrap; margin-bottom:20px;
+}
+.se-product-title { font-size:1.4rem; font-weight:900; color:var(--navy); margin-bottom:8px; line-height:1.3; }
+.se-product-meta {
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+  font-size:.8rem; color:var(--text-secondary);
+}
+.se-product-meta span { display:flex; align-items:center; gap:4px; }
+.se-type-chip-auction {
+  background:rgba(201,150,59,.1); color:var(--gold-dark);
+  border-radius:20px; padding:3px 10px; font-weight:700; font-size:.72rem!important;
+}
+.se-type-chip-fixed {
+  background:var(--info-light); color:var(--info);
+  border-radius:20px; padding:3px 10px; font-weight:700; font-size:.72rem!important;
+}
+.se-product-price-box { text-align:left; flex-shrink:0; }
+.se-product-price {
+  font-size:2rem; font-weight:900; color:var(--gold-dark);
+  font-family:'Tajawal',sans-serif; line-height:1;
+}
+.se-product-price-sub { font-size:.72rem; color:var(--text-light); margin-top:3px; }
+.se-product-divider { height:1px; background:#F0F4F8; margin:16px 0; }
+.se-section-mini-title {
+  display:flex; align-items:center; gap:8px;
+  font-size:.92rem; font-weight:800; color:var(--navy); margin-bottom:12px;
+}
+.se-section-mini-title i { color:var(--gold); }
+.se-product-desc {
+  color:var(--text-secondary); line-height:1.9; font-size:.92rem;
+  white-space:pre-line;
+}
+.se-gallery-card,
+.se-product-card,
+.se-comments-card,
+.se-deal-chat-card,
+.se-seller-card,
+.se-deal-info-card {
+  border:1px solid rgba(13,27,42,.07) !important;
+  box-shadow:0 18px 42px rgba(13,27,42,.08) !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(249,251,253,.98));
+}
+.se-detail-side-col {
+  position:relative;
+}
+.se-mobile-primary-slot {
+  display:none;
+}
+.se-mobile-fold-summary {
+  display:none;
+}
+.se-sidebar-stack {
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+/* Info banners */
+.se-info-banner {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:14px 16px; border-radius:12px; border-right:4px solid;
+}
+.se-banner-success { background:var(--success-light); border-color:var(--success); }
+.se-banner-danger  { background:var(--danger-light);  border-color:var(--danger); }
+.se-banner-icon {
+  font-size:1.1rem; margin-top:1px;
+}
+.se-banner-success .se-banner-icon { color:var(--success); }
+.se-banner-danger  .se-banner-icon { color:var(--danger); }
+.se-banner-title { font-weight:700; font-size:.88rem; margin-bottom:3px; }
+.se-banner-success .se-banner-title { color:var(--success); }
+.se-banner-danger  .se-banner-title { color:var(--danger); }
+.se-banner-sub { font-size:.82rem; color:var(--text-secondary); }
+
+/* Comments */
+.se-comments-card { border-radius:20px!important; overflow:hidden; }
+.se-section-head {
+  background:linear-gradient(135deg,var(--navy),var(--navy-mid));
+  padding:14px 24px; display:flex; align-items:center; gap:10px;
+}
+.se-section-head-title { color:white; margin:0; font-weight:700; font-size:.92rem; display:flex; align-items:center; gap:8px; }
+.se-section-head-title i { color:var(--gold); }
+.se-count-chip {
+  background:rgba(201,150,59,.25); color:var(--gold-light);
+  border-radius:20px; padding:2px 10px; font-size:.76rem; font-weight:700;
+}
+.se-comment-form { }
+.se-comment-input-row { display:flex; gap:12px; align-items:flex-start; }
+.se-comment-avatar {
+  width:40px; height:40px; border-radius:50%; object-fit:cover;
+  border:2px solid var(--gold); flex-shrink:0; margin-top:2px;
+}
+.se-comment-field-wrap { flex:1; }
+.se-comment-textarea { border-radius:12px!important; resize:none; font-size:.9rem!important; }
+.se-comment-form-footer {
+  display:flex; justify-content:space-between; align-items:center; margin-top:8px;
+}
+.se-char-hint { font-size:.72rem; color:var(--text-light); }
+.se-comment-submit-btn {
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:var(--navy); border:none; border-radius:8px;
+  padding:7px 18px; font-weight:700; font-size:.82rem;
+  cursor:pointer; font-family:'Cairo',sans-serif;
+  transition:all .25s ease;
+}
+.se-comment-submit-btn:hover { box-shadow:0 4px 12px rgba(201,150,59,.3); }
+.se-login-prompt {
+  padding:14px 18px; background:#F8F9FC;
+  border-radius:12px; border:1.5px dashed #D5DDE8;
+  text-align:center; font-size:.88rem; color:var(--text-secondary);
+}
+.se-login-prompt i { color:var(--gold); margin-left:6px; }
+.se-login-prompt a { color:var(--gold-dark); font-weight:700; text-decoration:none; }
+/* Comment items */
+.se-comment-header {
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;
+}
+.se-comment-author { display:flex; align-items:center; gap:10px; }
+.se-comment-author-avatar {
+  width:36px; height:36px; border-radius:50%; object-fit:cover;
+  border:2px solid var(--border-light);
+}
+.se-comment-author-name { font-weight:700; font-size:.88rem; color:var(--navy); }
+.se-comment-time { font-size:.72rem; color:var(--text-light); }
+.se-comment-text { font-size:.9rem; color:var(--text-primary); line-height:1.7; margin:0; }
+.se-delete-comment-btn {
+  background:none; border:none; color:var(--text-light); cursor:pointer;
+  padding:4px 8px; border-radius:6px; transition:all .2s; font-size:.8rem;
+}
+.se-delete-comment-btn:hover { background:var(--danger-light); color:var(--danger); }
+.se-replies-wrap { border-top:1px solid #F0F4F8; padding-top:10px; margin-top:10px; }
+.se-reply-header { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
+.se-reply-avatar {
+  width:26px; height:26px; border-radius:50%; object-fit:cover; border:1.5px solid var(--gold);
+}
+.se-reply-name { font-weight:700; font-size:.82rem; color:var(--navy); }
+.se-reply-time  { font-size:.7rem; color:var(--text-light); }
+.se-reply-text  { font-size:.85rem; color:var(--text-secondary); margin:0; line-height:1.6; }
+.se-reply-toggle-btn {
+  background:none; border:none; color:var(--gold-dark); font-size:.82rem;
+  font-weight:700; cursor:pointer; font-family:'Cairo',sans-serif;
+  padding:4px 8px; border-radius:6px; transition:all .2s; margin-top:8px;
+}
+.se-reply-toggle-btn:hover { background:rgba(201,150,59,.1); }
+.se-reply-form-wrap { margin-top:8px; }
+.se-reply-input-row { display:flex; gap:8px; }
+.se-reply-textarea { border-radius:10px!important; resize:none; font-size:.85rem!important; }
+.se-reply-submit-btn {
+  background:var(--navy); color:white; border:none; border-radius:8px;
+  padding:8px 16px; font-weight:700; font-size:.82rem;
+  cursor:pointer; font-family:'Cairo',sans-serif; white-space:nowrap; align-self:flex-start;
+  transition:all .2s;
+}
+.se-reply-submit-btn:hover { background:var(--navy-mid); }
+.se-no-comments {
+  text-align:center; padding:40px 20px; color:var(--text-secondary);
+}
+.se-no-comments i { font-size:2rem; color:#DDE3EC; display:block; margin-bottom:10px; }
+.se-no-comments div { font-size:.88rem; }
+
+/* Deal Chat */
+.se-deal-chat-card { border-radius:20px!important; overflow:hidden; }
+.se-deal-chat-head {
+  background:linear-gradient(135deg,#0a5940,var(--success));
+  padding:14px 24px;
+}
+.se-deal-chat-title { color:white; margin:0; font-weight:700; font-size:.92rem; display:flex; align-items:center; gap:8px; }
+.se-deal-chat-title i { }
+.se-deal-chat-hint { font-size:.75rem; opacity:.75; font-weight:400; }
+.se-deal-chat-box {
+  height:320px; overflow-y:auto; padding:20px;
+  background:#F4F6FA; scroll-behavior:smooth;
+  display:flex; flex-direction:column; gap:4px;
+}
+.se-deal-chat-box::-webkit-scrollbar { width:4px; }
+.se-deal-chat-box::-webkit-scrollbar-thumb { background:var(--gold); border-radius:10px; }
+/* ✅ إصلاح اتجاه الرسائل */
+.se-deal-msg-row {
+  display:flex; align-items:flex-end; gap:8px; margin-bottom:10px;
+}
+.se-dm-mine  { flex-direction:row-reverse; } /* رسائلي على اليمين */
+.se-dm-other { flex-direction:row; }          /* رسائل الطرف الآخر على اليسار */
+.se-deal-msg-avatar {
+  width:28px; height:28px; border-radius:50%; object-fit:cover;
+  border:1.5px solid var(--border-light); flex-shrink:0;
+}
+.se-deal-msg-content { max-width:68%; display:flex; flex-direction:column; gap:3px; }
+.se-dm-mine  .se-deal-msg-content { align-items:flex-end; }
+.se-dm-other .se-deal-msg-content { align-items:flex-start; }
+.se-deal-msg-bubble {
+  padding:10px 14px; font-size:.88rem; line-height:1.6;
+  border-radius:16px; box-shadow:var(--shadow-sm); word-break:break-word;
+}
+.se-dm-bubble-mine {
+  background:linear-gradient(135deg,var(--navy),var(--navy-mid)); color:white;
+  border-radius:16px 16px 4px 16px;
+}
+.se-dm-bubble-other {
+  background:white; color:var(--text-primary); border:1px solid var(--border-light);
+  border-radius:16px 16px 16px 4px;
+}
+.se-deal-file-link {
+  display:inline-flex; align-items:center; gap:5px; margin-top:6px;
+  font-size:.78rem; color:var(--gold-light); text-decoration:none; font-weight:600;
+}
+.se-dm-bubble-other .se-deal-file-link { color:var(--gold-dark); }
+.se-deal-msg-time {
+  font-size:.68rem; color:var(--text-light); padding:0 4px;
+}
+.se-dm-time-mine { text-align:right; }
+.se-deal-chat-empty {
+  text-align:center; padding:40px 20px; color:var(--text-secondary);
+  margin:auto;
+}
+.se-deal-chat-empty i { font-size:1.8rem; color:#D0D8E4; display:block; margin-bottom:8px; }
+.se-deal-chat-input-wrap {
+  padding:12px 16px; background:white; border-top:1px solid var(--border-light);
+}
+.se-deal-chat-form { display:flex; gap:8px; align-items:center; }
+.se-deal-attach-btn {
+  width:38px; height:38px; border-radius:10px;
+  background:#F8F9FC; border:1.5px solid var(--border-light);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; flex-shrink:0; color:var(--text-secondary);
+  font-size:.85rem; transition:all .2s;
+}
+.se-deal-attach-btn:hover { background:var(--gold); border-color:var(--gold); color:var(--navy); }
+.se-deal-msg-input { border-radius:10px!important; flex:1; }
+.se-deal-send-btn {
+  width:38px; height:38px; border-radius:10px!important;
+  padding:0!important; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+
+/* Buy Box */
+.se-buy-box {
+  position:sticky;
+  top:88px;
+  background:
+    radial-gradient(circle at top right, rgba(201,150,59,.13), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.99), rgba(246,249,252,.99));
+  border:1px solid rgba(13,27,42,.08);
+  border-radius:24px;
+  padding:22px;
+  box-shadow:0 20px 44px rgba(13,27,42,.1);
+}
+.se-buy-topline {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+.se-buy-chip {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:.74rem;
+  font-weight:800;
+}
+.se-buy-chip-auction {
+  background:rgba(201,150,59,.12);
+  color:var(--gold-dark);
+}
+.se-buy-chip-fixed {
+  background:rgba(36,113,163,.09);
+  color:var(--info);
+}
+.se-buy-chip-muted {
+  background:rgba(13,27,42,.05);
+  color:var(--text-secondary);
+}
+.se-buy-price-section {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:6px;
+}
+.se-buy-price {
+  font-size:2.4rem; font-weight:900; color:var(--gold-dark);
+  font-family:'Tajawal',sans-serif; line-height:1;
+}
+.se-buy-price-label { font-size:.75rem; color:var(--text-light); margin-top:4px; }
+.se-buy-price-label-top {
+  margin-top:0;
+  margin-bottom:8px;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+}
+.se-buy-status-pill {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:40px;
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:.78rem;
+  font-weight:800;
+  white-space:nowrap;
+}
+.se-buy-status-success { background:rgba(14,124,90,.12); color:var(--success); }
+.se-buy-status-danger { background:rgba(192,57,43,.12); color:var(--danger); }
+.se-buy-status-info { background:rgba(36,113,163,.12); color:var(--info); }
+.se-buy-status-neutral { background:rgba(201,150,59,.12); color:var(--gold-dark); }
+.se-buy-divider { height:1px; background:#F0F4F8; margin:16px 0; }
+.se-buy-guarantees { display:flex; flex-direction:column; gap:8px; margin-bottom:4px; }
+.se-buy-guarantee {
+  display:flex; align-items:center; gap:10px;
+  font-size:.82rem; color:var(--text-secondary);
+}
+.se-buy-mini-flow {
+  margin-top:16px;
+  background:linear-gradient(135deg,#F8FBFF,#F3F7FB);
+  border:1px solid #E3EBF3;
+  border-radius:14px;
+  padding:14px 16px;
+}
+.se-buy-mini-flow-label {
+  font-size:.74rem;
+  font-weight:900;
+  color:var(--gold-dark);
+  margin-bottom:6px;
+}
+.se-buy-mini-flow-text {
+  font-size:.84rem;
+  color:var(--navy);
+  font-weight:700;
+  line-height:1.8;
+}
+.se-buy-guarantee-icon {
+  width:28px; height:28px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.75rem; flex-shrink:0;
+}
+.se-buy-box-container {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.se-buy-box-container > * {
+  min-width:0;
+}
+.se-buy-main-btn {
+  font-size:.95rem!important;
+  padding:13px!important;
+  border-radius:14px!important;
+  font-weight:800!important;
+}
+.se-buy-box-container .btn,
+.se-buy-box-container a {
+  white-space:normal;
+  line-height:1.35;
+}
+.se-buy-inline-hint {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  margin-top:8px;
+  font-size:.75rem;
+  color:var(--text-light);
+  text-align:center;
+}
+
+/* Owner Actions */
+.se-owner-actions {
+  background:white; border:1px solid var(--border-light);
+  border-radius:16px; overflow:hidden; box-shadow:var(--shadow-sm);
+}
+.se-owner-actions-header {
+  background:linear-gradient(135deg,var(--navy),var(--navy-mid));
+  color:white; padding:12px 16px; font-size:.82rem; font-weight:700;
+  display:flex; align-items:center; gap:8px;
+}
+.se-owner-actions-header i { color:var(--gold); }
+.se-owner-actions-body {
+  padding:14px; display:flex; flex-direction:column; gap:8px;
+}
+.se-owner-btn {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  padding:11px 16px; border-radius:10px; font-size:.88rem; font-weight:700;
+  cursor:pointer; border:none; width:100%; text-decoration:none;
+  font-family:'Cairo',sans-serif; transition:all .25s cubic-bezier(.34,1.56,.64,1);
+}
+.se-owner-btn-edit {
+  background:linear-gradient(135deg,#EBF5FB,#D6EAF8);
+  color:var(--info);
+  border:1px solid rgba(36,113,163,.2);
+}
+.se-owner-btn-edit:hover {
+  background:linear-gradient(135deg,var(--info),#1a6fa0);
+  color:white; transform:translateY(-2px); box-shadow:0 4px 14px rgba(36,113,163,.3);
+}
+.se-owner-btn-delete {
+  background:linear-gradient(135deg,#FDEDEC,#FADADD);
+  color:var(--danger);
+  border:1px solid rgba(192,57,43,.2);
+}
+.se-owner-btn-delete:hover {
+  background:linear-gradient(135deg,var(--danger),#a93226);
+  color:white; transform:translateY(-2px); box-shadow:0 4px 14px rgba(192,57,43,.3);
+}
+.se-owner-actions-note {
+  padding:10px 14px; font-size:.72rem; color:var(--text-light);
+  border-top:1px solid #F0F4F8; display:flex; align-items:center; gap:6px;
+}
+.se-owner-actions-note i { color:var(--gold); }
+.se-collapse-box {
+  background:#F8F9FC; border-radius:12px; padding:16px;
+  margin-bottom:8px; border:1px solid var(--border-light);
+}
+.se-collapse-danger { background:var(--danger-light); border-color:var(--danger); }
+.se-form-label-sm { font-size:.82rem!important; margin-bottom:4px!important; }
+.se-status-banner {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  padding:14px 16px; border-radius:12px;
+  font-weight:700; font-size:.9rem;
+}
+.se-status-completed { background:var(--success-light); color:var(--success); }
+.se-status-disputed  { background:var(--danger-light);  color:var(--danger); }
+.se-status-info      { background:var(--info-light);    color:var(--info); }
+
+/* Seller Card */
+.se-seller-card { border-radius:18px!important; }
+.se-seller-profile { display:flex; align-items:center; gap:14px; }
+.se-seller-avatar {
+  width:54px; height:54px; border-radius:50%; object-fit:cover;
+  border:3px solid var(--gold); box-shadow:0 3px 12px rgba(201,150,59,.2);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.se-seller-profile:hover .se-seller-avatar { transform:scale(1.06); }
+.se-seller-name  { font-weight:800; color:var(--navy); font-size:1rem; margin-bottom:4px; }
+.se-seller-stats { display:flex; flex-wrap:wrap; gap:10px; font-size:.75rem; color:var(--text-secondary); }
+.se-seller-stats span { display:flex; align-items:center; gap:4px; }
+.se-seller-btns { display:flex; gap:8px; flex-wrap:wrap; }
+.se-seller-btn { flex:1; font-size:.82rem!important; padding:8px 12px!important; text-align:center; }
+.se-seller-icon-btn { padding:8px 14px!important; }
+
+/* Deal Info */
+.se-deal-info-card { border-radius:18px!important; }
+.se-deal-info-list { display:flex; flex-direction:column; gap:8px; }
+.se-deal-info-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:9px 12px; background:#F8F9FC; border-radius:10px;
+  font-size:.82rem;
+}
+.se-deal-info-row span:first-child { color:var(--text-secondary); }
+.se-info-val { font-weight:700; color:var(--navy); }
+.se-info-green { color:var(--success)!important; }
+.se-info-red   { color:var(--danger)!important; }
+.se-info-blue  { color:var(--info)!important; }
+.se-info-gold  { color:var(--gold-dark)!important; }
+
+  /* ══ Escrow Status Box ══ */
+  .se-escrow-status-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(135deg, rgba(13,27,42,0.05), rgba(201,150,59,0.06));
+    border: 1.5px solid rgba(201,150,59,0.25);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .se-escrow-status-box.se-escrow-warning {
+    background: linear-gradient(135deg, rgba(232,185,106,0.08), rgba(201,150,59,0.1));
+    border-color: rgba(201,150,59,0.4);
+  }
+  .se-escrow-icon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    display: flex; align-items: center; justify-content: center;
+    color: var(--navy); font-size: 1.2rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(201,150,59,0.3);
+  }
+  .se-escrow-title { font-size: .82rem; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+  .se-escrow-amount { font-size: 1.3rem; font-weight: 900; color: var(--gold-dark); line-height: 1.2; }
+  .se-escrow-sub { font-size: .72rem; color: var(--text-light); margin-top: 2px; }
+
+  /* ══ Deal Stepper ══ */
+  .se-deal-stepper {
+    background: rgba(240, 244, 248, 0.4);
+    border: 1px solid rgba(0,0,0,0.03);
+    border-radius: 20px;
+    padding: 30px;
+  }
+  .se-stepper-track {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+  .se-step {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 12px; z-index: 2; flex: 1;
+  }
+  .se-step-icon {
+    width: 50px; height: 50px; border-radius: 50%;
+    background: white; border: 2px solid #D5DDE8;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: #A0AEC0;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .se-step-label {
+    font-size: 0.85rem; font-weight: 700; color: #A0AEC0;
+    text-align: center; transition: all 0.4s ease;
+  }
+  /* Active Step */
+  .se-step.se-step-active .se-step-icon {
+    border-color: var(--gold); background: var(--gold); color: white;
+    box-shadow: 0 0 20px rgba(201,150,59,0.4); transform: scale(1.1);
+  }
+  .se-step.se-step-active .se-step-label { color: var(--navy); }
+  /* Completed Step */
+  .se-step.se-step-completed .se-step-icon {
+    border-color: var(--success); background: var(--success); color: white;
+  }
+  .se-step.se-step-completed .se-step-label { color: var(--success); }
+  /* Disputed Step */
+  .se-step.se-step-disputed .se-step-icon {
+    border-color: var(--danger); background: var(--danger); color: white;
+    animation: pulseDanger 2s infinite;
+  }
+  .se-step.se-step-disputed .se-step-label { color: var(--danger); }
+  @keyframes pulseDanger {
+    0% { box-shadow: 0 0 0 0 rgba(231,76,60,0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(231,76,60,0); }
+    100% { box-shadow: 0 0 0 0 rgba(231,76,60,0); }
+  }
+  /* Connectors */
+  .se-step-connector {
+    flex: 2; height: 4px; background: #D5DDE8;
+    margin: -25px 15px 0; border-radius: 4px;
+    position: relative; overflow: hidden;
+    transition: background 0.4s ease;
+  }
+  .se-step-connector.se-connector-active { background: var(--success); }
+  .se-step-connector.se-connector-active::after {
+    content: ''; position: absolute; top:0; left:0; height:100%; width: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    animation: stepShine 2s infinite;
+  }
+  @keyframes stepShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  @media (max-width: 768px) {
+    .se-stepper-track { flex-direction: column; align-items: flex-start; gap: 0; padding-left: 20px; }
+    .se-step { flex-direction: row; gap: 20px; width: 100%; justify-content: flex-start; margin-bottom: 30px; }
+    .se-step-connector { width: 4px; height: 40px; margin: -30px 0 0 23px; flex: none; display: block; }
+  }
+  @media (max-width: 991px) {
+    .se-detail-breadcrumb {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .se-detail-breadcrumb::-webkit-scrollbar { display: none; }
+    .se-product-top {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+    .se-product-price-box {
+      width: 100%;
+      text-align: inherit;
+      background: #F8F9FC;
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .se-buy-box {
+      position: static;
+      top: auto;
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .se-seller-btns .se-seller-btn,
+    .se-buy-main-btn {
+      min-height: 48px;
+    }
+    .se-owner-actions-body {
+      gap: 10px;
+    }
+  }
+  @media (max-width: 768px) {
+    .se-detail-breadcrumb {
+      display:none !important;
+    }
+    .se-mobile-primary-slot {
+      display:block;
+      margin:0 0 14px;
+    }
+    .se-mobile-primary-slot .se-buy-box {
+      margin-bottom:0;
+    }
+    .se-mobile-fold {
+      display:block;
+      margin:0 0 14px;
+    }
+    .se-mobile-fold-summary {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      list-style:none;
+      cursor:pointer;
+      padding:14px 16px;
+      border-radius:16px;
+      background:#fff;
+      border:1px solid rgba(13,27,42,.08);
+      box-shadow:0 10px 24px rgba(13,27,42,.06);
+      color:var(--navy);
+      font-size:.86rem;
+      font-weight:800;
+    }
+    .se-mobile-fold-summary::-webkit-details-marker {
+      display:none;
+    }
+    .se-mobile-fold-title {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .se-mobile-fold-title i {
+      color:var(--gold-dark);
+    }
+    .se-mobile-fold-meta {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:26px;
+      min-height:26px;
+      padding:0 8px;
+      border-radius:999px;
+      background:rgba(201,150,59,.12);
+      color:var(--gold-dark);
+      font-size:.74rem;
+      font-weight:900;
+      flex-shrink:0;
+    }
+    .se-mobile-fold-panel {
+      display:none;
+      padding-top:10px;
+    }
+    .se-mobile-fold[open] .se-mobile-fold-panel {
+      display:block;
+    }
+    .se-mobile-fold .se-section-head,
+    .se-mobile-fold .se-deal-chat-head,
+    .se-mobile-fold .card-body > .se-section-mini-title:first-child,
+    .se-mobile-fold .card-body > .se-share-head:first-child,
+    .se-mobile-fold .se-owner-actions-header {
+      display:none !important;
+    }
+    .se-mobile-fold .card,
+    .se-mobile-fold .se-owner-actions {
+      margin-bottom:0 !important;
+      box-shadow:0 12px 26px rgba(13,27,42,.06) !important;
+    }
+    .se-gallery-card .card-body,
+    .se-product-card .card-body,
+    .se-comments-card .card-body {
+      padding: 16px !important;
+    }
+    .se-product-title {
+      font-size: 1.15rem;
+    }
+    .se-product-price {
+      font-size: 1.6rem;
+    }
+    .se-product-meta {
+      gap: 8px;
+      font-size: .75rem;
+    }
+    .se-deal-stepper {
+      display:none;
+    }
+    .se-buy-price-section + .se-buy-divider,
+    .se-buy-guarantees + .se-buy-mini-flow + .se-buy-divider {
+      display:none;
+    }
+    .se-buy-guarantees,
+    .se-buy-mini-flow {
+      display:none;
+    }
+    .se-comment-form-footer {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+    .se-comment-submit-btn {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .se-comment-input-row,
+    .se-reply-input-row,
+    .se-deal-chat-form {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .se-comment-avatar {
+      width: 42px;
+      height: 42px;
+    }
+    .se-comment-field-wrap,
+    .se-reply-textarea,
+    .se-deal-msg-input {
+      width: 100%;
+    }
+    .se-reply-submit-btn,
+    .se-deal-send-btn {
+      width: 100%;
+      justify-content: center;
+      min-height: 46px;
+    }
+    .se-deal-chat-box {
+      max-height: 360px;
+    }
+    .se-deal-msg-row {
+      gap: 8px;
+    }
+    .se-deal-msg-bubble {
+      max-width: min(100%, 280px);
+    }
+    .se-seller-profile {
+      align-items: flex-start;
+    }
+  }
+  @media (max-width: 576px) {
+    .se-buy-box,
+    .se-owner-actions,
+    .se-seller-card,
+    .se-deal-info-card {
+      border-radius: 14px !important;
+    }
+    .se-sidebar-stack {
+      gap: 14px;
+    }
+    .se-buy-price-section {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      margin-bottom: 2px;
+    }
+    .se-buy-box-container {
+      gap: 12px;
+    }
+    .se-buy-price {
+      font-size: 2rem;
+    }
+    .se-buy-status-pill {
+      width: fit-content;
+      max-width: 100%;
+    }
+    .se-buy-box {
+      padding:16px;
+    }
+    .se-buy-main-btn {
+      padding: 14px 12px !important;
+      font-size: .9rem !important;
+    }
+    .se-buy-inline-hint {
+      font-size: .72rem;
+      line-height: 1.6;
+    }
+    .se-escrow-status-box {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .se-owner-actions-body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .se-owner-btn {
+      min-height: 48px;
+      padding: 12px 10px;
+      font-size: .82rem;
+    }
+    .se-seller-btns {
+      flex-direction: column;
+    }
+    .se-seller-btn {
+      width: 100%;
+    }
+    .se-section-head,
+    .se-deal-chat-head {
+      padding-inline: 16px;
+    }
+  }
+  @media (max-width: 420px) {
+    .se-owner-actions-body {
+      grid-template-columns: 1fr;
+    }
+  }
+  </style>
+{% include "partials/_deal_flow_light_styles.html" %}
+<link rel="stylesheet" href="{% static 'css/deal_escrow_premium.css' %}?v=20260525g">
+
+<script>
+window.DEAL_POLL_URL = "{% url 'poll_deal_chat' deal.id %}";
+
+// ── تبديل الصورة الرئيسية
+function switchMain(el) {
+  document.getElementById('mainImage').src = el.src;
+  const heroImage = document.querySelector('.dx-hero-media img');
+  if (heroImage) heroImage.src = el.src;
+  document.querySelectorAll('.se-gallery-thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── فتح modal الصورة
+function openImageModal(url) {
+  const modalEl = document.getElementById('imgModal');
+  const modalImg = document.getElementById('modalImg');
+  if (!modalEl || !modalImg || !url) return;
+  modalImg.src = url;
+  modalEl.classList.add('is-open');
+  modalEl.setAttribute('aria-hidden', 'false');
+  document.body.dataset.imageViewerOpen = 'true';
+  document.body.style.overflow = 'hidden';
+  modalEl.focus({ preventScroll: true });
+}
+
+function closeImageModal() {
+  const modalEl = document.getElementById('imgModal');
+  const modalImg = document.getElementById('modalImg');
+  if (!modalEl) return;
+
+  modalEl.classList.remove('is-open', 'show');
+  modalEl.setAttribute('aria-hidden', 'true');
+  delete document.body.dataset.imageViewerOpen;
+  document.body.classList.remove('modal-open');
+  document.body.style.removeProperty('overflow');
+  document.body.style.removeProperty('padding-right');
+  document.querySelectorAll('.modal-backdrop').forEach((backdrop) => backdrop.remove());
+
+  window.setTimeout(() => {
+    if (!modalEl.classList.contains('is-open') && modalImg) modalImg.removeAttribute('src');
+  }, 180);
+}
+
+(function bindDealImageModal() {
+  const modalEl = document.getElementById('imgModal');
+  const modalImg = document.getElementById('modalImg');
+  if (!modalEl) return;
+
+  modalEl.addEventListener('click', function(event) {
+    if (
+      event.target === modalEl ||
+      event.target.classList.contains('se-image-viewer-dialog') ||
+      event.target.classList.contains('se-image-viewer-body') ||
+      event.target.closest('.se-image-viewer-close, .se-image-viewer-header-close')
+    ) {
+      closeImageModal();
+    }
+  });
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && modalEl.classList.contains('is-open')) closeImageModal();
+  });
+  modalEl.addEventListener('transitionend', function() {
+    if (modalEl.classList.contains('is-open')) return;
+    if (modalImg) modalImg.removeAttribute('src');
+    document.querySelectorAll('.modal-backdrop').forEach((backdrop) => backdrop.remove());
+  });
+})();
+
+// ── إظهار/إخفاء قسم (شحن / نزاع)
+function toggleSection(id) {
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+// ── فتح/إغلاق نموذج الرد
+function toggleReply(id) {
+  const el = document.getElementById('reply-form-' + id);
+  const isHidden = el.style.display === 'none' || el.style.display === '';
+  el.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) el.querySelector('textarea').focus();
+}
+
+// ── تمرير دردشة الصفقة للأسفل
+const dealChatBox = document.getElementById('dealChatBox');
+if (dealChatBox) dealChatBox.scrollTop = dealChatBox.scrollHeight;
+
+// ── إرسال رسالة الصفقة بـ Enter
+const dealMsgInput = document.getElementById('dealMsgInput');
+if (dealMsgInput) {
+  dealMsgInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      const fileInput = document.getElementById('dealFileInput');
+      if (this.value.trim() || fileInput?.files?.length) {
+        document.getElementById('dealMsgForm').requestSubmit();
+      }
+    }
+  });
+}
+
+// ── إظهار اسم ملف الدردشة عند اختياره
+const dealFileInput = document.getElementById('dealFileInput');
+if (dealFileInput) {
+  dealFileInput.addEventListener('change', function() {
+    if (this.files[0]) {
+      const dealMsgInputEl = document.getElementById('dealMsgInput');
+      if (dealMsgInputEl) dealMsgInputEl.placeholder = '📎 ' + this.files[0].name;
+    }
+  });
+}
+// ── AJAX للتعليقات
+
+function createDealMessageElement(data) {
+  const row = document.createElement('div');
+  row.className = `se-deal-msg-row ${data.is_me ? 'se-dm-mine' : 'se-dm-other'}`;
+  row.dataset.msgId = data.id;
+
+  const safeText = escapeHtml(data.text || '');
+  const safeTime = escapeHtml(data.time || '{% t "deal.detail.now" %}');
+  const safeAvatar = escapeHtml(data.avatar || '');
+  const safeUsername = escapeHtml(data.username || '');
+  const safeFileUrl = escapeHtml(data.file_url || '');
+
+  row.innerHTML = `
+    ${data.is_me ? '' : `<img src="${safeAvatar}" loading="lazy" class="se-deal-msg-avatar" alt="${safeUsername}">`}
+    <div class="se-deal-msg-content">
+      <div class="se-deal-msg-bubble ${data.is_me ? 'se-dm-bubble-mine' : 'se-dm-bubble-other'}">
+        ${safeText ? safeText : ''}
+        ${safeFileUrl ? `<a href="${safeFileUrl}" target="_blank" rel="noopener noreferrer" class="se-deal-file-link"><i class="fas fa-paperclip"></i> {% t 'deal.detail.attached_file' %}</a>` : ''}
+      </div>
+      <div class="se-deal-msg-time ${data.is_me ? 'se-dm-time-mine' : ''}">${safeTime}</div>
+    </div>
+    ${data.is_me ? `<img src="${safeAvatar}" loading="lazy" class="se-deal-msg-avatar" alt="${safeUsername}">` : ''}
+  `;
+
+  return row;
+}
+
+const dealMsgForm = document.getElementById('dealMsgForm');
+if (dealMsgForm) {
+  dealMsgForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const text = dealMsgInput?.value.trim() || '';
+    const selectedFile = dealFileInput?.files?.[0];
+    if (!text && !selectedFile) return;
+
+    const sendBtn = this.querySelector('button[type="submit"]');
+    const formData = new FormData(this);
+    const originalHtml = sendBtn.innerHTML;
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+    fetch(window.location.href, {
+      method: 'POST',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      body: formData,
+    })
+    .then(async (response) => {
+      const data = await response.json();
+      if (!response.ok || data.status !== 'ok') {
+        throw new Error(data.message || 'failed');
+      }
+      return data;
+    })
+    .then((data) => {
+      const emptyState = document.querySelector('.se-deal-chat-empty');
+      if (emptyState) emptyState.remove();
+
+      const messageEl = createDealMessageElement({
+        ...data,
+        is_me: true,
+      });
+      dealChatBox?.appendChild(messageEl);
+      dealChatBox?.scrollTo({ top: dealChatBox.scrollHeight, behavior: 'smooth' });
+      this.reset();
+      if (dealMsgInput) {
+        dealMsgInput.placeholder = "{% t 'deal.detail.msg_ph' %}";
+      }
+      lastDealMessageId = String(data.id || lastDealMessageId);
+    })
+    .catch(() => {
+      this.submit();
+    })
+    .finally(() => {
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = originalHtml;
+    });
+  });
+}
+
+let dealPollTimeoutId;
+let lastDealMessageId = Array.from(document.querySelectorAll('#dealChatBox [data-msg-id]')).pop()?.dataset.msgId || '0';
+
+function nextDealPollDelay() {
+  if (document.hidden) return 30000;
+  if (window.matchMedia('(max-width: 768px)').matches) return 15000;
+  return 8000;
+}
+
+function scheduleDealPoll(delay = nextDealPollDelay()) {
+  window.clearTimeout(dealPollTimeoutId);
+  dealPollTimeoutId = window.setTimeout(pollDealMessages, delay);
+}
+
+function pollDealMessages() {
+  if (!dealChatBox || !window.DEAL_POLL_URL || navigator.onLine === false) {
+    scheduleDealPoll();
+    return;
+  }
+
+  fetch(`${window.DEAL_POLL_URL}?after=${lastDealMessageId}`, {
+    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+  })
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error('poll_failed');
+    }
+    return response.json();
+  })
+  .then((data) => {
+    if (!Array.isArray(data.messages) || !data.messages.length) return;
+
+    const emptyState = document.querySelector('.se-deal-chat-empty');
+    if (emptyState) emptyState.remove();
+
+    data.messages.forEach((msg) => {
+      const messageEl = createDealMessageElement(msg);
+      dealChatBox.appendChild(messageEl);
+      lastDealMessageId = String(msg.id);
+    });
+    dealChatBox.scrollTo({ top: dealChatBox.scrollHeight, behavior: 'smooth' });
+  })
+  .catch(() => {})
+  .finally(() => {
+    scheduleDealPoll();
+  });
+}
+
+if (dealChatBox && window.DEAL_POLL_URL) {
+  scheduleDealPoll();
+  window.addEventListener('beforeunload', () => window.clearTimeout(dealPollTimeoutId), { once: true });
+}
+
+const dealActions = document.getElementById('dealActions');
+const dealActionsDock = document.getElementById('dealActionsDock');
+const dealMobilePrimarySlot = document.getElementById('dealMobilePrimarySlot');
+const mobileDealFolds = Array.from(document.querySelectorAll('[data-mobile-fold]'));
+
+function syncDealDetailLayout() {
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+  if (dealActions && dealActionsDock && dealMobilePrimarySlot) {
+    if (isMobile) {
+      if (dealActions.parentElement !== dealMobilePrimarySlot) {
+        dealMobilePrimarySlot.appendChild(dealActions);
+      }
+    } else if (dealActions.previousElementSibling !== dealActionsDock) {
+      dealActionsDock.after(dealActions);
+    }
+  }
+
+  mobileDealFolds.forEach((fold) => {
+    const previousMode = fold.dataset.foldMode;
+    if (isMobile) {
+      if (previousMode !== 'mobile') {
+        fold.open = false;
+      }
+      fold.dataset.foldMode = 'mobile';
+    } else {
+      fold.open = true;
+      fold.dataset.foldMode = 'desktop';
+    }
+  });
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, function(char) {
+    return ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    })[char];
+  });
+}
+
+document.getElementById('commentForm') && document.getElementById('commentForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const textarea = this.querySelector('textarea[name="comment_text"]');
+  if (!textarea.value.trim()) return;
+
+  const formData = new FormData(this);
+  fetch(window.location.href, {
+    method: 'POST',
+    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    body: formData,
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.status !== 'ok') return;
+
+    // أزل حالة الفراغ
+    const noComments = document.querySelector('.se-no-comments');
+    if (noComments) noComments.remove();
+
+    // أضف التعليق الجديد
+    const container = document.querySelector('.card-body .comment-item')?.parentNode
+                   || document.querySelector('.se-comment-form').closest('.card-body');
+
+    const safeAvatar = escapeHtml(data.avatar);
+    const safeAuthor = escapeHtml(data.author);
+    const safeText = escapeHtml(data.text);
+    const div = document.createElement('div');
+    div.className = 'comment-item';
+    div.id = 'comment-' + data.comment_id;
+    div.style.animation = 'fadeInUp .3s ease both';
+    div.innerHTML = `
+      <div class="se-comment-header">
+        <div class="se-comment-author">
+          <img src="${safeAvatar}" class="se-comment-author-avatar" alt="${safeAuthor}">
+          <div>
+            <div class="se-comment-author-name">${safeAuthor}</div>
+            <div class="se-comment-time">{% t 'deal.detail.now' %}</div>
+          </div>
+        </div>
+      </div>
+      <p class="se-comment-text">${safeText}</p>
+    `;
+    container.appendChild(div);
+    textarea.value = '';
+
+    // تحديث العداد
+    const chip = document.querySelector('.se-count-chip');
+    if (chip) chip.textContent = parseInt(chip.textContent || 0) + 1;
+  })
+  .catch(() => this.submit());
+});
+
+// ── AJAX لردود التعليقات
+document.querySelectorAll('.se-reply-form-wrap form').forEach(form => {
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const textarea = this.querySelector('textarea[name="comment_text"]');
+    if (!textarea.value.trim()) return;
+    const parentId = this.querySelector('[name="parent_id"]').value;
+
+    const formData = new FormData(this);
+    fetch(window.location.href, {
+      method: 'POST',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      body: formData,
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.status !== 'ok') return;
+      let repliesWrap = document.querySelector('#comment-' + parentId + ' .se-replies-wrap');
+      if (!repliesWrap) {
+        repliesWrap = document.createElement('div');
+        repliesWrap.className = 'se-replies-wrap';
+        document.querySelector('#comment-' + parentId).appendChild(repliesWrap);
+      }
+      const safeReplyAvatar = escapeHtml(data.avatar);
+      const safeReplyAuthor = escapeHtml(data.author);
+      const safeReplyText = escapeHtml(data.text);
+      const div = document.createElement('div');
+      div.className = 'reply-item';
+      div.style.animation = 'fadeInUp .3s ease both';
+      div.innerHTML = `
+        <div class="se-reply-header">
+          <img src="${safeReplyAvatar}" class="se-reply-avatar" alt="${safeReplyAuthor}">
+          <span class="se-reply-name">${safeReplyAuthor}</span>
+          <span class="se-reply-time">{% t 'deal.detail.now' %}</span>
+        </div>
+        <p class="se-reply-text">${safeReplyText}</p>
+      `;
+      repliesWrap.appendChild(div);
+      textarea.value = '';
+      // أخفِ نموذج الرد
+      document.getElementById('reply-form-' + parentId).style.display = 'none';
+    })
+    .catch(() => this.submit());
+  });
+});
+
+window.addEventListener('resize', syncDealDetailLayout);
+window.addEventListener('orientationchange', syncDealDetailLayout);
+syncDealDetailLayout();
+</script>
+
+{% endblock %}
+
+{% block extra_js %}
+<script defer src="{% static 'js/deal_escrow_premium.js' %}?v=20260523b"></script>
+{% endblock %}

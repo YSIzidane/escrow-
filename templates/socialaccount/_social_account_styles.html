@@ -1,0 +1,297 @@
+<style>
+  body[data-page="socialaccount_login"],
+  body[data-page="socialaccount_confirm"],
+  body[data-page="socialaccount_connections"],
+  body[data-page="auth_error"] {
+    background: #f8fafc !important;
+    color: #0d1b2a !important;
+  }
+
+  body[data-page="socialaccount_login"] .page-bg-overlay,
+  body[data-page="socialaccount_confirm"] .page-bg-overlay,
+  body[data-page="socialaccount_connections"] .page-bg-overlay,
+  body[data-page="auth_error"] .page-bg-overlay {
+    background:
+      radial-gradient(circle at 14% 4%, rgba(37, 99, 235, 0.08), transparent 26%),
+      radial-gradient(circle at 86% 0%, rgba(201, 150, 59, 0.1), transparent 24%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 48%, #ffffff 100%) !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-card,
+  body[data-page="socialaccount_confirm"] .social-signup-card,
+  body[data-page="socialaccount_connections"] .connections-card,
+  body[data-page="auth_error"] .social-error-card {
+    border-radius: 24px !important;
+    border: 1px solid rgba(15, 23, 42, 0.09) !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    box-shadow: 0 22px 58px rgba(15, 23, 42, 0.12) !important;
+    overflow: hidden !important;
+    animation: socialAccountIn 0.52s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-header,
+  body[data-page="socialaccount_confirm"] .social-signup-header,
+  body[data-page="socialaccount_connections"] .connections-header,
+  body[data-page="auth_error"] .social-error-header {
+    padding: 38px 32px 28px !important;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(37, 99, 235, 0.1), transparent 32%),
+      radial-gradient(circle at 88% 10%, rgba(201, 150, 59, 0.13), transparent 28%),
+      linear-gradient(145deg, #ffffff 0%, #f5f8fd 100%) !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: none !important;
+    color: #0d1b2a !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-glow,
+  body[data-page="socialaccount_confirm"] .social-signup-glow,
+  body[data-page="socialaccount_connections"] .connections-glow,
+  body[data-page="auth_error"] .social-error-glow {
+    display: none !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-icon,
+  body[data-page="socialaccount_confirm"] .social-signup-icon,
+  body[data-page="socialaccount_connections"] .connections-icon,
+  body[data-page="auth_error"] .social-error-icon {
+    width: 72px !important;
+    height: 72px !important;
+    border-radius: 20px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.1) !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-mark,
+  body[data-page="socialaccount_confirm"] .social-signup-mark {
+    filter: none !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-wordmark,
+  body[data-page="socialaccount_confirm"] .social-signup-wordmark {
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  body[data-page="socialaccount_connections"] .connections-icon i {
+    color: #2563eb !important;
+  }
+
+  body[data-page="auth_error"] .social-error-icon i {
+    color: #dc2626 !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-header h3,
+  body[data-page="socialaccount_confirm"] .social-signup-header h3,
+  body[data-page="socialaccount_connections"] .connections-header h3,
+  body[data-page="auth_error"] .social-error-header h3 {
+    color: #0d1b2a !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-size: clamp(1.35rem, 2vw, 1.75rem) !important;
+    line-height: 1.28 !important;
+    letter-spacing: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-header p,
+  body[data-page="socialaccount_confirm"] .social-signup-header p,
+  body[data-page="socialaccount_connections"] .connections-header p,
+  body[data-page="auth_error"] .social-error-header p {
+    color: #5b6b7f !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-size: 0.96rem !important;
+    line-height: 1.75 !important;
+    max-width: 34rem;
+    margin-inline: auto !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-body,
+  body[data-page="socialaccount_confirm"] .social-signup-body,
+  body[data-page="socialaccount_connections"] .connections-body,
+  body[data-page="auth_error"] .social-error-body {
+    padding: 34px 32px !important;
+    background: #ffffff !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-profile-box,
+  body[data-page="socialaccount_confirm"] .social-signup-info,
+  body[data-page="socialaccount_connections"] .connections-status-card,
+  body[data-page="socialaccount_connections"] .connections-list,
+  body[data-page="socialaccount_connections"] .connections-empty,
+  body[data-page="auth_error"] .social-error-tipbox {
+    background: #f8fafc !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    color: #26364a !important;
+    box-shadow: none !important;
+  }
+
+  body[data-page="socialaccount_connections"] .connections-alert-warning {
+    background: #fffbeb !important;
+    border-color: #fde68a !important;
+  }
+
+  body[data-page="socialaccount_connections"] .connections-alert-success {
+    background: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-label,
+  body[data-page="socialaccount_login"] .social-login-profile-name,
+  body[data-page="socialaccount_confirm"] .social-signup-email,
+  body[data-page="socialaccount_connections"] .connections-title,
+  body[data-page="socialaccount_connections"] .connections-status-value,
+  body[data-page="socialaccount_connections"] .connections-alert strong,
+  body[data-page="socialaccount_connections"] .connections-brand {
+    color: #26364a !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-weight: 800 !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-intro p,
+  body[data-page="socialaccount_login"] .social-login-profile-email,
+  body[data-page="socialaccount_login"] .social-login-help,
+  body[data-page="socialaccount_login"] .social-login-footer p,
+  body[data-page="socialaccount_confirm"] .social-signup-prompt,
+  body[data-page="socialaccount_confirm"] .social-signup-note,
+  body[data-page="socialaccount_connections"] .connections-status-label,
+  body[data-page="socialaccount_connections"] .connections-alert p,
+  body[data-page="socialaccount_connections"] .connections-account,
+  body[data-page="socialaccount_connections"] .connections-google-copy small,
+  body[data-page="auth_error"] .social-error-text,
+  body[data-page="auth_error"] .social-error-tip-title,
+  body[data-page="auth_error"] .social-error-tipbox ul {
+    color: #5b6b7f !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-input {
+    min-height: 52px !important;
+    border: 1px solid rgba(15, 23, 42, 0.1) !important;
+    border-radius: 15px !important;
+    background: #f8fafc !important;
+    color: #0d1b2a !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-input:focus {
+    background: #ffffff !important;
+    border-color: rgba(37, 99, 235, 0.62) !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12) !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-btn,
+  body[data-page="socialaccount_confirm"] .social-signup-btn.success,
+  body[data-page="socialaccount_connections"] .connections-inline-btn,
+  body[data-page="auth_error"] .social-error-btn {
+    min-height: 52px !important;
+    border: 0 !important;
+    border-radius: 15px !important;
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-weight: 800 !important;
+    box-shadow: 0 14px 28px rgba(37, 99, 235, 0.24) !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .social-signup-btn.secondary,
+  body[data-page="socialaccount_connections"] .connections-google-btn {
+    min-height: 52px !important;
+    border-radius: 15px !important;
+    border: 1px solid rgba(15, 23, 42, 0.09) !important;
+    background: #ffffff !important;
+    color: #0d1b2a !important;
+    -webkit-text-fill-color: currentColor !important;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06) !important;
+  }
+
+  body[data-page="socialaccount_login"] .social-login-footer a,
+  body[data-page="socialaccount_connections"] .connections-helper-links a {
+    color: #2563eb !important;
+  }
+
+  @media (max-width: 576px) {
+    body[data-page="socialaccount_login"] .social-login-header,
+    body[data-page="socialaccount_confirm"] .social-signup-header,
+    body[data-page="socialaccount_connections"] .connections-header,
+    body[data-page="auth_error"] .social-error-header {
+      padding: 32px 20px 24px !important;
+    }
+
+    body[data-page="socialaccount_login"] .social-login-body,
+    body[data-page="socialaccount_confirm"] .social-signup-body,
+    body[data-page="socialaccount_connections"] .connections-body,
+    body[data-page="auth_error"] .social-error-body {
+      padding: 28px 20px !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body[data-page="socialaccount_login"] .social-login-card,
+    body[data-page="socialaccount_confirm"] .social-signup-card,
+    body[data-page="socialaccount_connections"] .connections-card,
+    body[data-page="auth_error"] .social-error-card {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  @keyframes socialAccountIn {
+    from {
+      opacity: 0;
+      transform: translateY(18px) scale(0.985);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  /* Unified dark social account finish. */
+  body[data-page="socialaccount_login"],
+  body[data-page="socialaccount_confirm"],
+  body[data-page="socialaccount_connections"],
+  body[data-page="auth_error"] {
+    background:
+      radial-gradient(circle at 16% -6%, rgba(115, 210, 255, 0.15), transparent 30rem),
+      radial-gradient(circle at 86% 5%, rgba(244, 201, 93, 0.14), transparent 28rem),
+      linear-gradient(135deg, #05070d, #0a1018) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="socialaccount_login"] :is(.social-login-card, .social-signup-card, .connections-card, .social-error-card),
+  body[data-page="socialaccount_confirm"] :is(.social-login-card, .social-signup-card, .connections-card, .social-error-card),
+  body[data-page="socialaccount_connections"] :is(.social-login-card, .social-signup-card, .connections-card, .social-error-card),
+  body[data-page="auth_error"] :is(.social-login-card, .social-signup-card, .connections-card, .social-error-card) {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.082), rgba(255, 255, 255, 0.046)) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+    box-shadow: var(--seu-shadow-soft) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  body[data-page="socialaccount_login"] :is(.social-login-header, .social-signup-header, .connections-header, .social-error-header),
+  body[data-page="socialaccount_confirm"] :is(.social-login-header, .social-signup-header, .connections-header, .social-error-header),
+  body[data-page="socialaccount_connections"] :is(.social-login-header, .social-signup-header, .connections-header, .social-error-header),
+  body[data-page="auth_error"] :is(.social-login-header, .social-signup-header, .connections-header, .social-error-header) {
+    background:
+      radial-gradient(circle at 18% 12%, rgba(115, 210, 255, 0.16), transparent 22rem),
+      radial-gradient(circle at 88% 10%, rgba(244, 201, 93, 0.18), transparent 20rem),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.045)) !important;
+    border-color: var(--seu-border) !important;
+  }
+
+  body[data-page="socialaccount_login"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="socialaccount_confirm"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="socialaccount_connections"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="auth_error"] :is(h1, h2, h3, h4, h5, h6, strong) {
+    color: var(--seu-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="socialaccount_login"] :is(p, small, .text-muted),
+  body[data-page="socialaccount_confirm"] :is(p, small, .text-muted),
+  body[data-page="socialaccount_connections"] :is(p, small, .text-muted),
+  body[data-page="auth_error"] :is(p, small, .text-muted) {
+    color: var(--seu-muted) !important;
+  }
+</style>

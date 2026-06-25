@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% t "nav.admin_users" %} - {% t "site.name" %}{% endblock %}
+{% block page_type %}admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/admin_control.css' %}?v=20260507a">{% endblock %}
+
+{% block content %}
+<div class="adm-shell">
+  {% include "partials/admin_control_sidebar.html" %}
+
+  <section class="adm-main">
+    <div class="adm-page-hero is-dark">
+      <div class="adm-page-copy">
+        <div class="adm-page-kicker">{% if current_language == 'ar' %}لوحة المالك{% else %}Admin control{% endif %}</div>
+        <h1 class="adm-page-heading">{% if current_language == 'ar' %}المستخدمون والأدوار الإدارية{% else %}Users and admin roles{% endif %}</h1>
+        <p>
+          {% if current_language == 'ar' %}
+            امنح الوصول الإداري، عطله، ووزع الحزم الأمنية والتشغيلية من مكان واحد مع رؤية سريعة لحالة الحسابات.
+          {% else %}
+            Grant admin access, revoke it, and manage security bundles from one private surface with a clean overview of account state.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="adm-summary-grid">
+        <div class="adm-summary-card">
+          <span>{% if current_language == 'ar' %}الحسابات الإدارية{% else %}Admin accounts{% endif %}</span>
+          <strong>{{ staff_count }}</strong>
+        </div>
+        <div class="adm-summary-card">
+          <span>{% if current_language == 'ar' %}الحسابات النشطة{% else %}Active accounts{% endif %}</span>
+          <strong>{{ active_count }}</strong>
+        </div>
+        <div class="adm-summary-card">
+          <span>{% if current_language == 'ar' %}الحسابات غير النشطة{% else %}Inactive accounts{% endif %}</span>
+          <strong>{{ inactive_count }}</strong>
+        </div>
+        <div class="adm-summary-card">
+          <span>{% if current_language == 'ar' %}الفواتير{% else %}Invoices{% endif %}</span>
+          <strong>{{ invoice_count }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="adm-filter-card adm-surface">
+      <form method="get" class="adm-filter-form">
+        <label class="adm-search-field">
+          <i class="fas fa-search"></i>
+          <input type="text" name="q" value="{{ search_query }}" placeholder="{% t 'admin_users.search_placeholder' %}">
+        </label>
+        <select name="staff" class="adm-select" aria-label="{% t 'admin_users.filter.all_users' %}">
+          <option value="">{% t "admin_users.filter.all_users" %}</option>
+          <option value="staff" {% if staff_filter == 'staff' %}selected{% endif %}>{% t "admin_users.filter.admins_only" %}</option>
+          <option value="regular" {% if staff_filter == 'regular' %}selected{% endif %}>{% t "admin_users.filter.regular_users" %}</option>
+          <option value="inactive" {% if staff_filter == 'inactive' %}selected{% endif %}>{% t "admin_users.filter.inactive_users" %}</option>
+        </select>
+        <button type="submit" class="adm-filter-submit">{% t "admin_users.filter.button" %}</button>
+      </form>
+    </div>
+
+    <div class="adm-card-stack">
+      {% for row in user_rows %}
+      <article class="adm-surface">
+        <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <h2 class="adm-panel-title mb-0">{{ row.user.get_full_name|default:row.user.username }}</h2>
+              {% if row.user.is_superuser %}
+              <span class="adm-status-pill">{% t "admin_users.superuser" %}</span>
+              {% endif %}
+              {% if row.user.is_staff %}
+              <span class="adm-status-pill is-warning">{% t "admin_users.admin" %}</span>
+              {% endif %}
+              {% if not row.user.is_active %}
+              <span class="adm-status-pill is-danger">{% t "admin_users.inactive" %}</span>
+              {% endif %}
+            </div>
+            <p class="adm-subtle mb-2">@{{ row.user.username }}{% if row.user.email %} · {{ row.user.email }}{% endif %}</p>
+            <div class="adm-tag-row">
+              {% for group_name in row.group_names %}
+              <span class="adm-tag">{{ group_name }}</span>
+              {% empty %}
+              <span class="adm-tag">{% t "admin_users.no_groups" %}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="adm-inline-actions">
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="user_id" value="{{ row.user.id }}">
+              {% if row.user.is_staff %}
+              <button type="submit" name="action" value="revoke_staff" class="adm-btn adm-btn--dark">{% t "admin_users.revoke_staff" %}</button>
+              {% else %}
+              <button type="submit" name="action" value="grant_staff" class="adm-btn adm-btn--gold">{% t "admin_users.grant_staff" %}</button>
+              {% endif %}
+            </form>
+
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="user_id" value="{{ row.user.id }}">
+              {% if row.user.is_active %}
+              <button type="submit" name="action" value="deactivate" class="adm-btn adm-btn--ghost">{% t "admin_users.deactivate" %}</button>
+              {% else %}
+              <button type="submit" name="action" value="activate" class="adm-btn adm-btn--light">{% t "admin_users.activate" %}</button>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+
+        <div class="adm-note mt-3">
+          <strong>{% if current_language == 'ar' %}الحزم الأمنية{% else %}Permission bundles{% endif %}</strong>
+          <div class="adm-card-stack mt-3">
+            {% for role_key, role in role_specs.items %}
+            <div class="adm-surface">
+              <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+                <div>
+                  <strong class="d-block text-dark">
+                    {% if role_key == 'support_admin' %}{% t "admin_users.role.support_admin" %}
+                    {% elif role_key == 'finance_admin' %}{% t "admin_users.role.finance_admin" %}
+                    {% elif role_key == 'operations_admin' %}{% t "admin_users.role.operations_admin" %}
+                    {% else %}{{ role.name }}{% endif %}
+                  </strong>
+                  <span class="adm-subtle d-block mt-1">
+                    {% if role_key == 'support_admin' %}{% t "admin_users.role_desc.support_admin" %}
+                    {% elif role_key == 'finance_admin' %}{% t "admin_users.role_desc.finance_admin" %}
+                    {% elif role_key == 'operations_admin' %}{% t "admin_users.role_desc.operations_admin" %}
+                    {% else %}{{ role.description }}{% endif %}
+                  </span>
+                </div>
+
+                <form method="post" class="adm-inline-actions">
+                  {% csrf_token %}
+                  <input type="hidden" name="user_id" value="{{ row.user.id }}">
+                  <input type="hidden" name="role_key" value="{{ role_key }}">
+                  {% if role.name in row.group_names %}
+                  <button type="submit" name="action" value="remove_role" class="adm-btn adm-btn--ghost">{% t "admin_users.remove_role" %}</button>
+                  {% else %}
+                  <button type="submit" name="action" value="assign_role" class="adm-btn adm-btn--gold">{% t "admin_users.assign_role" %}</button>
+                  {% endif %}
+                </form>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </article>
+      {% empty %}
+      <div class="adm-empty-state">
+        <i class="fas fa-users"></i>
+        <h3 class="adm-panel-title">{% if current_language == 'ar' %}لا توجد حسابات مطابقة{% else %}No matching accounts{% endif %}</h3>
+        <p class="mb-0">{% t "admin_users.empty" %}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% include "partials/_admin_light_styles.html" %}
+{% endblock %}

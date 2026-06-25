@@ -1,0 +1,131 @@
+/* ══════════════════════════════════════
+   MOBILE UI OPTIMIZATIONS for Escrow Platform
+   This file ensures that Deal Cards, Rooms, and Details are touch-friendly.
+══════════════════════════════════════ */
+
+@media (max-width: 768px) {
+
+  /* 1. Touch Targets (Minimum 44px height for buttons) */
+  .btn,
+  .se-btn,
+  .se-btn-primary,
+  .se-btn-secondary {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem !important;
+    padding: 10px 20px !important;
+    border-radius: 14px !important;
+  }
+
+  /* 2. Form Inputs Mobile Tweaks */
+  .form-control,
+  .se-input,
+  .se-textarea {
+    font-size: 16px !important;
+    /* Prevents iOS auto-zoom on focus */
+    padding: 12px 16px !important;
+    border-radius: 12px !important;
+  }
+
+  /* 3. Deal Grid Optimization for Mobile */
+  .se-deal-col {
+    width: 100%;
+    flex: 0 0 100%;
+  }
+
+  .se-deal-card {
+    display: flex;
+    flex-direction: row;
+    /* Horizontal layout on very small screens if desired, but sticking to vertical mostly */
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  .se-deal-img-wrap {
+    height: 180px;
+    /* Slightly taller on mobile for better visibility */
+    border-radius: 16px 16px 0 0;
+  }
+
+  /* 4. Deal Room Stats Layout */
+  .se-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  /* 5. Deal Detail Buy Box */
+  .se-buy-box-container {
+    position: fixed;
+    bottom: 65px;
+    /* Above bottom nav */
+    left: 0;
+    width: 100%;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .se-buy-box-btn {
+    width: 100%;
+    font-size: 1.1rem !important;
+  }
+
+  /* Add padding to bottom of page to account for fixed buy box */
+  body[data-page="deal_detail"] {
+    padding-bottom: 150px;
+  }
+
+  /* 6. Tabs & Filters Scroll */
+  .se-tabs-mobile-scroll {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  .se-tabs-mobile-scroll::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+  }
+
+  .se-tabs-mobile-scroll .se-tab-item {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* 7. Bottom Sheet Modals (For filters etc on mobile) */
+  .se-bottom-sheet {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
+    z-index: 1100;
+    transition: bottom 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .se-bottom-sheet.open {
+    bottom: 0;
+  }
+
+  .se-bottom-sheet-handle {
+    width: 40px;
+    height: 5px;
+    background: #DDE3EC;
+    border-radius: 10px;
+    margin: 0 auto 20px;
+  }
+}

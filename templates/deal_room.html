@@ -1,0 +1,491 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% t "my_deals.page_title" %} — {% t "site.name" %}{% endblock %}
+{% block page_type %}deal_room{% endblock %}
+
+{% block content %}
+<div id="deal-room-shell" class="se-dr-shell" style="animation:fadeInUp .5s ease both;">
+  <div class="se-dr-header">
+    <div class="pv-float-decor"><img src="{% static 'images/brand/secure_escrow_shield.webp' %}" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
+    <div>
+      <div class="se-dr-tag"><i class="fas fa-folder-open"></i> {% t "my_deals.tag" %}</div>
+      <h2 class="se-dr-title">{% t "my_deals.title" %}</h2>
+      <p class="se-dr-sub">{% t "my_deals.sub" %}</p>
+    </div>
+    <div class="se-dr-header-actions">
+      <a href="{% url 'create_room' %}" class="se-dr-ghost-btn">
+        <i class="fas fa-plus-circle"></i>
+        <span>{% t "chat_hub.create_room" %}</span>
+      </a>
+      <a href="{% url 'create_deal' %}" class="se-dr-add-btn">
+        <i class="fas fa-handshake"></i>
+        <span>{% t "my_deals.new_deal" %}</span>
+      </a>
+    </div>
+  </div>
+
+  {% if deals %}
+  <div class="se-dr-stats">
+    <div class="se-dr-stat se-stat-total">
+      <div class="se-dr-stat-icon"><i class="fas fa-layer-group"></i></div>
+      <div class="se-dr-stat-body">
+        <div class="se-dr-stat-num">{{ stats.total }}</div>
+        <div class="se-dr-stat-label">{% t "my_deals.total_deals" %}</div>
+      </div>
+    </div>
+    <div class="se-dr-stat se-stat-active">
+      <div class="se-dr-stat-icon"><i class="fas fa-bolt"></i></div>
+      <div class="se-dr-stat-body">
+        <div class="se-dr-stat-num">{{ stats.active }}</div>
+        <div class="se-dr-stat-label">{% t "my_deals.active" %}</div>
+      </div>
+    </div>
+    <div class="se-dr-stat se-stat-done">
+      <div class="se-dr-stat-icon"><i class="fas fa-check-double"></i></div>
+      <div class="se-dr-stat-body">
+        <div class="se-dr-stat-num">{{ stats.completed }}</div>
+        <div class="se-dr-stat-label">{% t "my_deals.completed" %}</div>
+      </div>
+    </div>
+    <div class="se-dr-stat se-stat-seller">
+      <div class="se-dr-stat-icon"><i class="fas fa-store"></i></div>
+      <div class="se-dr-stat-body">
+        <div class="se-dr-stat-num">{{ stats.selling }}</div>
+        <div class="se-dr-stat-label">{% t "my_deals.as_seller" %}</div>
+      </div>
+    </div>
+    <div class="se-dr-stat se-stat-buyer">
+      <div class="se-dr-stat-icon"><i class="fas fa-shopping-bag"></i></div>
+      <div class="se-dr-stat-body">
+        <div class="se-dr-stat-num">{{ stats.buying }}</div>
+        <div class="se-dr-stat-label">{% t "my_deals.as_buyer" %}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="se-dr-toolbar">
+    <div class="se-dr-search-wrap">
+      <i class="fas fa-search"></i>
+      <input
+        id="dealSearchInput"
+        type="search"
+        class="se-dr-search"
+        placeholder="{% t 'my_deals.search_placeholder' %}"
+        aria-label="{% t 'my_deals.search_placeholder' %}">
+    </div>
+
+    <div class="se-dr-role-switch" id="roleFilters">
+      <button type="button" class="se-dr-role-btn active" data-role="all">
+        {% t "my_deals.role_all" %}
+      </button>
+      <button type="button" class="se-dr-role-btn" data-role="seller">
+        {% t "my_deals.role_seller" %}
+      </button>
+      <button type="button" class="se-dr-role-btn" data-role="buyer">
+        {% t "my_deals.role_buyer" %}
+      </button>
+    </div>
+  </div>
+
+  <div class="se-dr-filters" id="statusFilters">
+    <button type="button" class="se-dr-filter-btn active" data-filter="all">
+      <i class="fas fa-th-large"></i> {% t "my_deals.filter_all" %}
+      <span class="se-filter-count">{{ stats.total }}</span>
+    </button>
+    <button type="button" class="se-dr-filter-btn" data-filter="new">
+      <i class="fas fa-star"></i> {% t "my_deals.filter_new" %}
+      <span class="se-filter-count">{{ stats.new }}</span>
+    </button>
+    <button type="button" class="se-dr-filter-btn" data-filter="reserved">
+      <i class="fas fa-lock"></i> {% t "my_deals.filter_reserved" %}
+      <span class="se-filter-count">{{ stats.reserved }}</span>
+    </button>
+    <button type="button" class="se-dr-filter-btn" data-filter="shipped">
+      <i class="fas fa-shipping-fast"></i> {% t "my_deals.filter_shipped" %}
+      <span class="se-filter-count">{{ stats.shipped }}</span>
+    </button>
+    <button type="button" class="se-dr-filter-btn" data-filter="completed">
+      <i class="fas fa-check-double"></i> {% t "my_deals.filter_completed" %}
+      <span class="se-filter-count">{{ stats.completed }}</span>
+    </button>
+    <button type="button" class="se-dr-filter-btn" data-filter="disputed">
+      <i class="fas fa-exclamation-triangle"></i> {% t "my_deals.filter_disputed" %}
+      <span class="se-filter-count">{{ stats.disputed }}</span>
+    </button>
+  </div>
+
+  <div class="card border-0 se-dr-table-card">
+    <div class="se-dr-table-header">
+      <div class="se-dr-table-title">
+        <i class="fas fa-list"></i>
+        {% t "my_deals.table_title" %}
+      </div>
+      <div class="se-dr-table-header-meta">
+        <span class="se-dr-table-count" id="visibleCount">{{ stats.total }} {% t "my_deals.deal_count" %}</span>
+        <button type="button" class="se-dr-clear-btn" id="dealFiltersReset">{% t "my_deals.clear_filters" %}</button>
+      </div>
+    </div>
+
+    <div class="table-responsive se-dr-desktop">
+      <table class="table mb-0" id="dealsTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>{% t "my_deals.col_deal" %}</th>
+            <th>{% t "my_deals.col_buyer" %}</th>
+            <th>{% t "my_deals.col_seller" %}</th>
+            <th>{% t "my_deals.col_amount" %}</th>
+            <th>{% t "my_deals.col_status" %}</th>
+            <th>{% t "my_deals.col_date" %}</th>
+            <th>{% t "my_deals.col_action" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for deal in deals %}
+          <tr
+            class="se-deal-row"
+            data-deal-status="{{ deal.status }}"
+            data-deal-role="{% if deal.seller == user %}seller{% else %}buyer{% endif %}"
+            data-deal-search="{{ deal.product_title|lower }} {{ deal.seller.username|lower }} {% if deal.buyer %}{{ deal.buyer.username|lower }}{% endif %}"
+            style="animation:fadeInUp .4s {{ forloop.counter0 }}00ms ease both;">
+            <td><span class="se-deal-id">#{{ deal.id }}</span></td>
+            <td>
+              <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="se-deal-link">
+                {{ deal.product_title|truncatechars:38 }}
+              </a>
+              <div class="se-deal-meta-row">
+                {% if deal.is_auction %}
+                <span class="se-deal-type-badge se-type-auction"><i class="fas fa-gavel"></i> {% t "my_deals.type_auction" %}</span>
+                {% else %}
+                <span class="se-deal-type-badge se-type-fixed"><i class="fas fa-tag"></i> {% t "my_deals.type_fixed" %}</span>
+                {% endif %}
+                <span class="se-deal-role-badge {% if deal.seller == user %}seller{% else %}buyer{% endif %}">
+                  {% if deal.seller == user %}{% t "my_deals.role_seller" %}{% else %}{% t "my_deals.role_buyer" %}{% endif %}
+                </span>
+                <span class="se-deal-time"><i class="fas fa-clock"></i> {{ deal.created_at|timesince }} {% t "profile.time_ago" %}</span>
+              </div>
+            </td>
+            <td>
+              {% if deal.buyer %}
+              <a href="{% url 'user_profile' deal.buyer.id %}" class="se-user-mini">
+                <img src="{{ deal.buyer.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ deal.buyer.username }}" loading="lazy" decoding="async" width="48" height="48">
+                <span>{{ deal.buyer.username }}</span>
+              </a>
+              {% else %}
+              <span class="se-waiting-badge"><i class="fas fa-hourglass-half"></i> {% t "my_deals.waiting" %}</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'user_profile' deal.seller.id %}" class="se-user-mini">
+                <img src="{{ deal.seller.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ deal.seller.username }}" loading="lazy" decoding="async" width="48" height="48">
+                <span>{{ deal.seller.username }}</span>
+              </a>
+            </td>
+            <td><span class="se-deal-price">${{ deal.price|default:deal.starting_price }}</span></td>
+            <td>
+              {% include "partials/deal_status_badge.html" with deal=deal %}
+            </td>
+            <td><span class="se-deal-date">{{ deal.created_at|date:"d/m/Y" }}</span></td>
+            <td>{% include "partials/deal_room_action.html" with deal=deal user=user %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="se-dr-mobile" id="dealCardsList">
+      {% for deal in deals %}
+      <article
+        class="se-dr-mobile-card se-deal-row"
+        data-deal-status="{{ deal.status }}"
+        data-deal-role="{% if deal.seller == user %}seller{% else %}buyer{% endif %}"
+        data-deal-search="{{ deal.product_title|lower }} {{ deal.seller.username|lower }} {% if deal.buyer %}{{ deal.buyer.username|lower }}{% endif %}">
+        <div class="se-dr-mobile-top">
+          <div>
+            <div class="se-dr-mobile-id">#{{ deal.id }}</div>
+            <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="se-dr-mobile-title">
+              {{ deal.product_title|truncatechars:50 }}
+            </a>
+          </div>
+          {% include "partials/deal_status_badge.html" with deal=deal %}
+        </div>
+
+        <div class="se-dr-mobile-meta">
+          <span class="se-deal-role-badge {% if deal.seller == user %}seller{% else %}buyer{% endif %}">
+            {% if deal.seller == user %}{% t "my_deals.role_seller" %}{% else %}{% t "my_deals.role_buyer" %}{% endif %}
+          </span>
+          {% if deal.is_auction %}
+          <span class="se-deal-type-badge se-type-auction"><i class="fas fa-gavel"></i> {% t "my_deals.type_auction" %}</span>
+          {% else %}
+          <span class="se-deal-type-badge se-type-fixed"><i class="fas fa-tag"></i> {% t "my_deals.type_fixed" %}</span>
+          {% endif %}
+        </div>
+
+        <div class="se-dr-mobile-grid">
+          <div class="se-dr-mobile-item">
+            <span>{% t "my_deals.col_amount" %}</span>
+            <strong>${{ deal.price|default:deal.starting_price }}</strong>
+          </div>
+          <div class="se-dr-mobile-item">
+            <span>{% t "my_deals.col_date" %}</span>
+            <strong>{{ deal.created_at|date:"d/m/Y" }}</strong>
+          </div>
+          <div class="se-dr-mobile-item">
+            <span>{% t "my_deals.col_seller" %}</span>
+            <strong>{{ deal.seller.username }}</strong>
+          </div>
+          <div class="se-dr-mobile-item">
+            <span>{% t "my_deals.col_buyer" %}</span>
+            <strong>{% if deal.buyer %}{{ deal.buyer.username }}{% else %}{% t "my_deals.waiting" %}{% endif %}</strong>
+          </div>
+        </div>
+
+        <div class="se-dr-mobile-actions">
+          {% include "partials/deal_room_action.html" with deal=deal user=user %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div id="noFilterResults" style="display:none;text-align:center;padding:40px 20px;color:var(--text-secondary);">
+      <i class="fas fa-inbox" style="font-size:2rem;color:#D5DDE8;display:block;margin-bottom:10px;"></i>
+      <div style="font-size:.95rem;font-weight:700;">{% t "my_deals.no_status_results" %}</div>
+      <div style="font-size:.82rem;margin-top:6px;">{% t "my_deals.try_another_filter" %}</div>
+    </div>
+  </div>
+  {% else %}
+  <div class="se-dr-empty">
+    <div class="se-dr-empty-icon"><i class="fas fa-folder-open"></i></div>
+    <h4 class="se-dr-empty-title">{% t "my_deals.empty_title" %}</h4>
+    <p class="se-dr-empty-sub">{% t "my_deals.empty_sub" %}</p>
+    <div class="se-dr-empty-actions">
+      <a href="{% url 'create_deal' %}" class="btn btn-primary px-5">
+        <i class="fas fa-plus-circle" style="margin-left:8px;"></i>{% t "my_deals.create_deal" %}
+      </a>
+      <a href="{% url 'listings' %}" class="btn btn-outline-primary px-5">
+        <i class="fas fa-search" style="margin-left:8px;"></i>{% t "my_deals.browse_deals" %}
+      </a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<style>
+.se-dr-shell{display:flex;flex-direction:column;gap:0}
+.se-dr-header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:28px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(245, 248, 253, 0.92)), url("{% static 'images/brand/room-bg.webp' %}") center/cover no-repeat; padding: 24px 32px; border-radius: 24px; box-shadow: 0 16px 40px rgba(13,27,42,0.06);}
+.se-dr-header-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.se-dr-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(201,150,59,.1);border:1px solid rgba(201,150,59,.2);color:var(--gold-dark);border-radius:30px;padding:4px 14px;font-size:.75rem;font-weight:700;margin-bottom:8px}
+.se-dr-title{font-size:1.75rem;font-weight:900;color:var(--navy);margin-bottom:4px}
+.se-dr-sub{color:var(--text-secondary);font-size:.9rem;margin:0}
+.se-dr-add-btn,.se-dr-ghost-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:14px;font-weight:800;font-size:.88rem;text-decoration:none;transition:all .25s ease}
+.se-dr-add-btn{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--navy);box-shadow:0 4px 18px rgba(201,150,59,.35)}
+.se-dr-add-btn:hover{transform:translateY(-2px);color:var(--navy)}
+.se-dr-ghost-btn{background:#fff;border:1px solid var(--border-light);color:var(--text-primary)}
+.se-dr-ghost-btn:hover{border-color:rgba(201,150,59,.35);color:var(--navy)}
+.se-dr-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-bottom:20px}
+.se-dr-stat{background:#fff;border-radius:16px;padding:18px 20px;border:1px solid var(--border-light);box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:14px}
+.se-dr-stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.se-stat-total .se-dr-stat-icon{background:rgba(201,150,59,.1);color:var(--gold-dark)}
+.se-stat-active .se-dr-stat-icon{background:rgba(99,102,241,.1);color:#4f46e5}
+.se-stat-done .se-dr-stat-icon{background:var(--success-light);color:var(--success)}
+.se-stat-seller .se-dr-stat-icon{background:var(--info-light);color:var(--info)}
+.se-stat-buyer .se-dr-stat-icon{background:var(--warning-light);color:var(--warning)}
+.se-dr-stat-num{font-size:1.75rem;font-weight:900;line-height:1;color:var(--navy);font-family:'Tajawal',sans-serif}
+.se-dr-stat-label{font-size:.75rem;color:var(--text-secondary);font-weight:600;margin-top:3px}
+.se-dr-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.se-dr-search-wrap{position:relative;flex:1;min-width:220px}
+.se-dr-search-wrap i{position:absolute;top:50%;right:14px;transform:translateY(-50%);color:var(--text-light)}
+.se-dr-search{width:100%;height:48px;border-radius:14px;border:1px solid var(--border-light);background:#fff;padding:0 42px 0 14px;font-size:.9rem;color:var(--text-primary)}
+.se-dr-search:focus{outline:none;border-color:rgba(201,150,59,.45);box-shadow:0 0 0 3px rgba(201,150,59,.08)}
+.se-dr-role-switch{display:flex;gap:8px;flex-wrap:wrap}
+.se-dr-role-btn{border:none;background:#eef2f7;color:var(--text-secondary);padding:10px 14px;border-radius:12px;font-size:.82rem;font-weight:800;font-family:'Cairo',sans-serif;cursor:pointer;transition:all .2s ease}
+.se-dr-role-btn.active{background:var(--navy);color:#fff}
+.se-dr-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.se-dr-filter-btn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--border-light);border-radius:12px;padding:9px 16px;font-size:.82rem;font-weight:700;color:var(--text-secondary);cursor:pointer;font-family:'Cairo',sans-serif;transition:all .2s ease}
+.se-dr-filter-btn:hover{border-color:rgba(201,150,59,.4);color:var(--navy)}
+.se-dr-filter-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.se-filter-count{background:#f3f4f6;color:var(--text-secondary);border-radius:999px;padding:2px 8px;font-size:.72rem;font-weight:800}
+.se-dr-filter-btn.active .se-filter-count{background:rgba(255,255,255,.16);color:var(--gold-light)}
+.se-dr-table-card{border-radius:18px!important;overflow:hidden;animation:fadeInUp .5s .08s ease both}
+.se-dr-table-header{background:linear-gradient(135deg,var(--navy),var(--navy-mid));padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.se-dr-table-title{color:#fff;font-weight:800;font-size:.95rem;display:flex;align-items:center;gap:8px}
+.se-dr-table-title i{color:var(--gold)}
+.se-dr-table-header-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.se-dr-table-count{background:rgba(201,150,59,.2);color:var(--gold-light);border-radius:999px;padding:5px 14px;font-size:.8rem;font-weight:800}
+.se-dr-clear-btn{border:none;background:rgba(255,255,255,.12);color:#fff;padding:8px 12px;border-radius:10px;font-size:.78rem;font-weight:800;cursor:pointer}
+table thead tr{background:#F8F9FC!important}
+table thead th{padding:13px 16px!important;font-size:.8rem;color:var(--text-secondary);font-weight:700;border:none!important;white-space:nowrap}
+.se-deal-row:hover{background:#FAFBFC!important}
+.se-deal-row td{border-bottom:1px solid #F5F7FA!important}
+.se-deal-id{background:#F0F4F8;color:var(--text-secondary);border-radius:8px;padding:3px 10px;font-size:.78rem;font-weight:800;font-family:'Tajawal',sans-serif}
+.se-deal-link{font-weight:800;color:var(--navy);text-decoration:none;font-size:.92rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.se-deal-link:hover{color:var(--gold-dark)}
+.se-deal-meta-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px}
+.se-deal-type-badge,.se-deal-role-badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 9px;font-size:.69rem;font-weight:800}
+.se-type-auction{background:rgba(201,150,59,.1);color:var(--gold-dark)}
+.se-type-fixed{background:var(--info-light);color:var(--info)}
+.se-deal-role-badge.seller{background:rgba(16,185,129,.1);color:#047857}
+.se-deal-role-badge.buyer{background:rgba(59,130,246,.1);color:#1d4ed8}
+.se-deal-time{font-size:.72rem;color:var(--text-light);display:inline-flex;align-items:center;gap:5px}
+.se-user-mini{display:flex;align-items:center;gap:7px;text-decoration:none}
+.se-user-mini img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border-light)}
+.se-user-mini span{font-size:.83rem;font-weight:700;color:var(--text-primary)}
+.se-waiting-badge{font-size:.75rem;color:var(--text-light);font-weight:700;display:inline-flex;align-items:center;gap:5px}
+.se-deal-price{font-weight:900;font-size:1rem;color:var(--gold-dark);font-family:'Tajawal',sans-serif}
+.se-deal-date{font-size:.78rem;color:var(--text-secondary);font-weight:700;white-space:nowrap}
+.se-status-badge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 12px;font-size:.76rem;font-weight:800;white-space:nowrap}
+.se-s-completed{background:var(--success-light);color:var(--success)}
+.se-s-reserved{background:var(--info-light);color:var(--info)}
+.se-s-new{background:#FFF8E7;color:#B8860B}
+.se-s-shipped{background:var(--warning-light);color:var(--warning)}
+.se-s-disputed{background:var(--danger-light);color:var(--danger)}
+.se-s-cancelled{background:#F0F4F8;color:var(--text-secondary)}
+.se-action-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;border:none;border-radius:10px;padding:8px 14px;font-size:.78rem;font-weight:800;text-decoration:none;transition:all .2s ease;white-space:nowrap}
+.se-action-confirm{background:linear-gradient(135deg,var(--success),#0a6147);color:#fff;box-shadow:0 2px 8px rgba(14,124,90,.2)}
+.se-action-confirm:hover{transform:translateY(-1px);color:#fff}
+.se-action-view{background:#F0F4F8;color:var(--text-secondary)}
+.se-action-view:hover{background:var(--navy);color:#fff}
+.se-action-dispute{background:var(--danger-light);color:var(--danger)}
+.se-action-dispute:hover{background:var(--danger);color:#fff}
+.se-dr-mobile{display:none;padding:14px;gap:12px}
+.se-dr-mobile-card{background:#fff;border:1px solid var(--border-light);border-radius:18px;padding:16px;box-shadow:var(--shadow-sm)}
+.se-dr-mobile-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+.se-dr-mobile-id{font-size:.75rem;font-weight:800;color:var(--text-light);margin-bottom:4px}
+.se-dr-mobile-title{display:block;font-size:.95rem;font-weight:900;color:var(--navy);text-decoration:none;line-height:1.55}
+.se-dr-mobile-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.se-dr-mobile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.se-dr-mobile-item{background:#f8fafc;border-radius:12px;padding:10px 12px}
+.se-dr-mobile-item span{display:block;font-size:.72rem;color:var(--text-light);font-weight:700;margin-bottom:3px}
+.se-dr-mobile-item strong{font-size:.83rem;color:var(--text-primary);font-weight:800}
+.se-dr-mobile-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.se-dr-mobile-actions .se-action-btn{flex:1}
+.se-dr-empty{text-align:center;padding:80px 20px;background:#fff;border-radius:20px;border:2px dashed #D5DDE8;animation:fadeInUp .5s ease both}
+.se-dr-empty-icon{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#F0F4F8,#E8EDF2);display:inline-flex;align-items:center;justify-content:center;font-size:2.2rem;color:#BDC7D3;margin-bottom:18px;animation:float 3s ease-in-out infinite}
+.se-dr-empty-title{color:var(--navy);font-weight:900;margin-bottom:8px;font-size:1.1rem}
+.se-dr-empty-sub{color:var(--text-secondary);margin-bottom:24px}
+.se-dr-empty-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+@media (max-width:1100px){.se-dr-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:767px){
+  .se-dr-shell{gap:2px}
+  .se-dr-title{font-size:1.35rem}
+  .se-dr-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .se-dr-stat{padding:14px 16px;gap:10px}
+  .se-dr-stat-num{font-size:1.45rem}
+  .se-dr-toolbar{flex-direction:column;align-items:stretch}
+  .se-dr-search-wrap{min-width:0}
+  .se-dr-role-switch{width:100%}
+  .se-dr-role-btn{flex:1}
+  .se-dr-filters{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+  .se-dr-filters::-webkit-scrollbar{display:none}
+  .se-dr-filter-btn{white-space:nowrap;flex:0 0 auto}
+  .se-dr-table-header{padding:14px 16px}
+  .se-dr-table-title{font-size:.88rem}
+  .se-dr-table-count{font-size:.74rem}
+  .se-dr-desktop{display:none}
+  .se-dr-mobile{display:grid}
+}
+@media (max-width:576px){
+  .se-dr-header{align-items:flex-start}
+  .se-dr-sub{font-size:.84rem;line-height:1.75}
+  .se-dr-header-actions{width:100%}
+  .se-dr-ghost-btn,.se-dr-add-btn{flex:1;justify-content:center}
+  .se-dr-mobile-grid{grid-template-columns:1fr 1fr}
+  .se-dr-mobile{padding:12px}
+  .se-dr-mobile-card{border-radius:16px;padding:14px}
+  .se-dr-mobile-title{font-size:.92rem}
+  .se-dr-mobile-actions{display:grid;grid-template-columns:1fr}
+  .se-dr-mobile-actions .se-action-btn{width:100%}
+  .se-dr-empty{padding:58px 18px;border-radius:18px}
+}
+@media (max-width:420px){
+  .se-dr-stats{grid-template-columns:1fr}
+  .se-dr-stat{padding:14px}
+  .se-dr-role-switch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .se-dr-role-btn{padding:10px 8px;font-size:.76rem}
+  .se-dr-mobile-grid{grid-template-columns:1fr}
+  .se-dr-header-actions{display:grid;grid-template-columns:1fr}
+  .se-dr-ghost-btn,.se-dr-add-btn{width:100%}
+}
+</style>
+{% include "partials/_rooms_light_styles.html" %}
+
+<script>
+window.initDealRoomPage = function () {
+  const shell = document.getElementById('deal-room-shell');
+  if (!shell) return;
+
+  const rows = Array.from(shell.querySelectorAll('.se-deal-row'));
+  const statusButtons = Array.from(shell.querySelectorAll('.se-dr-filter-btn'));
+  const roleButtons = Array.from(shell.querySelectorAll('.se-dr-role-btn'));
+  const searchInput = document.getElementById('dealSearchInput');
+  const visibleCount = document.getElementById('visibleCount');
+  const noResults = document.getElementById('noFilterResults');
+  const resetButton = document.getElementById('dealFiltersReset');
+
+  let currentStatus = 'all';
+  let currentRole = 'all';
+  let currentSearch = '';
+
+  function applyFilters() {
+    let visible = 0;
+    rows.forEach((row) => {
+      const statusMatch = currentStatus === 'all' || row.dataset.dealStatus === currentStatus;
+      const roleMatch = currentRole === 'all' || row.dataset.dealRole === currentRole;
+      const haystack = (row.dataset.dealSearch || '').toLowerCase();
+      const searchMatch = !currentSearch || haystack.includes(currentSearch);
+      const shouldShow = statusMatch && roleMatch && searchMatch;
+      row.style.display = shouldShow ? '' : 'none';
+      if (shouldShow) visible += 1;
+    });
+
+    if (visibleCount) {
+      visibleCount.textContent = `${visible} {% t "my_deals.deal_count" %}`;
+    }
+    if (noResults) {
+      noResults.style.display = visible === 0 ? 'block' : 'none';
+    }
+  }
+
+  statusButtons.forEach((btn) => {
+    btn.onclick = function () {
+      currentStatus = this.dataset.filter;
+      statusButtons.forEach((item) => item.classList.remove('active'));
+      this.classList.add('active');
+      applyFilters();
+    };
+  });
+
+  roleButtons.forEach((btn) => {
+    btn.onclick = function () {
+      currentRole = this.dataset.role;
+      roleButtons.forEach((item) => item.classList.remove('active'));
+      this.classList.add('active');
+      applyFilters();
+    };
+  });
+
+  if (searchInput) {
+    searchInput.oninput = function () {
+      currentSearch = this.value.trim().toLowerCase();
+      applyFilters();
+    };
+  }
+
+  if (resetButton) {
+    resetButton.onclick = function () {
+      currentStatus = 'all';
+      currentRole = 'all';
+      currentSearch = '';
+      if (searchInput) searchInput.value = '';
+      statusButtons.forEach((item) => item.classList.toggle('active', item.dataset.filter === 'all'));
+      roleButtons.forEach((item) => item.classList.toggle('active', item.dataset.role === 'all'));
+      applyFilters();
+    };
+  }
+
+  applyFilters();
+};
+
+window.initDealRoomPage();
+</script>
+{% endblock %}

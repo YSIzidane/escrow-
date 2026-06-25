@@ -1,0 +1,7 @@
+{% extends "account/base_confirm_code.html" %}
+
+{% block title %}{% if current_language == "ar" %}رمز تأكيد البريد{% else %}Email Verification Code{% endif %}{% endblock %}
+{% block code_title %}{% if current_language == "ar" %}أدخل رمز تأكيد البريد الإلكتروني{% else %}Enter email verification code{% endif %}{% endblock %}
+{% block recipient %}<a href="mailto:{{ email }}">{{ email }}</a>{% endblock %}
+{% block action_url %}{% url 'account_email_verification_sent' %}{% endblock %}
+{% block change_title %}{% if current_language == "ar" %}استخدام بريد إلكتروني مختلف{% else %}Use a different email address{% endif %}{% endblock %}

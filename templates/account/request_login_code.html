@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}{% if current_language == "ar" %}إرسال رمز الدخول{% else %}Send Sign-In Code{% endif %}{% endblock %}
+{% block page_type %}request_login_code{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5 auth-shell">
+  <div class="col-lg-5 col-md-7">
+    <div class="card border-0 auth-card">
+      <div class="auth-card-header">
+        <div class="auth-card-badge">
+          <i class="fas fa-paper-plane"></i>
+          {% if current_language == "ar" %}تسجيل دخول سريع{% else %}Fast sign-in{% endif %}
+        </div>
+
+        <div class="auth-card-icon">
+          <i class="fas fa-bolt"></i>
+        </div>
+
+        <h3>{% if current_language == "ar" %}أرسل لي رمز دخول{% else %}Send me a sign-in code{% endif %}</h3>
+        <p>{% if current_language == "ar" %}سنرسل رمزًا مؤقتًا إلى بريدك أو جهة الاتصال المتاحة لتسجيل الدخول بسهولة وبدون كلمة مرور.{% else %}We will send a temporary code to your email or available contact so you can sign in without a password.{% endif %}</p>
+      </div>
+
+      <div class="card-body auth-card-body">
+        {% if form.errors %}
+        <div class="auth-error">
+          <i class="fas fa-exclamation-circle"></i>
+          {% if current_language == "ar" %}يرجى مراجعة البيانات والمحاولة مرة أخرى.{% else %}Please review your details and try again.{% endif %}
+        </div>
+        {% endif %}
+
+        <div class="auth-note">
+          <strong>{% if current_language == "ar" %}ميزة سريعة{% else %}Quick option{% endif %}</strong>
+          <p>
+            {% if current_language == "ar" %}
+            هذا الخيار مناسب إذا كنت تريد دخولًا سريعًا من الهاتف بدون تذكّر كلمة المرور.
+            {% else %}
+            This is a great mobile-friendly option when you want a quick sign-in without remembering your password.
+            {% endif %}
+          </p>
+        </div>
+
+        <form method="post" action="">
+          {% csrf_token %}
+          {{ redirect_field }}
+
+          {% for field in form %}
+            {% if field.field.widget.input_type == "hidden" %}
+              {{ field }}
+            {% else %}
+            <div class="auth-field">
+              <label class="auth-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+              <small class="auth-field-error">{{ field.errors.0 }}</small>
+              {% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+
+          <button type="submit" class="btn auth-primary-btn mt-2">
+            <i class="fas fa-paper-plane"></i>
+            {% if current_language == "ar" %}إرسال الرمز{% else %}Request code{% endif %}
+          </button>
+        </form>
+
+        <a href="{% url 'account_login' %}" class="auth-secondary-link">
+          {% if current_language == "ar" %}خيارات تسجيل دخول أخرى{% else %}Other sign-in options{% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include "account/_auth_shell_styles.html" %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "account/email/base_message.txt" %}
+
+{% block content %}
+{% if current_language == 'ar' %}
+تم تغيير البريد الإلكتروني لحسابك من:
+{{ from_email }}
+إلى:
+{{ to_email }}
+
+إذا لم تقم بهذا التغيير، نوصي بتأمين حسابك فورًا.
+{% else %}
+Your account email address was changed from:
+{{ from_email }}
+to:
+{{ to_email }}
+
+If you did not make this change, secure your account immediately.
+{% endif %}
+{% endblock %}

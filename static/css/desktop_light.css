@@ -1,0 +1,1773 @@
+/* ==========================================================================
+   Desktop Light Experience
+   Final desktop-only visual layer loaded after page-specific CSS.
+   ========================================================================== */
+
+@media (min-width: 769px) and (hover: hover) {
+  body {
+    background: #f6f8fb !important;
+    background-image:
+      radial-gradient(circle at 12% 0%, rgba(201, 150, 59, 0.08), transparent 30%),
+      radial-gradient(circle at 88% 8%, rgba(13, 27, 42, 0.05), transparent 28%),
+      linear-gradient(180deg, #fbfcff 0%, #f4f7fb 48%, #eef3f8 100%) !important;
+    color: var(--text-primary, #0d1b2a) !important;
+  }
+
+  body[data-page="home"],
+  body[data-page="listings"],
+  body[data-page="about"],
+  body[data-page="guide"],
+  body[data-page="policies"],
+  body[data-page="403"],
+  body[data-page="404"],
+  body[data-page="500"],
+  body[data-page="503"] {
+    color: var(--text-primary, #0d1b2a) !important;
+  }
+
+  .page-bg-overlay,
+  body[data-page="home"] .page-bg-overlay,
+  body[data-page="listings"] .page-bg-overlay,
+  body[data-page="about"] .page-bg-overlay,
+  body[data-page="guide"] .page-bg-overlay,
+  body[data-page="policies"] .page-bg-overlay,
+  body[data-page="403"] .page-bg-overlay,
+  body[data-page="404"] .page-bg-overlay,
+  body[data-page="500"] .page-bg-overlay,
+  body[data-page="503"] .page-bg-overlay {
+    background:
+      radial-gradient(circle at 12% 0%, rgba(201, 150, 59, 0.12), transparent 24%),
+      radial-gradient(circle at 85% 5%, rgba(13, 27, 42, 0.05), transparent 26%),
+      linear-gradient(180deg, #fbfcff 0%, #f6f8fb 54%, #eef3f8 100%) !important;
+  }
+
+  .page-bg-overlay::after,
+  body[data-page="home"] .page-bg-overlay::after,
+  body[data-page="listings"] .page-bg-overlay::after,
+  body[data-page="about"] .page-bg-overlay::after,
+  body[data-page="guide"] .page-bg-overlay::after,
+  body[data-page="policies"] .page-bg-overlay::after,
+  body[data-page="403"] .page-bg-overlay::after,
+  body[data-page="404"] .page-bg-overlay::after,
+  body[data-page="500"] .page-bg-overlay::after,
+  body[data-page="503"] .page-bg-overlay::after {
+    display: block !important;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.08)),
+      radial-gradient(rgba(13, 27, 42, 0.035) 1px, transparent 1px) !important;
+    background-size: auto, 28px 28px !important;
+    opacity: 1 !important;
+  }
+
+  .se-navbar {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-bottom: 1px solid rgba(13, 27, 42, 0.08) !important;
+    box-shadow: 0 12px 34px rgba(13, 27, 42, 0.08) !important;
+    backdrop-filter: blur(18px) saturate(1.35) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(1.35) !important;
+    animation: none !important;
+  }
+
+  .se-navbar::after {
+    background: linear-gradient(90deg, transparent, rgba(201, 150, 59, 0.34), transparent) !important;
+  }
+
+  .se-nav-links a {
+    color: #405064 !important;
+    background: transparent !important;
+  }
+
+  .se-nav-links a i {
+    color: var(--gold, #c9963b) !important;
+  }
+
+  .se-nav-links a:hover,
+  .se-nav-links a.active {
+    color: var(--navy, #0d1b2a) !important;
+    background: rgba(201, 150, 59, 0.12) !important;
+  }
+
+  .se-nav-search input {
+    background: rgba(248, 250, 252, 0.95) !important;
+    border-color: rgba(13, 27, 42, 0.12) !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .se-nav-search input::placeholder {
+    color: #8a9bab !important;
+  }
+
+  .se-nav-search input:focus {
+    background: #ffffff !important;
+    border-color: rgba(201, 150, 59, 0.48) !important;
+    box-shadow: 0 0 0 3px rgba(201, 150, 59, 0.14) !important;
+  }
+
+  .se-nav-search .search-icon {
+    color: #8a9bab !important;
+  }
+
+  .se-lang-btn,
+  .se-notif-btn,
+  .se-mobile-search-btn,
+  .se-mob-toggle,
+  .se-user-btn,
+  .se-btn-login {
+    background: rgba(255, 255, 255, 0.88) !important;
+    border-color: rgba(13, 27, 42, 0.12) !important;
+    color: var(--navy, #0d1b2a) !important;
+    box-shadow: 0 4px 14px rgba(13, 27, 42, 0.045) !important;
+  }
+
+  .se-lang-btn:hover,
+  .se-notif-btn:hover,
+  .se-mobile-search-btn:hover,
+  .se-mob-toggle:hover,
+  .se-user-btn:hover,
+  .se-btn-login:hover {
+    background: #ffffff !important;
+    border-color: rgba(201, 150, 59, 0.28) !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .se-user-btn i.fa-chevron-down {
+    color: #7b8a9c !important;
+  }
+
+  .se-notif-badge {
+    border-color: #ffffff !important;
+  }
+
+  .se-dropdown,
+  .dropdown-menu {
+    background: rgba(255, 255, 255, 0.98) !important;
+    border-color: rgba(13, 27, 42, 0.1) !important;
+    box-shadow: 0 22px 54px rgba(13, 27, 42, 0.14) !important;
+  }
+
+  .se-dropdown a,
+  .se-dropdown button,
+  .dropdown-item {
+    color: #415064 !important;
+  }
+
+  .se-dropdown a:hover,
+  .se-dropdown button:hover,
+  .dropdown-item:hover {
+    background: rgba(13, 27, 42, 0.05) !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .se-dropdown hr {
+    border-color: rgba(13, 27, 42, 0.08) !important;
+  }
+
+  .card,
+  .app-card,
+  .app-surface,
+  .se-content-glass,
+  .table-responsive,
+  .modal-content {
+    background: rgba(255, 255, 255, 0.97) !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+    box-shadow: 0 14px 38px rgba(13, 27, 42, 0.08) !important;
+    color: var(--text-primary, #0d1b2a) !important;
+  }
+
+  .card-header,
+  .card-header.bg-primary,
+  .modal-header,
+  .se-card-hero-header,
+  .se-page-header,
+  .se-filter-header,
+  .se-publish-form-hero,
+  .se-escrow-header,
+  .se-hero-section,
+  .se-bg-hero,
+  .hero {
+    background:
+      radial-gradient(circle at 90% 0%, rgba(201, 150, 59, 0.16), transparent 32%),
+      linear-gradient(135deg, #ffffff 0%, #f7f9fc 100%) !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+    color: var(--navy, #0d1b2a) !important;
+    box-shadow: 0 14px 38px rgba(13, 27, 42, 0.08) !important;
+  }
+
+  .card-header *,
+  .modal-header *,
+  .se-card-hero-header *,
+  .se-page-header *,
+  .se-filter-header *,
+  .se-publish-form-hero *,
+  .se-escrow-header *,
+  .se-hero-section *,
+  .se-bg-hero *,
+  .hero * {
+    color: inherit !important;
+  }
+
+  .se-filter-header i,
+  .se-publish-form-hero i,
+  .se-page-header i,
+  .se-card-hero-header i {
+    color: var(--gold, #c9963b) !important;
+  }
+
+  .table thead,
+  .table-primary,
+  .adm-table thead,
+  .se-admin-rooms-table thead {
+    background: #f7f9fc !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .table thead th,
+  .adm-table th,
+  .se-admin-rooms-table th {
+    color: #5a6a7a !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+  }
+
+  .table tbody tr:hover,
+  .adm-table tbody tr:hover {
+    background: rgba(201, 150, 59, 0.045) !important;
+  }
+
+  /* Home and marketplace */
+  .mg-home {
+    color: var(--text-primary, #0d1b2a) !important;
+  }
+
+  .safo-hero,
+  .safo-section,
+  .safo-cta,
+  .se-deals-header,
+  .se-filter-panel,
+  .se-deal-card,
+  .se-search-topbar,
+  .se-search-card,
+  .se-search-empty,
+  .se-sort-bar {
+    background:
+      radial-gradient(circle at 92% 0%, rgba(201, 150, 59, 0.1), transparent 28%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 251, 253, 0.98)) !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+    color: var(--text-primary, #0d1b2a) !important;
+    box-shadow: 0 14px 38px rgba(13, 27, 42, 0.08) !important;
+  }
+
+  body[data-page="listings"],
+  body[data-page="listings"] .page-bg-overlay {
+    background:
+      radial-gradient(circle at 12% 0%, rgba(201, 150, 59, 0.12), transparent 24%),
+      radial-gradient(circle at 85% 5%, rgba(13, 27, 42, 0.05), transparent 26%),
+      linear-gradient(180deg, #fbfcff 0%, #f6f8fb 54%, #eef3f8 100%) !important;
+  }
+
+  body[data-page="listings"] .page-bg-overlay::after {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.08)),
+      radial-gradient(rgba(13, 27, 42, 0.035) 1px, transparent 1px) !important;
+  }
+
+  body[data-page="listings"] .se-filter-header,
+  body[data-page="listings"] .se-filter-header *,
+  body[data-page="listings"] .se-mobile-filter-toggle,
+  body[data-page="listings"] .se-mobile-filter-toggle * {
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  body[data-page="listings"] .se-filter-header i,
+  body[data-page="listings"] .se-mobile-filter-toggle i:first-child {
+    color: var(--gold, #c9963b) !important;
+  }
+
+  body[data-page="listings"] .se-filter-clear,
+  body[data-page="listings"] .se-filter-clear:hover {
+    color: var(--text-secondary, #4a5568) !important;
+  }
+
+  .safo-hero__title,
+  .safo-section__title,
+  .safo-step-card h3,
+  .safo-feature-card h3,
+  .safo-trust-card h3,
+  .safo-deal-card h3,
+  .safo-deal-card__price,
+  .safo-proof-value,
+  .safo-cta h2,
+  .se-deals-title,
+  .se-search-card h3 {
+    color: #0f1720 !important;
+  }
+
+  .safo-hero__lead,
+  .safo-section__sub,
+  .safo-step-card p,
+  .safo-feature-card p,
+  .safo-trust-card p,
+  .safo-deal-card__seller,
+  .safo-proof-label,
+  .safo-cta p,
+  .se-deals-sub,
+  .se-search-card p {
+    color: #5c6976 !important;
+  }
+
+  .safo-step-card,
+  .safo-feature-card,
+  .safo-trust-card,
+  .safo-deal-card,
+  .safo-preview-card {
+    background: #ffffff !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+    box-shadow: 0 8px 24px rgba(13, 27, 42, 0.06) !important;
+  }
+
+  .safo-pill--subtle,
+  .safo-deal-card__type {
+    color: #5c6976 !important;
+    background: rgba(13, 27, 42, 0.045) !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+  }
+
+  .safo-btn--outline {
+    background: #ffffff !important;
+    border-color: rgba(13, 27, 42, 0.12) !important;
+    color: #0f1720 !important;
+  }
+
+  /* About, guide, policies, errors */
+  .ab-hero,
+  .ab-panel,
+  .ab-card,
+  .ab-brand-panel,
+  .ab-stat,
+  .ab-step,
+  .hw-hero,
+  .hw-hero-card,
+  .hw-step-card,
+  .hw-panel,
+  .hw-warning-panel,
+  .se-policy-page,
+  .se-policy-sidebar,
+  .se-policy-content,
+  .se-error-card,
+  .se-error-note,
+  .se-error-contact,
+  .se-error-timer {
+    background:
+      radial-gradient(circle at 92% 0%, rgba(201, 150, 59, 0.12), transparent 30%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+    box-shadow: 0 18px 44px rgba(13, 27, 42, 0.08) !important;
+    color: var(--text-primary, #0d1b2a) !important;
+  }
+
+  .ab-hero h1,
+  .ab-hero h1 span,
+  .ab-panel h2,
+  .ab-card h2,
+  .ab-card h3,
+  .ab-step h3,
+  .ab-brand-panel strong,
+  .ab-stat strong,
+  .hw-hero h1,
+  .hw-step-card h2,
+  .hw-step-card h3,
+  .hw-panel h2,
+  .hw-warning-panel h2,
+  .se-policy-header h1,
+  .se-policy-section h2,
+  .se-error-title,
+  .se-error-note strong,
+  .se-error-timer-value {
+    color: var(--navy, #0d1b2a) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  .ab-hero p,
+  .ab-panel p,
+  .ab-card p,
+  .ab-panel-copy,
+  .ab-step p,
+  .ab-brand-panel span,
+  .ab-list-item,
+  .ab-stat span,
+  .hw-hero p,
+  .hw-step-card p,
+  .hw-panel p,
+  .hw-hero-note,
+  .hw-list-item,
+  .hw-warning-item span,
+  .se-policy-subtitle,
+  .se-policy-page p,
+  .se-policy-page li,
+  .se-policy-page li span,
+  .se-policy-page strong,
+  .se-policy-updated,
+  .se-error-message,
+  .se-error-note,
+  .se-error-contact-copy,
+  .se-error-timer-copy,
+  .se-error-timer-label {
+    color: #5a6a7a !important;
+  }
+
+  .ab-badge,
+  .hw-badge,
+  .ab-kicker,
+  .hw-kicker,
+  .se-sidebar-title {
+    background: rgba(201, 150, 59, 0.1) !important;
+    border-color: rgba(201, 150, 59, 0.18) !important;
+    color: var(--gold-dark, #a87828) !important;
+  }
+
+  .ab-step,
+  .hw-warning-item,
+  .ab-list-item,
+  .hw-list-item,
+  .hw-mini-screen,
+  .se-policy-list li,
+  .se-policy-contact {
+    background: #ffffff !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+    color: var(--text-primary, #0d1b2a) !important;
+    box-shadow: 0 8px 22px rgba(13, 27, 42, 0.05) !important;
+  }
+
+  .ab-card i,
+  .ab-step span,
+  .hw-step-card span,
+  .hw-warning-item i,
+  .se-policy-bullet {
+    background: rgba(201, 150, 59, 0.12) !important;
+    color: var(--gold-dark, #a87828) !important;
+  }
+
+  .se-policy-bullet.positive {
+    background: rgba(34, 197, 94, 0.12) !important;
+    color: #15803d !important;
+  }
+
+  .se-policy-bullet.negative {
+    background: rgba(239, 68, 68, 0.12) !important;
+    color: #dc2626 !important;
+  }
+
+  .se-policy-bullet.info {
+    background: rgba(59, 130, 246, 0.12) !important;
+    color: #2563eb !important;
+  }
+
+  .ab-inline-link,
+  .se-policy-page a,
+  .se-policy-contact-link {
+    color: var(--gold-dark, #a87828) !important;
+  }
+
+  .ab-inline-link:hover,
+  .se-policy-page a:hover,
+  .se-policy-contact-link:hover {
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .ab-btn-secondary,
+  .hw-btn-secondary {
+    background: #ffffff !important;
+    border-color: rgba(37, 99, 235, 0.14) !important;
+    color: #1d4ed8 !important;
+  }
+
+  .ab-btn-primary,
+  .hw-btn-primary {
+    color: #ffffff !important;
+  }
+
+  .hw-mini-top,
+  .hw-mini-row {
+    background: rgba(148, 163, 184, 0.22) !important;
+  }
+
+  .hw-mini-row.active {
+    background: linear-gradient(135deg, #2563eb, #60a5fa) !important;
+  }
+
+  .se-policy-header {
+    border-bottom-color: rgba(13, 27, 42, 0.08) !important;
+  }
+
+  .se-policy-list li {
+    padding: 12px 0 !important;
+    border-bottom: 1px solid rgba(13, 27, 42, 0.06) !important;
+    box-shadow: none !important;
+  }
+
+  .se-sidebar-link {
+    color: #415064 !important;
+  }
+
+  .se-sidebar-link:hover {
+    background: rgba(13, 27, 42, 0.05) !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .se-sidebar-link.active {
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    color: #ffffff !important;
+  }
+
+  .se-error-info {
+    background: rgba(34, 197, 94, 0.08) !important;
+    color: #166534 !important;
+  }
+
+  .se-error-btn-secondary {
+    background: #ffffff !important;
+    color: var(--navy, #0d1b2a) !important;
+    border-color: rgba(13, 27, 42, 0.12) !important;
+  }
+
+  .se-error-contact-link,
+  .se-error-timer-unit {
+    background: rgba(248, 250, 252, 0.95) !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  /* Auth and social account pages */
+  .auth-visuals,
+  .auth-card-header,
+  .auth-status-header,
+  .email-card-header,
+  .account-card-header,
+  .logout-header,
+  .reset-key-header,
+  .social-signup-header,
+  .social-login-header,
+  .connections-header,
+  .social-error-header {
+    background:
+      radial-gradient(circle at 92% 0%, rgba(201, 150, 59, 0.16), transparent 32%),
+      linear-gradient(135deg, #ffffff 0%, #f7f9fc 100%) !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+    color: var(--navy, #0d1b2a) !important;
+    box-shadow: 0 14px 38px rgba(13, 27, 42, 0.08) !important;
+  }
+
+  .auth-visuals *,
+  .auth-card-header *,
+  .auth-status-header *,
+  .email-card-header *,
+  .account-card-header *,
+  .logout-header *,
+  .reset-key-header *,
+  .social-signup-header *,
+  .social-login-header *,
+  .connections-header *,
+  .social-error-header * {
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .auth-hero-desc,
+  .auth-card-header p,
+  .auth-status-header p,
+  .email-card-header p,
+  .account-card-header p,
+  .logout-header p,
+  .reset-key-header p,
+  .social-signup-header p,
+  .social-login-header p,
+  .connections-header p,
+  .social-error-header p {
+    color: #5a6a7a !important;
+  }
+
+  .auth-feat,
+  .auth-meta-chip,
+  .auth-card-badge,
+  .social-signup-icon,
+  .social-login-icon,
+  .connections-icon,
+  .social-error-icon {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(13, 27, 42, 0.1) !important;
+    color: var(--navy, #0d1b2a) !important;
+    box-shadow: 0 8px 22px rgba(13, 27, 42, 0.08) !important;
+  }
+
+  .auth-logo-img[src*="logo-white"],
+  .social-signup-wordmark[src*="logo-white"],
+  .social-login-wordmark[src*="logo-white"],
+  .ab-logo[src*="logo-white"],
+  .se-brand-logo-admin-note[src*="logo-white"] {
+    filter: brightness(0) saturate(100%) invert(10%) sepia(25%) saturate(1300%) hue-rotate(172deg) brightness(91%) contrast(98%) !important;
+  }
+
+  /* Profile, deal, room, chat, payment, support */
+  .pf-user-card,
+  .pf-card,
+  .pf-deal-card,
+  .pf-review-row,
+  .withdraw-shell,
+  .withdraw-history-card,
+  .invoice-card,
+  .se-product-card,
+  .se-gallery-card,
+  .se-price-card,
+  .se-seller-card,
+  .se-share-card,
+  .se-comments-card,
+  .se-chat-card,
+  .se-chat-panel,
+  .se-dr-card,
+  .se-dr-stat,
+  .se-form-card,
+  .se-room-chat-card,
+  .se-room-sidebar-card,
+  .se-payment-card,
+  .se-payment-hero,
+  .se-payment-summary,
+  .se-step-card,
+  .ch-layout,
+  .ch-sidebar,
+  .ch-welcome-card,
+  .ch-welcome-stats,
+  .ch-item,
+  .ed-stat-card,
+  .ed-rooms-card,
+  .ed-room-row,
+  .ed-link-btn,
+  .ccp-review-card,
+  .ccp-action-card,
+  .ccp-meta-box,
+  .ccp-hero-stat,
+  .admin-withdrawal-card,
+  .admin-action-card,
+  .admin-audit-item,
+  .admin-detail-box,
+  .admin-stat-card,
+  .admin-metric-card,
+  .er-card,
+  .er-panel,
+  .er-chat-shell,
+  .er-sidebar,
+  .er-composer,
+  .er-guide-card,
+  .er-admin-card,
+  .support-card,
+  .ticket-card {
+    background: rgba(255, 255, 255, 0.97) !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+    color: var(--text-primary, #0d1b2a) !important;
+    box-shadow: 0 14px 38px rgba(13, 27, 42, 0.08) !important;
+  }
+
+  .pf-header,
+  .pf-card-header,
+  .pf-header-dark,
+  .withdraw-shell-hero,
+  .invoice-card-header,
+  .ch-sidebar-header,
+  .ed-header,
+  .ed-rooms-header,
+  .ccp-review-hero,
+  .admin-withdrawals-hero,
+  .se-product-top,
+  .se-chat-header,
+  .er-header,
+  .er-admin-head,
+  .se-payment-hero {
+    background:
+      radial-gradient(circle at 92% 0%, rgba(201, 150, 59, 0.12), transparent 30%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+    color: var(--navy, #0d1b2a) !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+  }
+
+  .pf-header *,
+  .pf-card-header *,
+  .pf-header-dark *,
+  .withdraw-shell-hero *,
+  .invoice-card-header *,
+  .ch-sidebar-header *,
+  .ed-header *,
+  .ed-rooms-header *,
+  .ccp-review-hero *,
+  .admin-withdrawals-hero *,
+  .se-product-top *,
+  .se-chat-header *,
+  .er-header *,
+  .er-admin-head *,
+  .se-payment-hero * {
+    color: inherit !important;
+  }
+
+  .withdraw-shell-hero p,
+  .withdraw-shell-hero [style*="rgba(255,255,255"],
+  .invoice-card-header [style*="opacity"],
+  .ch-sidebar-sub,
+  .ed-subtitle,
+  .ed-desc,
+  .ed-live-badge span,
+  .ed-clear-filter,
+  .ccp-review-hero p,
+  .ccp-review-kicker,
+  .ccp-hero-stat span,
+  .admin-withdrawals-hero p,
+  .admin-withdrawals-kicker,
+  .admin-stat-card span {
+    color: #5a6a7a !important;
+  }
+
+  .withdraw-shell-hero i,
+  .invoice-card-header i,
+  .ch-sidebar-title i,
+  .ed-rooms-title i,
+  .ed-header-icon i,
+  .ccp-review-kicker i,
+  .admin-withdrawals-kicker i,
+  .er-header i,
+  .er-admin-head i {
+    color: var(--gold-dark, #a87828) !important;
+  }
+
+  .withdraw-shell-hero > [style*="position:absolute"],
+  .ed-orb,
+  .ch-orb,
+  .er-header::before {
+    opacity: 0.55 !important;
+  }
+
+  .withdraw-shell-hero [style*="background:rgba(255,255,255"],
+  .ed-live-badge,
+  .admin-stat-card,
+  .ccp-hero-stat,
+  .er-status-box,
+  .card.border-0 > [style*="background:linear-gradient(135deg,var(--navy)"],
+  .card.border-0 > [style*="background: linear-gradient(135deg, var(--navy)"] {
+    background: rgba(255, 255, 255, 0.72) !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .card.border-0 > [style*="background:linear-gradient(135deg,var(--navy)"] *,
+  .card.border-0 > [style*="background: linear-gradient(135deg, var(--navy)"] * {
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .card.border-0 > [style*="background:linear-gradient(135deg,var(--navy)"] img,
+  .card.border-0 > [style*="background: linear-gradient(135deg, var(--navy)"] img {
+    border-color: rgba(201, 150, 59, 0.45) !important;
+  }
+
+  .ed-header-icon,
+  .ch-welcome-icon,
+  .er-chat-icon,
+  .se-room-header [style*="background: linear-gradient(135deg, var(--navy)"] {
+    background: linear-gradient(135deg, rgba(201, 150, 59, 0.18), rgba(232, 185, 106, 0.24)) !important;
+    color: var(--navy, #0d1b2a) !important;
+    box-shadow: 0 10px 24px rgba(201, 150, 59, 0.14) !important;
+  }
+
+  .ed-header-icon i,
+  .ch-welcome-icon i,
+  .er-chat-icon i,
+  .se-room-header [style*="background: linear-gradient(135deg, var(--navy)"] i {
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .ch-new-btn {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border-color: rgba(13, 27, 42, 0.1) !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .ch-new-btn:hover {
+    background: linear-gradient(135deg, var(--gold, #c9963b), var(--gold-light, #e8b96a)) !important;
+    border-color: rgba(201, 150, 59, 0.5) !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .card.border-0 > [style*="background:linear-gradient(135deg,var(--navy)"] p,
+  .card.border-0 > [style*="background: linear-gradient(135deg, var(--navy)"] p,
+  .card.border-0 > [style*="background:linear-gradient(135deg,var(--navy)"] [style*="rgba(255,255,255"],
+  .card.border-0 > [style*="background: linear-gradient(135deg, var(--navy)"] [style*="rgba(255,255,255"] {
+    color: #5a6a7a !important;
+  }
+
+  .ed-live-dot,
+  .er-dot {
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.55) !important;
+  }
+
+  .se-chat-body,
+  .er-chat-body,
+  .se-room-chat-box,
+  .ch-main {
+    background: #f8fafc !important;
+  }
+
+  .se-msg-bubble,
+  .er-msg,
+  .er-msg-other,
+  .er-msg-admin,
+  .room-msg,
+  .chat-message {
+    box-shadow: 0 8px 20px rgba(13, 27, 42, 0.06) !important;
+  }
+
+  .er-msg-admin {
+    background: rgba(13, 27, 42, 0.06) !important;
+    color: var(--navy, #0d1b2a) !important;
+    border: 1px solid rgba(13, 27, 42, 0.08) !important;
+  }
+
+  /* Admin surfaces */
+  .adm-brand,
+  .adm-side-section,
+  .adm-page-hero,
+  .adm-hero,
+  .adm-card,
+  .adm-kpi,
+  .adm-queue-card,
+  .adm-surface,
+  .adm-table-surface,
+  .adm-metric-card,
+  .adm-summary-card,
+  .ed-header,
+  .ed-rooms-card,
+  .ccp-review-hero,
+  .ccp-review-card,
+  .admin-withdrawals-hero,
+  .admin-withdrawal-card,
+  .admin-action-card,
+  .se-admin-rooms-card,
+  .se-admin-stat-card {
+    background: linear-gradient(180deg, #ffffff, #f8fafc) !important;
+    border-color: rgba(13, 27, 42, 0.08) !important;
+    color: var(--navy, #0d1b2a) !important;
+    box-shadow: 0 14px 38px rgba(13, 27, 42, 0.08) !important;
+  }
+
+  .adm-side-nav a.is-active,
+  .adm-btn--dark {
+    background: rgba(201, 150, 59, 0.14) !important;
+    border-color: rgba(201, 150, 59, 0.24) !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .adm-side-nav a.is-active i,
+  .adm-btn--dark i {
+    color: var(--gold-dark, #a87828) !important;
+  }
+
+  .ed-rooms-header,
+  .er-admin-head {
+    background: #f7f9fc !important;
+    border-bottom: 1px solid rgba(13, 27, 42, 0.08) !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .ed-rooms-title,
+  .ed-rooms-title span,
+  .er-admin-head {
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  .ed-count-chip,
+  .admin-status-badge,
+  .ccp-amount-pill {
+    background: rgba(201, 150, 59, 0.12) !important;
+    border-color: rgba(201, 150, 59, 0.22) !important;
+    color: var(--gold-dark, #a87828) !important;
+  }
+
+  .admin-action-card-success,
+  .ccp-action-card-success {
+    background: rgba(22, 163, 74, 0.055) !important;
+    border-color: rgba(22, 163, 74, 0.16) !important;
+  }
+
+  .admin-action-card-danger,
+  .ccp-action-card-danger {
+    background: rgba(239, 68, 68, 0.055) !important;
+    border-color: rgba(239, 68, 68, 0.16) !important;
+  }
+
+  .invoice-card-header {
+    padding: 28px 28px 20px !important;
+  }
+
+  /* Footer */
+  .se-footer {
+    background:
+      radial-gradient(circle at 90% 0%, rgba(201, 150, 59, 0.1), transparent 28%),
+      linear-gradient(180deg, #ffffff 0%, #f5f7fb 100%) !important;
+    border-top: 1px solid rgba(13, 27, 42, 0.08) !important;
+    box-shadow: 0 -12px 34px rgba(13, 27, 42, 0.05) !important;
+    color: var(--text-secondary, #4a5568) !important;
+  }
+
+  .se-footer a,
+  .se-footer-copyline {
+    color: var(--text-secondary, #4a5568) !important;
+  }
+
+  .se-footer a:hover {
+    color: var(--navy, #0d1b2a) !important;
+  }
+}
+
+/* Final desktop contrast pass.
+   The desktop shell turns several formerly dark panels into light surfaces.
+   This block wins over older page styles and inline color helpers that still
+   expect a dark background. */
+@media (min-width: 769px) and (hover: hover) {
+  :root {
+    --desktop-light-text: var(--text-primary, #0d1b2a);
+    --desktop-light-text-soft: var(--text-secondary, #4a5568);
+    --desktop-light-muted: #637184;
+    --desktop-dark-text: #ffffff;
+  }
+
+  body,
+  .se-main {
+    color: var(--desktop-light-text) !important;
+  }
+
+  .se-footer,
+  .se-footer-brand,
+  .se-footer-copyline,
+  .se-footer-copyline *,
+  .se-footer-brand span,
+  .se-footer-brand strong,
+  .se-footer-links a {
+    color: var(--desktop-light-text) !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  .se-footer-links a:hover {
+    color: var(--gold-dark, #a87828) !important;
+  }
+
+  :is(
+    .card,
+    .app-card,
+    .app-surface,
+    .se-content-glass,
+    .table-responsive,
+    .modal-content,
+    .se-page-header,
+    .se-card-hero-header,
+    .se-filter-header,
+    .se-publish-form-hero,
+    .se-escrow-header,
+    .se-hero-section,
+    .se-bg-hero,
+    .hero,
+    .mg-home,
+    .safo-hero,
+    .safo-section,
+    .safo-cta,
+    .se-deals-header,
+    .se-filter-panel,
+    .se-deal-card,
+    .se-search-topbar,
+    .se-search-card,
+    .se-search-empty,
+    .se-sort-bar,
+    .ab-hero,
+    .ab-panel,
+    .ab-card,
+    .ab-brand-panel,
+    .ab-stat,
+    .ab-step,
+    .hw-hero,
+    .hw-hero-card,
+    .hw-step-card,
+    .hw-panel,
+    .hw-warning-panel,
+    .se-policy-page,
+    .se-policy-sidebar,
+    .se-policy-content,
+    .se-error-card,
+    .se-error-note,
+    .se-error-contact,
+    .se-error-timer,
+    .auth-visuals,
+    .auth-card-header,
+    .auth-status-header,
+    .email-card-header,
+    .account-card-header,
+    .logout-header,
+    .reset-key-header,
+    .social-signup-header,
+    .social-login-header,
+    .connections-header,
+    .social-error-header,
+    .pf-header,
+    .pf-card-header,
+    .pf-header-dark,
+    .pf-user-card,
+    .pf-card,
+    .pf-deal-card,
+    .pf-review-row,
+    .withdraw-shell,
+    .withdraw-history-card,
+    .withdraw-shell-hero,
+    .invoice-card,
+    .invoice-card-header,
+    .se-product-card,
+    .se-gallery-card,
+    .se-price-card,
+    .se-seller-card,
+    .se-share-card,
+    .se-comments-card,
+    .se-chat-card,
+    .se-chat-panel,
+    .se-chat-header,
+    .se-dr-card,
+    .se-dr-stat,
+    .se-form-card,
+    .se-room-chat-card,
+    .se-room-sidebar-card,
+    .se-payment-card,
+    .se-payment-hero,
+    .se-payment-summary,
+    .se-step-card,
+    .ch-layout,
+    .ch-sidebar,
+    .ch-sidebar-header,
+    .ch-welcome-card,
+    .ch-welcome-stats,
+    .ch-item,
+    .ed-header,
+    .ed-rooms-card,
+    .ed-rooms-header,
+    .ed-room-row,
+    .ed-link-btn,
+    .ccp-review-card,
+    .ccp-action-card,
+    .ccp-meta-box,
+    .ccp-hero-stat,
+    .ccp-review-hero,
+    .admin-withdrawals-hero,
+    .admin-withdrawal-card,
+    .admin-action-card,
+    .admin-audit-item,
+    .admin-detail-box,
+    .admin-stat-card,
+    .admin-metric-card,
+    .adm-brand,
+    .adm-side-section,
+    .adm-page-hero,
+    .adm-page-hero.is-dark,
+    .adm-hero,
+    .adm-card,
+    .adm-kpi,
+    .adm-queue-card,
+    .adm-surface,
+    .adm-table-surface,
+    .adm-metric-card,
+    .adm-summary-card,
+    .er-card,
+    .er-panel,
+    .er-chat-shell,
+    .er-sidebar,
+    .er-composer,
+    .er-guide-card,
+    .er-admin-card,
+    .er-header,
+    .er-admin-head,
+    .support-card,
+    .ticket-card,
+    .se-admin-rooms-card,
+    .se-admin-stat-card
+  ) :is(
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    legend,
+    th,
+    .title,
+    .modal-title,
+    .card-title,
+    .se-page-title,
+    .se-deals-title,
+    .se-search-card h3,
+    .se-section-head-title,
+    .se-deal-chat-title,
+    .se-dr-title,
+    .se-dr-table-title,
+    .se-form-title,
+    .se-product-title,
+    .pf-header-title,
+    .pf-user-name,
+    .pf-sec-title,
+    .pf-card-title,
+    .pf-deal-title,
+    .adm-page-heading,
+    .adm-hero-title,
+    .adm-card-title,
+    .ed-title,
+    .ed-rooms-title,
+    .er-title,
+    .ch-sidebar-title,
+    .admin-withdrawals-title,
+    .ccp-review-title,
+    strong
+  ) {
+    color: var(--desktop-light-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+    text-shadow: none !important;
+  }
+
+  :is(
+    .card,
+    .app-card,
+    .app-surface,
+    .se-content-glass,
+    .modal-content,
+    .se-page-header,
+    .se-card-hero-header,
+    .se-filter-header,
+    .se-publish-form-hero,
+    .se-escrow-header,
+    .se-hero-section,
+    .se-bg-hero,
+    .hero,
+    .mg-home,
+    .safo-hero,
+    .safo-section,
+    .safo-cta,
+    .se-deals-header,
+    .se-filter-panel,
+    .se-deal-card,
+    .se-search-topbar,
+    .se-search-card,
+    .se-search-empty,
+    .se-sort-bar,
+    .ab-hero,
+    .ab-panel,
+    .ab-card,
+    .ab-brand-panel,
+    .ab-stat,
+    .ab-step,
+    .hw-hero,
+    .hw-hero-card,
+    .hw-step-card,
+    .hw-panel,
+    .hw-warning-panel,
+    .se-policy-page,
+    .se-policy-sidebar,
+    .se-policy-content,
+    .se-error-card,
+    .se-error-note,
+    .se-error-contact,
+    .se-error-timer,
+    .auth-visuals,
+    .auth-card-header,
+    .auth-status-header,
+    .email-card-header,
+    .account-card-header,
+    .logout-header,
+    .reset-key-header,
+    .social-signup-header,
+    .social-login-header,
+    .connections-header,
+    .social-error-header,
+    .pf-header,
+    .pf-card-header,
+    .pf-header-dark,
+    .pf-user-card,
+    .pf-card,
+    .pf-deal-card,
+    .withdraw-shell-hero,
+    .invoice-card-header,
+    .se-product-card,
+    .se-gallery-card,
+    .se-price-card,
+    .se-seller-card,
+    .se-share-card,
+    .se-comments-card,
+    .se-chat-card,
+    .se-chat-panel,
+    .se-chat-header,
+    .se-dr-card,
+    .se-form-card,
+    .se-room-chat-card,
+    .se-room-sidebar-card,
+    .se-payment-card,
+    .se-payment-hero,
+    .se-payment-summary,
+    .ch-sidebar,
+    .ch-sidebar-header,
+    .ch-welcome-card,
+    .ed-header,
+    .ed-rooms-card,
+    .ed-rooms-header,
+    .ccp-review-card,
+    .ccp-review-hero,
+    .admin-withdrawals-hero,
+    .admin-withdrawal-card,
+    .admin-action-card,
+    .admin-stat-card,
+    .adm-page-hero,
+    .adm-page-hero.is-dark,
+    .adm-hero,
+    .adm-card,
+    .adm-kpi,
+    .adm-summary-card,
+    .er-card,
+    .er-header,
+    .er-admin-head,
+    .support-card,
+    .ticket-card
+  ) :is(
+    p,
+    small,
+    li,
+    label,
+    span,
+    td,
+    .lead,
+    .text-white,
+    .text-light,
+    .text-muted,
+    .se-page-subtitle,
+    .se-deals-sub,
+    .se-deal-desc,
+    .se-form-subtitle,
+    .pf-header-sub,
+    .pf-user-handle,
+    .pf-stat-lbl,
+    .pf-progress-top,
+    .pf-earned span,
+    .pf-joined,
+    .adm-page-copy,
+    .adm-page-copy p,
+    .adm-summary-card span,
+    .ed-subtitle,
+    .ed-desc,
+    .ed-live-badge span,
+    .er-meta,
+    .er-badge-pulse span,
+    .ch-sidebar-sub,
+    .admin-withdrawals-kicker,
+    .ccp-review-kicker
+  ) {
+    color: var(--desktop-light-text-soft) !important;
+    -webkit-text-fill-color: currentColor !important;
+    text-shadow: none !important;
+  }
+
+  :is(
+    .se-footer,
+    .pf-user-card,
+    .pf-header,
+    .withdraw-shell-hero,
+    .invoice-card-header,
+    .se-chat-header,
+    .ch-sidebar-header,
+    .ed-header,
+    .ed-rooms-header,
+    .ccp-review-hero,
+    .admin-withdrawals-hero,
+    .adm-page-hero,
+    .adm-page-hero.is-dark,
+    .er-header,
+    .er-admin-head,
+    .auth-card-header,
+    .auth-status-header,
+    .email-card-header,
+    .account-card-header,
+    .logout-header,
+    .reset-key-header,
+    .social-signup-header,
+    .social-login-header,
+    .connections-header,
+    .social-error-header
+  ) [style*="color:white"],
+  :is(
+    .se-footer,
+    .pf-user-card,
+    .pf-header,
+    .withdraw-shell-hero,
+    .invoice-card-header,
+    .se-chat-header,
+    .ch-sidebar-header,
+    .ed-header,
+    .ed-rooms-header,
+    .ccp-review-hero,
+    .admin-withdrawals-hero,
+    .adm-page-hero,
+    .adm-page-hero.is-dark,
+    .er-header,
+    .er-admin-head,
+    .auth-card-header,
+    .auth-status-header,
+    .email-card-header,
+    .account-card-header,
+    .logout-header,
+    .reset-key-header,
+    .social-signup-header,
+    .social-login-header,
+    .connections-header,
+    .social-error-header
+  ) [style*="color: white"],
+  :is(
+    .se-footer,
+    .pf-user-card,
+    .pf-header,
+    .withdraw-shell-hero,
+    .invoice-card-header,
+    .se-chat-header,
+    .ch-sidebar-header,
+    .ed-header,
+    .ed-rooms-header,
+    .ccp-review-hero,
+    .admin-withdrawals-hero,
+    .adm-page-hero,
+    .adm-page-hero.is-dark,
+    .er-header,
+    .er-admin-head,
+    .auth-card-header,
+    .auth-status-header,
+    .email-card-header,
+    .account-card-header,
+    .logout-header,
+    .reset-key-header,
+    .social-signup-header,
+    .social-login-header,
+    .connections-header,
+    .social-error-header
+  ) [style*="color:#fff"],
+  :is(
+    .se-footer,
+    .pf-user-card,
+    .pf-header,
+    .withdraw-shell-hero,
+    .invoice-card-header,
+    .se-chat-header,
+    .ch-sidebar-header,
+    .ed-header,
+    .ed-rooms-header,
+    .ccp-review-hero,
+    .admin-withdrawals-hero,
+    .adm-page-hero,
+    .adm-page-hero.is-dark,
+    .er-header,
+    .er-admin-head,
+    .auth-card-header,
+    .auth-status-header,
+    .email-card-header,
+    .account-card-header,
+    .logout-header,
+    .reset-key-header,
+    .social-signup-header,
+    .social-login-header,
+    .connections-header,
+    .social-error-header
+  ) [style*="color: #fff"] {
+    color: var(--desktop-light-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  :is(
+    .se-footer,
+    .pf-user-card,
+    .pf-header,
+    .withdraw-shell-hero,
+    .invoice-card-header,
+    .se-chat-header,
+    .ch-sidebar-header,
+    .ed-header,
+    .ed-rooms-header,
+    .ccp-review-hero,
+    .admin-withdrawals-hero,
+    .adm-page-hero,
+    .adm-page-hero.is-dark,
+    .er-header,
+    .er-admin-head,
+    .auth-card-header,
+    .auth-status-header,
+    .email-card-header,
+    .account-card-header,
+    .logout-header,
+    .reset-key-header,
+    .social-signup-header,
+    .social-login-header,
+    .connections-header,
+    .social-error-header
+  ) [style*="rgba(255,255,255"],
+  :is(
+    .se-footer,
+    .pf-user-card,
+    .pf-header,
+    .withdraw-shell-hero,
+    .invoice-card-header,
+    .se-chat-header,
+    .ch-sidebar-header,
+    .ed-header,
+    .ed-rooms-header,
+    .ccp-review-hero,
+    .admin-withdrawals-hero,
+    .adm-page-hero,
+    .adm-page-hero.is-dark,
+    .er-header,
+    .er-admin-head,
+    .auth-card-header,
+    .auth-status-header,
+    .email-card-header,
+    .account-card-header,
+    .logout-header,
+    .reset-key-header,
+    .social-signup-header,
+    .social-login-header,
+    .connections-header,
+    .social-error-header
+  ) [style*="rgba(255, 255, 255"] {
+    color: var(--desktop-light-text-soft) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  .btn-primary,
+  .btn-gold,
+  .app-btn--primary,
+  .se-btn-register,
+  .se-add-deal-btn,
+  .se-filter-apply-btn,
+  .safo-btn--primary,
+  .ab-btn-primary,
+  .hw-btn-primary,
+  .auth-btn,
+  .email-main-btn,
+  .email-confirm-btn,
+  .account-card-btn,
+  .reset-key-btn,
+  .pf-avatar-edit,
+  .page-item.active .page-link {
+    color: var(--navy, #0d1b2a) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  .btn-secondary,
+  .btn-success,
+  .btn-danger,
+  .btn-dark,
+  .badge.bg-primary,
+  .badge.bg-success,
+  .badge.bg-danger,
+  .badge.bg-secondary,
+  .se-badge-fixed,
+  .se-badge-available,
+  .se-badge-reserved,
+  .se-gal-available,
+  .se-gal-reserved,
+  .se-gal-disputed,
+  .se-gal-shipped,
+  .se-action-confirm,
+  .se-action-view:hover,
+  .se-action-dispute:hover,
+  .er-btn-success,
+  .er-btn-danger,
+  .er-btn-dark,
+  .logout-btn,
+  .se-msg-mine,
+  .room-msg-mine,
+  .chat-message.mine {
+    color: var(--desktop-dark-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  .adm-security-panel,
+  .adm-security-panel :is(h1, h2, h3, h4, h5, h6, strong),
+  .adm-security-panel :is(p, span, li, small, label) {
+    color: var(--desktop-dark-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  .adm-security-panel .adm-page-kicker,
+  .adm-security-panel i {
+    color: var(--gold-light, #e8b96a) !important;
+  }
+}
+
+/* Homepage keeps a full-width marketing layout. The desktop shell should not
+   turn its sections into raised cards because this design is the public-page
+   reference for the rest of the site. */
+@media (min-width: 769px) and (hover: hover) {
+  body[data-page="home"] .mg-home,
+  body[data-page="home"] .safo-hero,
+  body[data-page="home"] .safo-section,
+  body[data-page="home"] .safo-cta {
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+
+  body[data-page="home"] .mg-home {
+    background: #ffffff !important;
+  }
+
+  body[data-page="home"] .safo-hero {
+    background:
+      radial-gradient(circle at 12% 10%, rgba(37, 99, 235, 0.08), transparent 28%),
+      radial-gradient(circle at 86% 4%, rgba(201, 150, 59, 0.1), transparent 24%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 62%, #ffffff 100%) !important;
+  }
+
+  body[data-page="home"] .safo-section:not(.safo-section--soft):not(.safo-section--dark),
+  body[data-page="home"] .safo-cta {
+    background: #ffffff !important;
+  }
+
+  body[data-page="home"] .safo-section--soft {
+    background: #f6f8fb !important;
+  }
+
+  body[data-page="home"] .safo-section--dark {
+    background:
+      linear-gradient(135deg, rgba(201, 150, 59, 0.12), transparent 34%),
+      linear-gradient(160deg, #0d1b2a 0%, #132844 52%, #172f5f 100%) !important;
+  }
+
+  body[data-page="home"] .safo-section--dark :is(h2, h3) {
+    color: #ffffff !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="home"] .safo-section--dark :is(p, span) {
+    color: rgba(255, 255, 255, 0.72) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="home"] .safo-section--dark .safo-section-tag {
+    color: #dbeafe !important;
+  }
+
+  body[data-page="home"] .safo-section--dark .safo-flow-number {
+    color: #111827 !important;
+  }
+
+  body[data-page="home"] .safo-btn--primary {
+    color: #ffffff !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="about"] .ab-hero,
+  body[data-page="guide"] .hw-hero {
+    background:
+      linear-gradient(135deg, rgba(7, 13, 25, 0.9), rgba(22, 53, 101, 0.78)),
+      url("../images/visuals/network-wave-v2.webp") center / cover no-repeat !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    box-shadow: 0 20px 60px rgba(10, 15, 26, 0.2) !important;
+  }
+
+  body[data-page="about"] .ab-hero::before,
+  body[data-page="guide"] .hw-hero::before {
+    background:
+      linear-gradient(90deg, rgba(4, 10, 19, 0.82), rgba(12, 25, 48, 0.54) 52%, rgba(37, 99, 235, 0.2)) !important;
+  }
+
+  body[data-page="about"] .ab-hero::after,
+  body[data-page="guide"] .hw-hero::after,
+  body[data-page="about"] .ab-hero .ab-hero-copy::before {
+    display: none !important;
+  }
+
+  body[data-page="about"] .ab-hero :is(h1, h2, h3, strong),
+  body[data-page="guide"] .hw-hero :is(h1, h2, h3, strong) {
+    color: #ffffff !important;
+    -webkit-text-fill-color: currentColor !important;
+    text-shadow: 0 3px 18px rgba(0, 0, 0, 0.42) !important;
+  }
+
+  body[data-page="about"] .ab-hero h1 span {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="about"] .ab-hero :is(p, span),
+  body[data-page="guide"] .hw-hero :is(p, span),
+  body[data-page="guide"] .hw-hero-note {
+    color: rgba(255, 255, 255, 0.92) !important;
+    -webkit-text-fill-color: currentColor !important;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.38) !important;
+  }
+
+  body[data-page="about"] .ab-badge,
+  body[data-page="guide"] .hw-badge {
+    background: rgba(255, 255, 255, 0.11) !important;
+    border-color: rgba(255, 255, 255, 0.22) !important;
+    color: #ffffff !important;
+  }
+
+  body[data-page="about"] .ab-badge *,
+  body[data-page="guide"] .hw-badge * {
+    color: #ffffff !important;
+  }
+
+  body[data-page="about"] .ab-brand-panel,
+  body[data-page="guide"] .hw-hero-card {
+    background:
+      linear-gradient(135deg, rgba(4, 10, 19, 0.62), rgba(22, 53, 101, 0.42)),
+      url("../images/visuals/glass-geometry-v2.webp") center / cover no-repeat !important;
+    border-color: rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 16px 38px rgba(4, 10, 19, 0.2) !important;
+  }
+
+  body[data-page="about"] .ab-logo {
+    filter: brightness(0) invert(1) !important;
+  }
+
+  body[data-page="guide"] .hw-mini-screen {
+    background: #f8fafc !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+  }
+
+  body[data-page="guide"] .hw-mini-top {
+    background: #e2e8f0 !important;
+  }
+
+  body[data-page="guide"] .hw-mini-row {
+    background: #e5e7eb !important;
+  }
+
+  body[data-page="guide"] .hw-mini-row.active {
+    background: #2563eb !important;
+  }
+
+  body[data-page="about"] .ab-hero .ab-btn-primary,
+  body[data-page="guide"] .hw-hero .hw-btn-primary {
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="about"] .ab-hero .ab-btn-secondary,
+  body[data-page="guide"] .hw-hero .hw-btn-secondary {
+    background: #ffffff !important;
+    border-color: rgba(15, 23, 42, 0.1) !important;
+    color: var(--navy, #0d1b2a) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="policies"] .se-policy-page {
+    background:
+      radial-gradient(circle at 12% 4%, rgba(37, 99, 235, 0.08), transparent 25%),
+      radial-gradient(circle at 88% 0%, rgba(201, 150, 59, 0.1), transparent 24%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 44%, #ffffff 100%) !important;
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+
+  body[data-page="policies"] .se-policy-content,
+  body[data-page="policies"] .se-policy-sidebar {
+    background: rgba(255, 255, 255, 0.96) !important;
+    border-color: rgba(15, 23, 42, 0.09) !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  body[data-page="policies"] .se-policy-content {
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.09) !important;
+  }
+
+  body[data-page="policies"] .se-policy-sidebar {
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06) !important;
+  }
+
+  body[data-page="policies"] .se-policy-list li {
+    padding: 13px 15px !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    border-radius: 14px !important;
+    background: #f8fafc !important;
+    box-shadow: none !important;
+  }
+
+  body[data-page="policies"] .se-sidebar-link.active {
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    border-color: #2563eb !important;
+    color: #ffffff !important;
+    box-shadow: 0 12px 26px rgba(37, 99, 235, 0.22) !important;
+  }
+
+  body[data-page="policies"] .se-sidebar-link.active i {
+    color: #ffffff !important;
+  }
+
+  body[data-page="403"] .se-error-shell,
+  body[data-page="404"] .se-error-shell,
+  body[data-page="500"] .se-error-shell,
+  body[data-page="503"] .se-error-shell {
+    background:
+      radial-gradient(circle at 12% 6%, rgba(37, 99, 235, 0.08), transparent 25%),
+      radial-gradient(circle at 88% 4%, rgba(201, 150, 59, 0.1), transparent 24%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 48%, #ffffff 100%) !important;
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+
+  body[data-page="403"] .se-error-card,
+  body[data-page="404"] .se-error-card,
+  body[data-page="500"] .se-error-card,
+  body[data-page="503"] .se-error-card {
+    background: rgba(255, 255, 255, 0.96) !important;
+    border-color: rgba(15, 23, 42, 0.09) !important;
+    box-shadow: 0 22px 58px rgba(15, 23, 42, 0.12) !important;
+    color: var(--navy, #0d1b2a) !important;
+  }
+
+  body[data-page="403"] .se-error-title,
+  body[data-page="404"] .se-error-title,
+  body[data-page="500"] .se-error-title,
+  body[data-page="503"] .se-error-title,
+  body[data-page="403"] .se-error-note strong,
+  body[data-page="404"] .se-error-note strong,
+  body[data-page="500"] .se-error-note strong,
+  body[data-page="503"] .se-error-note strong {
+    color: var(--navy, #0d1b2a) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="403"] .se-error-message,
+  body[data-page="404"] .se-error-message,
+  body[data-page="500"] .se-error-message,
+  body[data-page="503"] .se-error-message,
+  body[data-page="403"] .se-error-note,
+  body[data-page="404"] .se-error-note,
+  body[data-page="500"] .se-error-note,
+  body[data-page="503"] .se-error-note,
+  body[data-page="403"] .se-error-contact-copy,
+  body[data-page="404"] .se-error-contact-copy,
+  body[data-page="500"] .se-error-contact-copy,
+  body[data-page="503"] .se-error-contact-copy {
+    color: #5b6b7f !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="403"] .se-error-btn-primary,
+  body[data-page="404"] .se-error-btn-primary,
+  body[data-page="500"] .se-error-btn-primary,
+  body[data-page="503"] .se-error-btn-primary {
+    color: #ffffff !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="403"] .se-error-btn-secondary,
+  body[data-page="404"] .se-error-btn-secondary,
+  body[data-page="500"] .se-error-btn-secondary,
+  body[data-page="503"] .se-error-btn-secondary {
+    background: #ffffff !important;
+    border-color: rgba(15, 23, 42, 0.09) !important;
+    color: var(--navy, #0d1b2a) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+}

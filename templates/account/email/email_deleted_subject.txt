@@ -1,0 +1,1 @@
+{% if current_language == 'ar' %}تم حذف بريد من حسابك في SafouaneEscrow{% else %}An email address was removed from your SafouaneEscrow account{% endif %}

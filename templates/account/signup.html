@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+{% load static site_i18n i18n account socialaccount allauth %}
+
+{% block title %}{% t "account.signup.title" %} - SafouaneEscrow{% endblock %}
+{% block page_type %}register{% endblock %}
+
+{% block meta %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+<main class="saas-login-container">
+  <!-- Left Side: Signup Form -->
+  <section class="saas-login-form-section">
+    <div class="saas-form-wrapper">
+      <div class="saas-brand-mobile">
+        <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" width="520" height="150" decoding="async" fetchpriority="high">
+      </div>
+
+      <header class="saas-form-header">
+        <div class="saas-badge saas-secure-badge">
+          <i class="fas fa-user-plus"></i> {% t "account.signup.header" %}
+        </div>
+        <h1>{% t "account.signup.title" %}</h1>
+        <p>{% t "account.signup.sub" %}</p>
+      </header>
+
+      {% if form.non_field_errors %}
+      <div class="saas-alert saas-alert-error" role="alert" aria-live="assertive">
+        <i class="fas fa-circle-exclamation"></i>
+        <span>{{ form.non_field_errors.0 }}</span>
+      </div>
+      {% elif form.errors %}
+      <div class="saas-alert saas-alert-error" role="alert" aria-live="assertive">
+        <i class="fas fa-circle-exclamation"></i>
+        <span>{% t "account.signup.error" %}</span>
+      </div>
+      {% endif %}
+
+      <form method="post" id="signupForm" action="{% url 'account_signup' %}" class="saas-form" novalidate>
+        {% csrf_token %}
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+        {% endif %}
+
+        {% for field in form %}
+          {% if field.field.widget.input_type != "hidden" %}
+          <div class="saas-input-group">
+            <label for="{{ field.id_for_label }}">
+              {% if field.name == "email" %}
+              {% t "register.email" %}
+              {% elif field.name == "username" %}
+              {% t "register.username" %}
+              {% elif field.name == "password1" %}
+              {% t "register.password" %}
+              {% elif field.name == "password2" %}
+              {% t "register.password_confirm" %}
+              {% else %}
+              {{ field.label }}
+              {% endif %}
+              {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+            </label>
+            <div style="position: relative; width: 100%;">
+              {% if field.name == "email" %}
+              <input
+                type="email"
+                name="{{ field.html_name }}"
+                id="{{ field.id_for_label }}"
+                placeholder="{% t 'register.email_placeholder' %}"
+                value="{{ field.value|default:'' }}"
+                {% if field.field.required %}required{% endif %}
+                autocomplete="email"
+                style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; color: white; font-size: 14px; outline: none;"
+                onfocus="this.style.border = '1px solid #4f8ef7'; this.style.boxShadow = '0 0 0 3px rgba(79,142,247,0.15)';"
+                onblur="this.style.border = '1px solid rgba(255,255,255,0.14)'; this.style.boxShadow = 'none';"
+              >
+              <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); cursor: default; display: flex; align-items: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+              </span>
+              {% elif field.name == "username" %}
+              <input
+                type="text"
+                name="{{ field.html_name }}"
+                id="{{ field.id_for_label }}"
+                placeholder="{% t 'register.username_placeholder' %}"
+                value="{{ field.value|default:'' }}"
+                {% if field.field.required %}required{% endif %}
+                autocomplete="username"
+                style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; color: white; font-size: 14px; outline: none;"
+                onfocus="this.style.border = '1px solid #4f8ef7'; this.style.boxShadow = '0 0 0 3px rgba(79,142,247,0.15)';"
+                onblur="this.style.border = '1px solid rgba(255,255,255,0.14)'; this.style.boxShadow = 'none';"
+              >
+              <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); cursor: default; display: flex; align-items: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </span>
+              {% elif field.name == "password1" %}
+              <input
+                type="password"
+                name="{{ field.html_name }}"
+                id="{{ field.id_for_label }}"
+                placeholder="{% t 'register.password_placeholder' %}"
+                {% if field.field.required %}required{% endif %}
+                autocomplete="new-password"
+                style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; color: white; font-size: 14px; outline: none;"
+                onfocus="this.style.border = '1px solid #4f8ef7'; this.style.boxShadow = '0 0 0 3px rgba(79,142,247,0.15)';"
+                onblur="this.style.border = '1px solid rgba(255,255,255,0.14)'; this.style.boxShadow = 'none';"
+              >
+              <span data-password-toggle="{{ field.id_for_label }}" role="button" tabindex="0" aria-label="{% t 'login.toggle_password' %}" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </span>
+              {% elif field.name == "password2" %}
+              <input
+                type="password"
+                name="{{ field.html_name }}"
+                id="{{ field.id_for_label }}"
+                placeholder="{% t 'register.password_confirm_placeholder' %}"
+                {% if field.field.required %}required{% endif %}
+                autocomplete="new-password"
+                style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; color: white; font-size: 14px; outline: none;"
+                onfocus="this.style.border = '1px solid #4f8ef7'; this.style.boxShadow = '0 0 0 3px rgba(79,142,247,0.15)';"
+                onblur="this.style.border = '1px solid rgba(255,255,255,0.14)'; this.style.boxShadow = 'none';"
+              >
+              <span data-password-toggle="{{ field.id_for_label }}" role="button" tabindex="0" aria-label="{% t 'login.toggle_password' %}" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </span>
+              {% else %}
+              {{ field }}
+              {% endif %}
+            </div>
+            {% if field.name == "password1" %}
+            <div
+              class="password-strength"
+              data-password-strength-for="{{ field.id_for_label }}"
+              data-label-weak="{% t 'register.password_weak' %}"
+              data-label-fair="{% t 'register.password_fair' %}"
+              data-label-good="{% t 'register.password_good' %}"
+              data-label-strong="{% t 'register.password_strong' %}"
+              aria-live="polite"
+            >
+              <div class="strength-track">
+                <span class="strength-segment"></span>
+                <span class="strength-segment"></span>
+                <span class="strength-segment"></span>
+                <span class="strength-segment"></span>
+              </div>
+              <small>{% t "register.password_strength" %}</small>
+            </div>
+            {% endif %}
+            {% if field.help_text %}
+            <small class="saas-field-help">{{ field.help_text|safe }}</small>
+            {% endif %}
+            {% if field.errors %}
+            <small class="saas-field-error">{{ field.errors.0 }}</small>
+            {% endif %}
+          </div>
+          {% endif %}
+        {% endfor %}
+
+        <div class="saas-form-options signup-options">
+          <label class="saas-checkbox saas-terms-check">
+            <input type="checkbox" required>
+            <span class="checkmark"></span>
+            <span class="label-text">
+              {% t "register.policy_prefix" %} <a href="{% url 'terms' %}">{% t "register.policy_link" %}</a>
+            </span>
+          </label>
+        </div>
+
+        <button type="submit" class="saas-submit-btn" id="signupBtn">
+          <span>{% t "account.signup.submit" %}</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+
+      {% get_providers as socialaccount_providers %}
+      {% if socialaccount_providers %}
+      <div class="saas-divider">
+        <span>{% t "login.or_continue_with" %}</span>
+      </div>
+
+      <div class="saas-social-login">
+        {% for provider in socialaccount_providers %}
+        {% if provider.id == "google" %}
+        <a href="{% if redirect_field_value %}{% provider_login_url provider.id process='login' next=redirect_field_value %}{% else %}{% provider_login_url provider.id process='login' %}{% endif %}" class="saas-social-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+          </svg>
+          <span>{% t "login.continue_with_google" %}</span>
+        </a>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <footer class="saas-form-footer">
+        <p>{% t "account.signup.have_account" %} <a href="{% url 'account_login' %}{% if redirect_field_value %}?{{ redirect_field_name }}={{ redirect_field_value|urlencode }}{% endif %}" data-auth-switch>{% t "account.signup.login" %}</a></p>
+      </footer>
+
+      <div class="saas-security-note saas-trust-strip" aria-label="{% t 'account.trust_signals' %}">
+        <span class="trust-item"><i class="fas fa-id-card" aria-hidden="true"></i><span>{% t "account.signup.trust_verification" %}</span></span>
+        <span class="trust-item"><i class="fas fa-vault" aria-hidden="true"></i><span>{% t "account.signup.trust_escrow" %}</span></span>
+        <span class="trust-item"><i class="fas fa-bolt" aria-hidden="true"></i><span>{% t "account.signup.trust_setup" %}</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Right Side: Visual Section -->
+  <section class="saas-login-visual">
+    <div class="visual-background">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="grid-overlay"></div>
+
+      <div class="abstract-ring ring-1"></div>
+      <div class="abstract-ring ring-2"></div>
+    </div>
+
+    <div class="visual-overlay"></div>
+
+    <div class="visual-content">
+      <div class="visual-badge">{% t "account.signup.visual_badge" %}</div>
+      <h2><span class="hero-headline-line">{% t "account.signup.visual_title_1" %}</span><br><span class="highlight hero-headline-line hero-headline-delay">{% t "account.signup.visual_title_2" %}</span></h2>
+      <p>{% t "account.signup.visual_body" %}</p>
+    </div>
+  </section>
+</main>
+
+{% include "account/_auth_pages_shared.html" %}
+
+<style>
+  /* ── Signup-Specific Overrides ─── */
+
+  /* Navbar: Hide register button (we're on register), show login link */
+  body[data-page="register"] .se-nav-auth .se-btn-register { display: none !important; }
+
+  body[data-page="register"] .se-btn-login {
+    background: transparent !important;
+    border: 1px solid rgba(255,255,255,0.16) !important;
+    color: rgba(255,255,255,0.86) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06) !important;
+  }
+  body[data-page="register"] .se-btn-login:hover {
+    border-color: rgba(79,142,247,0.46) !important;
+    background: rgba(255,255,255,0.05) !important;
+    color: #fff !important;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body[data-page="register"] .se-btn-login {
+      background: rgba(255,255,255,0.08) !important;
+      border-color: rgba(255,255,255,0.16) !important;
+      color: #F8FAFC !important;
+    }
+    body[data-page="register"] .se-btn-login:hover {
+      background: rgba(255,255,255,0.12) !important;
+      color: #FFFFFF !important;
+    }
+  }
+
+  /* Wider form wrapper for 4 fields */
+  body[data-page="register"] .saas-form-wrapper {
+    max-width: min(566px, 100%);
+  }
+
+  /* Balanced spacing for signup (more fields) */
+  body[data-page="register"] .saas-form {
+    gap: clamp(12px, 1.8vh, 18px);
+  }
+  body[data-page="register"] .saas-form-header {
+    margin-bottom: clamp(16px, 2.4vh, 24px);
+  }
+
+  /* Signup options: just checkbox, no forgot link */
+  .signup-options {
+    justify-content: flex-start;
+  }
+
+  /* Short desktop: even tighter for signup */
+  @media (min-width: 1025px) and (max-height: 700px) {
+    body[data-page="register"] .saas-form { gap: 9px; }
+    body[data-page="register"] .saas-form-header { margin-bottom: 10px; }
+    body[data-page="register"] .saas-form-header h1 { font-size: 1.34rem; }
+    body[data-page="register"] .saas-input-group label { font-size: 0.74rem; }
+    body[data-page="register"] .saas-input-wrapper input { height: 40px; }
+    body[data-page="register"] .saas-submit-btn { min-height: 40px; }
+    body[data-page="register"] .saas-checkbox .label-text { font-size: 0.72rem; }
+    body[data-page="register"] .saas-form-footer p { font-size: 0.72rem; }
+  }
+
+  /* Mobile: keep signup compact without cramping */
+  @media (max-width: 1024px) {
+    body[data-page="register"] .saas-form { gap: 10px; }
+    body[data-page="register"] .saas-input-wrapper input { height: 44px; }
+    body[data-page="register"] .saas-submit-btn { min-height: 46px; }
+    body[data-page="register"] .saas-checkbox .label-text { font-size: 0.76rem; }
+  }
+
+  @media (max-width: 420px) {
+    body[data-page="register"] .saas-form { gap: 9px; }
+    body[data-page="register"] .saas-input-wrapper input { height: 42px; }
+    body[data-page="register"] .saas-submit-btn { min-height: 44px; }
+  }
+</style>
+
+<script>
+  const signupForm = document.getElementById("signupForm");
+  document.querySelectorAll("[data-password-toggle]").forEach((button) => {
+    button.addEventListener("click", function () {
+      const input = document.getElementById(this.dataset.passwordToggle);
+      if (!input) return;
+
+      const shouldShow = input.type === "password";
+      input.type = shouldShow ? "text" : "password";
+      this.setAttribute("aria-pressed", String(shouldShow));
+    });
+  });
+
+  if (signupForm) {
+    signupForm.addEventListener("submit", function () {
+      const btn = document.getElementById("signupBtn");
+      if (!btn) return;
+      btn.disabled = true;
+      btn.style.opacity = "0.8";
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm" style="margin-inline-end: 8px; width: 1.1rem; height: 1.1rem;"></span> {% t "account.signup.loading" %}';
+    });
+  }
+</script>
+{% endblock %}

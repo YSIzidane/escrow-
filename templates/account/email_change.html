@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}{% if current_language == "ar" %}تغيير البريد الإلكتروني{% else %}Change Email Address{% endif %}{% endblock %}
+{% block page_type %}account_email_change{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+  <div class="col-lg-6 col-md-8">
+    <div class="card border-0 email-card">
+      <div class="email-card-header">
+        <div class="email-card-glow"></div>
+        <div class="email-card-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <h3>{% if current_language == "ar" %}تحديث البريد الإلكتروني{% else %}Update your email address{% endif %}</h3>
+        <p>{% if current_language == "ar" %}أدر البريد الحالي وغيّره إلى عنوان جديد مع تأكيد آمن.{% else %}Manage your current email and switch to a new address with secure verification.{% endif %}</p>
+      </div>
+
+      <div class="card-body email-card-body">
+        <form method="post" action="{% url 'account_email' %}">
+          {% csrf_token %}
+
+          {% if current_emailaddress %}
+          <div class="mb-3">
+            <label class="form-label email-form-label">{% if current_language == "ar" %}البريد الحالي{% else %}Current email{% endif %}</label>
+            <input type="email" class="form-control" value="{{ current_emailaddress.email }}" disabled>
+          </div>
+          {% endif %}
+
+          {% if new_emailaddress %}
+          <div class="email-pending-box">
+            <div class="email-pending-title">{% if current_language == "ar" %}بريد جديد بانتظار التفعيل{% else %}Pending new email{% endif %}</div>
+            <div class="email-pending-address">{{ new_emailaddress.email }}</div>
+            <p class="email-pending-copy">
+              {% if current_language == "ar" %}
+              هذا البريد ما زال بانتظار التحقق. يمكنك إعادة إرسال رسالة التفعيل أو إلغاء التغيير.
+              {% else %}
+              This email is still waiting for verification. You can resend the verification email or cancel the change.
+              {% endif %}
+            </p>
+            <div class="email-pending-actions">
+              <button type="submit" form="pending-email" name="action_send" class="btn btn-light">
+                {% if current_language == "ar" %}إعادة إرسال التفعيل{% else %}Re-send verification{% endif %}
+              </button>
+              {% if current_emailaddress %}
+              <button type="submit" form="pending-email" name="action_remove" class="btn btn-danger">
+                {% if current_language == "ar" %}إلغاء التغيير{% else %}Cancel change{% endif %}
+              </button>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+
+          {% if form.errors %}
+          <div class="email-error-box">
+            <i class="fas fa-exclamation-circle"></i>
+            {% if current_language == "ar" %}يرجى مراجعة البريد الجديد والمحاولة مرة أخرى.{% else %}Please review the new email address and try again.{% endif %}
+          </div>
+          {% endif %}
+
+          {% for field in form %}
+            {% if field.field.widget.input_type == "hidden" %}
+              {{ field }}
+            {% else %}
+            <div class="mb-3">
+              <label class="form-label email-form-label" for="{{ field.id_for_label }}">
+                {{ field.label }}
+              </label>
+              {{ field }}
+              {% if field.errors %}
+              <small class="email-field-error">{{ field.errors.0 }}</small>
+              {% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+
+          <button name="action_add" type="submit" class="btn btn-primary w-100 email-main-btn">
+            {% if current_language == "ar" %}تغيير البريد الإلكتروني{% else %}Change email{% endif %}
+          </button>
+        </form>
+
+        {% if new_emailaddress %}
+        <form style="display:none" id="pending-email" method="post" action="{% url 'account_email' %}">
+          {% csrf_token %}
+          <input type="hidden" name="email" value="{{ new_emailaddress.email }}">
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .email-card {
+    border-radius: 24px !important;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(13, 27, 42, 0.15) !important;
+  }
+  .email-card-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 40px 32px 28px;
+    text-align: center;
+    position: relative;
+  }
+  .email-card-glow {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 150, 59, .18) 0%, transparent 70%);
+  }
+  .email-card-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 20px rgba(201, 150, 59, 0.2);
+  }
+  .email-card-icon i { color: var(--gold); font-size: 28px; }
+  .email-card-header h3 { color: white; font-weight: 800; margin-bottom: 8px; font-size: 1.3rem; }
+  .email-card-header p { color: rgba(255, 255, 255, 0.65); font-size: 0.9rem; margin: 0; }
+  .email-card-body { padding: 40px 32px !important; }
+  .email-form-label { font-size: 0.9rem; font-weight: 600; }
+  .email-card-body .form-control {
+    border: 1px solid var(--border-light) !important;
+    border-radius: 10px !important;
+    padding: 12px 14px !important;
+    font-size: 0.95rem !important;
+    transition: all 0.3s ease !important;
+    width: 100%;
+  }
+  .email-card-body .form-control:focus {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 3px rgba(201, 150, 59, 0.1) !important;
+    outline: 0;
+  }
+  .email-pending-box {
+    background: rgba(201, 150, 59, 0.05);
+    border: 1px solid rgba(201, 150, 59, 0.18);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 22px;
+  }
+  .email-pending-title { font-weight: 800; color: var(--text-primary); margin-bottom: 6px; }
+  .email-pending-address { font-weight: 700; color: var(--gold-dark); margin-bottom: 8px; word-break: break-word; }
+  .email-pending-copy { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 14px; }
+  .email-pending-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .email-error-box {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 20px;
+    color: #ef4444;
+    font-size: 0.9rem;
+  }
+  .email-error-box i { margin-inline-end: 8px; }
+  .email-field-error { color: #ef4444; display: block; margin-top: 4px; }
+  .email-main-btn {
+    padding: 12px !important;
+    border-radius: 10px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    border: none;
+    margin-top: 10px;
+  }
+</style>
+{% include "account/_account_settings_styles.html" %}
+{% endblock %}

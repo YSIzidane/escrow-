@@ -1,0 +1,101 @@
+/*
+  Shared performance layer.
+  Keeps the visual system intact while reducing off-screen rendering work.
+*/
+
+:root {
+  --se-card-intrinsic: 680px;
+  --se-section-intrinsic: 920px;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+video {
+  height: auto;
+  object-fit: cover;
+}
+
+@supports (content-visibility: auto) {
+  .se-main > section + section,
+  .se-main > article + article,
+  .se-main > div + div,
+  .hp-home > section:not(.hp-hero),
+  .ip-section,
+  .ip-content-section,
+  .dl-results-head,
+  #deals-container,
+  #search-results,
+  .dx-progress-panel,
+  .dx-intel-grid,
+  .er-command-grid,
+  .er-room-timeline,
+  .se-payment-steps,
+  .se-payment-layout,
+  .se-footer {
+    content-visibility: auto;
+    contain-intrinsic-size: auto var(--se-section-intrinsic);
+  }
+
+  .dl-deal-card,
+  .hp-feature-card,
+  .hp-testimonial,
+  .ip-card,
+  .sd-card,
+  .dx-card,
+  .er-command-card,
+  .se-share-card,
+  .se-payment-card {
+    content-visibility: auto;
+    contain-intrinsic-size: auto var(--se-card-intrinsic);
+  }
+}
+
+@media (max-width: 768px), (pointer: coarse), (update: slow) {
+  body,
+  .se-main,
+  .page-bg-overlay,
+  .dl-page,
+  .sr-page,
+  .sd-page,
+  .cm-page,
+  .dx-page,
+  .er-page,
+  .hp-home {
+    background-attachment: scroll !important;
+  }
+
+  .se-main *,
+  .se-navbar *,
+  .se-footer *,
+  .se-bottom-nav * {
+    animation-timing-function: ease-out;
+  }
+
+  .se-main [style*="backdrop-filter"],
+  .se-main [style*="-webkit-backdrop-filter"] {
+    transform: translateZ(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

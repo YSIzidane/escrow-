@@ -1,0 +1,347 @@
+/* Global dark profile theme.
+   This layer restores the whole site to the same premium dark language used by the profile page. */
+
+:root {
+  --profile-bg: #0b0d12;
+  --profile-bg-2: #08090d;
+  --profile-card: #11141c;
+  --profile-card-2: #161a23;
+  --profile-card-3: #1c2030;
+  --profile-field: #1c2128;
+  --profile-primary: #6366f1;
+  --profile-primary-2: #818cf8;
+  --profile-text: #f4f4f5;
+  --profile-muted: #9099a8;
+  --profile-muted-2: #c7ced8;
+  --profile-border: rgba(255,255,255,0.08);
+  --profile-border-2: rgba(255,255,255,0.14);
+  --profile-gradient: linear-gradient(135deg, #5b62e8 0%, #6366f1 100%);
+  --profile-gradient-soft: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(99,102,241,0.04));
+  --profile-shadow: 0 24px 70px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.20);
+
+  --navy: #f4f4f5;
+  --navy-mid: #c7ced8;
+  --navy-light: #9099a8;
+  --text-primary: #f4f4f5;
+  --text-secondary: #c7ced8;
+  --text-light: #9099a8;
+  --border-light: rgba(255,255,255,0.08);
+  --bg-light: #11141c;
+  --shadow-sm: 0 10px 28px rgba(0,0,0,0.18);
+  --shadow-md: 0 18px 44px rgba(0,0,0,0.26);
+  --shadow-lg: 0 24px 70px rgba(0,0,0,0.36);
+}
+
+html {
+  background: var(--profile-bg);
+  color-scheme: dark;
+}
+
+body {
+  color: var(--profile-text) !important;
+  background:
+    radial-gradient(1200px 700px at 85% -10%, rgba(99,102,241,0.10), transparent 60%),
+    radial-gradient(900px 600px at 5% 10%, rgba(99,102,241,0.05), transparent 65%),
+    linear-gradient(180deg, var(--profile-bg) 0%, var(--profile-bg-2) 100%) !important;
+}
+
+.page-bg-overlay {
+  background: transparent !important;
+}
+
+.page-bg-overlay::after,
+.se-visual-field {
+  display: none !important;
+}
+
+.se-main {
+  color: var(--profile-text);
+}
+
+.se-navbar {
+  background: rgba(13,15,26,0.82) !important;
+  border-bottom: 1px solid var(--profile-border) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+.se-nav-links a {
+  color: var(--profile-muted) !important;
+  border: 1px solid transparent !important;
+  border-radius: 999px !important;
+}
+
+.se-nav-links a i {
+  color: currentColor !important;
+}
+
+.se-nav-links a:hover,
+.se-nav-links a.active {
+  color: var(--profile-text) !important;
+  border-color: rgba(99,102,241,0.30) !important;
+  background: rgba(99,102,241,0.09) !important;
+}
+
+.se-lang-btn,
+.se-notif-btn,
+.se-user-btn,
+.se-btn-login,
+.se-btn-register,
+.se-mobile-search-btn,
+.se-mob-toggle,
+.se-btn-action {
+  border: 1px solid var(--profile-border) !important;
+  background: rgba(18,23,43,0.76) !important;
+  color: var(--profile-text) !important;
+  box-shadow: none !important;
+}
+
+.se-btn-register,
+.btn-primary,
+.btn-success,
+.app-btn--primary {
+  border-color: transparent !important;
+  background: var(--profile-gradient) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+.se-dropdown,
+.dropdown-menu,
+.modal-content,
+.offcanvas,
+.toast,
+.popover,
+.se-footer {
+  background: rgba(17,20,28,0.96) !important;
+  color: var(--profile-text) !important;
+  border: 1px solid var(--profile-border) !important;
+  box-shadow: var(--profile-shadow) !important;
+}
+
+.se-footer {
+  box-shadow: none !important;
+}
+
+.dropdown-item,
+.se-dropdown a,
+.se-dropdown button {
+  color: var(--profile-muted-2) !important;
+}
+
+.dropdown-item:hover,
+.se-dropdown a:hover,
+.se-dropdown button:hover {
+  color: var(--profile-text) !important;
+  background: rgba(255,255,255,0.06) !important;
+}
+
+.card,
+.app-card,
+.panel,
+.list-group-item,
+.accordion-item,
+.table,
+.se-card,
+.deal-card,
+.room-shell,
+.se-publish-form-card,
+.se-publish-card,
+.se-empty-state,
+.empty-state,
+.alert:not(.alert-danger):not(.alert-warning):not(.alert-success),
+body :is(section, article, aside, div)[class*="card"],
+body :is(section, article, aside, div)[class*="panel"] {
+  background: var(--profile-card) !important;
+  color: var(--profile-text) !important;
+  border-color: var(--profile-border) !important;
+  box-shadow: none !important;
+}
+
+.card::before,
+.app-card::before,
+.se-card::before,
+.se-publish-form-card::before {
+  border-color: var(--profile-border);
+}
+
+.table,
+.table > :not(caption) > * > * {
+  color: var(--profile-text) !important;
+  background-color: transparent !important;
+  border-color: var(--profile-border) !important;
+}
+
+.table thead,
+.table-light,
+.table-hover > tbody > tr:hover > * {
+  background: rgba(255,255,255,0.04) !important;
+  color: var(--profile-text) !important;
+}
+
+input,
+select,
+textarea,
+.form-control,
+.form-select,
+.app-input,
+.input-group-text {
+  background: var(--profile-field) !important;
+  color: var(--profile-text) !important;
+  border-color: var(--profile-border) !important;
+  box-shadow: none !important;
+}
+
+input::placeholder,
+textarea::placeholder,
+.form-control::placeholder {
+  color: rgba(255,255,255,0.52) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.form-control:focus,
+.form-select:focus,
+.app-input:focus {
+  border-color: rgba(99,102,241,0.48) !important;
+  box-shadow: 0 0 0 4px rgba(99,102,241,0.13) !important;
+}
+
+.btn-outline-secondary,
+.btn-light,
+.btn-outline-primary,
+.app-btn--secondary {
+  background: rgba(255,255,255,0.04) !important;
+  color: var(--profile-muted-2) !important;
+  border-color: var(--profile-border) !important;
+}
+
+.btn-outline-secondary:hover,
+.btn-light:hover,
+.btn-outline-primary:hover,
+.app-btn--secondary:hover {
+  background: rgba(99,102,241,0.12) !important;
+  color: var(--profile-text) !important;
+  border-color: rgba(99,102,241,0.30) !important;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.page-title,
+.section-title {
+  color: var(--profile-text) !important;
+  letter-spacing: 0;
+}
+
+p,
+small,
+.text-muted,
+.text-secondary,
+.lead,
+.form-text,
+.help-text,
+.subtle,
+.muted {
+  color: var(--profile-muted) !important;
+}
+
+a {
+  color: inherit;
+}
+
+.badge,
+.pill,
+.chip,
+.tag {
+  border-color: var(--profile-border) !important;
+  background: rgba(255,255,255,0.05) !important;
+  color: var(--profile-muted-2) !important;
+}
+
+hr {
+  border-color: var(--profile-border) !important;
+}
+
+/* Hard stop for legacy light inline/card fragments. */
+body [style*="background:white"],
+body [style*="background: white"],
+body [style*="background:#fff"],
+body [style*="background: #fff"],
+body [style*="background:#ffffff"],
+body [style*="background: #ffffff"],
+body [style*="background-color:white"],
+body [style*="background-color: white"],
+body [style*="background-color:#fff"],
+body [style*="background-color: #fff"],
+body [style*="background-color:#ffffff"],
+body [style*="background-color: #ffffff"] {
+  background: var(--profile-card) !important;
+  color: var(--profile-text) !important;
+  border-color: var(--profile-border) !important;
+}
+
+body [style*="color:var(--navy)"],
+body [style*="color: var(--navy)"],
+body [style*="color:#0D1B2A"],
+body [style*="color: #0D1B2A"],
+body [style*="color:#0d1b2a"],
+body [style*="color: #0d1b2a"] {
+  color: var(--profile-text) !important;
+}
+
+body [style*="color:var(--text-secondary)"],
+body [style*="color: var(--text-secondary)"],
+body [style*="color:#4A5568"],
+body [style*="color: #4A5568"],
+body [style*="color:#64748b"],
+body [style*="color: #64748b"] {
+  color: var(--profile-muted) !important;
+}
+
+/* Home page had a strong white marketing layer; bring it back into the profile theme. */
+body[data-page="home"] {
+  background:
+    radial-gradient(1200px 700px at 85% -10%, rgba(99,102,241,0.10), transparent 60%),
+    radial-gradient(900px 600px at 5% 10%, rgba(99,102,241,0.05), transparent 65%),
+    linear-gradient(180deg, var(--profile-bg) 0%, var(--profile-bg-2) 100%) !important;
+}
+
+body[data-page="home"] .se-main,
+body[data-page="home"] .se-footer,
+body[data-page="home"] .safo-section,
+body[data-page="home"] .safo-band,
+body[data-page="home"] .safo-feature-card,
+body[data-page="home"] .safo-deal-card,
+body[data-page="home"] .safo-trust-card,
+body[data-page="home"] .safo-cta-box,
+body[data-page="home"] .safo-hero-card {
+  background: transparent !important;
+  color: var(--profile-text) !important;
+}
+
+body[data-page="home"] .safo-feature-card,
+body[data-page="home"] .safo-deal-card,
+body[data-page="home"] .safo-trust-card,
+body[data-page="home"] .safo-cta-box,
+body[data-page="home"] .safo-hero-card {
+  background: rgba(17,20,28,0.88) !important;
+  border: 1px solid var(--profile-border) !important;
+}
+
+@media (max-width: 768px) {
+  .se-bottom-nav {
+    background: rgba(13,15,26,0.92) !important;
+    border-top: 1px solid var(--profile-border) !important;
+    box-shadow: 0 -18px 50px rgba(0,0,0,0.32) !important;
+  }
+
+  .se-bnav-item {
+    color: var(--profile-muted) !important;
+  }
+
+  .se-bnav-item.active,
+  .se-bnav-primary {
+    color: var(--profile-text) !important;
+  }
+}

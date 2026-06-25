@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{% t "chat_hub.header" %} - Safouane{% endblock %}
+{% block page_type %}chat_hub{% endblock %}
+{% block nav_chat %}active{% endblock %}
+
+{% block meta %}
+{{ block.super }}
+{% endblock %}
+
+{% block late_css %}
+<link rel="stylesheet" href="{% static 'css/communication_dark.css' %}?v=20260523a">
+{% endblock %}
+
+{% block content %}
+<main class="cm-page cm-bg-messages" dir="rtl">
+  <section class="cm-shell cm-messages-shell" aria-labelledby="messages-title">
+    <aside class="cm-panel cm-conversation-panel" aria-label="{% t 'chat_hub.conversations' %}">
+      <header class="cm-panel-head">
+        <div>
+          <span class="cm-kicker">
+            <i class="fas fa-lock" aria-hidden="true"></i>
+            {% t "chat_hub.secure_kicker" %}
+          </span>
+          <h1 id="messages-title">{% t "chat_hub.header" %}</h1>
+          <p>{{ friends_count|default:friends.count }} {% t "chat_hub.conversations" %} {% t "chat_hub.available_suffix" %}</p>
+        </div>
+        <a href="{% url 'friends_list' %}" class="cm-icon-action" aria-label="{% t 'chat_hub.add_friends' %}">
+          <i class="fas fa-user-plus" aria-hidden="true"></i>
+        </a>
+      </header>
+
+      <label class="cm-search" for="chatSearch">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input
+          id="chatSearch"
+          type="search"
+          placeholder="{% t 'chat_hub.search_placeholder' %}"
+          data-cm-filter-input
+          data-cm-filter-target="#chatList"
+          data-cm-filter-item=".cm-conversation-row"
+        >
+      </label>
+
+      <div class="cm-conversation-list" id="chatList">
+        {% if friends %}
+          {% for friend in friends %}
+          <a href="{% url 'private_chat' friend.id %}" class="cm-conversation-row" data-cm-filter-name="{{ friend.username|lower }}">
+            <img src="{{ friend.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ friend.username }}" loading="lazy">
+            <span>
+              <strong>{{ friend.username }}{% verification_badge friend.profile %}</strong>
+              <small>{% t "chat_hub.click_to_chat" %}</small>
+            </span>
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          </a>
+          {% endfor %}
+        {% else %}
+          <section class="cm-empty">
+            <span class="cm-empty-icon"><i class="fas fa-comment-slash" aria-hidden="true"></i></span>
+            <h2>{% t "chat_hub.no_conversations" %}</h2>
+            <p>{% t "chat_hub.empty_sub" %}</p>
+            <a href="{% url 'friends_list' %}" class="cm-btn cm-btn-primary">
+              <i class="fas fa-user-plus" aria-hidden="true"></i>
+              <span>{% t "chat_hub.add_friends" %}</span>
+            </a>
+          </section>
+        {% endif %}
+      </div>
+    </aside>
+
+    <section class="cm-panel cm-welcome-panel">
+      <div class="cm-welcome-mark" aria-hidden="true">
+        <i class="fas fa-comments"></i>
+      </div>
+      <span class="cm-live">
+        <i aria-hidden="true"></i>
+        {% t "chat_hub.live_space" %}
+      </span>
+      <h2>{% t "chat_hub.welcome" %} {{ user.first_name|default:user.username }}</h2>
+      <p>{% t "chat_hub.intro_copy" %}</p>
+
+      <div class="cm-action-grid">
+        <a href="{% url 'friends_list' %}" class="cm-action-card">
+          <span><i class="fas fa-user-friends" aria-hidden="true"></i></span>
+          <strong>{% t "chat_hub.friends_list" %}</strong>
+          <small>{% t "chat_hub.action_friends_sub" %}</small>
+        </a>
+        <a href="{% url 'join_room' %}" class="cm-action-card">
+          <span><i class="fas fa-door-open" aria-hidden="true"></i></span>
+          <strong>{% t "chat_hub.join_room" %}</strong>
+          <small>{% t "chat_hub.action_join_sub" %}</small>
+        </a>
+        <a href="{% url 'create_room' %}" class="cm-action-card">
+          <span><i class="fas fa-plus" aria-hidden="true"></i></span>
+          <strong>{% t "chat_hub.create_room" %}</strong>
+          <small>{% t "chat_hub.action_create_sub" %}</small>
+        </a>
+      </div>
+
+      <div class="cm-stats" aria-label="{% t 'chat_hub.summary_label' %}">
+        <article>
+          <strong>{{ friends_count|default:friends.count }}</strong>
+          <span>{% t "chat_hub.conversations" %}</span>
+        </article>
+        <article>
+          <strong>{{ user.seller_deals.count }}</strong>
+          <span>{% t "chat_hub.seller_deals" %}</span>
+        </article>
+        <article>
+          <strong>{{ user.buyer_deals.count }}</strong>
+          <span>{% t "chat_hub.buyer_deals" %}</span>
+        </article>
+      </div>
+    </section>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/communication_dark.js' %}?v=20260522a"></script>
+{% endblock %}

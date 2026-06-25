@@ -1,0 +1,182 @@
+{% load static %}
+<style>
+  /*
+    Legacy filename retained for include compatibility.
+    This partial now enforces the unified dark platform system on admin/staff views.
+  */
+
+  body[data-page="admin"] {
+    background:
+      radial-gradient(circle at 12% -6%, rgba(115, 210, 255, 0.15), transparent 30rem),
+      radial-gradient(circle at 88% 4%, rgba(244, 201, 93, 0.13), transparent 28rem),
+      linear-gradient(135deg, #05070d 0%, #0a1018 100%) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="admin"] .page-bg-overlay {
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+      radial-gradient(circle at 16% 12%, rgba(115, 210, 255, 0.16), transparent 26rem),
+      radial-gradient(circle at 84% 4%, rgba(244, 201, 93, 0.14), transparent 24rem),
+      linear-gradient(135deg, rgba(5, 7, 13, 0.98), rgba(9, 13, 22, 0.98)) !important;
+    background-size: 56px 56px, 56px 56px, auto, auto, auto !important;
+  }
+
+  body[data-page="admin"] .adm-shell,
+  body[data-page="admin"] .admin-shell,
+  body[data-page="admin"] .staff-ticket-shell {
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="admin"] .adm-brand,
+  body[data-page="admin"] .adm-side-section,
+  body[data-page="admin"] .adm-page-hero,
+  body[data-page="admin"] .adm-surface,
+  body[data-page="admin"] .adm-table-surface,
+  body[data-page="admin"] .adm-card,
+  body[data-page="admin"] .adm-kpi,
+  body[data-page="admin"] .adm-queue-card,
+  body[data-page="admin"] .pf-card,
+  body[data-page="admin"] .se-admin-stat-card,
+  body[data-page="admin"] .se-admin-rooms-card,
+  body[data-page="admin"] .ed-header,
+  body[data-page="admin"] .ed-stat-card,
+  body[data-page="admin"] .ed-rooms-card,
+  body[data-page="admin"] .admin-stat-card,
+  body[data-page="admin"] .admin-metric-card,
+  body[data-page="admin"] .admin-withdrawal-card,
+  body[data-page="admin"] .admin-action-card,
+  body[data-page="admin"] .admin-detail-box,
+  body[data-page="admin"] .admin-audit-item,
+  body[data-page="admin"] .ccp-review-card,
+  body[data-page="admin"] .ccp-review-hero,
+  body[data-page="admin"] .ccp-hero-stat,
+  body[data-page="admin"] .ccp-action-card,
+  body[data-page="admin"] .ccp-meta-box,
+  body[data-page="admin"] .ccp-review-note,
+  body[data-page="admin"] .staff-ticket-shell .card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.082), rgba(255, 255, 255, 0.046)) !important;
+    border: 1px solid var(--seu-border) !important;
+    border-radius: var(--seu-radius-lg) !important;
+    box-shadow: var(--seu-shadow-soft) !important;
+    color: var(--seu-text) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  body[data-page="admin"] .adm-page-hero.is-dark,
+  body[data-page="admin"] .adm-hero,
+  body[data-page="admin"] .ed-header,
+  body[data-page="admin"] .admin-withdrawals-hero,
+  body[data-page="admin"] .ccp-review-hero {
+    background:
+      radial-gradient(circle at 18% 14%, rgba(115, 210, 255, 0.16), transparent 22rem),
+      radial-gradient(circle at 88% 10%, rgba(244, 201, 93, 0.18), transparent 20rem),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.045)) !important;
+    border-color: var(--seu-border) !important;
+  }
+
+  body[data-page="admin"] :is(h1, h2, h3, h4, h5, h6, .adm-page-heading, .adm-hero h1, .ed-title, .admin-withdrawals-hero h1, .ccp-review-hero h1, .se-admin-rooms-header h1, .adm-panel-title, .adm-card-head h2, .staff-ticket-shell h4, .ed-stat-val, .admin-withdrawal-amount-block strong, .ccp-amount-pill) {
+    color: var(--seu-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="admin"] :is(p, span, small, .adm-page-copy p, .adm-hero p, .ed-desc, .admin-withdrawals-hero p, .ccp-review-hero p, .se-admin-rooms-sub, .adm-subtle, .adm-empty, .ed-amount-lbl, .ccp-review-submeta, .ed-stat-label, .admin-stat-card span, .ccp-hero-stat span) {
+    color: var(--seu-muted) !important;
+  }
+
+  body[data-page="admin"] :is(.adm-page-kicker, .adm-hero-kicker, .admin-withdrawals-kicker, .ccp-review-kicker, .ed-subtitle) {
+    color: var(--seu-primary) !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  body[data-page="admin"] :is(.adm-select, .adm-search-field, .adm-search-field input, .pf-input, .pf-textarea, .admin-filter-input, .admin-filter-input input, .ccp-filter-search, .ccp-filter-search input, .form-control, .form-select, textarea, select, input) {
+    background: rgba(255, 255, 255, 0.065) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+    border-radius: var(--seu-radius-sm) !important;
+    box-shadow: none !important;
+  }
+
+  body[data-page="admin"] :is(.adm-select, .adm-search-field input, .pf-input, .pf-textarea, .admin-filter-input input, .ccp-filter-search input, .form-control, .form-select, textarea, select, input):focus {
+    border-color: rgba(244, 201, 93, 0.55) !important;
+    box-shadow: var(--seu-ring) !important;
+    outline: none !important;
+  }
+
+  body[data-page="admin"] :is(.adm-table th, .se-admin-rooms-table thead, .ed-rooms-header) {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: var(--seu-muted) !important;
+    border-color: var(--seu-border) !important;
+  }
+
+  body[data-page="admin"] :is(.adm-table td, .se-admin-rooms-table td, .ed-room-row) {
+    color: var(--seu-text) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  body[data-page="admin"] :is(.adm-side-nav a, .adm-btn--dark, .adm-btn--light, .adm-btn--ghost, .ed-link-btn, .ed-clear-filter, .se-room-action-btn, .btn-outline-secondary, .btn-outline-primary, .btn-outline-warning) {
+    background: rgba(255, 255, 255, 0.065) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+    border-radius: var(--seu-radius-sm) !important;
+  }
+
+  body[data-page="admin"] :is(.adm-side-nav a.is-active, .adm-btn--gold, .adm-filter-submit, .admin-filter-submit, .ccp-filter-btn, .ed-btn-enter, .se-room-action-btn.btn-primary, .admin-action-btn-success, .ccp-action-btn-success) {
+    background: linear-gradient(135deg, var(--seu-primary), #ffe18a) !important;
+    border-color: rgba(255, 225, 138, 0.45) !important;
+    color: #15110a !important;
+    box-shadow: 0 14px 30px rgba(244, 201, 93, 0.22) !important;
+  }
+
+  body[data-page="admin"] :is(.admin-action-btn-danger, .ccp-action-btn-danger, .btn-danger) {
+    background: rgba(255, 107, 124, 0.16) !important;
+    border-color: rgba(255, 107, 124, 0.34) !important;
+    color: #ffd1d7 !important;
+  }
+
+  body[data-page="admin"] :is(.adm-status-pill, .adm-pill, .adm-tag, .ed-status-badge, .admin-status-badge, .ccp-amount-pill) {
+    background: rgba(255, 255, 255, 0.075) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+    border-radius: 999px !important;
+  }
+
+  body[data-page="admin"] :is(.adm-status-pill.is-success, .ed-badge-success, .admin-status-processed) {
+    background: rgba(85, 214, 165, 0.15) !important;
+    border-color: rgba(85, 214, 165, 0.34) !important;
+    color: #c8ffe8 !important;
+  }
+
+  body[data-page="admin"] :is(.adm-status-pill.is-warning, .ed-badge-gold, .admin-status-pending) {
+    background: rgba(255, 209, 102, 0.15) !important;
+    border-color: rgba(255, 209, 102, 0.34) !important;
+    color: #ffe8a6 !important;
+  }
+
+  body[data-page="admin"] :is(.adm-status-pill.is-danger, .ed-badge-danger, .admin-status-rejected) {
+    background: rgba(255, 107, 124, 0.15) !important;
+    border-color: rgba(255, 107, 124, 0.34) !important;
+    color: #ffd1d7 !important;
+  }
+
+  body[data-page="admin"] :is(.adm-brand-mark, .adm-kpi-icon, .adm-activity-icon, .ed-header-icon, .ed-room-icon) {
+    background: rgba(244, 201, 93, 0.14) !important;
+    border: 1px solid rgba(244, 201, 93, 0.28) !important;
+    color: var(--seu-primary) !important;
+  }
+
+  body[data-page="admin"] :is(.ed-orb, .admin-orb, .ccp-orb, .adm-orb) {
+    display: none !important;
+  }
+
+  @media (max-width: 768px) {
+    body[data-page="admin"] :is(.adm-shell, .admin-shell, .staff-ticket-shell) {
+      padding-inline: 1rem !important;
+    }
+
+    body[data-page="admin"] :is(.adm-page-hero, .adm-hero, .ed-header, .admin-withdrawals-hero, .ccp-review-hero) {
+      border-radius: var(--seu-radius-md) !important;
+    }
+  }
+</style>

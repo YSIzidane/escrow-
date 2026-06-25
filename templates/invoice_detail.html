@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load site_i18n %}
+{% block title %}{% t "invoice.title" %} {{ invoice.invoice_number }} - {% t "site.name" %}{% endblock %}
+{% block page_type %}invoice{% endblock %}
+
+{% block content %}
+<section class="invoice-page" style="max-width:980px;margin:0 auto;padding:32px 20px 48px;">
+  <div style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:22px;">
+    <div>
+      <div style="font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#C9963B;font-weight:800;">{% t "invoice.title" %}</div>
+      <h1 style="margin:8px 0 6px;font-size:2rem;color:#0D1B2A;">{{ invoice.invoice_number }}</h1>
+      <p style="margin:0;color:#5A6A7A;">Deal #{{ invoice.deal.id }} • {{ invoice.deal.product_title }}</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="{% url 'profile' %}" style="padding:12px 16px;border-radius:14px;background:#fff;border:1px solid rgba(13,27,42,.08);text-decoration:none;color:#0D1B2A;font-weight:700;">{% t "invoice.back_to_account" %}</a>
+      <button type="button" onclick="window.print()" style="padding:12px 16px;border-radius:14px;background:#C9963B;border:none;color:#0D1B2A;font-weight:800;cursor:pointer;">{% t "invoice.print" %}</button>
+    </div>
+  </div>
+
+  <div class="invoice-card" style="background:#fff;border:1px solid rgba(13,27,42,.08);border-radius:28px;box-shadow:0 20px 48px rgba(13,27,42,.08);overflow:hidden;">
+    <div class="invoice-card-header" style="padding:28px 28px 20px;background:linear-gradient(135deg,#0D1B2A 0%,#1A2E45 100%);color:#fff;">
+      <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:.8rem;opacity:.72;">{% t "invoice.issued" %}</div>
+          <div style="font-size:1.05rem;font-weight:800;">{{ invoice.issued_at|date:"d/m/Y H:i" }}</div>
+        </div>
+        <div>
+          <div style="font-size:.8rem;opacity:.72;">{% t "invoice.status" %}</div>
+          <div style="font-size:1.05rem;font-weight:800;">{{ invoice.get_status_display }}</div>
+        </div>
+        <div>
+          <div style="font-size:.8rem;opacity:.72;">{% t "invoice.payment_method" %}</div>
+          <div style="font-size:1.05rem;font-weight:800;">{{ invoice.payment.get_payment_method_display }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;border-bottom:1px solid rgba(13,27,42,.08);">
+      <div style="padding:18px;border-radius:20px;background:#F8FAFC;">
+        <div style="font-size:.82rem;color:#64748B;margin-bottom:8px;">{% t "invoice.buyer" %}</div>
+        <div style="font-size:1rem;font-weight:800;color:#0D1B2A;">{{ invoice.buyer.get_full_name|default:invoice.buyer.username }}</div>
+        <div style="font-size:.88rem;color:#475569;">{{ invoice.buyer.email|default:"-" }}</div>
+      </div>
+      <div style="padding:18px;border-radius:20px;background:#F8FAFC;">
+        <div style="font-size:.82rem;color:#64748B;margin-bottom:8px;">{% t "invoice.seller" %}</div>
+        <div style="font-size:1rem;font-weight:800;color:#0D1B2A;">{{ invoice.seller.get_full_name|default:invoice.seller.username }}</div>
+        <div style="font-size:.88rem;color:#475569;">{{ invoice.seller.email|default:"-" }}</div>
+      </div>
+      <div style="padding:18px;border-radius:20px;background:#F8FAFC;">
+        <div style="font-size:.82rem;color:#64748B;margin-bottom:8px;">{% t "invoice.reference" %}</div>
+        <div style="font-size:1rem;font-weight:800;color:#0D1B2A;">{{ invoice.payment.transaction_id|default:"-" }}</div>
+        <div style="font-size:.88rem;color:#475569;">{{ invoice.payment.get_status_display }}</div>
+      </div>
+    </div>
+
+    <div style="padding:28px;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:right;padding:12px 0;color:#64748B;font-size:.84rem;border-bottom:1px solid rgba(13,27,42,.08);">{% t "invoice.item" %}</th>
+            <th style="text-align:left;padding:12px 0;color:#64748B;font-size:.84rem;border-bottom:1px solid rgba(13,27,42,.08);">{% t "invoice.amount" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:14px 0;border-bottom:1px solid rgba(13,27,42,.06);">{{ invoice.deal.product_title }}</td>
+            <td style="padding:14px 0;text-align:left;border-bottom:1px solid rgba(13,27,42,.06);">${{ invoice.subtotal|floatformat:2 }}</td>
+          </tr>
+          <tr>
+            <td style="padding:14px 0;border-bottom:1px solid rgba(13,27,42,.06);">{% t "invoice.platform_fee" %}</td>
+            <td style="padding:14px 0;text-align:left;border-bottom:1px solid rgba(13,27,42,.06);">${{ invoice.platform_fee|floatformat:2 }}</td>
+          </tr>
+          <tr>
+            <td style="padding:14px 0;font-weight:800;color:#0D1B2A;">{% t "invoice.seller_net" %}</td>
+            <td style="padding:14px 0;text-align:left;font-weight:900;color:#16a34a;">${{ invoice.seller_net|floatformat:2 }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% include "partials/_utility_light_styles.html" %}
+{% endblock %}

@@ -1,0 +1,816 @@
+/*
+  Mobile app experience layer.
+  Loaded after the visual system on phones and touch devices only.
+*/
+
+@media (max-width: 768px), (pointer: coarse) {
+  :root {
+    --ma-bg: #f7f9fc;
+    --ma-surface: rgba(255, 255, 255, 0.96);
+    --ma-surface-solid: #ffffff;
+    --ma-text: #101827;
+    --ma-muted: #68758a;
+    --ma-border: rgba(16, 24, 39, 0.09);
+    --ma-border-strong: rgba(16, 24, 39, 0.14);
+    --ma-gold: #c9963b;
+    --ma-gold-soft: rgba(201, 150, 59, 0.13);
+    --ma-radius: 18px;
+    --ma-radius-lg: 24px;
+    --ma-shadow: 0 12px 30px rgba(15, 23, 42, 0.11);
+    --ma-shadow-soft: 0 6px 18px rgba(15, 23, 42, 0.08);
+    --ma-navbar: calc(62px + env(safe-area-inset-top));
+    --ma-bottom-nav: calc(78px + env(safe-area-inset-bottom));
+    --ma-action-bar: calc(82px + env(safe-area-inset-bottom));
+  }
+
+  html {
+    height: 100%;
+    overflow-x: hidden;
+    scroll-padding-top: var(--ma-navbar);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--ma-bg) !important;
+    color: var(--ma-text) !important;
+    overscroll-behavior-y: contain;
+    touch-action: manipulation;
+  }
+
+  body,
+  body * {
+    letter-spacing: 0 !important;
+  }
+
+  body.se-mobile-keyboard .se-bottom-nav,
+  body.se-mobile-keyboard .se-mobile-action-bar {
+    transform: translate3d(0, calc(120% + env(safe-area-inset-bottom)), 0) !important;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  summary,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+
+  button,
+  .btn,
+  [role="button"],
+  input[type="submit"],
+  input[type="button"],
+  .hp-btn,
+  .dl-btn,
+  .sr-btn,
+  .dx-btn,
+  .er-btn,
+  .se-owner-btn,
+  .se-seller-btn,
+  .se-buy-main-btn,
+  .se-deal-send-btn {
+    min-height: 48px !important;
+    min-width: 44px;
+    border-radius: 15px !important;
+  }
+
+  .is-tapping {
+    transform: scale(0.985) !important;
+    filter: brightness(0.98);
+  }
+
+  .se-main {
+    padding-bottom: calc(var(--ma-bottom-nav) + 18px) !important;
+  }
+
+  body.se-has-action-bar .se-main {
+    padding-bottom: calc(var(--ma-bottom-nav) + var(--ma-action-bar) + 10px) !important;
+  }
+
+  body[data-page="private_chat"] .se-main,
+  body[data-page="room"] .se-main,
+  body[data-page="escrow_room"] .se-main {
+    padding-bottom: 18px !important;
+  }
+
+  .se-navbar {
+    position: sticky !important;
+    top: 0 !important;
+    min-height: var(--ma-navbar) !important;
+    height: var(--ma-navbar) !important;
+    padding-top: env(safe-area-inset-top) !important;
+    background: rgba(255, 255, 255, 0.88) !important;
+    border-bottom: 1px solid rgba(16, 24, 39, 0.08) !important;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08) !important;
+    backdrop-filter: blur(18px) saturate(1.25) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(1.25) !important;
+  }
+
+  .se-navbar-inner {
+    height: 62px !important;
+    min-height: 62px !important;
+    padding-inline: max(10px, env(safe-area-inset-left)) max(10px, env(safe-area-inset-right)) !important;
+    gap: 7px !important;
+  }
+
+  .se-logo-img {
+    height: 38px !important;
+    max-width: 132px !important;
+    object-fit: contain;
+  }
+
+  .se-nav-search,
+  .se-nav-links {
+    display: none !important;
+  }
+
+  .se-mobile-actions {
+    gap: 6px !important;
+  }
+
+  .se-lang-btn,
+  .se-mobile-search-btn,
+  .se-notif-btn,
+  .se-user-btn,
+  .se-mob-toggle {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 !important;
+    border-radius: 15px !important;
+    background: rgba(248, 250, 252, 0.92) !important;
+    border: 1px solid var(--ma-border) !important;
+    color: var(--ma-text) !important;
+    box-shadow: none !important;
+  }
+
+  .se-lang-btn span,
+  .se-user-name,
+  .se-user-btn i.fa-chevron-down {
+    display: none !important;
+  }
+
+  .se-user-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+  }
+
+  .se-nav-auth {
+    gap: 7px !important;
+  }
+
+  .se-nav-auth .se-btn-login,
+  .se-nav-auth .se-btn-register {
+    height: 44px !important;
+    min-height: 44px !important;
+    padding-inline: 12px !important;
+    border-radius: 15px !important;
+    font-size: 0.84rem !important;
+  }
+
+  .se-mobile-menu-backdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 1090 !important;
+    background: rgba(15, 23, 42, 0.28) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+  }
+
+  .se-mobile-menu {
+    display: flex !important;
+    position: fixed !important;
+    top: auto !important;
+    left: max(10px, env(safe-area-inset-left)) !important;
+    right: max(10px, env(safe-area-inset-right)) !important;
+    bottom: max(10px, env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+    max-height: min(74dvh, 640px) !important;
+    padding: 22px 12px 12px !important;
+    border: 1px solid rgba(16, 24, 39, 0.1) !important;
+    border-radius: 26px !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    box-shadow: 0 28px 70px rgba(15, 23, 42, 0.22) !important;
+    opacity: 0;
+    pointer-events: none;
+    overflow: auto !important;
+    transform: translate3d(0, calc(100% + 28px), 0) !important;
+    transition: opacity 0.18s ease, transform 0.24s ease !important;
+  }
+
+  .se-mobile-menu::before {
+    content: "";
+    position: absolute;
+    top: 9px;
+    left: 50%;
+    width: 42px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(16, 24, 39, 0.18);
+    transform: translateX(-50%);
+  }
+
+  .se-mobile-menu.open {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  .se-mobile-menu a,
+  .se-mobile-menu button {
+    min-height: 50px !important;
+    padding: 0 14px !important;
+    border-radius: 16px !important;
+    color: var(--ma-text) !important;
+    font-size: 0.93rem !important;
+    font-weight: 850 !important;
+  }
+
+  .se-mobile-menu a:active,
+  .se-mobile-menu button:active {
+    background: rgba(201, 150, 59, 0.1) !important;
+  }
+
+  .se-mobile-menu a i,
+  .se-mobile-menu button i {
+    width: 22px !important;
+    color: var(--ma-gold) !important;
+  }
+
+  .se-bottom-nav {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: center !important;
+    gap: 4px !important;
+    left: max(8px, env(safe-area-inset-left)) !important;
+    right: max(8px, env(safe-area-inset-right)) !important;
+    bottom: max(8px, env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+    height: 66px !important;
+    padding: 7px !important;
+    border: 1px solid rgba(16, 24, 39, 0.09) !important;
+    border-radius: 24px !important;
+    background: rgba(255, 255, 255, 0.93) !important;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16) !important;
+    backdrop-filter: blur(18px) saturate(1.25) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(1.25) !important;
+    transition: transform 0.24s ease, opacity 0.2s ease !important;
+  }
+
+  .se-bnav-item {
+    height: 52px !important;
+    min-height: 52px !important;
+    padding: 5px 3px !important;
+    border-radius: 18px !important;
+    color: #7b8794 !important;
+    font-size: 0.66rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .se-bnav-item i {
+    font-size: 1.08rem !important;
+    color: currentColor !important;
+  }
+
+  .se-bnav-item.active {
+    background: rgba(201, 150, 59, 0.14) !important;
+    color: #815d18 !important;
+  }
+
+  .se-bnav-primary {
+    background: #101827 !important;
+    color: #fff !important;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.16) !important;
+  }
+
+  .se-bnav-primary.active {
+    background: linear-gradient(135deg, #101827, #1e2b42) !important;
+    color: #fff !important;
+  }
+
+  .se-bnav-avatar {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .se-footer {
+    padding-bottom: calc(94px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .hp-shell,
+  .dl-shell,
+  .sr-shell,
+  .dx-page,
+  .er-container,
+  .info-shell,
+  .sd-shell,
+  .cm-shell {
+    width: min(100% - 20px, 1180px) !important;
+  }
+
+  .hp-section,
+  .info-section,
+  .sd-section,
+  .cm-section {
+    padding-block: 42px !important;
+  }
+
+  .hp-hero {
+    min-height: auto !important;
+  }
+
+  .hp-hero-inner {
+    grid-template-columns: 1fr !important;
+    padding-block: 28px 18px !important;
+  }
+
+  .hp-hero-title {
+    font-size: 2.28rem !important;
+    line-height: 1.08 !important;
+  }
+
+  .hp-hero-statement,
+  .hp-hero-lead,
+  .hp-section-head p,
+  .hp-why-copy p,
+  .hp-showcase-copy p,
+  .hp-pricing-copy p,
+  .hp-faq-copy p {
+    font-size: 0.94rem !important;
+    line-height: 1.78 !important;
+  }
+
+  .hp-hero-actions,
+  .hp-final-box .hp-actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  .hp-btn,
+  .dl-btn,
+  .sr-btn {
+    width: 100%;
+    justify-content: center !important;
+  }
+
+  .hp-stat-grid,
+  .hp-feature-grid,
+  .hp-proof-grid,
+  .hp-testimonial-grid,
+  .hp-deal-grid,
+  .hp-price-cards,
+  .hp-faq-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .hp-stat,
+  .hp-feature-card,
+  .hp-proof-card,
+  .hp-step,
+  .hp-testimonial,
+  .hp-price-card,
+  .hp-faq-item,
+  .dl-panel,
+  .dl-deal-card,
+  .sr-card,
+  .dx-hero,
+  .dx-progress-panel,
+  .dx-intel-card,
+  .er-command-card {
+    border-radius: var(--ma-radius-lg) !important;
+    box-shadow: var(--ma-shadow-soft) !important;
+  }
+
+  .dl-page,
+  .sr-page {
+    padding-top: 0 !important;
+  }
+
+  .dl-hero,
+  .sr-hero {
+    gap: 14px !important;
+    padding: 22px !important;
+    border-radius: var(--ma-radius-lg) !important;
+  }
+
+  .dl-hero h1,
+  .sr-hero h1 {
+    font-size: 1.72rem !important;
+    line-height: 1.16 !important;
+  }
+
+  .dl-hero-actions,
+  .dl-filter-actions,
+  .sr-search-row {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100%;
+  }
+
+  .dl-filter-bar,
+  .sr-search-form {
+    position: sticky;
+    top: calc(var(--ma-navbar) + 8px);
+    z-index: 20;
+    padding: 14px !important;
+    border-radius: 22px !important;
+  }
+
+  .dl-filter-controls {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    width: 100%;
+  }
+
+  .dl-search-field,
+  .sr-search-field {
+    min-height: 50px !important;
+  }
+
+  .dl-deals-grid,
+  .sr-results-grid,
+  .sr-user-grid {
+    grid-template-columns: 1fr !important;
+    gap: 13px !important;
+  }
+
+  .dl-deal-media {
+    aspect-ratio: 1.42 !important;
+  }
+
+  .dl-card-footer {
+    gap: 10px !important;
+  }
+
+  .dx-hero {
+    gap: 18px !important;
+  }
+
+  .dx-hero h1 {
+    font-size: 1.82rem !important;
+    line-height: 1.14 !important;
+  }
+
+  .dx-progress-panel,
+  .dx-intel-grid,
+  .dx-people-row,
+  .er-command-grid,
+  .er-room-timeline,
+  body[data-page="deal_detail"] .row,
+  body[data-page="escrow_room"] .er-layout {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  body[data-page="deal_detail"] .row > [class*="col-"],
+  body[data-page="escrow_room"] .er-layout > * {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .dx-mobile-section-nav {
+    position: sticky;
+    top: calc(var(--ma-navbar) + 8px);
+    z-index: 22;
+    display: flex;
+    gap: 8px;
+    margin: 14px 0;
+    padding: 8px;
+    overflow-x: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    background: rgba(15, 18, 28, 0.78);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+    scrollbar-width: none;
+  }
+
+  .dx-mobile-section-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dx-mobile-section-nav a {
+    flex: 0 0 auto;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 12px;
+    border-radius: 13px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .dx-mobile-section-nav a.is-active {
+    background: linear-gradient(135deg, #c9963b, #e8b96a);
+    color: #111827;
+  }
+
+  .se-gallery-main img,
+  body[data-page="deal_detail"] .se-gallery-main img {
+    height: auto !important;
+    aspect-ratio: 1.35;
+    object-fit: cover;
+  }
+
+  .se-gallery-thumbs {
+    display: flex !important;
+    overflow-x: auto;
+    gap: 8px !important;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .se-gallery-thumbs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .se-gallery-thumb {
+    flex: 0 0 74px !important;
+    width: 74px !important;
+    height: 58px !important;
+  }
+
+  .se-buy-box,
+  .se-owner-actions,
+  .se-seller-card,
+  .se-deal-info-card {
+    position: static !important;
+    top: auto !important;
+  }
+
+  .se-buy-guarantees,
+  .se-owner-actions-body,
+  .se-seller-btns {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 9px !important;
+  }
+
+  .se-deal-chat-box,
+  body[data-page="deal_detail"] .se-deal-chat-box,
+  body[data-page="escrow_room"] .er-chat-body {
+    height: min(58dvh, 440px) !important;
+    scroll-behavior: auto !important;
+  }
+
+  .se-deal-chat-form,
+  .er-chat-form {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    background: inherit;
+  }
+
+  .se-deal-msg-row,
+  .er-msg-row {
+    max-width: 100%;
+  }
+
+  .se-deal-msg-bubble,
+  .er-msg-me,
+  .er-msg-other {
+    max-width: min(86%, 520px) !important;
+  }
+
+  .se-mobile-action-bar {
+    position: fixed;
+    left: max(10px, env(safe-area-inset-left));
+    right: max(10px, env(safe-area-inset-right));
+    bottom: calc(82px + env(safe-area-inset-bottom));
+    z-index: 1088;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid rgba(16, 24, 39, 0.1);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.18);
+    backdrop-filter: blur(16px) saturate(1.25);
+    -webkit-backdrop-filter: blur(16px) saturate(1.25);
+    transition: transform 0.24s ease, opacity 0.2s ease;
+  }
+
+  .se-mobile-action-bar.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, 16px, 0);
+  }
+
+  .se-mobile-action-bar a,
+  .se-mobile-action-bar button {
+    width: 100%;
+    min-height: 48px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border-radius: 15px !important;
+    font-size: 0.9rem !important;
+    font-weight: 900 !important;
+    text-decoration: none !important;
+  }
+
+  .er-header h1,
+  .er-title {
+    font-size: 1.72rem !important;
+    line-height: 1.16 !important;
+  }
+
+  body[data-page="escrow_room"] .er-chat-card {
+    min-height: min(74dvh, 620px) !important;
+  }
+
+  .er-admin-panel,
+  .er-side-card,
+  .er-chat-card {
+    border-radius: var(--ma-radius-lg) !important;
+  }
+
+  .profile-shell,
+  .up-shell,
+  .profile-grid,
+  .up-grid,
+  .profile-content,
+  .up-content {
+    width: min(100% - 20px, 1180px) !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .profile-hero,
+  .up-hero,
+  .profile-card,
+  .up-card {
+    border-radius: var(--ma-radius-lg) !important;
+  }
+
+  .profile-nav,
+  .up-tabs,
+  .profile-tabs {
+    overflow-x: auto !important;
+    scrollbar-width: none;
+  }
+
+  .profile-nav::-webkit-scrollbar,
+  .up-tabs::-webkit-scrollbar,
+  .profile-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .auth-shell,
+  .auth-layout,
+  .account-shell,
+  .social-login-shell,
+  .social-signup-shell {
+    min-height: auto !important;
+    padding: 16px 12px calc(22px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .auth-card,
+  .account-card,
+  .social-login-card,
+  .social-signup-card {
+    width: 100% !important;
+    border-radius: var(--ma-radius-lg) !important;
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    min-height: 50px !important;
+    font-size: 16px !important;
+  }
+
+  label,
+  .form-label {
+    line-height: 1.45 !important;
+  }
+
+  .table-responsive,
+  table {
+    max-width: 100%;
+  }
+
+  .table-responsive {
+    border-radius: var(--ma-radius);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @supports (content-visibility: auto) {
+    .hp-section:not(:first-child),
+    .dl-deal-card,
+    .sr-result-card,
+    .dx-intel-card,
+    .se-comments-card,
+    .se-seller-card,
+    .se-deal-info-card,
+    .er-side-card,
+    .profile-card,
+    .up-card {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 560px;
+    }
+  }
+}
+
+@media (max-width: 430px) {
+  .se-logo-img {
+    max-width: 112px !important;
+  }
+
+  .se-nav-auth .se-btn-login,
+  .se-nav-auth .se-btn-register {
+    padding-inline: 10px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .hp-hero-title,
+  .dx-hero h1,
+  .dl-hero h1,
+  .sr-hero h1 {
+    font-size: 1.62rem !important;
+  }
+
+  .se-bottom-nav {
+    height: 64px !important;
+    border-radius: 22px !important;
+  }
+
+  .se-bnav-item {
+    height: 50px !important;
+    min-height: 50px !important;
+    font-size: 0.62rem !important;
+  }
+
+  .se-bnav-item i {
+    font-size: 1rem !important;
+  }
+
+  .se-mobile-action-bar {
+    bottom: calc(78px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 360px) {
+  .se-logo-img {
+    max-width: 44px !important;
+  }
+
+  .se-nav-auth .se-btn-register i,
+  .se-nav-auth .se-btn-login {
+    display: none !important;
+  }
+
+  .se-lang-btn,
+  .se-mobile-search-btn,
+  .se-notif-btn,
+  .se-user-btn,
+  .se-mob-toggle {
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+  }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .se-bottom-nav,
+  .se-mobile-action-bar {
+    display: none !important;
+  }
+
+  .se-mobile-menu {
+    max-height: calc(100dvh - 16px) !important;
+  }
+
+  .hp-hero-inner,
+  .dx-hero,
+  .dl-hero,
+  .sr-hero {
+    padding-block: 16px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce), (update: slow) {
+  .se-mobile-menu,
+  .se-bottom-nav,
+  .se-mobile-action-bar,
+  .hp-home *,
+  .dx-page *,
+  .er-container *,
+  .dl-page *,
+  .sr-page * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

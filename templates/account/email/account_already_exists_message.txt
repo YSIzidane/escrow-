@@ -1,0 +1,25 @@
+{% extends "account/email/base_message.txt" %}
+
+{% block content %}
+{% if current_language == 'ar' %}
+حاول شخص ما إنشاء حساب باستخدام هذا البريد الإلكتروني:
+{{ email }}
+
+لكن يوجد بالفعل حساب مرتبط به.
+
+إذا كان الحساب يخصك، يمكنك استعادة الوصول عبر الرابط التالي:
+{{ password_reset_url }}
+
+إذا لم تكن أنت من حاول التسجيل، يمكنك تجاهل هذه الرسالة.
+{% else %}
+Someone tried to create an account using this email address:
+{{ email }}
+
+However, an account already exists for it.
+
+If this account belongs to you, recover access using the link below:
+{{ password_reset_url }}
+
+If you did not initiate this signup attempt, you can ignore this email.
+{% endif %}
+{% endblock %}

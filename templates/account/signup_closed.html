@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{% if current_language == "ar" %}التسجيل مغلق{% else %}Sign Up Closed{% endif %}{% endblock %}
+{% block page_type %}signup_closed{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+  <div class="col-lg-5 col-md-6">
+    <div class="card border-0 auth-status-card">
+      <div class="auth-status-header">
+        <div class="auth-status-glow auth-status-glow-top"></div>
+        <div class="auth-status-glow auth-status-glow-bottom"></div>
+        <div class="auth-status-icon warning">
+          <i class="fas fa-user-slash"></i>
+        </div>
+        <h3>{% if current_language == "ar" %}التسجيل مغلق حاليًا{% else %}Sign up is currently closed{% endif %}</h3>
+        <p>{% if current_language == "ar" %}لا يمكن إنشاء حسابات جديدة في الوقت الحالي.{% else %}New account creation is not available right now.{% endif %}</p>
+      </div>
+      <div class="card-body auth-status-body text-center">
+        <p class="auth-status-text">
+          {% if current_language == "ar" %}
+          يمكنك العودة لاحقًا أو تصفح المنصة إذا كانت بعض الصفحات العامة متاحة.
+          {% else %}
+          You can try again later or continue browsing the platform if public pages are available.
+          {% endif %}
+        </p>
+        <a href="{% url 'home' %}" class="btn btn-primary w-100 auth-status-btn">
+          {% if current_language == "ar" %}العودة إلى الرئيسية{% else %}Back to home{% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .auth-status-card { border-radius: 24px !important; overflow: hidden; box-shadow: 0 20px 60px rgba(13, 27, 42, 0.15) !important; }
+  .auth-status-header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); padding: 40px 32px 28px; text-align: center; position: relative; overflow: hidden; }
+  .auth-status-glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(201, 150, 59, 0.18) 0%, transparent 70%); }
+  .auth-status-glow-top { top: -40px; right: -40px; width: 150px; height: 150px; }
+  .auth-status-glow-bottom { bottom: -20px; left: -20px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(201, 150, 59, 0.12) 0%, transparent 70%); }
+  .auth-status-icon { width: 64px; height: 64px; border-radius: 18px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  .auth-status-icon.warning { background: rgba(245, 158, 11, 0.12); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.22); }
+  .auth-status-icon i { color: #f59e0b; font-size: 30px; }
+  .auth-status-header h3 { color: white; font-weight: 800; margin-bottom: 8px; font-size: 1.3rem; }
+  .auth-status-header p { color: rgba(255,255,255,0.65); font-size: 0.92rem; margin: 0; }
+  .auth-status-body { padding: 40px 32px !important; }
+  .auth-status-text { color: var(--text-secondary); font-size: 1rem; line-height: 1.7; margin-bottom: 28px; }
+  .auth-status-btn { padding: 13px !important; font-size: 1rem !important; font-weight: 700; border-radius: 12px; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%); border: none; text-decoration: none; }
+</style>
+{% include "account/_auth_status_styles.html" %}
+{% endblock %}

@@ -1,0 +1,101 @@
+{% load static %}
+<style>
+  /*
+    Legacy filename retained for include compatibility.
+    Marketplace and search pages now use the unified dark platform system.
+  */
+
+  body[data-page="listings"],
+  body[data-page="search"] {
+    background:
+      radial-gradient(circle at 14% -6%, rgba(115, 210, 255, 0.15), transparent 30rem),
+      radial-gradient(circle at 86% 4%, rgba(244, 201, 93, 0.13), transparent 28rem),
+      linear-gradient(135deg, #05070d 0%, #0a1018 100%) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="listings"] .page-bg-overlay,
+  body[data-page="search"] .page-bg-overlay {
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+      radial-gradient(circle at 18% 12%, rgba(115, 210, 255, 0.16), transparent 26rem),
+      radial-gradient(circle at 86% 6%, rgba(244, 201, 93, 0.14), transparent 24rem),
+      linear-gradient(135deg, rgba(5, 7, 13, 0.98), rgba(9, 13, 22, 0.98)) !important;
+    background-size: 56px 56px, 56px 56px, auto, auto, auto !important;
+  }
+
+  body[data-page="listings"] :is(.se-deals-header, .se-filter-panel, .se-sort-bar, .se-deal-card, .se-empty-state),
+  body[data-page="search"] :is(.se-search-form, .se-search-topbar, .se-search-card, .se-search-empty, .se-search-tabs) {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.082), rgba(255, 255, 255, 0.046)) !important;
+    border: 1px solid var(--seu-border) !important;
+    border-radius: var(--seu-radius-lg) !important;
+    box-shadow: var(--seu-shadow-soft) !important;
+    color: var(--seu-text) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  body[data-page="listings"] .se-deals-header {
+    background:
+      radial-gradient(circle at 16% 12%, rgba(115, 210, 255, 0.16), transparent 22rem),
+      radial-gradient(circle at 88% 10%, rgba(244, 201, 93, 0.18), transparent 20rem),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.045)) !important;
+  }
+
+  body[data-page="listings"] :is(.se-deals-title, .se-filter-label, .se-deal-title, .se-deal-seller-name, .se-empty-state h3, .se-sort-select, .se-page-link, .se-sort-count strong),
+  body[data-page="search"] :is(.se-search-card h3, .se-search-user-row h3, .se-search-summary strong, .se-search-section-head h2, .se-search-section-head span, .se-search-card-foot strong) {
+    color: var(--seu-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="listings"] :is(.se-deals-sub, .se-deals-header-note, .se-sort-count, .se-radio, .se-quick-link, .se-deal-desc, .se-deal-seller-rating, .se-empty-state p),
+  body[data-page="search"] :is(.se-search-help, .se-search-summary, .se-search-card p, .se-search-user-row p, .se-search-card-foot span, .se-search-empty p) {
+    color: var(--seu-muted) !important;
+  }
+
+  body[data-page="listings"] :is(.se-mobile-filter-toggle, .se-add-deal-btn, .se-filter-apply-btn, .se-deal-quick-view),
+  body[data-page="search"] :is(.se-search-submit, .app-btn--primary) {
+    background: linear-gradient(135deg, var(--seu-primary), #ffe18a) !important;
+    border-color: rgba(255, 225, 138, 0.45) !important;
+    color: #15110a !important;
+    box-shadow: 0 14px 30px rgba(244, 201, 93, 0.22) !important;
+  }
+
+  body[data-page="listings"] :is(.se-mobile-filter-toggle, .se-add-deal-btn, .se-filter-apply-btn, .se-deal-quick-view) *,
+  body[data-page="search"] :is(.se-search-submit, .app-btn--primary) * {
+    color: #15110a !important;
+  }
+
+  body[data-page="listings"] :is(.se-radio, .se-price-input, .se-filter-group .form-control, .se-sort-select, .se-quick-link),
+  body[data-page="search"] :is(.se-search-field input, .se-search-tab-btn, .se-search-pagination a, .se-search-pagination span) {
+    background: rgba(255, 255, 255, 0.065) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+    border-radius: var(--seu-radius-sm) !important;
+  }
+
+  body[data-page="listings"] :is(.se-radio.active, .se-radio:has(input:checked), .se-quick-link:hover, .se-quick-link.active),
+  body[data-page="search"] :is(.se-search-tab-btn.active, .se-search-pagination .active) {
+    background: rgba(244, 201, 93, 0.15) !important;
+    border-color: rgba(244, 201, 93, 0.34) !important;
+    color: var(--seu-primary) !important;
+  }
+
+  body[data-page="listings"] :is(.se-deals-count, .se-badge-auction, .se-badge-fixed, .se-badge-available, .se-badge-reserved) {
+    background: rgba(255, 255, 255, 0.075) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+    border-radius: 999px !important;
+  }
+
+  body[data-page="listings"] .se-deal-price {
+    color: var(--seu-primary) !important;
+  }
+
+  body[data-page="listings"] .se-deal-no-img,
+  body[data-page="search"] :is(.se-search-card-fallback, .se-search-user-fallback, .se-search-empty-icon) {
+    background: rgba(244, 201, 93, 0.14) !important;
+    border: 1px solid rgba(244, 201, 93, 0.28) !important;
+    color: var(--seu-primary) !important;
+  }
+</style>

@@ -1,0 +1,188 @@
+/* Careful design refinement layer: preserve brand, improve polish */
+
+:root {
+  --se-radius-md: 18px;
+  --se-radius-lg: 24px;
+  --se-shadow-surface: 0 16px 42px rgba(0, 0, 0, 0.18);
+  --se-shadow-float: 0 22px 54px rgba(0, 0, 0, 0.22);
+  --se-border-gold-soft: rgba(201, 150, 59, 0.14);
+}
+
+body {
+  background: #0a141e;
+}
+
+.page-bg-overlay {
+  background:
+    radial-gradient(circle at top right, rgba(201, 150, 59, 0.11), transparent 22%),
+    radial-gradient(circle at 15% 20%, rgba(42, 72, 104, 0.22), transparent 26%),
+    linear-gradient(180deg, #09111a 0%, #0c1621 52%, #0a1119 100%);
+}
+
+.page-bg-overlay::after {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0)),
+    rgba(0, 0, 0, 0.12);
+}
+
+.se-main {
+  padding-top: 20px;
+}
+
+.se-navbar {
+  background: rgba(9, 15, 24, 0.9);
+  border-bottom-color: rgba(201, 150, 59, 0.22);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.18);
+}
+
+.se-navbar::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 150, 59, 0.26), transparent);
+  pointer-events: none;
+}
+
+.se-nav-links a {
+  border-radius: 12px;
+  padding: 9px 10px;
+}
+
+.se-nav-links a:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.se-nav-links a.active {
+  background: rgba(201, 150, 59, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(201, 150, 59, 0.12);
+}
+
+.se-user-btn,
+.se-lang-btn,
+.se-notif-btn,
+.se-mob-toggle,
+.se-btn-login,
+.se-btn-register {
+  border-radius: 12px;
+}
+
+.se-btn-register {
+  box-shadow: 0 8px 20px rgba(201, 150, 59, 0.25);
+}
+
+.se-dropdown,
+.se-mobile-menu {
+  border-color: rgba(201, 150, 59, 0.16);
+  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.35);
+}
+
+.card,
+.se-content-glass,
+.table-responsive {
+  border-radius: 22px;
+}
+
+.card,
+.se-content-glass {
+  box-shadow: var(--se-shadow-surface);
+}
+
+.card,
+.card-header,
+.card-body,
+.table-responsive,
+.se-content-glass {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.btn,
+button,
+.form-control,
+.form-select,
+textarea,
+input,
+select {
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, background-color 0.18s ease;
+}
+
+.btn,
+button,
+a.btn {
+  border-radius: 14px;
+}
+
+.btn:hover,
+button:hover,
+a.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary,
+.se-btn-register {
+  box-shadow: 0 10px 22px rgba(201, 150, 59, 0.22);
+}
+
+.form-control,
+.form-select {
+  border-radius: 14px;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: rgba(201, 150, 59, 0.44);
+  box-shadow: 0 0 0 3px rgba(201, 150, 59, 0.10);
+}
+
+.se-alert {
+  border-radius: 16px;
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.16);
+}
+
+.se-footer {
+  border-top: 1px solid rgba(201, 150, 59, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.se-footer-links a {
+  position: relative;
+}
+
+.se-footer-links a::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.18s ease;
+  opacity: 0.55;
+}
+
+.se-footer-links a:hover::after {
+  transform: scaleX(1);
+}
+
+@media (max-width: 991px) {
+  .se-main {
+    padding-top: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .card,
+  .se-content-glass,
+  .table-responsive {
+    border-radius: 18px;
+  }
+
+  .btn,
+  button,
+  a.btn,
+  .form-control,
+  .form-select {
+    border-radius: 14px;
+  }
+}

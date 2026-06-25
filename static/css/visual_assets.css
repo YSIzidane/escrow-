@@ -1,0 +1,271 @@
+/* Curated bitmap visuals from the project asset set. */
+:root {
+  --asset-network-wave: url("../images/visuals/network-wave-v2.webp");
+  --asset-glass-geometry: url("../images/visuals/glass-geometry-v2.webp");
+  --asset-blue-particles: url("../images/visuals/blue-particles.jpg");
+  --asset-white-circuit: url("../images/visuals/white-circuit.jpg");
+  --asset-blue-line-wave: url("../images/visuals/blue-line-wave.jpg");
+  --asset-neural-blue: url("../images/visuals/neural-blue.jpg");
+  --asset-black-wave: url("../images/visuals/black-wave.jpg");
+  --asset-soft-ribbon: url("../images/visuals/soft-ribbon.jpg");
+  --asset-blue-purple-wave: url("../images/visuals/blue-purple-wave.jpg");
+  --asset-iridescent-flow: url("../images/visuals/iridescent-flow.jpg");
+  --asset-glass-abstract: url("../images/visuals/glass-abstract.jpg");
+}
+
+body[data-page="chat_hub"] .page-bg-overlay,
+body[data-page="create_room"] .page-bg-overlay,
+body[data-page="join_room"] .page-bg-overlay,
+body[data-page="room"] .page-bg-overlay {
+  background:
+    linear-gradient(180deg, rgba(247, 250, 255, 0.96), rgba(255, 255, 255, 0.92)),
+    var(--asset-white-circuit) center top / 520px auto repeat !important;
+}
+
+body[data-page="chat_hub"] .ch-layout,
+body[data-page="room"] .room-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+body[data-page="chat_hub"] .ch-layout::before,
+body[data-page="room"] .room-shell::before {
+  content: "";
+  position: absolute;
+  inset: -22px;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.52;
+  background: var(--asset-blue-line-wave) center top / cover no-repeat;
+  filter: saturate(1.15);
+  border-radius: 32px;
+}
+
+body[data-page="chat_hub"] .ch-sidebar-header {
+  background:
+    linear-gradient(135deg, rgba(10, 20, 34, 0.93), rgba(23, 43, 70, 0.9)),
+    var(--asset-black-wave) center / cover no-repeat !important;
+}
+
+body[data-page="chat_hub"] .ch-list {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.93), rgba(248, 251, 255, 0.97)),
+    var(--asset-blue-particles) center top / cover no-repeat !important;
+}
+
+body[data-page="chat_hub"] .ch-main {
+  background:
+    linear-gradient(135deg, rgba(247, 250, 255, 0.84), rgba(240, 246, 255, 0.9)),
+    var(--asset-glass-geometry) center / min(58vw, 540px) auto no-repeat !important;
+}
+
+body[data-page="chat_hub"] .ch-orb {
+  display: none !important;
+}
+
+body[data-page="chat_hub"] .ch-welcome-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(250, 253, 255, 0.98)),
+    var(--asset-iridescent-flow) right top / 260px auto no-repeat !important;
+  border-color: rgba(37, 99, 235, 0.12) !important;
+}
+
+body[data-page="create_room"] .se-publish-form-card,
+body[data-page="join_room"] .se-publish-form-card {
+  border: 1px solid rgba(37, 99, 235, 0.11) !important;
+  box-shadow: 0 24px 62px rgba(15, 23, 42, 0.11) !important;
+}
+
+body[data-page="create_room"] .se-publish-form-hero,
+body[data-page="join_room"] .se-publish-form-hero {
+  background:
+    linear-gradient(135deg, rgba(10, 20, 34, 0.91), rgba(24, 56, 103, 0.85)),
+    var(--asset-blue-purple-wave) center / cover no-repeat !important;
+}
+
+body[data-page="create_room"] .se-publish-form-hero::after,
+body[data-page="join_room"] .se-publish-form-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.09), transparent);
+  opacity: 0.6;
+}
+
+body[data-page="create_room"] .se-publish-form-hero > *,
+body[data-page="join_room"] .se-publish-form-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+body[data-page="room"] .room-modern-header {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(37, 99, 235, 0.13);
+  border-radius: 24px;
+  padding: 20px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(247, 251, 255, 0.9)),
+    var(--asset-white-circuit) right center / 520px auto no-repeat !important;
+  box-shadow: 0 18px 46px rgba(15, 23, 42, 0.08);
+}
+
+body[data-page="room"] .room-modern-header::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: min(38%, 420px);
+  pointer-events: none;
+  opacity: 0.2;
+  background: var(--asset-network-wave) center / cover no-repeat;
+  mask-image: linear-gradient(90deg, transparent, #000 26%);
+}
+
+body[data-page="room"] .room-modern-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+body[data-page="room"] .room-type-mark,
+body[data-page="room"] .room-chat-icon {
+  background:
+    linear-gradient(135deg, rgba(13, 27, 42, 0.9), rgba(37, 99, 235, 0.68)),
+    var(--asset-neural-blue) center / cover no-repeat !important;
+}
+
+body[data-page="room"] .room-chat-head,
+body[data-page="room"] .trade-panel-head {
+  background:
+    linear-gradient(135deg, rgba(248, 251, 255, 0.96), rgba(255, 255, 255, 0.98)),
+    var(--asset-soft-ribbon) center / cover no-repeat !important;
+}
+
+body[data-page="room"] .se-room-chat-box {
+  background:
+    linear-gradient(180deg, rgba(244, 248, 255, 0.95), rgba(255, 255, 255, 0.92)),
+    var(--asset-blue-particles) center / cover no-repeat !important;
+}
+
+body[data-page="support"] .page-bg-overlay {
+  background:
+    linear-gradient(180deg, rgba(251, 253, 255, 0.97), rgba(244, 248, 255, 0.94) 52%, rgba(255, 255, 255, 0.98)),
+    var(--asset-white-circuit) center top / 620px auto repeat !important;
+}
+
+body[data-page="support"] .sp-page-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(247, 251, 255, 0.96)),
+    var(--asset-iridescent-flow) right center / 360px auto no-repeat !important;
+}
+
+body[data-page="support"] .sp-form-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(12, 23, 38, 0.91), rgba(28, 67, 122, 0.82)),
+    var(--asset-neural-blue) center / cover no-repeat !important;
+  color: #ffffff;
+}
+
+body[data-page="support"] .sp-form-hero h4,
+body[data-page="support"] .sp-form-hero p {
+  color: #ffffff !important;
+}
+
+body[data-page="support"] .sp-empty {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 251, 255, 0.98)),
+    var(--asset-glass-geometry) center top / 320px auto no-repeat !important;
+}
+
+body[data-page="about"] .ab-hero,
+body[data-page="guide"] .hw-hero {
+  background:
+    linear-gradient(135deg, rgba(7, 13, 25, 0.9), rgba(22, 53, 101, 0.78)),
+    var(--asset-network-wave) center / cover no-repeat !important;
+}
+
+body[data-page="about"] .ab-hero::before,
+body[data-page="guide"] .hw-hero::before {
+  background:
+    linear-gradient(90deg, rgba(4, 10, 19, 0.82), rgba(12, 25, 48, 0.54) 52%, rgba(37, 99, 235, 0.2)) !important;
+}
+
+body[data-page="about"] .ab-hero,
+body[data-page="guide"] .hw-hero,
+body[data-page="about"] .ab-hero :is(h1, h2, h3, p, span, strong, i),
+body[data-page="guide"] .hw-hero :is(h1, h2, h3, p, span, strong, i),
+body[data-page="guide"] .hw-hero-note {
+  color: #ffffff !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body[data-page="about"] .ab-hero :is(h1, h2, h3, strong),
+body[data-page="guide"] .hw-hero :is(h1, h2, h3, strong) {
+  text-shadow: 0 3px 18px rgba(0, 0, 0, 0.42) !important;
+}
+
+body[data-page="about"] .ab-hero h1 span {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+}
+
+body[data-page="about"] .ab-hero p,
+body[data-page="guide"] .hw-hero p,
+body[data-page="about"] .ab-brand-panel span,
+body[data-page="guide"] .hw-hero-note {
+  color: rgba(255, 255, 255, 0.92) !important;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.38) !important;
+}
+
+body[data-page="about"] .ab-badge,
+body[data-page="guide"] .hw-badge {
+  background: rgba(255, 255, 255, 0.11) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+body[data-page="about"] .ab-brand-panel,
+body[data-page="guide"] .hw-hero-card {
+  background:
+    linear-gradient(135deg, rgba(4, 10, 19, 0.62), rgba(22, 53, 101, 0.42)),
+    var(--asset-glass-geometry) center / cover no-repeat !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 16px 38px rgba(4, 10, 19, 0.2) !important;
+}
+
+body[data-page="about"] .ab-logo {
+  filter: brightness(0) invert(1) !important;
+}
+
+body[data-page="about"] .ab-panel:nth-of-type(odd),
+body[data-page="guide"] .hw-panel:nth-of-type(odd) {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.98)),
+    var(--asset-white-circuit) right top / 420px auto no-repeat !important;
+}
+
+@media (max-width: 768px) {
+  body[data-page="chat_hub"] .ch-layout::before,
+  body[data-page="room"] .room-shell::before,
+  body[data-page="room"] .room-modern-header::after {
+    display: none;
+  }
+
+  body[data-page="chat_hub"] .ch-main,
+  body[data-page="support"] .sp-page-hero,
+  body[data-page="support"] .sp-empty {
+    background-size: 240px auto !important;
+    background-position: center top !important;
+  }
+
+  body[data-page="room"] .room-modern-header {
+    padding: 16px;
+    border-radius: 20px;
+    background-size: 360px auto !important;
+  }
+}

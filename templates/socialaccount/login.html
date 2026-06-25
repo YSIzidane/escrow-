@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% load static site_i18n account socialaccount %}
+
+{% block title %}{% t "social.signup.title" %}{% endblock %}
+{% block page_type %}socialaccount_confirm{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+  <div class="col-lg-5 col-md-6">
+    <div class="card border-0 social-signup-card">
+      <div class="social-signup-header">
+        <div class="social-signup-glow top"></div>
+        <div class="social-signup-glow bottom"></div>
+
+        <div class="social-signup-brandlockup">
+          <div class="social-signup-icon">
+            <img src="{% static 'images/brand/icon-192.png' %}" alt="{% t 'site.name' %}" class="social-signup-mark" width="192" height="192" decoding="async">
+            <span class="social-signup-icon-badge"><i class="fas fa-check"></i></span>
+          </div>
+          <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" class="social-signup-wordmark" width="520" height="150" decoding="async">
+        </div>
+
+        <h3>{% t "social.signup.header" %}</h3>
+        <p>{% t "social.signup.sub" %}</p>
+      </div>
+
+      <div class="card-body social-signup-body">
+        <div class="social-signup-info">
+          <div>
+            <p class="social-signup-email"><span>{% t "social.signup.email_label" %}</span> <strong>{{ account.user.email }}</strong></p>
+            <p class="social-signup-prompt">{% t "social.signup.prompt" %}</p>
+          </div>
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+
+          <p class="social-signup-note">{% t "social.signup.link_notice" %}</p>
+
+          <button type="submit" class="btn btn-primary w-100 social-signup-btn success">
+            <i class="fas fa-check"></i>
+            {% t "social.signup.confirm" %}
+          </button>
+
+          <a href="{% url 'account_login' %}{% if redirect_field_value %}?{{ redirect_field_name }}={{ redirect_field_value|urlencode }}{% endif %}" class="btn btn-light w-100 social-signup-btn secondary">
+            <i class="fas fa-arrow-left"></i>
+            {% t "social.signup.back" %}
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .social-signup-card {
+    border-radius: 24px !important;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(13,27,42,0.15) !important;
+    animation: fadeInUp 0.6s ease both;
+  }
+  .social-signup-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 40px 32px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .social-signup-glow {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,150,59,.18) 0%, transparent 70%);
+  }
+  .social-signup-glow.top { top: -40px; right: -40px; width: 150px; height: 150px; }
+  .social-signup-glow.bottom { bottom: -20px; left: -20px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(201,150,59,.12) 0%, transparent 70%); }
+  .social-signup-brandlockup {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .social-signup-icon {
+    width: 76px;
+    height: 76px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 14px 34px rgba(7, 13, 22, 0.32), inset 0 1px 0 rgba(255,255,255,.08);
+    animation: scaleIn 0.5s 0.2s ease both;
+    position: relative;
+    backdrop-filter: blur(8px);
+  }
+  .social-signup-mark {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 16px rgba(201,150,59,.22));
+  }
+  .social-signup-wordmark {
+    height: 26px;
+    width: auto;
+    max-width: min(180px, 70vw);
+    object-fit: contain;
+    opacity: .96;
+  }
+  .social-signup-icon-badge {
+    position: absolute;
+    inset-inline-end: -6px;
+    bottom: -6px;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 18px rgba(76,175,80,.35);
+    font-size: 13px;
+  }
+  .social-signup-header h3 { color: white; font-weight: 800; margin-bottom: 8px; font-size: 1.3rem; }
+  .social-signup-header p { color: rgba(255,255,255,0.65); font-size: 0.9rem; margin: 0; }
+  .social-signup-body { padding: 40px 32px !important; }
+  .social-signup-info {
+    background: rgba(76, 175, 80, 0.08);
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 28px;
+    animation: fadeInUp 0.4s 0.1s ease both;
+  }
+  .social-signup-email { color: var(--text-primary); font-weight: 600; margin: 0 0 4px; }
+  .social-signup-prompt { color: var(--text-secondary); font-size: 0.85rem; margin: 0; }
+  .social-signup-note { color: var(--text-secondary); font-size: 0.9rem; text-align: center; margin-bottom: 20px; }
+  .social-signup-btn {
+    padding: 13px !important;
+    font-size: 1rem !important;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .social-signup-btn.success {
+    background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+    border: none;
+    color: white;
+  }
+  .social-signup-btn.secondary {
+    border: 1px solid var(--border-light);
+    background: rgba(255,255,255,0.95);
+    color: var(--text-primary);
+  }
+  @media (max-width: 576px) {
+    .social-signup-header {
+      padding: 34px 22px 24px;
+    }
+    .social-signup-body {
+      padding: 28px 22px !important;
+    }
+    .social-signup-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 22px;
+    }
+    .social-signup-mark {
+      width: 38px;
+      height: 38px;
+    }
+    .social-signup-wordmark {
+      height: 22px;
+      max-width: 150px;
+    }
+  }
+</style>
+{% include "socialaccount/_social_account_styles.html" %}
+{% endblock %}

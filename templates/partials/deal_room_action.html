@@ -1,0 +1,39 @@
+{% load site_i18n %}
+{% if deal.status == "completed" %}
+  <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="se-action-btn se-action-view">
+    <i class="fas fa-eye"></i> {% t "my_deals.action_view" %}
+  </a>
+{% elif deal.status == "disputed" %}
+  <a href="{% url 'deal_detail' deal.id %}" class="se-action-btn se-action-dispute">
+    <i class="fas fa-balance-scale"></i> {% t "my_deals.action_dispute" %}
+  </a>
+{% elif deal.escrow_room and deal.status != "new" %}
+  <a href="{% url 'escrow_room' deal.id %}" class="se-action-btn se-action-view" title="{% t 'my_deals.enter_room' %}">
+    <i class="fas fa-lock"></i> {% t "my_deals.action_room" %}
+  </a>
+{% elif deal.buyer == user and not deal.buyer_confirmed and deal.status == "reserved" %}
+  <form method="post" action="{% url 'confirm_deal' deal.id %}" onsubmit="return confirm('{% t 'my_deals.confirm_prompt' %}')" style="display:inline;" data-async-form data-refresh-target="#deal-room-shell" data-after-refresh="initDealRoomPage">
+    {% csrf_token %}
+    <button type="submit" class="se-action-btn se-action-confirm">
+      <i class="fas fa-check"></i> {% t "my_deals.confirm_btn" %}
+    </button>
+  </form>
+{% elif deal.buyer == user and not deal.buyer_confirmed and deal.status == "shipped" %}
+  <form method="post" action="{% url 'confirm_deal' deal.id %}" onsubmit="return confirm('{% t 'my_deals.confirm_prompt' %}')" style="display:inline;" data-async-form data-refresh-target="#deal-room-shell" data-after-refresh="initDealRoomPage">
+    {% csrf_token %}
+    <button type="submit" class="se-action-btn se-action-confirm">
+      <i class="fas fa-check"></i> {% t "my_deals.confirm_btn" %}
+    </button>
+  </form>
+{% elif deal.seller == user and not deal.seller_confirmed and deal.status != "new" %}
+  <form method="post" action="{% url 'confirm_deal' deal.id %}" onsubmit="return confirm('{% t 'my_deals.confirm_prompt' %}')" style="display:inline;" data-async-form data-refresh-target="#deal-room-shell" data-after-refresh="initDealRoomPage">
+    {% csrf_token %}
+    <button type="submit" class="se-action-btn se-action-confirm">
+      <i class="fas fa-check"></i> {% t "my_deals.confirm_btn" %}
+    </button>
+  </form>
+{% else %}
+  <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="se-action-btn se-action-view">
+    <i class="fas fa-arrow-left"></i> {% t "my_deals.action_open" %}
+  </a>
+{% endif %}

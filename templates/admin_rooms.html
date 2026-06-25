@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% t "admin_rooms.title" %}{% endblock %}
+{% block page_type %}admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/admin_control.css' %}?v=20260507a">{% endblock %}
+
+{% block content %}
+<div class="adm-shell">
+  {% include "partials/admin_control_sidebar.html" %}
+  <section class="adm-main">
+<div class="se-admin-rooms-shell">
+  <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap se-admin-rooms-header">
+    <div>
+      <div style="font-size:.82rem;color:var(--gold);font-weight:800;text-transform:uppercase;letter-spacing:.6px;">{% t "nav.admin" %}</div>
+      <h1>{% t "admin_rooms.heading" %}</h1>
+      <p class="se-admin-rooms-sub">{% t "admin_rooms.sub" %}</p>
+    </div>
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary se-room-action-btn">
+      <i class="fas fa-arrow-left" style="margin-left:6px;"></i> {% t "admin_rooms.dashboard" %}
+    </a>
+  </div>
+
+  <div class="se-admin-rooms-stats">
+    <div class="card border-0 se-admin-stat-card">
+      <div class="se-admin-stat-label">{% t "admin_rooms.stats.total" %}</div>
+      <div class="se-admin-stat-value" style="color:var(--navy);">{{ stats.total }}</div>
+    </div>
+    <div class="card border-0 se-admin-stat-card">
+      <div class="se-admin-stat-label">{% t "admin_rooms.stats.active" %}</div>
+      <div class="se-admin-stat-value" style="color:#0e7c5a;">{{ stats.active }}</div>
+    </div>
+    <div class="card border-0 se-admin-stat-card">
+      <div class="se-admin-stat-label">{% t "admin_rooms.stats.closed" %}</div>
+      <div class="se-admin-stat-value" style="color:#c0392b;">{{ stats.closed }}</div>
+    </div>
+    <div class="card border-0 se-admin-stat-card">
+      <div class="se-admin-stat-label">{% t "admin_rooms.stats.last_24h" %}</div>
+      <div class="se-admin-stat-value" style="color:var(--gold-dark);">{{ stats.today }}</div>
+    </div>
+  </div>
+
+  <div class="card border-0 se-admin-rooms-card">
+    <div style="padding:18px;border-bottom:1px solid var(--border-light);background:white;">
+      <form method="get" class="se-admin-rooms-filter">
+        <div>
+          <label class="form-label se-publish-field-label">{% t "admin_rooms.search" %}</label>
+          <input type="text" name="q" value="{{ search_query }}" class="form-control se-publish-input" placeholder="{% t 'admin_rooms.search_placeholder' %}">
+        </div>
+        <div>
+          <label class="form-label se-publish-field-label">{% t "admin_rooms.status" %}</label>
+          <select name="status" class="form-select se-publish-select">
+            <option value="">{% t "admin_rooms.all" %}</option>
+            <option value="active" {% if status_filter == 'active' %}selected{% endif %}>{% t "admin_rooms.active" %}</option>
+            <option value="closed" {% if status_filter == 'closed' %}selected{% endif %}>{% t "admin_rooms.closed" %}</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label se-publish-field-label">{% t "admin_rooms.type" %}</label>
+          <select name="type" class="form-select se-publish-select">
+            <option value="">{% t "admin_rooms.all" %}</option>
+            <option value="buy" {% if type_filter == 'buy' %}selected{% endif %}>{% t "admin_rooms.type_buy" %}</option>
+            <option value="sell" {% if type_filter == 'sell' %}selected{% endif %}>{% t "admin_rooms.type_sell" %}</option>
+            <option value="trade" {% if type_filter == 'trade' %}selected{% endif %}>{% t "admin_rooms.type_trade" %}</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary se-room-action-btn">{% t "admin_rooms.filter_button" %}</button>
+      </form>
+    </div>
+
+    <div class="se-admin-rooms-table-wrap">
+      <table class="table align-middle mb-0 se-admin-rooms-table">
+        <thead style="background:#f8fafc;">
+          <tr>
+            <th>{% t "admin_rooms.table.room" %}</th>
+            <th>{% t "admin_rooms.table.creator" %}</th>
+            <th>{% t "admin_rooms.table.participants" %}</th>
+            <th>{% t "admin_rooms.table.messages" %}</th>
+            <th>{% t "admin_rooms.table.status" %}</th>
+            <th>{% t "admin_rooms.table.created" %}</th>
+            <th style="min-width:250px;">{% t "admin_rooms.table.actions" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for room in rooms %}
+          <tr>
+            <td data-label="{% t 'admin_rooms.table.room' %}">
+              <div class="se-admin-room-title">{{ room.display_title }}</div>
+              <div class="se-admin-room-meta">{{ room.code }} &middot; {{ room.get_room_type_display }}</div>
+            </td>
+            <td data-label="{% t 'admin_rooms.table.creator' %}">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <img src="{{ room.creator.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ room.creator.username }}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;border:1.5px solid var(--gold);">
+                <div>
+                  <div style="font-weight:700;">{{ room.creator.username }}</div>
+                  <div style="font-size:.75rem;color:var(--text-light);">{{ room.creator.email|default:"-" }}</div>
+                </div>
+              </div>
+            </td>
+            <td data-label="{% t 'admin_rooms.table.participants' %}">{{ room.participant_total }}</td>
+            <td data-label="{% t 'admin_rooms.table.messages' %}">{{ room.message_total }}</td>
+            <td data-label="{% t 'admin_rooms.table.status' %}">
+              {% if room.is_active %}
+              <span style="background:rgba(34,197,94,.12);color:#0e7c5a;border-radius:999px;padding:4px 10px;font-weight:800;font-size:.75rem;">{% t "admin_rooms.active" %}</span>
+              {% else %}
+              <span style="background:rgba(239,68,68,.1);color:#c0392b;border-radius:999px;padding:4px 10px;font-weight:800;font-size:.75rem;">{% t "admin_rooms.closed" %}</span>
+              {% endif %}
+            </td>
+            <td data-label="{% t 'admin_rooms.table.created' %}">{{ room.created_at|date:"Y-m-d H:i" }}</td>
+            <td data-label="{% t 'admin_rooms.table.actions' %}">
+              <div class="se-admin-room-actions">
+                <a href="{% url 'room_detail' room.code %}" class="btn btn-sm btn-outline-secondary se-room-action-btn">{% t "admin_rooms.open" %}</a>
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="room_id" value="{{ room.id }}">
+                  {% if room.is_active %}
+                  <input type="hidden" name="action" value="close">
+                  <button type="submit" class="btn btn-sm btn-outline-danger se-room-action-btn">{% t "admin_rooms.close" %}</button>
+                  {% else %}
+                  <input type="hidden" name="action" value="reopen">
+                  <button type="submit" class="btn btn-sm btn-outline-success se-room-action-btn">{% t "admin_rooms.reopen" %}</button>
+                  {% endif %}
+                </form>
+                {% if request.user.is_superuser %}
+                <form method="post" onsubmit="return confirm('{% t 'admin_rooms.delete_confirm' %}');">
+                  {% csrf_token %}
+                  <input type="hidden" name="room_id" value="{{ room.id }}">
+                  <input type="hidden" name="action" value="delete">
+                  <button type="submit" class="btn btn-sm btn-danger se-room-action-btn">{% t "admin_rooms.delete" %}</button>
+                </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" style="text-align:center;padding:32px;color:var(--text-light);">{% t "admin_rooms.empty" %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+  </section>
+</div>
+<style>
+@media (max-width: 768px) {
+  .se-admin-rooms-header h1 {
+    font-size: 1.4rem;
+  }
+  .se-admin-rooms-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .se-admin-rooms-filter {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .se-admin-rooms-table-wrap {
+    padding: 0 14px 14px;
+  }
+  .se-admin-rooms-table,
+  .se-admin-rooms-table tbody,
+  .se-admin-rooms-table tr,
+  .se-admin-rooms-table td {
+    display: block;
+    width: 100%;
+  }
+  .se-admin-rooms-table thead {
+    display: none;
+  }
+  .se-admin-rooms-table tr {
+    border: 1px solid rgba(13,27,42,.08);
+    border-radius: 18px;
+    padding: 14px;
+    margin-top: 12px;
+    background: #fff;
+    box-shadow: 0 10px 28px rgba(13,27,42,.05);
+  }
+  .se-admin-rooms-table tr:first-child {
+    margin-top: 0;
+  }
+  .se-admin-rooms-table td {
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(13,27,42,.08);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .se-admin-rooms-table td:last-child {
+    border-bottom: 0;
+  }
+  .se-admin-rooms-table td::before {
+    content: attr(data-label);
+    font-size: .72rem;
+    color: var(--text-light);
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .se-admin-room-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+</style>
+{% include "partials/_admin_light_styles.html" %}
+{% endblock %}

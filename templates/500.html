@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% t "error.500.title" %}{% endblock %}
+{% block page_type %}500{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/error_pages.css' %}?v=20260520c">
+{% endblock %}
+
+{% block content %}
+<div class="se-error-shell">
+  <div class="se-error-wrap se-error-500">
+    <div class="se-error-code">500</div>
+
+    <div class="se-error-card">
+      <div class="se-error-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+
+      <h1 class="se-error-title">{% t "error.500.header" %}</h1>
+      <p class="se-error-message">{% t "error.500.message" %}</p>
+
+      <div class="se-error-info">
+        <p><i class="fas fa-shield-alt"></i> {% t "error.500.security_notice" %}</p>
+      </div>
+
+      <div class="se-error-actions">
+        <button type="button" class="se-error-btn se-error-btn-primary" onclick="window.location.reload();">
+          <i class="fas fa-sync-alt"></i>
+          {% t "error.500.try_again" %}
+        </button>
+        <a href="{% url 'home' %}" class="se-error-btn se-error-btn-secondary">
+          <i class="fas fa-home"></i>
+          {% t "error.404.home" %}
+        </a>
+      </div>
+
+      <div class="se-error-contact">
+        <p class="se-error-contact-copy">{% t "error.500.help" %}</p>
+        <div class="se-error-contact-links">
+          <a href="https://wa.me/213663580460" target="_blank" class="se-error-contact-link whatsapp" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+          <a href="mailto:safouanebaadoud@gmail.com" class="se-error-contact-link mail" title="Email">
+            <i class="fas fa-envelope"></i>
+          </a>
+          <a href="{% url 'create_ticket' %}" class="se-error-contact-link" title="Support ticket">
+            <i class="fas fa-ticket-alt"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

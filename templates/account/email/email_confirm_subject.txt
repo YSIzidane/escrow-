@@ -1,0 +1,1 @@
+{% if current_language == 'ar' %}تم تأكيد بريدك الإلكتروني في SafouaneEscrow{% else %}Your email address was confirmed on SafouaneEscrow{% endif %}

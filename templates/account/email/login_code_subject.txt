@@ -1,0 +1,1 @@
+{% if current_language == 'ar' %}رمز تسجيل الدخول إلى SafouaneEscrow{% else %}Your SafouaneEscrow sign-in code{% endif %}

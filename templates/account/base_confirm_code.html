@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load i18n allauth %}
+
+{% block title %}{% if current_language == "ar" %}تأكيد الرمز{% else %}Confirm Code{% endif %}{% endblock %}
+{% block page_type %}account_confirm_code{% endblock %}
+
+{% block content %}
+{% setvar code_title_ %}{% block code_title %}{% if current_language == "ar" %}تأكيد الرمز{% else %}Confirm Code{% endif %}{% endblock %}{% endsetvar %}
+{% setvar recipient_ %}{% block recipient %}{% endblock %}{% endsetvar %}
+{% setvar confirm_action_url %}{% block action_url %}{% endblock %}{% endsetvar %}
+{% setvar change_title_ %}{% block change_title %}{% if current_language == "ar" %}استخدام جهة اتصال مختلفة{% else %}Use a different address{% endif %}{% endblock %}{% endsetvar %}
+<div class="row justify-content-center py-5 auth-shell">
+  <div class="col-lg-5 col-md-7">
+    <div class="card border-0 auth-card">
+      <div class="auth-card-header">
+        <div class="auth-card-badge">
+          <i class="fas fa-bolt"></i>
+          {% if current_language == "ar" %}رمز مؤقت{% else %}One-time code{% endif %}
+        </div>
+
+        <div class="auth-card-icon">
+          <i class="fas fa-shield-halved"></i>
+        </div>
+
+        <h3>{{ code_title_ }}</h3>
+        <p>
+          {% if current_language == "ar" %}
+          أرسلنا رمزًا مؤقتًا إلى الجهة التالية. أدخله هنا قبل انتهاء صلاحيته حتى نكمل المتابعة بأمان.
+          {% else %}
+          We sent a temporary code to the following destination. Enter it here before it expires to continue securely.
+          {% endif %}
+        </p>
+
+        {% if recipient_ %}
+        <div class="auth-meta-row">
+          <div class="auth-meta-chip">
+            <i class="fas fa-paper-plane"></i>
+            <span>{{ recipient_ }}</span>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="card-body auth-card-body">
+        <div class="auth-note">
+          <strong>{% if current_language == "ar" %}تلميح سريع{% else %}Quick tip{% endif %}</strong>
+          <p>
+            {% if current_language == "ar" %}
+            إذا لم تجد الرسالة، تحقّق من البريد غير الهام أو اطلب رمزًا جديدًا.
+            {% else %}
+            If you do not see the message, check spam or request a fresh code.
+            {% endif %}
+          </p>
+        </div>
+
+        <form method="post" action="{{ confirm_action_url }}">
+          {% csrf_token %}
+          {{ redirect_field }}
+
+          {% if verify_form.non_field_errors %}
+          <div class="auth-error">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ verify_form.non_field_errors.0 }}
+          </div>
+          {% endif %}
+
+          {% for field in verify_form %}
+            {% if field.field.widget.input_type == "hidden" %}
+              {{ field }}
+            {% else %}
+            <div class="auth-field">
+              <label class="auth-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+              <small class="auth-field-error">{{ field.errors.0 }}</small>
+              {% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+
+          <div class="auth-actions{% if can_resend or cancel_url or not cancel_url %} auth-actions-split{% endif %}">
+            <button type="submit" class="btn auth-primary-btn">
+              <i class="fas fa-check"></i>
+              {% if current_language == "ar" %}تأكيد الرمز{% else %}Confirm code{% endif %}
+            </button>
+            {% if can_resend %}
+            <button type="submit" form="resend-code-form" class="btn auth-secondary-btn">
+              <i class="fas fa-rotate-right"></i>
+              {% if current_language == "ar" %}إرسال رمز جديد{% else %}Request new code{% endif %}
+            </button>
+            {% endif %}
+            {% if cancel_url %}
+            <a href="{{ cancel_url }}" class="btn auth-secondary-btn">
+              <i class="fas fa-arrow-left"></i>
+              {% if current_language == "ar" %}إلغاء{% else %}Cancel{% endif %}
+            </a>
+            {% else %}
+            <button type="submit" form="logout-from-stage" class="btn auth-secondary-btn">
+              <i class="fas fa-arrow-left"></i>
+              {% if current_language == "ar" %}إلغاء{% else %}Cancel{% endif %}
+            </button>
+            {% endif %}
+          </div>
+        </form>
+
+        {% if can_change %}
+        <details class="auth-disclosure" {% if change_form.errors %}open{% endif %}>
+          <summary>{{ change_title_ }}</summary>
+          <form method="post" action="{{ confirm_action_url }}" class="mt-3">
+            {% csrf_token %}
+            {{ redirect_field }}
+            {% if change_form.non_field_errors %}
+            <div class="auth-error">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ change_form.non_field_errors.0 }}
+            </div>
+            {% endif %}
+            {% for field in change_form %}
+              {% if field.field.widget.input_type == "hidden" %}
+                {{ field }}
+              {% else %}
+              <div class="auth-field">
+                <label class="auth-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <small class="auth-field-error">{{ field.errors.0 }}</small>
+                {% endif %}
+              </div>
+              {% endif %}
+            {% endfor %}
+            <button type="submit" name="action" value="change" class="btn auth-primary-btn mt-2">
+              <i class="fas fa-paper-plane"></i>
+              {% if current_language == "ar" %}تحديث وإرسال الرمز{% else %}Change and resend{% endif %}
+            </button>
+          </form>
+        </details>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<form id="resend-code-form" method="post" action="{{ confirm_action_url }}">
+  {% csrf_token %}
+  {{ redirect_field }}
+  <input type="hidden" name="action" value="resend">
+</form>
+
+{% if not cancel_url %}
+<form id="logout-from-stage" method="post" action="{% url 'account_logout' %}">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{% url 'account_login' %}">
+</form>
+{% endif %}
+
+{% include "account/_auth_shell_styles.html" %}
+{% endblock %}

@@ -1,0 +1,1684 @@
+/* Modern public information and policy pages. */
+:root {
+  --info-ink: #0f172a;
+  --info-muted: #5b6b7f;
+  --info-soft: #f4f7fb;
+  --info-line: rgba(15, 23, 42, 0.09);
+  --info-blue: #2563eb;
+  --info-blue-dark: #1d4ed8;
+  --info-gold: #c9963b;
+  --info-radius: 22px;
+  --info-radius-sm: 14px;
+  --info-shadow: 0 18px 48px rgba(15, 23, 42, 0.09);
+  --info-shadow-soft: 0 10px 28px rgba(15, 23, 42, 0.06);
+  --info-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body[data-page="about"],
+body[data-page="guide"],
+body[data-page="policies"] {
+  background: #f7f9fc !important;
+  color: var(--info-ink) !important;
+}
+
+body[data-page="about"] .se-main,
+body[data-page="guide"] .se-main,
+body[data-page="policies"] .se-main {
+  max-width: none;
+  padding-top: 22px !important;
+}
+
+body[data-page="about"] .page-bg-overlay,
+body[data-page="guide"] .page-bg-overlay,
+body[data-page="policies"] .page-bg-overlay {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(37, 99, 235, 0.08), transparent 26%),
+    radial-gradient(circle at 92% 4%, rgba(201, 150, 59, 0.1), transparent 22%),
+    linear-gradient(180deg, #fbfdff 0%, #f3f6fb 54%, #ffffff 100%) !important;
+}
+
+body[data-page="about"] .page-bg-overlay::after,
+body[data-page="guide"] .page-bg-overlay::after,
+body[data-page="policies"] .page-bg-overlay::after {
+  display: none !important;
+}
+
+body[data-page="about"] .se-navbar,
+body[data-page="guide"] .se-navbar,
+body[data-page="policies"] .se-navbar {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-bottom: 1px solid rgba(37, 99, 235, 0.08) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06) !important;
+}
+
+body[data-page="about"] .se-footer,
+body[data-page="guide"] .se-footer,
+body[data-page="policies"] .se-footer {
+  background: #ffffff !important;
+  border-top: 1px solid var(--info-line) !important;
+  color: var(--info-muted) !important;
+}
+
+.ab-shell,
+.hw-shell,
+.se-policy-page > .container,
+.se-policy-hero {
+  width: min(1120px, calc(100% - 32px));
+  max-width: 1120px;
+  margin-inline: auto;
+}
+
+.ab-shell,
+.hw-shell {
+  padding-inline: 0 !important;
+}
+
+.ab-hero,
+.hw-hero,
+.se-policy-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: min(560px, calc(100dvh - 150px));
+  display: grid;
+  align-items: center;
+  gap: 30px;
+  margin: 0 auto 34px !important;
+  padding: clamp(28px, 5vw, 58px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 30px;
+  background-color: #0b1220;
+  color: #ffffff;
+  box-shadow: 0 26px 72px rgba(15, 23, 42, 0.22);
+  isolation: isolate;
+}
+
+body[data-page="about"] .ab-hero,
+.ab-hero {
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.75fr);
+  background:
+    linear-gradient(90deg, rgba(8, 13, 24, 0.92), rgba(8, 13, 24, 0.6) 52%, rgba(8, 13, 24, 0.28)),
+    url("../images/visuals/page-backgrounds/01-solar-terrace.webp") center / cover no-repeat !important;
+  background-position: center;
+  background-size: cover;
+}
+
+body[data-page="guide"] .hw-hero,
+.hw-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.82fr);
+  background:
+    linear-gradient(90deg, rgba(8, 13, 24, 0.92), rgba(8, 13, 24, 0.58) 55%, rgba(8, 13, 24, 0.22)),
+    url("../images/visuals/page-backgrounds/04-gallery-sculptures.webp") center / cover no-repeat !important;
+  background-position: center;
+  background-size: cover;
+}
+
+.se-policy-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.64fr);
+  min-height: 430px;
+  margin-top: 0 !important;
+  margin-bottom: 28px !important;
+}
+
+.se-policy-privacy .se-policy-hero {
+  background-image:
+    linear-gradient(90deg, rgba(8, 13, 24, 0.92), rgba(8, 13, 24, 0.56) 55%, rgba(8, 13, 24, 0.2)),
+    url("../images/visuals/page-backgrounds/02-blue-logo-wall.webp");
+  background-position: center;
+  background-size: cover;
+}
+
+.se-policy-terms .se-policy-hero {
+  background-image:
+    linear-gradient(90deg, rgba(8, 13, 24, 0.94), rgba(8, 13, 24, 0.56) 56%, rgba(8, 13, 24, 0.22)),
+    url("../images/visuals/page-backgrounds/03-architect-desk.webp");
+  background-position: center;
+  background-size: cover;
+}
+
+.se-policy-returns .se-policy-hero {
+  background-image:
+    linear-gradient(90deg, rgba(8, 13, 24, 0.94), rgba(8, 13, 24, 0.58) 56%, rgba(8, 13, 24, 0.2)),
+    url("../images/visuals/page-backgrounds/06-minimal-books.webp");
+  background-position: center;
+  background-size: cover;
+}
+
+.ab-hero::after,
+.hw-hero::after,
+.se-policy-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(96, 165, 250, 0.18), transparent 26%),
+    radial-gradient(circle at 88% 16%, rgba(201, 150, 59, 0.16), transparent 24%),
+    linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.14));
+  pointer-events: none;
+}
+
+.ab-hero-copy,
+.ab-brand-panel,
+.hw-hero > div,
+.hw-hero-card,
+.se-policy-hero-copy,
+.se-policy-hero-panel {
+  position: relative;
+  z-index: 1;
+}
+
+.ab-hero-copy,
+.hw-hero > div:first-child,
+.se-policy-hero-copy {
+  min-width: 0;
+  max-width: 100%;
+  justify-self: stretch;
+}
+
+.ab-badge,
+.hw-badge,
+.se-policy-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 13px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff !important;
+  font-size: 0.78rem;
+  font-weight: 900;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.ab-hero h1,
+.hw-hero h1,
+.se-policy-hero h1 {
+  max-width: 760px;
+  margin: 0;
+  color: #ffffff !important;
+  font-size: clamp(2.25rem, 5vw, 4.35rem);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.04;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.ab-hero h1 span {
+  color: #bfdbfe !important;
+  -webkit-text-fill-color: #bfdbfe !important;
+}
+
+.ab-hero p,
+.hw-hero p,
+.se-policy-hero p {
+  max-width: 680px;
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.85;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.82) !important;
+}
+
+.ab-actions,
+.hw-actions,
+.se-policy-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.ab-btn,
+.hw-btn,
+.se-policy-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 900;
+  transition: transform 0.18s var(--info-ease), box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.ab-btn-primary,
+.hw-btn-primary,
+.se-policy-action-primary {
+  background: #ffffff !important;
+  color: var(--info-blue-dark) !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.ab-btn-secondary,
+.hw-btn-secondary,
+.se-policy-action-secondary {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+.ab-btn:hover,
+.hw-btn:hover,
+.se-policy-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+}
+
+.ab-brand-panel,
+.hw-hero-card,
+.se-policy-hero-panel {
+  min-height: 300px;
+  display: grid;
+  align-content: end;
+  gap: 12px;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.14)),
+    rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(18px) saturate(1.35);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+}
+
+body[data-page="about"] .ab-brand-panel,
+body[data-page="guide"] .hw-hero-card {
+  background:
+    linear-gradient(180deg, rgba(8, 13, 24, 0.12), rgba(8, 13, 24, 0.34)),
+    rgba(255, 255, 255, 0.1) !important;
+}
+
+.ab-brand-panel::before,
+.hw-hero-card::before,
+.se-policy-hero-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.72;
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.ab-brand-panel::before {
+  background-image: url("../images/visuals/page-backgrounds/08-workspace-table.webp") !important;
+  mix-blend-mode: normal;
+}
+
+.hw-hero-card::before {
+  background-image: url("../images/visuals/page-backgrounds/09-future-wall.webp") !important;
+  mix-blend-mode: normal;
+}
+
+.se-policy-hero-panel::before {
+  background-image: url("../images/visuals/page-backgrounds/05-solar-campus.webp");
+}
+
+.se-policy-privacy .se-policy-hero-panel::before {
+  background-image: url("../images/visuals/page-backgrounds/07-meeting-room.webp");
+}
+
+.se-policy-returns .se-policy-hero-panel::before {
+  background-image: url("../images/visuals/page-backgrounds/08-workspace-table.webp");
+}
+
+.ab-logo-picture,
+.ab-logo,
+.se-policy-hero-panel i,
+.se-policy-hero-panel strong,
+.se-policy-hero-panel span,
+.hw-mini-screen,
+.hw-hero-note {
+  position: relative;
+  z-index: 1;
+}
+
+.ab-logo {
+  width: min(250px, 72vw);
+  height: auto;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.ab-brand-panel strong,
+.se-policy-hero-panel strong {
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.ab-brand-panel span,
+.hw-hero-note,
+.se-policy-hero-panel span {
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.75;
+  font-weight: 700;
+}
+
+.hw-mini-screen {
+  display: grid;
+  gap: 12px;
+  max-width: 360px;
+  padding: 18px;
+  border-radius: 20px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+}
+
+.hw-mini-top,
+.hw-mini-row {
+  border-radius: 999px;
+  background: #dbe4f0;
+}
+
+.hw-mini-top {
+  width: 42%;
+  height: 10px;
+}
+
+.hw-mini-row {
+  height: 42px;
+}
+
+.hw-mini-row.active {
+  background: linear-gradient(135deg, var(--info-blue), #60a5fa);
+}
+
+.ab-stats,
+.ab-grid,
+.hw-grid,
+.hw-warning-grid {
+  gap: 16px !important;
+}
+
+.ab-stat,
+.ab-card,
+.ab-panel,
+.ab-step,
+.hw-step-card,
+.hw-panel,
+.hw-warning-panel,
+.hw-warning-item,
+.se-policy-sidebar,
+.se-policy-content {
+  border: 1px solid var(--info-line) !important;
+  border-radius: var(--info-radius) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: var(--info-shadow-soft) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.ab-card,
+.ab-panel,
+.hw-step-card,
+.hw-panel,
+.hw-warning-panel {
+  padding: clamp(20px, 3vw, 30px) !important;
+}
+
+.ab-card i,
+.hw-warning-item i {
+  color: var(--info-blue) !important;
+}
+
+.ab-card h2,
+.ab-panel h2,
+.ab-step h3,
+.hw-step-card h2,
+.hw-panel h2,
+.se-policy-content h2,
+.se-policy-header h2 {
+  color: var(--info-ink) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+}
+
+.ab-card p,
+.ab-panel-copy,
+.ab-step p,
+.hw-step-card p,
+.hw-panel p,
+.hw-list-item,
+.hw-warning-item span,
+.se-policy-page p,
+.se-policy-page li,
+.se-policy-page li span {
+  color: var(--info-muted) !important;
+}
+
+.ab-list-item,
+.hw-list-item,
+.se-policy-list li {
+  background: #f8fafc !important;
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+  border-radius: 14px !important;
+}
+
+.ab-stat strong,
+.ab-step span,
+.hw-step-card > span {
+  color: var(--info-blue-dark) !important;
+}
+
+.se-policy-page {
+  padding: 0 0 72px !important;
+  background: transparent !important;
+}
+
+.se-policy-page .container {
+  padding: 0 !important;
+}
+
+.se-policy-page .row {
+  align-items: flex-start;
+}
+
+.se-policy-sidebar {
+  position: sticky;
+  top: 88px;
+  padding: 12px !important;
+}
+
+.se-sidebar-title {
+  color: var(--info-blue-dark) !important;
+  background: rgba(37, 99, 235, 0.08) !important;
+}
+
+.se-sidebar-link {
+  min-height: 48px;
+  border-radius: 14px !important;
+  font-weight: 900 !important;
+}
+
+.se-sidebar-link.active {
+  background: linear-gradient(135deg, var(--info-blue), #60a5fa) !important;
+  color: #ffffff !important;
+}
+
+.se-policy-content {
+  padding: clamp(24px, 4vw, 46px) !important;
+  box-shadow: var(--info-shadow) !important;
+}
+
+.se-policy-header {
+  padding-bottom: 22px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--info-line);
+}
+
+.se-policy-header h1,
+.se-policy-header h2 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(1.55rem, 3.4vw, 2.25rem) !important;
+  line-height: 1.14 !important;
+}
+
+.se-policy-subtitle {
+  margin-top: 10px !important;
+  color: var(--info-muted) !important;
+  font-weight: 750 !important;
+}
+
+.se-policy-contact {
+  border: 1px solid rgba(37, 99, 235, 0.12) !important;
+  border-radius: 18px !important;
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.05), rgba(255, 255, 255, 0.9)) !important;
+}
+
+.se-policy-updated {
+  border-radius: 999px !important;
+  background: #eef4ff !important;
+  color: var(--info-blue-dark) !important;
+}
+
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-hero-copy h1,
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-hero-copy h1 *,
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-eyebrow,
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-eyebrow *,
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-hero-panel,
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-hero-panel * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-hero-copy h1 {
+  text-shadow: 0 3px 22px rgba(0, 0, 0, 0.36) !important;
+}
+
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-hero-copy p,
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-hero-panel span {
+  color: rgba(255, 255, 255, 0.84) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.84) !important;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.32) !important;
+}
+
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-action {
+  text-decoration: none !important;
+}
+
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-action-secondary {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-action-primary {
+  color: var(--info-blue-dark) !important;
+  -webkit-text-fill-color: var(--info-blue-dark) !important;
+}
+
+@media (max-width: 991px) {
+  .ab-hero,
+  .hw-hero,
+  .se-policy-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .ab-brand-panel,
+  .hw-hero-card,
+  .se-policy-hero-panel {
+    min-height: 240px;
+  }
+
+  .se-policy-sidebar {
+    position: static;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 768px), (pointer: coarse) {
+  body[data-page="about"] .se-main,
+  body[data-page="guide"] .se-main,
+  body[data-page="policies"] .se-main {
+    padding: 10px 0 calc(88px + env(safe-area-inset-bottom)) !important;
+  }
+
+  html[dir="rtl"] body[data-page="about"] .se-main,
+  html[dir="rtl"] body[data-page="guide"] .se-main {
+    padding-right: 10px !important;
+  }
+
+  .ab-shell,
+  .hw-shell,
+  .se-policy-page > .container,
+  .se-policy-hero {
+    width: min(100% - 20px, 1120px);
+  }
+
+  body[data-page="about"] .ab-shell,
+  body[data-page="guide"] .hw-shell {
+    width: auto !important;
+    max-width: 1120px !important;
+    margin-inline: 18px !important;
+    padding-inline: 0 !important;
+    overflow: hidden;
+  }
+
+  .ab-hero,
+  .hw-hero,
+  .se-policy-hero {
+    border-radius: 22px;
+    padding: 24px;
+    background-attachment: scroll !important;
+  }
+
+  body[data-page="about"] .ab-hero,
+  body[data-page="guide"] .hw-hero {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    justify-items: stretch !important;
+    padding-inline: 16px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    text-align: right !important;
+  }
+
+  .ab-hero h1,
+  .hw-hero h1,
+  .se-policy-hero h1 {
+    display: block;
+    max-width: 100% !important;
+    width: 100% !important;
+    font-size: clamp(1.45rem, 7.4vw, 1.72rem) !important;
+    line-height: 1.18 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    text-wrap: balance;
+  }
+
+  body[data-page="about"] .ab-hero .public-hero-title,
+  body[data-page="guide"] .hw-hero .public-hero-title {
+    max-width: 100% !important;
+    width: 100% !important;
+    font-size: clamp(1.45rem, 7.4vw, 1.72rem) !important;
+    line-height: 1.22 !important;
+  }
+
+  html[dir="rtl"] body[data-page="about"] .ab-hero .public-hero-title,
+  html[dir="rtl"] body[data-page="guide"] .hw-hero .public-hero-title,
+  html[dir="rtl"] body[data-page="about"] .ab-hero p,
+  html[dir="rtl"] body[data-page="guide"] .hw-hero p {
+    direction: rtl !important;
+    text-align: center !important;
+  }
+
+  .ab-hero-copy,
+  .hw-hero > div:first-child,
+  .se-policy-hero-copy {
+    width: 100%;
+    max-width: 100% !important;
+    text-align: start !important;
+  }
+
+  body[data-page="about"] .ab-hero .ab-hero-copy,
+  body[data-page="guide"] .hw-hero > div:first-child,
+  body[data-page="policies"] .se-policy-hero .se-policy-hero-copy {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    justify-self: stretch !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+
+  body[data-page="about"] .ab-hero .public-hero-title,
+  body[data-page="guide"] .hw-hero .public-hero-title {
+    max-inline-size: 18ch !important;
+    margin-inline: auto !important;
+  }
+
+  body[data-page="about"] .ab-hero .public-hero-title span,
+  body[data-page="guide"] .hw-hero .public-hero-title span {
+    display: block !important;
+  }
+
+  .ab-badge,
+  .hw-badge,
+  .se-policy-eyebrow {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  body[data-page="about"] .ab-hero .ab-badge,
+  body[data-page="guide"] .hw-hero .hw-badge,
+  body[data-page="policies"] .se-policy-hero .se-policy-eyebrow {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    max-width: 100% !important;
+    max-inline-size: 31ch !important;
+    margin-inline: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  body[data-page="about"] .ab-hero p,
+  body[data-page="guide"] .hw-hero p,
+  body[data-page="policies"] .se-policy-hero p {
+    max-inline-size: 34ch !important;
+    margin-inline: auto !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+
+  .ab-hero p,
+  .hw-hero p,
+  .se-policy-hero p {
+    max-width: 100%;
+    font-size: 0.94rem;
+  }
+
+  .ab-actions,
+  .hw-actions,
+  .se-policy-hero-actions {
+    flex-direction: column;
+    width: 100% !important;
+  }
+
+  body[data-page="about"] .ab-actions,
+  body[data-page="guide"] .hw-actions {
+    width: calc(100% - 16px) !important;
+    margin-inline: auto !important;
+  }
+
+  .ab-btn,
+  .hw-btn,
+  .se-policy-action {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .ab-brand-panel,
+  .hw-hero-card,
+  .se-policy-hero-panel {
+    min-height: 190px;
+    border-radius: 18px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  body[data-page="about"] .ab-brand-panel,
+  body[data-page="guide"] .hw-hero-card {
+    width: calc(100% - 16px) !important;
+    max-width: 100% !important;
+    justify-self: center !important;
+    margin-inline: auto !important;
+  }
+
+  .hw-mini-screen {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-inline: auto !important;
+  }
+
+  .hw-hero-note {
+    max-inline-size: 34ch !important;
+    margin-inline: auto !important;
+    overflow-wrap: anywhere !important;
+    text-align: center !important;
+  }
+
+  .ab-stats,
+  .ab-grid,
+  .hw-grid,
+  .hw-warning-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .se-policy-page .row {
+    margin: 0 !important;
+  }
+
+  .se-policy-page [class*="col-"] {
+    padding-inline: 0 !important;
+  }
+
+  .se-policy-content {
+    border-radius: 20px !important;
+  }
+}
+
+/* Profile/auth aligned redesign. */
+body[data-page="about"],
+body[data-page="guide"],
+body[data-page="policies"] {
+  --info-bg: #0b0d12;
+  --info-bg-2: #08090d;
+  --info-card: #11141c;
+  --info-card-2: #161a23;
+  --info-card-3: #1c2030;
+  --info-text: #f4f4f5;
+  --info-muted: #9099a8;
+  --info-muted-2: #c7ceda;
+  --info-border: rgba(255, 255, 255, 0.06);
+  --info-border-2: rgba(255, 255, 255, 0.12);
+  --info-primary: #6366f1;
+  --info-primary-2: #818cf8;
+  --info-blue: #4f6ef7;
+  --info-green: #34d399;
+  --info-danger: #f87171;
+  --info-gold: #e4e4e7;
+  --info-gradient: linear-gradient(135deg, #5b62e8 0%, #6366f1 58%, #7c3aed 100%);
+  --info-gradient-soft: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(99, 102, 241, 0.04));
+  --info-shadow: 0 24px 70px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
+  --info-glow: 0 0 0 1px rgba(99, 102, 241, 0.14), 0 18px 50px rgba(0, 0, 0, 0.35);
+  --info-brand-shadow: 0 18px 44px rgba(99, 102, 241, 0.28);
+  --info-radius-card: 28px;
+  --info-radius-panel: 18px;
+  background:
+    radial-gradient(1200px 700px at 85% -10%, rgba(99, 102, 241, 0.12), transparent 60%),
+    radial-gradient(900px 600px at 5% 10%, rgba(79, 110, 247, 0.07), transparent 65%),
+    linear-gradient(180deg, var(--info-bg) 0%, var(--info-bg-2) 100%) !important;
+  color: var(--info-text) !important;
+}
+
+body[data-page="about"] .page-bg-overlay,
+body[data-page="guide"] .page-bg-overlay,
+body[data-page="policies"] .page-bg-overlay {
+  display: block !important;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    radial-gradient(circle at 78% 0%, rgba(99, 102, 241, 0.12), transparent 32%),
+    linear-gradient(180deg, #0b0d12, #08090d) !important;
+  background-size: 56px 56px, 56px 56px, auto, auto !important;
+}
+
+body[data-page="about"] .page-bg-overlay::after,
+body[data-page="guide"] .page-bg-overlay::after,
+body[data-page="policies"] .page-bg-overlay::after {
+  display: block !important;
+  background: linear-gradient(180deg, rgba(8, 9, 13, 0.12), rgba(8, 9, 13, 0.72)) !important;
+}
+
+body[data-page="about"] .se-main,
+body[data-page="guide"] .se-main,
+body[data-page="policies"] .se-main {
+  max-width: none !important;
+  padding: 32px 0 88px !important;
+}
+
+body[data-page="about"] .se-navbar,
+body[data-page="guide"] .se-navbar,
+body[data-page="policies"] .se-navbar {
+  background: rgba(13, 15, 26, 0.82) !important;
+  border-bottom: 1px solid var(--info-border) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(20px) saturate(1.2) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.2) !important;
+}
+
+body[data-page="about"] .se-footer,
+body[data-page="guide"] .se-footer,
+body[data-page="policies"] .se-footer {
+  background: rgba(13, 15, 26, 0.88) !important;
+  border-top: 1px solid var(--info-border) !important;
+  color: var(--info-muted) !important;
+}
+
+body[data-page="about"] .se-footer a,
+body[data-page="guide"] .se-footer a,
+body[data-page="policies"] .se-footer a {
+  color: var(--info-muted-2) !important;
+}
+
+body[data-page="about"] .ab-shell,
+body[data-page="guide"] .hw-shell,
+body[data-page="policies"] .se-policy-page > .container,
+body[data-page="policies"] .se-policy-hero {
+  width: min(1240px, calc(100% - 56px)) !important;
+  max-width: 1240px !important;
+  margin-inline: auto !important;
+}
+
+body[data-page="about"] .ab-hero,
+body[data-page="guide"] .hw-hero,
+body[data-page="policies"] .se-policy-hero {
+  min-height: 500px !important;
+  border: 1px solid var(--info-border) !important;
+  border-radius: var(--info-radius-card) !important;
+  background-color: var(--info-card) !important;
+  box-shadow: var(--info-shadow) !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease !important;
+}
+
+body[data-page="about"] .ab-hero:hover,
+body[data-page="guide"] .hw-hero:hover,
+body[data-page="policies"] .se-policy-hero:hover {
+  border-color: rgba(79, 110, 247, 0.32) !important;
+  box-shadow: var(--info-shadow), var(--info-glow) !important;
+}
+
+body[data-page="about"] .ab-hero {
+  background:
+    linear-gradient(90deg, rgba(8, 9, 13, 0.72) 0%, rgba(8, 9, 13, 0.46) 48%, rgba(8, 9, 13, 0.78) 100%),
+    linear-gradient(180deg, rgba(8, 9, 13, 0.02) 0%, rgba(8, 9, 13, 0.36) 100%),
+    url("../images/visuals/page-backgrounds/01-solar-terrace.webp") center / cover no-repeat,
+    radial-gradient(circle at 82% 20%, rgba(99, 102, 241, 0.22), transparent 42%),
+    linear-gradient(135deg, #141821, #1a1f2c) !important;
+}
+
+body[data-page="guide"] .hw-hero {
+  background:
+    linear-gradient(90deg, rgba(8, 9, 13, 0.76) 0%, rgba(8, 9, 13, 0.42) 48%, rgba(8, 9, 13, 0.8) 100%),
+    linear-gradient(180deg, rgba(8, 9, 13, 0.02) 0%, rgba(8, 9, 13, 0.34) 100%),
+    url("../images/visuals/page-backgrounds/04-gallery-sculptures.webp") center / cover no-repeat,
+    radial-gradient(circle at 78% 22%, rgba(99, 102, 241, 0.2), transparent 42%),
+    linear-gradient(135deg, #141821, #1a1f2c) !important;
+}
+
+body[data-page="policies"] .se-policy-privacy .se-policy-hero {
+  background:
+    linear-gradient(90deg, rgba(8, 9, 13, 0.78) 0%, rgba(8, 9, 13, 0.42) 48%, rgba(8, 9, 13, 0.8) 100%),
+    linear-gradient(180deg, rgba(8, 9, 13, 0.02), rgba(8, 9, 13, 0.36)),
+    url("../images/visuals/page-backgrounds/02-blue-logo-wall.webp") center / cover no-repeat,
+    linear-gradient(135deg, #141821, #1a1f2c) !important;
+}
+
+body[data-page="policies"] .se-policy-terms .se-policy-hero {
+  background:
+    linear-gradient(90deg, rgba(8, 9, 13, 0.78) 0%, rgba(8, 9, 13, 0.42) 48%, rgba(8, 9, 13, 0.8) 100%),
+    linear-gradient(180deg, rgba(8, 9, 13, 0.02), rgba(8, 9, 13, 0.36)),
+    url("../images/visuals/page-backgrounds/03-architect-desk.webp") center / cover no-repeat,
+    linear-gradient(135deg, #141821, #1a1f2c) !important;
+}
+
+body[data-page="policies"] .se-policy-returns .se-policy-hero {
+  background:
+    linear-gradient(90deg, rgba(8, 9, 13, 0.78) 0%, rgba(8, 9, 13, 0.42) 48%, rgba(8, 9, 13, 0.82) 100%),
+    linear-gradient(180deg, rgba(8, 9, 13, 0.02), rgba(8, 9, 13, 0.36)),
+    url("../images/visuals/page-backgrounds/06-minimal-books.webp") center / cover no-repeat,
+    linear-gradient(135deg, #141821, #1a1f2c) !important;
+}
+
+body[data-page="about"] .ab-hero::before,
+body[data-page="guide"] .hw-hero::before,
+body[data-page="policies"] .se-policy-hero::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: -1 !important;
+  display: block !important;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 96px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 96px),
+    linear-gradient(115deg, transparent 0 40%, rgba(255, 255, 255, 0.025) 40.2%, transparent 41% 70%, rgba(255, 255, 255, 0.018) 70.2%, transparent 71%) !important;
+  opacity: 0.34 !important;
+  pointer-events: none !important;
+}
+
+body[data-page="about"] .ab-hero::after,
+body[data-page="guide"] .hw-hero::after,
+body[data-page="policies"] .se-policy-hero::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: auto 0 0 !important;
+  z-index: -1 !important;
+  display: block !important;
+  height: 160px !important;
+  background: linear-gradient(180deg, transparent, rgba(18, 23, 43, 0.96)) !important;
+  pointer-events: none !important;
+}
+
+body[data-page="about"] .ab-badge,
+body[data-page="guide"] .hw-badge,
+body[data-page="policies"] .se-policy-eyebrow {
+  min-height: 42px !important;
+  padding: 0 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 999px !important;
+  background: rgba(13, 15, 26, 0.42) !important;
+  color: var(--info-muted-2) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(12px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(1.12) !important;
+}
+
+body[data-page="about"] .ab-badge *,
+body[data-page="guide"] .hw-badge *,
+body[data-page="policies"] .se-policy-eyebrow * {
+  color: var(--info-muted-2) !important;
+  -webkit-text-fill-color: var(--info-muted-2) !important;
+}
+
+body[data-page="about"] .ab-badge i,
+body[data-page="guide"] .hw-badge i,
+body[data-page="policies"] .se-policy-eyebrow i {
+  color: var(--info-primary-2) !important;
+  -webkit-text-fill-color: var(--info-primary-2) !important;
+}
+
+body[data-page="about"] .ab-hero h1,
+body[data-page="about"] .ab-hero h1 *,
+body[data-page="guide"] .hw-hero h1,
+body[data-page="guide"] .hw-hero h1 *,
+body[data-page="policies"] .se-policy-hero h1,
+body[data-page="policies"] .se-policy-hero h1 * {
+  color: var(--info-text) !important;
+  -webkit-text-fill-color: var(--info-text) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+  text-shadow: 0 18px 44px rgba(0, 0, 0, 0.32) !important;
+}
+
+body[data-page="about"] .ab-hero h1,
+body[data-page="guide"] .hw-hero h1,
+body[data-page="policies"] .se-policy-hero h1 {
+  font-size: clamp(2.35rem, 5vw, 4.45rem) !important;
+  line-height: 1.03 !important;
+}
+
+body[data-page="about"] .ab-hero p,
+body[data-page="guide"] .hw-hero p,
+body[data-page="policies"] .se-policy-hero p {
+  color: rgba(244, 244, 245, 0.78) !important;
+  -webkit-text-fill-color: rgba(244, 244, 245, 0.78) !important;
+  font-weight: 700 !important;
+  line-height: 1.9 !important;
+  text-shadow: 0 12px 34px rgba(0, 0, 0, 0.34) !important;
+}
+
+body[data-page="about"] .ab-btn,
+body[data-page="guide"] .hw-btn,
+body[data-page="policies"] .se-policy-action {
+  min-height: 48px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--info-border-2) !important;
+  font-weight: 850 !important;
+  text-decoration: none !important;
+}
+
+body[data-page="about"] .ab-btn-primary,
+body[data-page="guide"] .hw-btn-primary,
+body[data-page="policies"] .se-policy-action-primary {
+  background: var(--info-gradient) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: var(--info-brand-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+}
+
+body[data-page="about"] .ab-btn-secondary,
+body[data-page="guide"] .hw-btn-secondary,
+body[data-page="policies"] .se-policy-action-secondary {
+  background: rgba(255, 255, 255, 0.055) !important;
+  color: var(--info-text) !important;
+  -webkit-text-fill-color: var(--info-text) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+body[data-page="about"] .ab-btn:hover,
+body[data-page="guide"] .hw-btn:hover,
+body[data-page="policies"] .se-policy-action:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(99, 102, 241, 0.2) !important;
+}
+
+body[data-page="about"] .ab-brand-panel,
+body[data-page="guide"] .hw-hero-card,
+body[data-page="policies"] .se-policy-hero-panel {
+  min-height: 310px !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 24px !important;
+  background: rgba(15, 17, 23, 0.34) !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(16px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.12) !important;
+}
+
+body[data-page="about"] .ab-brand-panel::before,
+body[data-page="guide"] .hw-hero-card::before,
+body[data-page="policies"] .se-policy-hero-panel::before {
+  opacity: 0.24 !important;
+  filter: saturate(1.02) contrast(1.05) !important;
+}
+
+body[data-page="about"] .ab-logo {
+  filter: none !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.28) !important;
+}
+
+body[data-page="about"] .ab-brand-panel strong,
+body[data-page="guide"] .hw-hero-note,
+body[data-page="policies"] .se-policy-hero-panel strong {
+  color: var(--info-text) !important;
+  -webkit-text-fill-color: var(--info-text) !important;
+}
+
+body[data-page="about"] .ab-brand-panel span,
+body[data-page="policies"] .se-policy-hero-panel span {
+  color: rgba(244, 244, 245, 0.7) !important;
+  -webkit-text-fill-color: rgba(244, 244, 245, 0.7) !important;
+}
+
+body[data-page="guide"] .hw-mini-screen {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.11) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 18px 44px rgba(0, 0, 0, 0.2) !important;
+}
+
+body[data-page="guide"] .hw-mini-top,
+body[data-page="guide"] .hw-mini-row {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+body[data-page="guide"] .hw-mini-row.active {
+  background: var(--info-gradient) !important;
+  box-shadow: 0 14px 32px rgba(99, 102, 241, 0.32) !important;
+}
+
+body[data-page="about"] .ab-stat,
+body[data-page="about"] .ab-card,
+body[data-page="about"] .ab-panel,
+body[data-page="about"] .ab-step,
+body[data-page="guide"] .hw-step-card,
+body[data-page="guide"] .hw-panel,
+body[data-page="guide"] .hw-warning-panel,
+body[data-page="guide"] .hw-warning-item,
+body[data-page="policies"] .se-policy-sidebar,
+body[data-page="policies"] .se-policy-content {
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1px solid var(--info-border) !important;
+  border-radius: var(--info-radius-panel) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+    var(--info-card) !important;
+  box-shadow: var(--info-shadow) !important;
+  color: var(--info-text) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body[data-page="about"] .ab-stat:hover,
+body[data-page="about"] .ab-card:hover,
+body[data-page="about"] .ab-panel:hover,
+body[data-page="about"] .ab-step:hover,
+body[data-page="guide"] .hw-step-card:hover,
+body[data-page="guide"] .hw-panel:hover,
+body[data-page="guide"] .hw-warning-panel:hover,
+body[data-page="policies"] .se-policy-content:hover,
+body[data-page="policies"] .se-policy-sidebar:hover {
+  border-color: rgba(79, 110, 247, 0.32) !important;
+  box-shadow: var(--info-shadow), var(--info-glow) !important;
+}
+
+body[data-page="about"] .ab-stat::before,
+body[data-page="about"] .ab-card::before,
+body[data-page="about"] .ab-panel::before,
+body[data-page="about"] .ab-step::before,
+body[data-page="guide"] .hw-step-card::before,
+body[data-page="guide"] .hw-panel::before,
+body[data-page="guide"] .hw-warning-panel::before,
+body[data-page="policies"] .se-policy-content::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 2px !important;
+  background: var(--info-gradient) !important;
+  opacity: 0.9 !important;
+  pointer-events: none !important;
+}
+
+body[data-page="about"] .ab-card::after,
+body[data-page="about"] .ab-panel::after,
+body[data-page="guide"] .hw-step-card::after,
+body[data-page="guide"] .hw-panel::after,
+body[data-page="policies"] .se-policy-content::after {
+  content: "" !important;
+  position: absolute !important;
+  top: -46px !important;
+  left: -44px !important;
+  width: 140px !important;
+  height: 140px !important;
+  border-radius: 999px !important;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.16), transparent 70%) !important;
+  pointer-events: none !important;
+}
+
+body[data-page="about"] .ab-card > *,
+body[data-page="about"] .ab-panel > *,
+body[data-page="guide"] .hw-step-card > *,
+body[data-page="guide"] .hw-panel > *,
+body[data-page="guide"] .hw-warning-panel > *,
+body[data-page="policies"] .se-policy-content > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+body[data-page="about"] .ab-card h2,
+body[data-page="about"] .ab-panel h2,
+body[data-page="about"] .ab-step h3,
+body[data-page="guide"] .hw-step-card h2,
+body[data-page="guide"] .hw-panel h2,
+body[data-page="policies"] .se-policy-content h2,
+body[data-page="policies"] .se-policy-header h2 {
+  color: var(--info-text) !important;
+  -webkit-text-fill-color: var(--info-text) !important;
+}
+
+body[data-page="about"] .ab-card p,
+body[data-page="about"] .ab-panel-copy,
+body[data-page="about"] .ab-step p,
+body[data-page="guide"] .hw-step-card p,
+body[data-page="guide"] .hw-panel p,
+body[data-page="guide"] .hw-warning-item span,
+body[data-page="guide"] .hw-list-item,
+body[data-page="policies"] .se-policy-page p,
+body[data-page="policies"] .se-policy-page li,
+body[data-page="policies"] .se-policy-page li span {
+  color: var(--info-muted) !important;
+  -webkit-text-fill-color: var(--info-muted) !important;
+}
+
+body[data-page="about"] .ab-card i,
+body[data-page="guide"] .hw-warning-item i {
+  display: inline-flex !important;
+  width: 44px !important;
+  height: 44px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid rgba(79, 110, 247, 0.28) !important;
+  border-radius: 14px !important;
+  background: var(--info-gradient-soft) !important;
+  color: var(--info-primary-2) !important;
+}
+
+body[data-page="about"] .ab-stat strong,
+body[data-page="about"] .ab-step span,
+body[data-page="guide"] .hw-step-card > span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 14px !important;
+  background: var(--info-gradient-soft) !important;
+  border: 1px solid rgba(79, 110, 247, 0.28) !important;
+  color: var(--info-primary-2) !important;
+  -webkit-text-fill-color: var(--info-primary-2) !important;
+}
+
+body[data-page="about"] .ab-stat strong {
+  width: auto !important;
+  min-width: 58px !important;
+  padding-inline: 12px !important;
+  font-size: 1.55rem !important;
+}
+
+body[data-page="about"] .ab-stat span,
+body[data-page="guide"] .hw-step-card p {
+  color: var(--info-muted) !important;
+}
+
+body[data-page="about"] .ab-list-item,
+body[data-page="guide"] .hw-list-item,
+body[data-page="policies"] .se-policy-list li {
+  border: 1px solid var(--info-border) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.025) !important;
+  color: var(--info-muted-2) !important;
+}
+
+body[data-page="about"] .ab-kicker,
+body[data-page="guide"] .hw-kicker {
+  color: var(--info-primary-2) !important;
+  -webkit-text-fill-color: var(--info-primary-2) !important;
+}
+
+body[data-page="about"] .ab-inline-link {
+  color: var(--info-primary-2) !important;
+}
+
+body[data-page="about"] .si-divider,
+body[data-page="guide"] .si-divider {
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.28), transparent) !important;
+}
+
+body[data-page="policies"] .se-policy-page {
+  background: transparent !important;
+  padding: 0 0 78px !important;
+}
+
+body[data-page="policies"] .se-policy-page .container {
+  max-width: 1240px !important;
+}
+
+body[data-page="policies"] .se-policy-sidebar {
+  padding: 14px !important;
+  top: 96px !important;
+}
+
+body[data-page="policies"] .se-sidebar-title {
+  background: var(--info-gradient-soft) !important;
+  border: 1px solid rgba(79, 110, 247, 0.22) !important;
+  color: var(--info-primary-2) !important;
+}
+
+body[data-page="policies"] .se-sidebar-link {
+  color: var(--info-muted) !important;
+  border-color: transparent !important;
+}
+
+body[data-page="policies"] .se-sidebar-link i {
+  color: rgba(129, 140, 248, 0.72) !important;
+}
+
+body[data-page="policies"] .se-sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.045) !important;
+  border-color: rgba(79, 110, 247, 0.28) !important;
+  color: var(--info-text) !important;
+}
+
+body[data-page="policies"] .se-sidebar-link.active {
+  background: var(--info-gradient) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+  box-shadow: var(--info-brand-shadow) !important;
+}
+
+body[data-page="policies"] .se-sidebar-link.active i {
+  color: #fff !important;
+}
+
+body[data-page="policies"] .se-policy-content {
+  padding: clamp(26px, 4vw, 48px) !important;
+  line-height: 1.95 !important;
+}
+
+body[data-page="policies"] .se-policy-header {
+  border-bottom: 1px solid var(--info-border) !important;
+}
+
+body[data-page="policies"] .se-policy-subtitle {
+  color: var(--info-muted) !important;
+  -webkit-text-fill-color: var(--info-muted) !important;
+}
+
+body[data-page="policies"] .se-policy-section h2::before {
+  background: var(--info-gradient) !important;
+}
+
+body[data-page="policies"] .se-policy-bullet {
+  background: rgba(99, 102, 241, 0.12) !important;
+  border: 1px solid rgba(99, 102, 241, 0.24) !important;
+  color: var(--info-primary-2) !important;
+}
+
+body[data-page="policies"] .se-policy-bullet.positive {
+  background: rgba(52, 211, 153, 0.12) !important;
+  border-color: rgba(52, 211, 153, 0.26) !important;
+  color: var(--info-green) !important;
+}
+
+body[data-page="policies"] .se-policy-bullet.negative {
+  background: rgba(248, 113, 113, 0.12) !important;
+  border-color: rgba(248, 113, 113, 0.26) !important;
+  color: var(--info-danger) !important;
+}
+
+body[data-page="policies"] .se-policy-contact {
+  border: 1px solid rgba(99, 102, 241, 0.22) !important;
+  border-inline-start: 4px solid var(--info-primary) !important;
+  background: rgba(255, 255, 255, 0.025) !important;
+  border-radius: 18px !important;
+}
+
+html[dir="rtl"] body[data-page="policies"] .se-policy-contact {
+  border-inline-start-width: 1px !important;
+  border-inline-end: 4px solid var(--info-primary) !important;
+}
+
+body[data-page="policies"] .se-policy-contact-icon,
+body[data-page="policies"] .se-policy-page a {
+  color: var(--info-primary-2) !important;
+}
+
+body[data-page="policies"] .se-policy-contact strong {
+  color: var(--info-text) !important;
+}
+
+body[data-page="policies"] .se-policy-updated {
+  border-top: 1px solid var(--info-border) !important;
+  background: transparent !important;
+  color: var(--info-muted) !important;
+}
+
+@media (max-width: 991px) {
+  body[data-page="about"] .ab-hero,
+  body[data-page="guide"] .hw-hero,
+  body[data-page="policies"] .se-policy-hero {
+    min-height: auto !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  body[data-page="policies"] .se-policy-sidebar {
+    position: static !important;
+  }
+}
+
+@media (max-width: 768px), (pointer: coarse) {
+  body[data-page="about"] .se-main,
+  body[data-page="guide"] .se-main,
+  body[data-page="policies"] .se-main {
+    padding: 16px 0 calc(98px + env(safe-area-inset-bottom)) !important;
+  }
+
+  html[dir="rtl"] body[data-page="about"] .se-main,
+  html[dir="rtl"] body[data-page="guide"] .se-main {
+    padding-right: 0 !important;
+  }
+
+  body[data-page="about"] .ab-shell,
+  body[data-page="guide"] .hw-shell,
+  body[data-page="policies"] .se-policy-page > .container,
+  body[data-page="policies"] .se-policy-hero {
+    width: calc(100% - 24px) !important;
+    margin-inline: auto !important;
+  }
+
+  body[data-page="about"] .ab-hero,
+  body[data-page="guide"] .hw-hero,
+  body[data-page="policies"] .se-policy-hero {
+    border-radius: 24px !important;
+    padding: 24px 16px !important;
+    text-align: center !important;
+  }
+
+  body[data-page="about"] .ab-hero h1,
+  body[data-page="guide"] .hw-hero h1,
+  body[data-page="policies"] .se-policy-hero h1 {
+    max-inline-size: 18ch !important;
+    margin-inline: auto !important;
+    font-size: clamp(1.75rem, 8vw, 2.15rem) !important;
+    line-height: 1.16 !important;
+    text-align: center !important;
+  }
+
+  body[data-page="about"] .ab-hero p,
+  body[data-page="guide"] .hw-hero p,
+  body[data-page="policies"] .se-policy-hero p {
+    max-inline-size: 34ch !important;
+    margin-inline: auto !important;
+    text-align: center !important;
+    font-size: 0.94rem !important;
+  }
+
+  body[data-page="about"] .ab-badge,
+  body[data-page="guide"] .hw-badge,
+  body[data-page="policies"] .se-policy-eyebrow {
+    justify-content: center !important;
+    max-inline-size: 31ch !important;
+    margin-inline: auto !important;
+  }
+
+  body[data-page="about"] .ab-actions,
+  body[data-page="guide"] .hw-actions,
+  body[data-page="policies"] .se-policy-hero-actions {
+    width: 100% !important;
+    flex-direction: column !important;
+  }
+
+  body[data-page="about"] .ab-btn,
+  body[data-page="guide"] .hw-btn,
+  body[data-page="policies"] .se-policy-action {
+    width: 100% !important;
+  }
+
+  body[data-page="about"] .ab-brand-panel,
+  body[data-page="guide"] .hw-hero-card,
+  body[data-page="policies"] .se-policy-hero-panel {
+    width: calc(100% - 12px) !important;
+    min-height: 210px !important;
+    margin-inline: auto !important;
+    justify-self: center !important;
+    border-radius: 20px !important;
+  }
+
+  body[data-page="guide"] .hw-mini-screen {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body[data-page="policies"] .se-policy-content {
+    padding: 24px 18px !important;
+    border-radius: 22px !important;
+  }
+
+  body[data-page="policies"] .se-policy-sidebar {
+    grid-template-columns: 1fr !important;
+    border-radius: 20px !important;
+  }
+}
+
+body[data-page="policies"] .se-policy-content,
+body[data-page="policies"] .se-policy-sidebar {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025)),
+    #11141c !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body[data-page="policies"] .se-policy-content :is(h1, h2, h3, h4, strong),
+body[data-page="policies"] .se-policy-header :is(h1, h2),
+body[data-page="policies"] .se-policy-section h2 {
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+}
+
+body[data-page="policies"] .se-policy-content :is(p, li, li span),
+body[data-page="policies"] .se-policy-subtitle,
+body[data-page="policies"] .se-policy-updated {
+  color: #b7bfcc !important;
+  -webkit-text-fill-color: #b7bfcc !important;
+}
+
+body[data-page="policies"] .se-policy-list li {
+  background: rgba(255, 255, 255, 0.035) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body[data-page="policies"] .se-policy-contact {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+body[data-page="policies"] .se-policy-contact strong {
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+}
+
+html body[data-page="policies"],
+html body[data-page="policies"] .se-policy-page,
+html body[data-page="policies"] .se-main {
+  background:
+    radial-gradient(1200px 700px at 85% -10%, rgba(99, 102, 241, 0.12), transparent 60%),
+    radial-gradient(900px 600px at 5% 10%, rgba(79, 110, 247, 0.07), transparent 65%),
+    linear-gradient(180deg, #0b0d12 0%, #08090d 100%) !important;
+}
+
+body[data-page="policies"] .se-policy-fade,
+body[data-page="policies"] .se-policy-content.se-policy-fade {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+body[data-page="about"] .ab-hero .ab-actions .ab-btn-primary,
+body[data-page="guide"] .hw-hero .hw-actions .hw-btn-primary {
+  background: var(--info-gradient) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  border-color: transparent !important;
+}
+
+body[data-page="about"] .ab-hero .ab-actions .ab-btn-secondary,
+body[data-page="guide"] .hw-hero .hw-actions .hw-btn-secondary {
+  background: rgba(255, 255, 255, 0.055) !important;
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+body[data-page="policies"] .se-policy-content::before,
+body[data-page="policies"] .se-policy-content::after,
+body[data-page="policies"] .se-policy-sidebar::before,
+body[data-page="policies"] .se-policy-sidebar::after {
+  z-index: 0 !important;
+}
+
+body[data-page="policies"] .se-policy-content > *,
+body[data-page="policies"] .se-policy-sidebar > * {
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+body[data-page="policies"] .se-policy-content :is(h1, h2, h3, h4, p, li, li span, strong, a),
+body[data-page="policies"] .se-policy-sidebar :is(h1, h2, h3, h4, p, span, a, i) {
+  opacity: 1 !important;
+}
+
+body[data-page="policies"] .se-policy-hero .se-policy-action,
+body[data-page="policies"] .se-policy-hero .se-policy-action:visited,
+body[data-page="policies"] .se-policy-hero .se-policy-action:hover {
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+}
+
+body[data-page="policies"] .se-policy-hero .se-policy-action-primary,
+body[data-page="policies"] .se-policy-hero .se-policy-action-primary:visited,
+body[data-page="policies"] .se-policy-hero .se-policy-action-primary:hover {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+body[data-page="policies"] .se-policy-content {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.97)),
+    #ffffff !important;
+  border-color: rgba(226, 232, 240, 0.86) !important;
+  color: #0f172a !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38), 0 0 0 1px rgba(99, 102, 241, 0.12) !important;
+}
+
+body[data-page="policies"] .se-policy-content :is(h1, h2, h3, h4, strong),
+body[data-page="policies"] .se-policy-header :is(h1, h2),
+body[data-page="policies"] .se-policy-section h2 {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+}
+
+body[data-page="policies"] .se-policy-content :is(p, li, li span),
+body[data-page="policies"] .se-policy-subtitle,
+body[data-page="policies"] .se-policy-updated {
+  color: #475569 !important;
+  -webkit-text-fill-color: #475569 !important;
+}
+
+body[data-page="policies"] .se-policy-list li {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+body[data-page="policies"] .se-policy-contact {
+  background: linear-gradient(180deg, #f8fbff, #ffffff) !important;
+  border-color: rgba(99, 102, 241, 0.22) !important;
+}
+
+body[data-page="policies"] .se-policy-contact strong {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+}
+
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-hero-actions a.se-policy-action-primary,
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-hero-actions a.se-policy-action-primary:visited,
+body[data-page="policies"] .se-policy-page .se-policy-hero .se-policy-hero-actions a.se-policy-action-primary:hover {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: none !important;
+}

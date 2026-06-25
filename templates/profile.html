@@ -1,0 +1,1581 @@
+{% load static site_i18n %}
+<!DOCTYPE html>
+<html lang="{% if current_language == 'ar' %}ar{% else %}en{% endif %}" dir="{% if current_language == 'ar' %}rtl{% else %}ltr{% endif %}">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{% if current_language == 'ar' %}الملف الشخصي{% else %}Profile{% endif %} - {{ user.get_full_name|default:user.username }} | Safouane Secure Deals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+{% if current_language == 'ar' %}
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+{% else %}
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+{% endif %}
+<style>
+  /* ============================================================
+     DESIGN TOKENS
+  ============================================================ */
+  :root {
+    /* Refined monochrome palette — single accent */
+    --color-bg:           #0b0d12;
+    --color-bg-2:         #08090d;
+    --color-card:         #11141c;
+    --color-card-2:       #161a23;
+    --color-card-3:       #1c2030;
+    --color-cover-start:  #141821;
+    --color-cover-end:    #1a1f2c;
+    --color-primary:      #6366f1;
+    --color-primary-2:    #818cf8;
+    --color-purple:       #6366f1;
+    --color-gold:         #d4d4d8;
+    --color-green:        #34d399;
+    --color-danger:       #f87171;
+    --color-text:         #f4f4f5;
+    --color-muted:        #9099a8;
+    --color-border:       rgba(255,255,255,0.06);
+    --color-border-2:     rgba(255,255,255,0.12);
+
+    /* Effects — restrained, single hue */
+    --gradient-brand:     linear-gradient(135deg, #5b62e8 0%, #6366f1 100%);
+    --gradient-brand-soft:linear-gradient(135deg, rgba(99,102,241,0.10), rgba(99,102,241,0.04));
+    --gradient-gold:      linear-gradient(135deg, #e4e4e7 0%, #a1a1aa 100%);
+    --shadow-card:        0 24px 70px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.20);
+    --shadow-glow:        0 0 0 1px rgba(99,102,241,0.14), 0 18px 50px rgba(0,0,0,0.35);
+    --shadow-brand:       0 12px 30px rgba(99,102,241,0.32);
+
+    /* Shape */
+    --radius-card:  24px;
+    --radius-panel: 18px;
+    --radius-pill:  999px;
+    --page-max:     1240px;
+  }
+
+  /* ============================================================
+     BASE RESET
+  ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    min-height: 100%;
+    background: var(--color-bg);
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+    font-family: "Cairo", "Manrope", system-ui, sans-serif;
+    color: var(--color-text);
+    direction: rtl;
+    text-align: right;
+    background:
+      radial-gradient(1200px 700px at 85% -10%, rgba(99,102,241,0.10), transparent 60%),
+      radial-gradient(900px 600px at 5% 10%, rgba(99,102,241,0.05), transparent 65%),
+      linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-2) 100%);
+  }
+  /* Fine noise / grid overlay for premium depth */
+  body::before {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 56px 56px, 56px 56px;
+    mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 70%);
+  }
+  body > * { position: relative; z-index: 1; }
+
+  a { color: inherit; text-decoration: none; }
+  button, input, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; border: 0; background: transparent; }
+
+  .latin, .num, .user-handle {
+    font-family: "Manrope", "Cairo", system-ui, sans-serif;
+  }
+
+  .icon {
+    width: 20px; height: 20px;
+    stroke: currentColor; stroke-width: 1.9;
+    stroke-linecap: round; stroke-linejoin: round;
+    fill: none; flex: 0 0 auto;
+  }
+  .icon-sm { width: 16px; height: 16px; }
+  .icon-lg { width: 24px; height: 24px; }
+
+  .sr-only {
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+
+  /* ============================================================
+     TOP NAVIGATION
+  ============================================================ */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(13,15,26,0.82);
+    border-bottom: 1px solid var(--color-border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .topbar-inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    min-height: 74px;
+    padding: 0 28px;
+    display: grid;
+    grid-template-columns: auto minmax(0,1fr) auto;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .brand { display: inline-flex; align-items: center; gap: 12px; min-width: 0; }
+  .brand-logo-picture {
+    display: inline-flex;
+    align-items: center;
+    height: 46px;
+    max-width: 190px;
+  }
+  .brand-logo-img {
+    display: block;
+    width: auto;
+    height: 42px;
+    max-width: 190px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 24px rgba(0,0,0,0.28));
+  }
+  .nav-links {
+    display: flex; justify-content: center; align-items: center; gap: 6px;
+  }
+  .nav-link {
+    min-height: 42px; padding: 0 14px;
+    display: inline-flex; align-items: center; gap: 8px;
+    border-radius: var(--radius-pill);
+    color: var(--color-muted);
+    font-size: 14px; font-weight: 700;
+    border: 1px solid transparent;
+    transition: all .2s ease;
+    white-space: nowrap;
+  }
+  .nav-link:hover, .nav-link.is-active {
+    color: var(--color-text);
+    border-color: rgba(79,110,247,0.30);
+    background: rgba(79,110,247,0.09);
+  }
+  .nav-link .latin { font-size: 12px; opacity: .75; }
+
+  .nav-actions { display: flex; align-items: center; gap: 10px; justify-content: flex-end; }
+
+  .account-menu { position: relative; }
+  .account-button, .nav-icon-button, .avatar-button {
+    min-height: 44px;
+    border: 1px solid var(--color-border);
+    background: rgba(18,23,43,0.76);
+    color: var(--color-text);
+    border-radius: var(--radius-pill);
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all .2s ease;
+  }
+  .account-button { padding: 0 15px; font-size: 14px; font-weight: 700; }
+  .account-button:hover, .nav-icon-button:hover, .avatar-button:hover {
+    border-color: var(--color-border-2);
+    background: rgba(23,29,53,0.98);
+    transform: translateY(-1px);
+  }
+  .account-button .crown { color: var(--color-gold); }
+
+  .nav-icon-button { width: 44px; padding: 0; position: relative; }
+  .notification-dot {
+    position: absolute; top: 7px; left: 8px;
+    min-width: 18px; height: 18px; padding: 0 5px;
+    border-radius: var(--radius-pill);
+    background: var(--color-danger); color: #fff;
+    font-size: 10px; font-weight: 800;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 2px solid var(--color-bg);
+  }
+
+  .avatar-button { width: 44px; padding: 0; overflow: hidden; }
+  .nav-avatar {
+    width: 38px; height: 38px; border-radius: 50%; object-fit: cover;
+    border: 1px solid rgba(255,255,255,0.14);
+  }
+
+  .account-dropdown {
+    position: absolute; top: calc(100% + 10px); right: 0;
+    width: 240px; padding: 10px;
+    border-radius: 18px;
+    background: rgba(18,23,43,0.98);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+    opacity: 0; pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .account-menu.is-open .account-dropdown {
+    opacity: 1; pointer-events: auto; transform: translateY(0);
+  }
+  .dropdown-item {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    text-align: right;
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 12px;
+    color: var(--color-muted); font-size: 14px; font-weight: 700;
+    cursor: pointer;
+  }
+  .dropdown-item:hover { background: rgba(255,255,255,0.06); color: var(--color-text); }
+
+  /* ============================================================
+     PAGE SHELL
+  ============================================================ */
+  .page-shell {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 32px 28px 80px;
+    display: grid; gap: 28px;
+  }
+
+  /* ============================================================
+     PROFILE HERO CARD
+  ============================================================ */
+  .profile-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+    transition: border-color .25s ease, box-shadow .25s ease;
+  }
+  .profile-card:hover,
+  .about-card:hover,
+  .actions-card:hover {
+    border-color: rgba(79,110,247,0.32);
+    box-shadow: var(--shadow-card), var(--shadow-glow);
+  }
+
+  /* --- Cover banner with geometric mesh pattern --- */
+  .cover-banner {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+    background:
+      linear-gradient(90deg, rgba(8,9,13,0.46) 0%, rgba(8,9,13,0.06) 46%, rgba(8,9,13,0.18) 100%),
+      linear-gradient(180deg, rgba(8,9,13,0.02) 0%, rgba(8,9,13,0.22) 100%),
+      url("{% static 'images/visuals/profile_background_new.webp' %}") center / cover no-repeat,
+      radial-gradient(circle at 82% 20%, rgba(99,102,241,0.22), transparent 42%),
+      radial-gradient(circle at 20% 110%, rgba(99,102,241,0.10), transparent 50%),
+      linear-gradient(135deg, var(--color-cover-start), var(--color-cover-end));
+  }
+  /* Diagonal slash highlights */
+  .cover-banner::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(115deg,
+        transparent 0 40%,
+        rgba(255,255,255,0.025) 40.2%, transparent 41% 70%,
+        rgba(255,255,255,0.018) 70.2%, transparent 71%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  }
+  /* Subtle grid mesh */
+  .cover-banner::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 96px),
+      repeating-linear-gradient(0deg,  rgba(255,255,255,0.035) 0 1px, transparent 1px 96px);
+    mask-image: radial-gradient(ellipse at center, #000 40%, transparent 100%);
+    opacity: 0.22;
+  }
+  /* Decorative geometric SVG (mesh / lines) */
+  .cover-mesh {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    opacity: 0.28;
+    pointer-events: none;
+  }
+  /* Cover-to-card fade */
+  .cover-fade {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: 120px;
+    background: linear-gradient(180deg, transparent, rgba(18,23,43,0.95));
+    pointer-events: none;
+  }
+
+  /* --- Edit profile button (floating gradient pill with tooltip) --- */
+  .edit-profile-button {
+    position: absolute; top: 22px; left: 22px; z-index: 3;
+    min-height: 46px; padding: 0 20px;
+    border-radius: var(--radius-pill);
+    background: var(--gradient-brand);
+    color: #fff;
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: 14px; font-weight: 800;
+    box-shadow: var(--shadow-brand);
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  }
+  .edit-profile-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 50px rgba(124,58,237,0.50), 0 10px 28px rgba(79,110,247,0.40);
+    filter: brightness(1.06);
+  }
+  .edit-profile-button::after {
+    content: attr(data-tooltip);
+    position: absolute; top: calc(100% + 10px); left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    padding: 6px 10px; border-radius: 10px;
+    background: #080a12; border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-size: 12px; font-weight: 700; white-space: nowrap;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .edit-profile-button:hover::after {
+    opacity: 1; transform: translateX(-50%) translateY(0);
+  }
+
+  /* --- Profile body --- */
+  .profile-body {
+    position: relative;
+    padding: 40px 40px 36px;
+  }
+
+  /* Avatar — bottom LEFT (RTL convention) with glowing brand-gradient ring */
+  .avatar-wrap {
+    position: absolute;
+    top: -72px;
+    left: 40px;       /* bottom-left of cover in RTL convention */
+    width: 148px; height: 148px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: var(--gradient-brand);
+    box-shadow:
+      0 0 0 7px rgba(18,23,43,0.96),
+      0 0 36px rgba(79,110,247,0.55),
+      0 0 70px rgba(124,58,237,0.38);
+    animation: avatarGlow 4s ease-in-out infinite;
+  }
+  @keyframes avatarGlow {
+    0%, 100% { box-shadow: 0 0 0 7px rgba(18,23,43,0.96), 0 0 36px rgba(79,110,247,0.55), 0 0 70px rgba(124,58,237,0.38); }
+    50%      { box-shadow: 0 0 0 7px rgba(18,23,43,0.96), 0 0 46px rgba(79,110,247,0.70), 0 0 90px rgba(124,58,237,0.50); }
+  }
+  .avatar-wrap::after {
+    content: "";
+    position: absolute; inset: -7px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.20);
+  }
+  .profile-avatar {
+    width: 134px; height: 134px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--color-card);
+    background: #1f2540;
+  }
+  .camera-chip {
+    position: absolute; right: 4px; bottom: 8px;
+    width: 40px; height: 40px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.16);
+    background: #0f1426; color: #fff;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.40);
+    transition: transform .2s ease;
+  }
+  .camera-chip:hover { transform: scale(1.06); }
+
+  /* Identity row — sits to the right of the avatar in RTL */
+  .identity-row {
+    min-height: 84px;
+    padding-left: 188px;   /* leave room for avatar on the left */
+    display: grid; gap: 12px;
+  }
+
+  .name-line {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 14px;
+  }
+  .profile-name {
+    margin: 0;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+  /* --- Prominent verified badge with shield + glow --- */
+  .verified-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    min-height: 42px; padding: 8px 18px;
+    border-radius: var(--radius-pill);
+    color: #d1fae5;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18), transparent 30%),
+      linear-gradient(135deg, rgba(52,211,153,0.18), rgba(52,211,153,0.10));
+    border: 1px solid rgba(22,163,74,0.55);
+    box-shadow:
+      0 0 0 1px rgba(22,163,74,0.20),
+      0 0 28px rgba(22,163,74,0.32),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+    font-size: 14px; font-weight: 800;
+    white-space: nowrap;
+    position: relative;
+  }
+  .verified-badge .shield {
+    width: 18px; height: 18px;
+    color: #34d399;
+    filter: drop-shadow(0 0 6px rgba(22,163,74,0.6));
+  }
+  .verified-badge .check {
+    width: 14px; height: 14px;
+    color: #34d399;
+  }
+
+  .user-handle {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 15px; font-weight: 600;
+  }
+  .user-handle .dot { opacity: .5; margin: 0 6px; }
+
+  /* ============================================================
+     STATS GRID
+  ============================================================ */
+  .stats-grid {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 16px;
+  }
+
+  .stat-card {
+    position: relative;
+    min-height: 158px;
+    padding: 22px 20px;
+    border-radius: 20px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+      var(--color-card-2);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    display: grid; gap: 10px; align-content: start;
+    transition: all .25s ease;
+  }
+  .stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(79,110,247,0.30);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.35), 0 0 0 1px rgba(79,110,247,0.18);
+  }
+  /* Subtle top accent strip per stat */
+  .stat-card::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--accent, var(--gradient-brand));
+    opacity: 0.85;
+  }
+  /* Decorative corner glow */
+  .stat-card::after {
+    content: "";
+    position: absolute; top: -40px; left: -40px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: var(--accent-glow, radial-gradient(circle, rgba(79,110,247,0.18), transparent 70%));
+    pointer-events: none;
+  }
+
+  .stat-card.is-primary  { --accent: var(--gradient-brand);
+                           --accent-glow: radial-gradient(circle, rgba(99,102,241,0.18), transparent 70%); }
+  .stat-card.is-gold     { --accent: linear-gradient(135deg, #e4e4e7, #a1a1aa);
+                           --accent-glow: radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%); }
+  .stat-card.is-green    { --accent: linear-gradient(135deg, #34d399, #10b981);
+                           --accent-glow: radial-gradient(circle, rgba(52,211,153,0.14), transparent 70%); }
+  .stat-card.is-purple   { --accent: var(--gradient-brand);
+                           --accent-glow: radial-gradient(circle, rgba(99,102,241,0.18), transparent 70%); }
+
+  .stat-icon {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--icon-bg, rgba(79,110,247,0.15));
+    color: var(--icon-fg, var(--color-primary-2));
+    border: 1px solid var(--icon-border, rgba(79,110,247,0.30));
+    position: relative; z-index: 1;
+  }
+  .stat-card.is-gold   .stat-icon { --icon-bg: rgba(255,255,255,0.06); --icon-fg: #e4e4e7; --icon-border: rgba(255,255,255,0.14); }
+  .stat-card.is-green  .stat-icon { --icon-bg: rgba(52,211,153,0.10); --icon-fg: #34d399; --icon-border: rgba(52,211,153,0.24); }
+  .stat-card.is-purple .stat-icon { --icon-bg: rgba(124,58,237,0.16); --icon-fg: #c4b5fd; --icon-border: rgba(124,58,237,0.34); }
+
+  .stat-label {
+    color: var(--color-muted);
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: baseline; gap: 8px;
+    line-height: 1.3;
+  }
+  .stat-label .latin { font-size: 11px; opacity: 0.7; }
+
+  .stat-value {
+    font-family: "Manrope", "Cairo", system-ui, sans-serif;
+    font-size: 32px; font-weight: 800;
+    color: var(--color-text);
+    line-height: 1;
+    letter-spacing: 0;
+  }
+  .stat-value .unit {
+    font-size: 14px; font-weight: 700;
+    color: var(--color-muted);
+    margin-right: 4px;
+  }
+
+  /* ============================================================
+     ABOUT + QUICK ACTIONS GRID
+  ============================================================ */
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 320px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .about-card, .actions-card {
+    border-radius: var(--radius-card);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+    padding: 28px;
+    transition: border-color .25s ease, box-shadow .25s ease;
+  }
+
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 18px;
+  }
+  .section-icon {
+    width: 38px; height: 38px;
+    border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--gradient-brand-soft);
+    color: var(--color-primary-2);
+    border: 1px solid rgba(79,110,247,0.28);
+  }
+  .section-title {
+    margin: 0;
+    font-size: 20px; font-weight: 800;
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  .section-title .latin {
+    font-size: 13px; font-weight: 700;
+    color: var(--color-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .about-text {
+    color: #d1d5db;
+    font-size: 15px; line-height: 1.85;
+    margin: 0;
+  }
+  .about-meta {
+    margin-top: 22px;
+    display: grid; grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 14px;
+  }
+  .meta-item {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--color-border);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .meta-item .meta-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(79,110,247,0.12);
+    color: var(--color-primary-2);
+    border: 1px solid rgba(79,110,247,0.22);
+  }
+  .meta-item .meta-label {
+    color: var(--color-muted);
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .meta-item .meta-value {
+    color: var(--color-text);
+    font-size: 14px; font-weight: 700;
+    margin-top: 2px;
+  }
+
+  /* --- Quick actions sidebar --- */
+  .actions-card { padding: 24px; }
+  .actions-list {
+    display: grid; gap: 10px;
+    margin-top: 4px;
+  }
+  .action-btn {
+    width: 100%;
+    min-height: 54px;
+    padding: 0 18px;
+    border-radius: 14px;
+    display: inline-flex; align-items: center; gap: 12px;
+    border: 1px solid var(--color-border);
+    background: rgba(255,255,255,0.025);
+    color: var(--color-text);
+    font-size: 14px; font-weight: 700;
+    text-align: right;
+    transition: all .2s ease;
+  }
+  .action-btn .action-icon {
+    width: 38px; height: 38px;
+    border-radius: 11px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(79,110,247,0.14);
+    color: var(--color-primary-2);
+    border: 1px solid rgba(79,110,247,0.26);
+    transition: all .2s ease;
+  }
+  .action-btn .action-text { flex: 1; }
+  .action-btn .action-arrow {
+    color: var(--color-muted);
+    transition: transform .2s ease, color .2s ease;
+  }
+  .action-btn:hover {
+    border-color: rgba(79,110,247,0.40);
+    background: rgba(79,110,247,0.08);
+    transform: translateY(-1px);
+  }
+  .action-btn:hover .action-arrow {
+    color: var(--color-text);
+    transform: translateX(-4px);   /* arrow moves "forward" in RTL = left */
+  }
+  .action-btn.is-primary {
+    background: var(--gradient-brand);
+    border-color: transparent;
+    box-shadow: var(--shadow-brand);
+  }
+  .action-btn.is-primary .action-icon {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    border-color: rgba(255,255,255,0.28);
+  }
+  .action-btn.is-primary .action-arrow { color: rgba(255,255,255,0.85); }
+  .action-btn.is-primary:hover { filter: brightness(1.06); transform: translateY(-2px); }
+
+  .action-btn.is-danger:hover {
+    border-color: rgba(239,68,68,0.45);
+    background: rgba(239,68,68,0.08);
+  }
+  .action-btn.is-danger .action-icon {
+    background: rgba(239,68,68,0.12);
+    color: #fca5a5;
+    border-color: rgba(239,68,68,0.28);
+  }
+
+  /* ============================================================
+     FORMS, MESSAGES, LINKED PROFILE DATA
+  ============================================================ */
+  .profile-flashes {
+    display: grid;
+    gap: 10px;
+  }
+  .profile-flash {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(99,102,241,0.10);
+    border: 1px solid rgba(99,102,241,0.22);
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .profile-flash.error {
+    background: rgba(248,113,113,0.10);
+    border-color: rgba(248,113,113,0.26);
+  }
+  .profile-flash.success {
+    background: rgba(52,211,153,0.10);
+    border-color: rgba(52,211,153,0.24);
+  }
+  .profile-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 30px;
+    padding: 0 11px;
+    border-radius: var(--radius-pill);
+    color: var(--color-muted);
+    background: rgba(255,255,255,0.035);
+    border: 1px solid var(--color-border);
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .profile-status.is-success {
+    color: #bbf7d0;
+    background: rgba(52,211,153,0.10);
+    border-color: rgba(52,211,153,0.24);
+  }
+  .profile-status.is-warning {
+    color: #e4e4e7;
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.14);
+  }
+  .edit-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(0,0,0,0.70);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .edit-modal.is-open { display: flex; }
+  .edit-dialog {
+    width: min(620px, 100%);
+    max-height: min(760px, 92vh);
+    overflow: auto;
+    border-radius: var(--radius-card);
+    background: var(--color-card);
+    border: 1px solid var(--color-border-2);
+    box-shadow: var(--shadow-card);
+  }
+  .edit-dialog-header,
+  .edit-dialog-body,
+  .edit-dialog-footer {
+    padding: 24px;
+  }
+  .edit-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .edit-dialog-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+  }
+  .modal-close {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: rgba(255,255,255,0.035);
+    transition: all .2s ease;
+  }
+  .modal-close:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: var(--color-border-2);
+  }
+  .edit-dialog-body {
+    display: grid;
+    gap: 16px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 14px;
+  }
+  .form-field {
+    display: grid;
+    gap: 8px;
+  }
+  .form-field.is-full { grid-column: 1 / -1; }
+  .form-label {
+    color: var(--color-muted);
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid var(--color-border);
+    background: rgba(255,255,255,0.035);
+    color: var(--color-text);
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .form-input {
+    min-height: 48px;
+    padding: 0 14px;
+  }
+  .form-textarea {
+    min-height: 128px;
+    resize: vertical;
+    padding: 13px 14px;
+    line-height: 1.8;
+  }
+  .form-input:focus,
+  .form-textarea:focus {
+    border-color: rgba(99,102,241,0.46);
+    box-shadow: 0 0 0 4px rgba(99,102,241,0.12);
+  }
+  .file-pick {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+    border-radius: 14px;
+    border: 1px dashed rgba(255,255,255,0.18);
+    color: var(--color-text);
+    background: rgba(255,255,255,0.03);
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .form-hint {
+    color: var(--color-muted);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .edit-dialog-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    border-top: 1px solid var(--color-border);
+  }
+  .form-submit,
+  .form-secondary {
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 18px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .form-submit {
+    color: #fff;
+    background: var(--gradient-brand);
+    box-shadow: var(--shadow-brand);
+  }
+  .form-secondary {
+    color: var(--color-text);
+    background: rgba(255,255,255,0.035);
+    border: 1px solid var(--color-border);
+  }
+  .profile-data-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+  }
+  .data-card {
+    border-radius: var(--radius-card);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+    padding: 24px;
+  }
+  .data-list {
+    display: grid;
+    gap: 12px;
+  }
+  .data-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--color-border);
+    background: rgba(255,255,255,0.025);
+  }
+  .data-label {
+    color: var(--color-muted);
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .data-value {
+    color: var(--color-text);
+    font-size: 13px;
+    font-weight: 800;
+    text-align: left;
+    direction: ltr;
+  }
+  .mini-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--color-primary-2);
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .deal-list,
+  .activity-list {
+    display: grid;
+    gap: 10px;
+  }
+  .mini-item {
+    display: grid;
+    gap: 6px;
+    padding: 13px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--color-border);
+    background: rgba(255,255,255,0.025);
+  }
+  .mini-item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .mini-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .mini-meta {
+    color: var(--color-muted);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .empty-state {
+    padding: 18px;
+    border-radius: 14px;
+    color: var(--color-muted);
+    text-align: center;
+    border: 1px dashed rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.02);
+    font-size: 14px;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1024px) {
+    .nav-links { display: none; }
+    .topbar-inner { grid-template-columns: auto 1fr auto; }
+    .about-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    .page-shell { padding: 20px 16px 60px; }
+    .topbar-inner { padding: 0 16px; min-height: 64px; }
+    .brand-logo-picture { height: 42px; max-width: 54px; }
+    .brand-logo-img { height: 40px; max-width: 54px; }
+    .account-button span { display: none; }
+    .account-button { padding: 0 12px; }
+
+    .cover-banner {
+      height: 200px;
+      background:
+        linear-gradient(90deg, rgba(8,9,13,0.46) 0%, rgba(8,9,13,0.06) 46%, rgba(8,9,13,0.18) 100%),
+        linear-gradient(180deg, rgba(8,9,13,0.02) 0%, rgba(8,9,13,0.22) 100%),
+        url("{% static 'images/visuals/profile-background-mobile.webp' %}") center / cover no-repeat,
+        linear-gradient(135deg, var(--color-cover-start), var(--color-cover-end));
+    }
+    .edit-profile-button { top: 14px; left: 14px; min-height: 40px; padding: 0 14px; font-size: 13px; }
+    .edit-profile-button span.latin { display: none; }
+
+    .profile-body { padding: 28px 20px 24px; }
+    .avatar-wrap { width: 110px; height: 110px; top: -56px; left: 20px; }
+    .profile-avatar { width: 96px; height: 96px; }
+    .camera-chip { width: 34px; height: 34px; right: 2px; bottom: 4px; }
+    .identity-row { padding-left: 0; padding-top: 70px; }
+    .profile-name { font-size: 26px; }
+
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 28px; }
+    .stat-card { min-height: 138px; padding: 18px 16px; }
+    .stat-value { font-size: 26px; }
+
+    .about-card, .actions-card { padding: 22px 18px; }
+    .about-meta { grid-template-columns: 1fr; }
+    .profile-data-grid { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .edit-dialog-header,
+    .edit-dialog-body,
+    .edit-dialog-footer { padding: 18px; }
+    .edit-dialog-footer { flex-direction: column; align-items: stretch; }
+    .form-submit,
+    .form-secondary { width: 100%; }
+  }
+
+  @media (max-width: 420px) {
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+</style>
+<link rel="stylesheet" href="{% static 'css/enterprise_unify.css' %}?v=20260523a" />
+<link rel="stylesheet" href="{% static 'css/mobile_app.css' %}?v=20260523a" media="(max-width: 768px), (pointer: coarse)" />
+</head>
+<body data-page="profile">
+
+<!-- ============================================================
+     TOP NAVIGATION BAR
+============================================================= -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="{% url 'home' %}" aria-label="Safouane Secure Deals">
+      <picture class="brand-logo-picture">
+        <source media="(max-width: 768px)" srcset="{% static 'images/brand/icon-192.png' %}">
+        <img class="brand-logo-img" src="{% static 'images/brand/logo-white-small.webp' %}" alt="Safouane Secure Deals" width="520" height="150" decoding="async" fetchpriority="high">
+      </picture>
+    </a>
+
+    <nav class="nav-links" aria-label="{% if current_language == 'ar' %}القائمة الرئيسية{% else %}Main menu{% endif %}">
+      <a class="nav-link" href="{% url 'home' %}">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+        {% if current_language == 'ar' %}الرئيسية{% else %}Home{% endif %} <span class="latin">Dashboard</span>
+      </a>
+      <a class="nav-link" href="{% url 'my_deals' %}">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
+        {% if current_language == 'ar' %}المعاملات{% else %}Deals{% endif %} <span class="latin">Transactions</span>
+      </a>
+      <a class="nav-link" href="{% url 'my_tickets' %}">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+        {% if current_language == 'ar' %}النزاعات{% else %}Disputes{% endif %} <span class="latin">Disputes</span>
+      </a>
+      <a class="nav-link" href="{% url 'chat_hub' %}">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 12a8 8 0 11-3-6.2L21 4v6h-6"/></svg>
+        {% if current_language == 'ar' %}الرسائل{% else %}Messages{% endif %} <span class="latin">Messages</span>
+      </a>
+    </nav>
+
+    <div class="nav-actions">
+      <div class="account-menu" id="accountMenu">
+        <button class="account-button" type="button" aria-haspopup="menu" aria-expanded="false">
+          <svg class="icon icon-sm crown" viewBox="0 0 24 24"><path d="M3 17l2-9 5 5 2-7 2 7 5-5 2 9z"/><path d="M3 20h18"/></svg>
+          <span>{% if current_language == 'ar' %}الحساب{% else %}Account{% endif %}</span>
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="account-dropdown" role="menu">
+          <a class="dropdown-item" href="{% url 'profile' %}"><svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>{% if current_language == 'ar' %}الملف الشخصي{% else %}Profile{% endif %}</a>
+          {% if not user.has_usable_password %}
+          <a class="dropdown-item" href="{% url 'account_set_password' %}"><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>{% if current_language == 'ar' %}إضافة كلمة مرور{% else %}Add password{% endif %}</a>
+          {% else %}
+          <a class="dropdown-item" href="{% url 'account_change_password' %}"><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>{% if current_language == 'ar' %}تغيير كلمة المرور{% else %}Change password{% endif %}</a>
+          {% endif %}
+          <a class="dropdown-item" href="{% url 'logout' %}"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>{% if current_language == 'ar' %}تسجيل الخروج{% else %}Sign out{% endif %}</a>
+        </div>
+      </div>
+
+      <a class="nav-icon-button" href="{% url 'notifications' %}" aria-label="{% if current_language == 'ar' %}الإشعارات{% else %}Notifications{% endif %}">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M18 16v-5a6 6 0 10-12 0v5l-2 3h16z"/><path d="M10 21a2 2 0 004 0"/></svg>
+        {% if unread_notif_count %}<span class="notification-dot">{{ unread_notif_count }}</span>{% endif %}
+      </a>
+
+      <a class="avatar-button" href="{% url 'profile' %}" aria-label="{% if current_language == 'ar' %}حسابي{% else %}My account{% endif %}">
+        <img class="nav-avatar" src="{{ profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ user.get_full_name|default:user.username }}" loading="lazy" decoding="async" />
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     MAIN CONTENT
+============================================================= -->
+<main class="page-shell">
+  {% if messages %}
+  <div class="profile-flashes" aria-live="polite">
+    {% for message in messages %}
+    <div class="profile-flash {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ========== PROFILE HERO CARD ========== -->
+  <section class="profile-card" aria-label="{% if current_language == 'ar' %}بطاقة الملف الشخصي{% else %}Profile card{% endif %}">
+
+    <!-- Cover banner with geometric mesh pattern -->
+    <div class="cover-banner">
+      <!-- Geometric SVG mesh: hexagonal/diagonal lines matching brand -->
+      <svg class="cover-mesh" viewBox="0 0 1200 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="meshGrad" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%"  stop-color="#4f6ef7" stop-opacity="0.55"/>
+            <stop offset="60%" stop-color="#7c3aed" stop-opacity="0.40"/>
+            <stop offset="100%" stop-color="#f5c518" stop-opacity="0.25"/>
+          </linearGradient>
+          <linearGradient id="meshGrad2" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#fff" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <!-- Concentric polygons -->
+        <g fill="none" stroke="url(#meshGrad)" stroke-width="1">
+          <polygon points="900,40 1020,110 1020,210 900,280 780,210 780,110" opacity="0.65"/>
+          <polygon points="900,80 990,130 990,200 900,250 810,200 810,130" opacity="0.45"/>
+          <polygon points="900,120 960,150 960,190 900,220 840,190 840,150" opacity="0.35"/>
+        </g>
+        <!-- Floating dot grid -->
+        <g fill="#fff" opacity="0.18">
+          <circle cx="120" cy="60" r="1.4"/>
+          <circle cx="180" cy="60" r="1.4"/>
+          <circle cx="240" cy="60" r="1.4"/>
+          <circle cx="120" cy="120" r="1.4"/>
+          <circle cx="180" cy="120" r="1.4"/>
+          <circle cx="240" cy="120" r="1.4"/>
+          <circle cx="120" cy="180" r="1.4"/>
+          <circle cx="180" cy="180" r="1.4"/>
+          <circle cx="240" cy="180" r="1.4"/>
+        </g>
+        <!-- Diagonal accent lines -->
+        <g stroke="url(#meshGrad2)" stroke-width="1.5" fill="none">
+          <line x1="0" y1="220" x2="1200" y2="60"/>
+          <line x1="0" y1="260" x2="1200" y2="100"/>
+        </g>
+        <!-- Subtle shield outline echo -->
+        <g fill="none" stroke="#fff" stroke-opacity="0.10" stroke-width="1.2">
+          <path d="M520 40 L600 60 L600 150 Q600 200 520 220 Q440 200 440 150 L440 60 Z"/>
+        </g>
+      </svg>
+
+      <button class="edit-profile-button" type="button" data-tooltip="{% if current_language == 'ar' %}تخصيص الملف الشخصي{% else %}Customize profile{% endif %}" data-open-profile-modal>
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 113 3L7 19l-4 1 1-4z"/></svg>
+        <span>{% if current_language == 'ar' %}تعديل الملف{% else %}Edit profile{% endif %}</span>
+        <span class="latin">Edit</span>
+      </button>
+
+      <div class="cover-fade"></div>
+    </div>
+
+    <!-- Profile body -->
+    <div class="profile-body">
+
+      <!-- Avatar (bottom-left, overlapping cover) -->
+      <div class="avatar-wrap">
+        <img id="avatarPreview" class="profile-avatar" src="{{ profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ user.get_full_name|default:user.username }}" decoding="async" fetchpriority="high" />
+        <button class="camera-chip" type="button" aria-label="{% if current_language == 'ar' %}تغيير الصورة{% else %}Change photo{% endif %}" data-avatar-trigger>
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 7h4l2-3h6l2 3h4v12H3z"/><circle cx="12" cy="13" r="4"/></svg>
+        </button>
+      </div>
+
+      <!-- Identity -->
+      <div class="identity-row">
+        <div class="name-line">
+          <h1 class="profile-name">{{ user.get_full_name|default:user.username }}</h1>
+
+          <span class="verified-badge" title="{% if current_language == 'ar' %}بائع موثق{% else %}Verified seller{% endif %}">
+            <svg class="icon shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/><path d="M9 12l2.5 2.5L16 10"/></svg>
+            <span>{% if current_language == 'ar' %}بائع موثق{% else %}Verified seller{% endif %}</span>
+            <svg class="icon check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          </span>
+        </div>
+
+        <p class="user-handle">
+          <span class="latin">@{{ user.username }}</span>
+          <span class="dot">·</span>
+          <span class="latin">Protected. Effortless.</span>
+        </p>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="stats-grid" role="list">
+
+        <article class="stat-card is-primary" role="listitem">
+          <span class="stat-icon" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
+          </span>
+          <span class="stat-label">{% if current_language == 'ar' %}عضو منذ{% else %}Member since{% endif %} <span class="latin">Member Since</span></span>
+          <span class="stat-value num">{{ profile.created_at|date:"Y" }}</span>
+        </article>
+
+        <article class="stat-card is-gold" role="listitem">
+          <span class="stat-icon" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,19 6,22 7,15 2,10 9,9"/></svg>
+          </span>
+          <span class="stat-label">{% if current_language == 'ar' %}التقييم{% else %}Rating{% endif %} <span class="latin">Rating</span></span>
+          <span class="stat-value num">{% if avg_rating %}{{ avg_rating|floatformat:1 }}{% else %}—{% endif %}</span>
+        </article>
+
+        <article class="stat-card is-green" role="listitem">
+          <span class="stat-icon" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+          </span>
+          <span class="stat-label">{% if current_language == 'ar' %}مكتملة{% else %}Completed{% endif %} <span class="latin">Completed</span></span>
+          <span class="stat-value num">{{ completed_deals_total|default:0 }}</span>
+        </article>
+
+        <article class="stat-card is-purple" role="listitem">
+          <span class="stat-icon" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M3 12l4-7h10l4 7-9 9z"/><path d="M3 12h18"/></svg>
+          </span>
+          <span class="stat-label">{% if current_language == 'ar' %}المعاملات الكلية{% else %}Total deals{% endif %} <span class="latin">Total Deals</span></span>
+          <span class="stat-value num">{{ total_deals|default:0 }}</span>
+        </article>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== ABOUT + QUICK ACTIONS ========== -->
+  <section class="about-grid">
+
+    <!-- About card -->
+    <article class="about-card">
+      <header class="section-header">
+        <span class="section-icon" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v4h1"/></svg>
+        </span>
+        <h2 class="section-title">{% if current_language == 'ar' %}نبذة عني{% else %}About me{% endif %} <span class="latin">About</span></h2>
+      </header>
+
+      <p class="about-text">
+        {% if profile.bio %}
+        {{ profile.bio|linebreaksbr }}
+        {% else %}
+        {% if current_language == 'ar' %}
+        مرحباً، أنا <strong>{{ user.get_full_name|default:user.username }}</strong> — بائع موثّق على منصة Safouane Secure Deals.
+        أؤمن بالشفافية في كل صفقة، وأعتمد على نظام الضمان لحماية كلٍّ من البائع والمشتري.
+        تواصل معي لأي معاملة B2B تتطلب وسيطاً موثوقاً وعملية دفع آمنة من البداية إلى النهاية.
+        {% else %}
+        Hi, I am <strong>{{ user.get_full_name|default:user.username }}</strong>, a verified seller on Safouane Secure Deals.
+        I value transparency in every deal and use escrow to protect both buyers and sellers.
+        Contact me for any B2B transaction that needs a trusted mediator and a secure payment flow from start to finish.
+        {% endif %}
+        {% endif %}
+      </p>
+
+      <div class="about-meta">
+        <div class="meta-item">
+          <span class="meta-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+          <div>
+            <div class="meta-label">{% if current_language == 'ar' %}نوع الحساب{% else %}Account type{% endif %} · Role</div>
+            <div class="meta-value">{% if current_language == 'ar' %}بائع آمن{% else %}Secure seller{% endif %}</div>
+          </div>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 16.92V21a1 1 0 01-1.1 1 19 19 0 01-8.3-3 19 19 0 01-6-6A19 19 0 013.1 4.6 1 1 0 014 3.5h4.1a1 1 0 011 .75c.13.96.34 1.9.63 2.8a1 1 0 01-.23 1L8 9.3a16 16 0 006 6l1.3-1.5a1 1 0 011-.23c.9.3 1.84.5 2.8.63a1 1 0 01.75 1z"/></svg></span>
+          <div>
+            <div class="meta-label">{% if current_language == 'ar' %}الرصيد{% else %}Balance{% endif %} · Balance</div>
+            <div class="meta-value latin">${{ profile.balance|floatformat:2 }}</div>
+          </div>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg></span>
+          <div>
+            <div class="meta-label">{% if current_language == 'ar' %}التوثيق{% else %}Verification{% endif %} · KYC</div>
+            <div class="meta-value">
+              {% if profile.kyc_status == "approved" %}{% t "profile.kyc_verified" %}{% elif profile.kyc_status == "pending" %}{% t "profile.kyc_pending" %}{% elif profile.kyc_status == "rejected" %}{% t "profile.kyc_rejected" %}{% else %}{% if current_language == 'ar' %}غير مرسل{% else %}Not submitted{% endif %}{% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/></svg></span>
+          <div>
+            <div class="meta-label">{% if current_language == 'ar' %}الحماية{% else %}Protection{% endif %} · Protection</div>
+            <div class="meta-value">{% if profile.is_verified %}{% if current_language == 'ar' %}موثق{% else %}Verified{% endif %}{% else %}{% if current_language == 'ar' %}قياسي{% else %}Standard{% endif %}{% endif %}</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Quick actions sidebar -->
+    <aside class="actions-card">
+      <header class="section-header">
+        <span class="section-icon" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>
+        </span>
+        <h2 class="section-title">{% if current_language == 'ar' %}إجراءات سريعة{% else %}Quick actions{% endif %} <span class="latin">Quick Actions</span></h2>
+      </header>
+
+      <div class="actions-list">
+        <a class="action-btn is-primary" href="{% url 'create_deal' %}">
+          <span class="action-icon">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 12l4-7h10l4 7-9 9z"/></svg>
+          </span>
+          <span class="action-text">{% if current_language == 'ar' %}بدء معاملة{% else %}Start a deal{% endif %}</span>
+          <svg class="icon icon-sm action-arrow" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+        </a>
+
+        <a class="action-btn" href="{% url 'chat_hub' %}">
+          <span class="action-icon">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 12a8 8 0 11-3-6.2L21 4v6h-6"/></svg>
+          </span>
+          <span class="action-text">{% if current_language == 'ar' %}إرسال رسالة{% else %}Send message{% endif %}</span>
+          <svg class="icon icon-sm action-arrow" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+        </a>
+
+        <a class="action-btn is-danger" href="{% url 'create_ticket' %}">
+          <span class="action-icon">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          </span>
+          <span class="action-text">{% if current_language == 'ar' %}تقديم شكوى{% else %}Submit report{% endif %}</span>
+          <svg class="icon icon-sm action-arrow" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+        </a>
+
+      </div>
+    </aside>
+
+  </section>
+
+  <!-- ========== CONTACT / SECURITY + LIVE PROFILE DATA ========== -->
+  <section class="profile-data-grid" aria-label="{% if current_language == 'ar' %}بيانات الملف النشطة{% else %}Active profile data{% endif %}">
+    <article class="data-card">
+      <header class="section-header">
+        <span class="section-icon" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/></svg>
+        </span>
+        <h2 class="section-title">{% if current_language == 'ar' %}الأمان والتواصل{% else %}Security and contact{% endif %} <span class="latin">Security</span></h2>
+      </header>
+
+      <div class="data-list">
+        <div class="data-row">
+          <span class="data-label">{% if current_language == 'ar' %}البريد الإلكتروني{% else %}Email{% endif %}</span>
+          <span class="data-value">{{ masked_email|default:"s***@gmail.com" }}</span>
+          {% if email_verified %}<span class="profile-status is-success">{% if current_language == 'ar' %}موثق{% else %}Verified{% endif %}</span>{% else %}<span class="profile-status is-warning">{% if current_language == 'ar' %}غير مكتمل{% else %}Incomplete{% endif %}</span>{% endif %}
+        </div>
+        <div class="data-row">
+          <span class="data-label">{% if current_language == 'ar' %}الهاتف{% else %}Phone{% endif %}</span>
+          <span class="data-value">{{ masked_phone|default:"+*** *** **00" }}</span>
+          {% if phone_verified %}<span class="profile-status is-success">{% if current_language == 'ar' %}موثق{% else %}Verified{% endif %}</span>{% else %}<span class="profile-status is-warning">{% if current_language == 'ar' %}غير مكتمل{% else %}Incomplete{% endif %}</span>{% endif %}
+        </div>
+        <div class="data-row">
+          <span class="data-label">{% if current_language == 'ar' %}المصادقة الثنائية{% else %}Two-factor authentication{% endif %}</span>
+          <span class="data-value">{% if two_factor_enabled %}Active{% else %}Inactive{% endif %}</span>
+          {% if two_factor_enabled %}<span class="profile-status is-success">{% if current_language == 'ar' %}مفعلة{% else %}Enabled{% endif %}</span>{% else %}<span class="profile-status is-warning">{% if current_language == 'ar' %}غير مفعلة{% else %}Disabled{% endif %}</span>{% endif %}
+        </div>
+      </div>
+    </article>
+
+    <article class="data-card">
+      <header class="section-header">
+        <span class="section-icon" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
+        </span>
+        <h2 class="section-title">{% if current_language == 'ar' %}الصفقات الجارية{% else %}Active deals{% endif %} <span class="latin">Active</span></h2>
+      </header>
+
+      <div class="deal-list">
+        {% for deal in active_transactions %}
+        <article class="mini-item">
+          <div class="mini-item-top">
+            <a class="mini-title" href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}">{{ deal.product_title }}</a>
+            <span class="profile-status {% if deal.status == 'disputed' %}is-warning{% else %}is-success{% endif %}">
+              {% if deal.status == "completed" %}{% t "my_deals.status_completed" %}
+              {% elif deal.status == "reserved" %}{% t "my_deals.status_reserved" %}
+              {% elif deal.status == "new" %}{% t "my_deals.status_new" %}
+              {% elif deal.status == "shipped" %}{% t "my_deals.status_shipped" %}
+              {% elif deal.status == "disputed" %}{% t "my_deals.status_disputed" %}
+              {% elif deal.status == "cancelled" %}{% t "my_deals.status_cancelled" %}
+              {% else %}{{ deal.status }}{% endif %}
+            </span>
+          </div>
+          <div class="mini-meta">
+            <span class="latin">${{ deal.profile_amount|default:"0.00" }}</span>
+            · @{{ deal.profile_counterpart_label }}
+          </div>
+        </article>
+        {% empty %}
+        <div class="empty-state">{% if current_language == 'ar' %}لا توجد صفقات جارية الآن.{% else %}No active deals right now.{% endif %}</div>
+        {% endfor %}
+      </div>
+
+      <p><a class="mini-link" href="{% url 'my_deals' %}">{% if current_language == 'ar' %}عرض كل المعاملات{% else %}View all deals{% endif %} <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></a></p>
+    </article>
+  </section>
+
+  <section class="data-card" aria-label="{% if current_language == 'ar' %}آخر النشاطات{% else %}Recent activity{% endif %}">
+    <header class="section-header">
+      <span class="section-icon" aria-hidden="true">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>
+      </span>
+      <h2 class="section-title">{% if current_language == 'ar' %}آخر النشاطات{% else %}Recent activity{% endif %} <span class="latin">Recent Activity</span></h2>
+    </header>
+
+    <div class="activity-list">
+      {% for item in recent_activity_items %}
+      <article class="mini-item">
+        <div class="mini-item-top">
+          <span class="mini-title">{% if item.url %}<a href="{{ item.url }}">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</span>
+          <time class="profile-status" datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|timesince }} {% t "profile.time_ago" %}</time>
+        </div>
+        {% if item.body %}<div class="mini-meta">{{ item.body }}</div>{% endif %}
+      </article>
+      {% empty %}
+      <div class="empty-state">{% if current_language == 'ar' %}لا توجد نشاطات حديثة بعد.{% else %}No recent activity yet.{% endif %}</div>
+      {% endfor %}
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     EDIT PROFILE MODAL — wired to Django profile view
+============================================================= -->
+<div class="edit-modal" id="editProfileModal" aria-hidden="true">
+  <div class="edit-dialog" role="dialog" aria-modal="true" aria-labelledby="editProfileTitle">
+    <form id="profileEditForm" method="post" action="{% url 'profile' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="edit-dialog-header">
+        <h2 class="edit-dialog-title" id="editProfileTitle">{% if current_language == 'ar' %}تعديل الملف الشخصي{% else %}Edit profile{% endif %}</h2>
+        <button class="modal-close" type="button" data-close-profile-modal aria-label="{% if current_language == 'ar' %}إغلاق{% else %}Close{% endif %}">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="edit-dialog-body">
+        <div class="form-grid">
+          <label class="form-field">
+            <span class="form-label">{% if current_language == 'ar' %}الاسم الأول{% else %}First name{% endif %}</span>
+            <input class="form-input" type="text" name="first_name" value="{{ user.first_name }}" maxlength="30" autocomplete="given-name">
+          </label>
+          <label class="form-field">
+            <span class="form-label">{% if current_language == 'ar' %}اسم العائلة{% else %}Last name{% endif %}</span>
+            <input class="form-input" type="text" name="last_name" value="{{ user.last_name }}" maxlength="150" autocomplete="family-name">
+          </label>
+          <label class="form-field is-full">
+            <span class="form-label">{% if current_language == 'ar' %}رقم الهاتف{% else %}Phone number{% endif %}</span>
+            <input class="form-input" type="tel" name="phone" value="{{ profile.phone }}" maxlength="20" placeholder="+213 ..." autocomplete="tel">
+          </label>
+          <label class="form-field is-full">
+            <span class="form-label">{% if current_language == 'ar' %}نبذة عني{% else %}Bio{% endif %}</span>
+            <textarea class="form-textarea" name="bio" maxlength="500" placeholder="{% if current_language == 'ar' %}اكتب نبذة مختصرة عن خبرتك ومعاملاتك الآمنة.{% else %}Write a short bio about your experience and secure deals.{% endif %}">{{ profile.bio }}</textarea>
+            <span class="form-hint">{% if current_language == 'ar' %}الحد الأقصى 500 حرف.{% else %}Maximum 500 characters.{% endif %}</span>
+          </label>
+          <div class="form-field">
+            <span class="form-label">{% if current_language == 'ar' %}الصورة الشخصية{% else %}Profile photo{% endif %}</span>
+            <label class="file-pick" for="avatarInput">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/><path d="M5 21h14"/></svg>
+              {% if current_language == 'ar' %}اختيار صورة{% else %}Choose photo{% endif %}
+            </label>
+            <input id="avatarInput" type="file" name="avatar" accept="image/jpeg,image/png,image/gif,image/webp" hidden>
+            <span class="form-hint" id="avatarFileName">{% if current_language == 'ar' %}JPG أو PNG أو GIF أو WEBP، بحد أقصى 2MB.{% else %}JPG, PNG, GIF, or WEBP, up to 2MB.{% endif %}</span>
+          </div>
+          <div class="form-field">
+            <span class="form-label">{% if current_language == 'ar' %}وثيقة التوثيق KYC{% else %}KYC verification document{% endif %}</span>
+            <label class="file-pick" for="kycInput">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+              {% if current_language == 'ar' %}رفع وثيقة{% else %}Upload document{% endif %}
+            </label>
+            <input id="kycInput" type="file" name="kyc_document" accept="image/jpeg,image/png,image/webp,application/pdf" hidden>
+            <span class="form-hint" id="kycFileName">{% if current_language == 'ar' %}الحالة الحالية:{% else %}Current status:{% endif %} {% if profile.kyc_status == "approved" %}{% t "profile.kyc_verified" %}{% elif profile.kyc_status == "pending" %}{% t "profile.kyc_pending" %}{% elif profile.kyc_status == "rejected" %}{% t "profile.kyc_rejected" %}{% else %}{% if current_language == 'ar' %}غير مرسل{% else %}Not submitted{% endif %}{% endif %}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="edit-dialog-footer">
+        <button class="form-submit" type="submit" id="profileSaveButton">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+          {% if current_language == 'ar' %}حفظ التغييرات{% else %}Save changes{% endif %}
+        </button>
+        <button class="form-secondary" type="button" data-close-profile-modal>{% if current_language == 'ar' %}إلغاء{% else %}Cancel{% endif %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================
+     VANILLA JS — account dropdown toggle
+============================================================= -->
+<script>
+  (function () {
+    var menu = document.getElementById('accountMenu');
+    if (!menu) return;
+    var btn = menu.querySelector('.account-button');
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = menu.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function (e) {
+      if (!menu.contains(e.target)) {
+        menu.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        menu.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    var modal = document.getElementById('editProfileModal');
+    var openers = document.querySelectorAll('[data-open-profile-modal]');
+    var closers = document.querySelectorAll('[data-close-profile-modal]');
+    var avatarTriggers = document.querySelectorAll('[data-avatar-trigger]');
+    var profileForm = document.getElementById('profileEditForm');
+    var saveButton = document.getElementById('profileSaveButton');
+    var avatarInput = document.getElementById('avatarInput');
+    var kycInput = document.getElementById('kycInput');
+    var avatarPreview = document.getElementById('avatarPreview');
+    var navAvatar = document.querySelector('.nav-avatar');
+    var avatarFileName = document.getElementById('avatarFileName');
+    var kycFileName = document.getElementById('kycFileName');
+    var copy = {
+      avatarSelected: "{% if current_language == 'ar' %}تم اختيار: {% else %}Selected: {% endif %}",
+      documentSelected: "{% if current_language == 'ar' %}تم اختيار وثيقة: {% else %}Document selected: {% endif %}",
+      saving: "{% if current_language == 'ar' %}جار الحفظ...{% else %}Saving...{% endif %}"
+    };
+
+    function openModal() {
+      if (!modal) return;
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      if (!modal) return;
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    openers.forEach(function (opener) {
+      opener.addEventListener('click', openModal);
+    });
+    avatarTriggers.forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        openModal();
+        if (avatarInput) avatarInput.click();
+      });
+    });
+    closers.forEach(function (closer) {
+      closer.addEventListener('click', closeModal);
+    });
+    if (modal) {
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeModal();
+    });
+    if (avatarInput && avatarPreview) {
+      avatarInput.addEventListener('change', function () {
+        var file = avatarInput.files && avatarInput.files[0];
+        if (!file) return;
+        var nextUrl = URL.createObjectURL(file);
+        avatarPreview.src = nextUrl;
+        if (navAvatar) navAvatar.src = nextUrl;
+        if (avatarFileName) avatarFileName.textContent = copy.avatarSelected + file.name;
+      });
+    }
+    if (kycInput && kycFileName) {
+      kycInput.addEventListener('change', function () {
+        var file = kycInput.files && kycInput.files[0];
+        if (file) kycFileName.textContent = copy.documentSelected + file.name;
+      });
+    }
+    if (profileForm && saveButton) {
+      profileForm.addEventListener('submit', function () {
+        saveButton.disabled = true;
+        saveButton.innerHTML = '<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> ' + copy.saving;
+      });
+    }
+  })();
+</script>
+<script defer src="{% static 'js/mobile_ux.js' %}?v=20260523a"></script>
+
+</body>
+</html>

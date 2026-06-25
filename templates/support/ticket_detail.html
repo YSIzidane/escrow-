@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{{ ticket.ticket_number }} - {% t "support.detail.title_suffix" %}{% endblock %}
+{% block page_type %}support{% endblock %}
+{% block nav_support %}active{% endblock %}
+
+{% block meta %}
+{{ block.super }}
+{% endblock %}
+
+{% block late_css %}
+<link rel="stylesheet" href="{% static 'css/support_dark.css' %}?v=20260523a">
+{% endblock %}
+
+{% block content %}
+<main class="sd-page sd-bg-detail" dir="rtl">
+  <section class="sd-shell" aria-labelledby="ticket-title">
+    <header class="sd-hero sd-hero-compact">
+      <div class="sd-hero-copy">
+        <span class="sd-kicker">
+          <i class="fas fa-ticket" aria-hidden="true"></i>
+          {{ ticket.ticket_number }}
+        </span>
+        <h1 id="ticket-title">{{ ticket.subject }}</h1>
+        <p>{% t "support.detail.created_prefix" %} {{ ticket.created_at|date:"d/m/Y H:i" }} {% t "support.detail.created_suffix" %}</p>
+      </div>
+
+      <div class="sd-actions">
+        <a href="{% url 'my_tickets' %}" class="sd-btn sd-btn-ghost">
+          <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          <span>{% t "support.back_to_support" %}</span>
+        </a>
+      </div>
+    </header>
+
+    <div class="sd-detail-grid">
+      <section class="sd-card sd-main-card">
+        <div class="sd-card-head">
+          <div>
+            <h2>{% t "support.detail.summary_title" %}</h2>
+            <p>{% t "support.detail.summary_sub" %}</p>
+          </div>
+          <div class="sd-pill-stack">
+            <span class="sd-pill sd-pill-{{ ticket.status }}">{% choice_label "support.status" ticket.status %}</span>
+            <span class="sd-pill sd-priority-{{ ticket.priority }}">{% choice_label "support.priority" ticket.priority %}</span>
+          </div>
+        </div>
+
+        <div class="sd-ticket-summary">
+          <div>
+            <span>{% t "support.detail.category" %}</span>
+            <strong>{% choice_label "support.category" ticket.category %}</strong>
+          </div>
+          <div>
+            <span>{% t "support.detail.last_update" %}</span>
+            <strong>{{ ticket.updated_at|date:"d/m/Y H:i" }}</strong>
+          </div>
+          {% if ticket.deal %}
+          <div>
+            <span>{% t "support.detail.related_deal" %}</span>
+            <a href="{% url 'deal_detail' ticket.deal.id %}">{% t "support.detail.open_deal" %} #{{ ticket.deal.id }}</a>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="sd-description">
+          <p>{{ ticket.description|linebreaksbr }}</p>
+        </div>
+
+        {% if ticket.attachment %}
+        <a href="{% url 'ticket_attachment' ticket.id %}" target="_blank" class="sd-attachment">
+          <i class="fas fa-paperclip" aria-hidden="true"></i>
+          <span>{% t "support.detail.view_attachment" %}</span>
+        </a>
+        {% endif %}
+      </section>
+
+      <aside class="sd-side-stack" aria-label="{% t "support.detail.side_label" %}">
+        <section class="sd-side-card">
+          <span class="sd-live">
+            <i aria-hidden="true"></i>
+            {% t "support.detail.followup_saved" %}
+          </span>
+          <h2>{% t "support.detail.status_title" %}</h2>
+          <p>{% t "support.detail.status_sub" %}</p>
+        </section>
+
+        <section class="sd-side-card sd-tone-card">
+          <i class="fas fa-comments" aria-hidden="true"></i>
+          <h2>{% t "support.detail.replies_title" %}: {{ replies|length }}</h2>
+          <p>{% t "support.detail.reply_help" %}</p>
+        </section>
+      </aside>
+    </div>
+
+    <section class="sd-card sd-thread-card" aria-labelledby="thread-title">
+      <div class="sd-card-head">
+        <div>
+          <h2 id="thread-title">{% t "support.detail.thread_title" %}</h2>
+          <p>{% t "support.detail.thread_sub" %}</p>
+        </div>
+      </div>
+
+      {% if replies %}
+      <div class="sd-thread">
+        {% for reply in replies %}
+        <article class="sd-thread-item {% if reply.is_staff_reply %}is-staff{% else %}is-user{% endif %}">
+          <div class="sd-thread-bubble">
+            <div class="sd-thread-meta">
+              <strong>{% if reply.is_staff_reply %}{% t "support.detail.support_team" %}{% else %}{{ reply.sender.username }}{% endif %}</strong>
+              <time>{{ reply.created_at|date:"d/m/Y H:i" }}</time>
+            </div>
+            <p>{{ reply.message|linebreaksbr }}</p>
+            {% if reply.attachment %}
+            <a href="{% url 'ticket_reply_attachment' reply.id %}" target="_blank" class="sd-attachment sd-attachment-small">
+              <i class="fas fa-paperclip" aria-hidden="true"></i>
+              <span>{% t "support.detail.reply_attachment" %}</span>
+            </a>
+            {% endif %}
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <section class="sd-empty sd-empty-small">
+        <span class="sd-empty-icon"><i class="fas fa-comment-dots" aria-hidden="true"></i></span>
+        <h2>{% t "support.detail.no_replies_title" %}</h2>
+        <p>{% t "support.detail.no_replies_sub" %}</p>
+      </section>
+      {% endif %}
+    </section>
+
+    {% if ticket.status != 'closed' %}
+    <section class="sd-card sd-reply-card" aria-labelledby="reply-title">
+      <div class="sd-card-head">
+        <div>
+          <h2 id="reply-title">{% t "support.detail.add_reply" %}</h2>
+          <p>{% t "support.detail.reply_form_sub" %}</p>
+        </div>
+      </div>
+
+      <form method="post" enctype="multipart/form-data" class="sd-form sd-reply-form" data-sd-submit-form>
+        {% csrf_token %}
+        <div class="sd-field sd-field-full">
+          <label for="reply-message">
+            <i class="fas fa-reply" aria-hidden="true"></i>
+            {% t "support.detail.reply_text" %}
+          </label>
+          <textarea id="reply-message" name="message" rows="4" placeholder="{% t "support.detail.reply_placeholder" %}" required></textarea>
+        </div>
+
+        <div class="sd-reply-actions">
+          <label class="sd-file-drop sd-file-compact" for="reply-attachment" data-sd-file-wrap>
+            <span class="sd-file-icon"><i class="fas fa-paperclip" aria-hidden="true"></i></span>
+            <strong data-sd-file-name data-default-text="{% t "support.detail.file_default" %}">{% t "support.detail.file_default" %}</strong>
+            <input id="reply-attachment" type="file" name="attachment" accept="image/*,.pdf" data-sd-file-input>
+          </label>
+
+          <button type="submit" class="sd-btn sd-btn-primary" data-sd-submit-button data-loading-text="{% t "support.detail.reply_sending" %}">
+            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+            <span>{% t "support.detail.send_reply" %}</span>
+          </button>
+        </div>
+      </form>
+    </section>
+    {% else %}
+    <section class="sd-empty sd-empty-small">
+      <span class="sd-empty-icon"><i class="fas fa-lock" aria-hidden="true"></i></span>
+      <h2>{% t "support.detail.closed_title" %}</h2>
+      <p>{% t "support.detail.closed_sub" %}</p>
+    </section>
+    {% endif %}
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/support_dark.js' %}?v=20260522a"></script>
+{% endblock %}

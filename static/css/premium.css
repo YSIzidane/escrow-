@@ -1,0 +1,864 @@
+/* ═══════════════════════════════════════════
+   PREMIUM DESIGN SYSTEM v2.0
+   Global overlay for world-class SaaS aesthetic
+   ═══════════════════════════════════════════ */
+
+@keyframes pmFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-14px) rotate(2deg); }
+  66% { transform: translateY(8px) rotate(-1.5deg); }
+}
+
+
+
+/* ── Design Tokens ── */
+:root {
+  --pm-bg: #fafbfd;
+  --pm-surface: #ffffff;
+  --pm-ink: #0c1425;
+  --pm-muted: #5a6a80;
+  --pm-subtle: #94a3b8;
+  --pm-line: rgba(15,23,42,0.07);
+  --pm-blue: #2563eb;
+  --pm-blue-dark: #1746a2;
+  --pm-blue-soft: rgba(37,99,235,0.07);
+  --pm-gold: #b8860b;
+  --pm-gold-soft: rgba(184,134,11,0.08);
+  --pm-radius: 14px;
+  --pm-radius-lg: 22px;
+  --pm-shadow-sm: 0 1px 3px rgba(15,23,42,0.04), 0 6px 16px rgba(15,23,42,0.03);
+  --pm-shadow-md: 0 4px 12px rgba(15,23,42,0.05), 0 16px 40px rgba(15,23,42,0.06);
+  --pm-shadow-lg: 0 8px 24px rgba(15,23,42,0.06), 0 24px 64px rgba(15,23,42,0.08);
+  --pm-ease: cubic-bezier(0.22,1,0.36,1);
+  --pm-font: 'Manrope', 'Cairo', 'Tajawal', system-ui, sans-serif;
+}
+
+/* ── Premium Typography ── */
+/* ═══ HERO SECTION PREMIUM ═══ */
+.safo-hero {
+  position: relative;
+  padding: 88px 0 56px;
+  background: linear-gradient(180deg, #f8faff 0%, #ffffff 50%, var(--pm-bg) 100%);
+  overflow: hidden;
+}
+
+.safo-hero::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  right: -8%;
+  width: 640px;
+  height: 640px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.safo-hero::after {
+  content: "";
+  position: absolute;
+  bottom: -10%;
+  left: -5%;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184,134,11,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.safo-hero__title {
+  font-family: var(--pm-font) !important;
+  font-size: clamp(2.4rem, 5.2vw, 4.2rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.06 !important;
+  color: var(--pm-ink) !important;
+}
+
+.safo-text-accent {
+  background: linear-gradient(135deg, var(--pm-blue), #4f8df7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.safo-hero__statement {
+  font-family: var(--pm-font) !important;
+  font-size: clamp(1rem, 1.8vw, 1.18rem) !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  letter-spacing: -0.01em;
+}
+
+.safo-hero__lead {
+  font-family: var(--pm-font) !important;
+  color: var(--pm-muted) !important;
+  font-size: 0.95rem !important;
+  line-height: 1.8 !important;
+  font-weight: 400 !important;
+}
+
+/* ── Kicker Badge ── */
+.safo-kicker {
+  background: var(--pm-blue-soft) !important;
+  border: 1px solid rgba(37,99,235,0.1) !important;
+  border-radius: 999px !important;
+  padding: 6px 16px !important;
+  font-family: var(--pm-font) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em;
+  color: var(--pm-blue-dark) !important;
+  backdrop-filter: blur(8px);
+}
+
+.safo-pulse-dot {
+  width: 6px !important;
+  height: 6px !important;
+  background: #16a34a !important;
+  box-shadow: 0 0 0 4px rgba(22,163,74,0.12) !important;
+  animation: pmPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes pmPulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(22,163,74,0.12); }
+  50% { box-shadow: 0 0 0 8px rgba(22,163,74,0.06); }
+}
+
+/* ── Premium Buttons ── */
+.safo-btn {
+  font-family: var(--pm-font) !important;
+  font-weight: 700 !important;
+  border-radius: 12px !important;
+  letter-spacing: -0.01em;
+  transition: all 0.28s var(--pm-ease) !important;
+}
+
+.safo-btn--primary {
+  background: var(--pm-blue) !important;
+  border-color: var(--pm-blue) !important;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.22), 0 1px 3px rgba(37,99,235,0.12) !important;
+}
+
+.safo-btn--primary:hover {
+  background: var(--pm-blue-dark) !important;
+  box-shadow: 0 8px 28px rgba(37,99,235,0.28), 0 2px 6px rgba(37,99,235,0.16) !important;
+  transform: translateY(-2px) !important;
+}
+
+.safo-btn--secondary {
+  background: var(--pm-surface) !important;
+  border: 1.5px solid var(--pm-line) !important;
+  box-shadow: var(--pm-shadow-sm) !important;
+}
+
+.safo-btn--secondary:hover {
+  border-color: rgba(37,99,235,0.18) !important;
+  box-shadow: var(--pm-shadow-md) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ── Hero Visual / Card ── */
+.safo-hero-card {
+  border: 1px solid rgba(15,23,42,0.08) !important;
+  border-radius: var(--pm-radius-lg) !important;
+  background: var(--pm-surface) !important;
+  box-shadow: var(--pm-shadow-lg) !important;
+  overflow: hidden;
+  transition: transform 0.5s var(--pm-ease), box-shadow 0.5s ease;
+}
+
+.safo-hero-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(15,23,42,0.08), 0 32px 80px rgba(15,23,42,0.1) !important;
+}
+
+.safo-device-bar {
+  background: #f8fafc !important;
+  border-bottom: 1px solid rgba(15,23,42,0.05) !important;
+  height: 38px !important;
+}
+
+.safo-device-bar span {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+/* ── Flow Strip ── */
+.safo-flow-strip__item {
+  background: rgba(255,255,255,0.96) !important;
+  backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid rgba(15,23,42,0.06) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--pm-shadow-sm) !important;
+  transition: all 0.3s var(--pm-ease);
+}
+
+.safo-flow-strip__item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--pm-shadow-md) !important;
+}
+
+/* ── Stats ── */
+.safo-stats {
+  border: 1px solid rgba(15,23,42,0.06) !important;
+  border-radius: var(--pm-radius-lg) !important;
+  background: var(--pm-surface) !important;
+  box-shadow: var(--pm-shadow-sm) !important;
+  padding: 8px !important;
+}
+
+.safo-stat-card {
+  border-radius: 14px !important;
+  background: #f8fafc !important;
+  padding: 22px 18px !important;
+}
+
+.safo-stat-card span {
+  font-family: var(--pm-font) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em;
+  color: var(--pm-blue) !important;
+}
+
+.safo-stat-card p {
+  font-family: var(--pm-font) !important;
+  font-weight: 600 !important;
+  font-size: 0.78rem !important;
+  color: var(--pm-muted) !important;
+  letter-spacing: 0;
+}
+
+/* ═══ SECTION STYLING ═══ */
+.safo-section-tag {
+  font-family: var(--pm-font) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 6px 14px !important;
+}
+
+.safo-section-title {
+  font-family: var(--pm-font) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--pm-ink) !important;
+}
+
+.safo-section__sub {
+  font-family: var(--pm-font) !important;
+  color: var(--pm-muted) !important;
+  font-weight: 400 !important;
+  line-height: 1.75 !important;
+}
+
+/* ── Dark Section Premium ── */
+.safo-section--dark {
+  background:
+    linear-gradient(135deg, rgba(37,99,235,0.08) 0%, transparent 40%),
+    linear-gradient(160deg, #0a1628 0%, #0f2042 50%, #132d5e 100%) !important;
+  position: relative;
+}
+
+.safo-section--dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('../images/brand/dark-section-bg.webp');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.15;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* ── Flow Cards ── */
+.safo-flow-card {
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: var(--pm-radius) !important;
+  background: rgba(255,255,255,0.04) !important;
+  backdrop-filter: blur(12px);
+  padding: 32px 24px 26px !important;
+  transition: all 0.35s var(--pm-ease) !important;
+}
+
+.safo-flow-card:hover {
+  background: rgba(255,255,255,0.08) !important;
+  border-color: rgba(255,255,255,0.18) !important;
+  transform: translateY(-6px) !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.safo-flow-number {
+  background: linear-gradient(135deg, var(--pm-blue), #4f8df7) !important;
+  color: #ffffff !important;
+  width: 30px !important;
+  height: 30px !important;
+  font-size: 0.74rem !important;
+}
+
+.safo-flow-icon {
+  background: rgba(255,255,255,0.08) !important;
+  border-radius: 12px !important;
+}
+
+/* ── Trust Cards ── */
+.safo-trust-card,
+.safo-feature-card {
+  border: 1px solid var(--pm-line) !important;
+  border-radius: var(--pm-radius) !important;
+  background: var(--pm-surface) !important;
+  box-shadow: var(--pm-shadow-sm) !important;
+  padding: 26px 22px !important;
+  transition: all 0.32s var(--pm-ease) !important;
+}
+
+.safo-trust-card:hover,
+.safo-feature-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--pm-shadow-md) !important;
+  border-color: rgba(37,99,235,0.12) !important;
+}
+
+.safo-trust-card h3,
+.safo-feature-card h3,
+.safo-flow-card h3 {
+  font-family: var(--pm-font) !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: -0.01em;
+}
+
+.safo-trust-card p,
+.safo-feature-card p,
+.safo-flow-card p {
+  font-family: var(--pm-font) !important;
+  font-weight: 400 !important;
+  font-size: 0.84rem !important;
+  line-height: 1.7 !important;
+}
+
+.safo-trust-icon,
+.safo-feature-card > i {
+  background: var(--pm-blue-soft) !important;
+  color: var(--pm-blue) !important;
+  border-radius: 12px !important;
+  width: 46px !important;
+  height: 46px !important;
+}
+
+.safo-trust-card--accent {
+  border-color: rgba(184,134,11,0.15) !important;
+  background: linear-gradient(180deg, rgba(184,134,11,0.04), var(--pm-surface)) !important;
+}
+
+.safo-trust-card--accent .safo-trust-icon {
+  background: var(--pm-gold-soft) !important;
+  color: var(--pm-gold) !important;
+}
+
+/* ── Feature Media ── */
+.safo-feature-media {
+  border: 1px solid var(--pm-line) !important;
+  border-radius: var(--pm-radius-lg) !important;
+  box-shadow: var(--pm-shadow-lg) !important;
+  overflow: hidden;
+  position: relative;
+}
+
+.safo-feature-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 60%, rgba(37,99,235,0.06));
+  pointer-events: none;
+}
+
+/* ── Timeline ── */
+.safo-timeline::before {
+  background: linear-gradient(180deg, var(--pm-blue), rgba(37,99,235,0.06)) !important;
+  width: 2px !important;
+}
+
+.safo-timeline-item > span {
+  border: 2px solid var(--pm-blue) !important;
+  background: var(--pm-surface) !important;
+  color: var(--pm-blue) !important;
+  font-family: var(--pm-font) !important;
+  font-weight: 800 !important;
+}
+
+.safo-timeline-item > div {
+  border: 1px solid var(--pm-line) !important;
+  border-radius: var(--pm-radius) !important;
+  background: var(--pm-surface) !important;
+  box-shadow: var(--pm-shadow-sm) !important;
+  transition: all 0.32s var(--pm-ease) !important;
+}
+
+.safo-timeline-item > div:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: var(--pm-shadow-md) !important;
+  border-color: rgba(37,99,235,0.14) !important;
+}
+
+.safo-timeline-item h3 {
+  font-family: var(--pm-font) !important;
+  font-weight: 700 !important;
+}
+
+.safo-timeline-item p {
+  font-family: var(--pm-font) !important;
+}
+
+/* ── Deal Cards ── */
+.safo-deal-card {
+  border: 1px solid var(--pm-line) !important;
+  border-radius: var(--pm-radius) !important;
+  background: var(--pm-surface) !important;
+  box-shadow: var(--pm-shadow-sm) !important;
+  overflow: hidden;
+  transition: all 0.32s var(--pm-ease) !important;
+}
+
+.safo-deal-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--pm-shadow-md) !important;
+}
+
+.safo-deal-card__type {
+  font-family: var(--pm-font) !important;
+  font-weight: 700 !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.02em;
+}
+
+.safo-deal-card__price {
+  font-family: var(--pm-font) !important;
+  font-weight: 800 !important;
+}
+
+.safo-deal-card h3 {
+  font-family: var(--pm-font) !important;
+  font-weight: 700 !important;
+  font-size: 0.92rem !important;
+}
+
+.safo-deal-card__seller {
+  font-family: var(--pm-font) !important;
+  font-weight: 600 !important;
+}
+
+.safo-icon-link {
+  background: var(--pm-blue-soft) !important;
+  color: var(--pm-blue) !important;
+  border-radius: 10px !important;
+  transition: all 0.25s var(--pm-ease) !important;
+}
+
+.safo-icon-link:hover {
+  background: var(--pm-blue) !important;
+  color: #fff !important;
+  transform: translateY(-1px) scale(1.04) !important;
+}
+
+/* ═══ CTA SECTION ═══ */
+.safo-cta-box {
+  border-radius: var(--pm-radius-lg) !important;
+  box-shadow: var(--pm-shadow-lg) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.safo-cta-box::before {
+  background: linear-gradient(135deg, rgba(10,22,40,0.78), rgba(23,70,162,0.52)) !important;
+}
+
+.safo-cta-content h2 {
+  font-family: var(--pm-font) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+}
+
+.safo-cta-content p {
+  font-family: var(--pm-font) !important;
+}
+
+/* ═══ GLOBAL PREMIUM OVERRIDES ═══ */
+
+/* Navbar */
+body[data-page="home"] .se-navbar {
+  background: rgba(255,255,255,0.88) !important;
+  backdrop-filter: blur(20px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.5) !important;
+  border-bottom: 1px solid rgba(15,23,42,0.06) !important;
+  box-shadow: 0 1px 3px rgba(15,23,42,0.03), 0 8px 24px rgba(15,23,42,0.04) !important;
+}
+
+/* Footer */
+body[data-page="home"] .se-footer {
+  background: var(--pm-surface) !important;
+  border-top: 1px solid var(--pm-line) !important;
+}
+
+.se-footer-brand, .se-footer-copyline {
+  font-family: var(--pm-font) !important;
+}
+
+.se-footer-links a {
+  font-family: var(--pm-font) !important;
+  font-weight: 500 !important;
+  transition: color 0.2s ease !important;
+}
+
+/* ── Toolbar / Links ── */
+.safo-link {
+  font-family: var(--pm-font) !important;
+  font-weight: 700 !important;
+  color: var(--pm-blue) !important;
+}
+
+.safo-toolbar .safo-section-title,
+.safo-toolbar .safo-section__sub {
+  font-family: var(--pm-font) !important;
+}
+
+/* ═══ PREMIUM ANIMATIONS ═══ */
+@media (min-width: 769px) {
+  .safo-reveal {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    filter: blur(4px);
+    transition:
+      transform 0.72s var(--pm-ease),
+      opacity 0.52s ease,
+      filter 0.56s ease !important;
+  }
+
+  .safo-reveal.zoom {
+    transform: translate3d(0, 20px, 0) scale(0.97);
+  }
+
+  .safo-reveal.safo-reveal-active {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: blur(0) !important;
+  }
+}
+
+/* ═══ HERO FLUID DECORATION ═══ */
+.safo-hero-fluid-decor {
+  position: absolute;
+  top: -48px;
+  right: -64px;
+  width: 280px;
+  height: 280px;
+  z-index: 3;
+  pointer-events: none;
+  animation: pmFloat 10s ease-in-out infinite;
+}
+
+html[dir="rtl"] .safo-hero-fluid-decor {
+  right: auto;
+  left: -64px;
+}
+
+.safo-hero-fluid-decor picture,
+.safo-hero-fluid-decor img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.safo-hero-fluid-decor img {
+  object-fit: contain;
+  filter: saturate(1.1) brightness(1.05);
+  opacity: 0.55;
+}
+
+.safo-hero__visual::before {
+  display: none !important;
+}
+
+/* ── Feature Shapes Media ── */
+.safo-feature-media {
+  position: relative;
+  background: linear-gradient(135deg, #f0f5ff, #f8fafc) !important;
+}
+
+.safo-feature-media img {
+  transition: transform 0.6s var(--pm-ease);
+}
+
+.safo-feature-media:hover img {
+  transform: scale(1.03);
+}
+
+/* ═══ RESPONSIVE PREMIUM ═══ */
+@media (max-width: 768px) {
+  .safo-hero-fluid-decor {
+    width: 140px;
+    height: 140px;
+    top: -28px;
+    right: -24px;
+  }
+
+  .safo-hero-fluid-decor img {
+    opacity: 0.35;
+  }
+
+  .safo-hero {
+    padding: 48px 0 32px !important;
+  }
+
+  .safo-reveal {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    transition: transform 0.4s var(--pm-ease), opacity 0.3s ease !important;
+  }
+
+  .safo-reveal.safo-reveal-active {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ═══ SCROLLBAR PREMIUM ═══ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(37,99,235,0.2);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(37,99,235,0.35);
+}
+
+/* ═══ SMOOTH SELECTION ═══ */
+::selection {
+  background: rgba(37,99,235,0.14);
+  color: var(--pm-ink);
+}
+
+/* ── Empty State ── */
+.safo-empty {
+  border: 2px dashed rgba(15,23,42,0.08) !important;
+  border-radius: var(--pm-radius) !important;
+  background: var(--pm-surface) !important;
+}
+
+.safo-empty i { color: var(--pm-subtle) !important; }
+.safo-empty p {
+  font-family: var(--pm-font) !important;
+  font-weight: 600 !important;
+}
+
+/* ── Proof Line ── */
+.safo-proof-line {
+  font-family: var(--pm-font) !important;
+  color: var(--pm-subtle) !important;
+  font-weight: 600 !important;
+  font-size: 0.84rem !important;
+}
+
+/* ═══════════════════════════════════════════
+   GLOBAL APP PAGES PREMIUM
+   Applies to all pages (dashboard, profile, etc)
+   ═══════════════════════════════════════════ */
+
+/* ── Global Typography ── */
+body {
+  font-family: var(--pm-font) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Card System ── */
+.card,
+.se-content-glass {
+  border: 1px solid var(--pm-line) !important;
+  border-radius: var(--pm-radius) !important;
+  box-shadow: var(--pm-shadow-sm) !important;
+  transition: transform 0.28s var(--pm-ease), box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+/* ── Form Refinements ── */
+.form-control {
+  font-family: var(--pm-font) !important;
+  border-radius: 10px !important;
+  border: 1.5px solid rgba(15,23,42,0.1) !important;
+  transition: all 0.22s ease !important;
+}
+
+.form-control:focus {
+  border-color: rgba(37,99,235,0.4) !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.08) !important;
+}
+
+.form-label {
+  font-family: var(--pm-font) !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem !important;
+  letter-spacing: -0.01em;
+}
+
+/* ── Button System ── */
+.btn-primary {
+  font-family: var(--pm-font) !important;
+  background: var(--pm-blue) !important;
+  border-color: var(--pm-blue) !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.2) !important;
+  transition: all 0.25s var(--pm-ease) !important;
+}
+
+.btn-primary:hover {
+  background: var(--pm-blue-dark) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(37,99,235,0.28) !important;
+}
+
+.btn-secondary {
+  font-family: var(--pm-font) !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+}
+
+/* ── Alert Refinements ── */
+.se-alert {
+  font-family: var(--pm-font) !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+}
+
+/* ── Premium Footer ── */
+.se-footer {
+  font-family: var(--pm-font) !important;
+}
+
+/* ── Navbar Typography ── */
+.se-nav-links a,
+.se-user-name,
+.se-dropdown a,
+.se-dropdown button,
+.se-mobile-menu a {
+  font-family: var(--pm-font) !important;
+}
+
+/* ── Premium Page Background ── */
+.se-visual-field {
+  background:
+    linear-gradient(180deg, rgba(248,250,253,0.97), rgba(255,255,255,0.99) 40%, rgba(248,250,253,0.97)) !important;
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .safo-hero-fluid-decor,
+  .safo-pulse-dot {
+    animation: none !important;
+  }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Public page legibility fixes.
+   These rules sit at the end because desktop_light and premium both restyle
+   the same home sections with !important declarations. */
+body[data-page="home"] .safo-section--dark .safo-section-title,
+body[data-page="home"] .safo-section--dark .safo-flow-card h3 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: currentColor !important;
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.2);
+}
+
+body[data-page="home"] .safo-section--dark .safo-section__sub,
+body[data-page="home"] .safo-section--dark .safo-flow-card p {
+  color: rgba(255, 255, 255, 0.78) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body[data-page="home"] .safo-section--dark .safo-section-tag {
+  color: #dbeafe !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body[data-page="home"] #how-it-works {
+  color: #ffffff !important;
+  background:
+    linear-gradient(135deg, rgba(201, 150, 59, 0.14), transparent 34%),
+    linear-gradient(160deg, #0d1b2a 0%, #132844 54%, #17366f 100%) !important;
+  box-shadow: none !important;
+}
+
+body[data-page="home"] #how-it-works::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.38;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.88), transparent 86%);
+}
+
+body[data-page="home"] #how-it-works .safo-shell {
+  position: relative;
+  z-index: 1;
+}
+
+body[data-page="home"] #how-it-works .safo-section-title,
+body[data-page="home"] #how-it-works .safo-timeline-item h3 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: currentColor !important;
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.18);
+}
+
+body[data-page="home"] #how-it-works .safo-section__sub,
+body[data-page="home"] #how-it-works .safo-timeline-item p {
+  color: rgba(255, 255, 255, 0.78) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body[data-page="home"] #how-it-works .safo-section-tag {
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #dbeafe !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body[data-page="home"] #how-it-works .safo-timeline::before {
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.36), transparent) !important;
+}
+
+body[data-page="home"] #how-it-works .safo-timeline-item > span {
+  border-color: rgba(255, 255, 255, 0.68) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: var(--pm-blue) !important;
+  box-shadow: 0 0 0 7px rgba(13, 27, 42, 0.86) !important;
+}
+
+body[data-page="home"] #how-it-works .safo-timeline-item > div {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.16) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+body[data-page="home"] .safo-cta-content h2 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: currentColor !important;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+}
+
+body[data-page="home"] .safo-cta-content p {
+  color: rgba(255, 255, 255, 0.82) !important;
+  -webkit-text-fill-color: currentColor !important;
+}

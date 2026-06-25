@@ -1,0 +1,82 @@
+{% load site_i18n %}
+<aside class="adm-sidebar">
+  <div class="adm-brand">
+    <div class="adm-brand-mark"><i class="fas fa-shield-halved"></i></div>
+    <div>
+      <div class="adm-brand-kicker">{% if current_language == 'ar' %}لوحة خاصة{% else %}Private control{% endif %}</div>
+      <div class="adm-brand-title">{% t "admin.dash.title" %}</div>
+    </div>
+  </div>
+
+  <div class="adm-side-section">
+    <div class="adm-side-label">{% if current_language == 'ar' %}الصلاحيات{% else %}Access{% endif %}</div>
+    <div class="adm-role-stack">
+      {% for role in current_role_specs %}
+      <div class="adm-role-card">
+        <strong>{{ role.name }}</strong>
+      </div>
+      {% empty %}
+      <div class="adm-role-card">
+        <strong>{% if current_language == 'ar' %}وصول إداري{% else %}Admin access{% endif %}</strong>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="adm-side-section">
+    <div class="adm-side-label">{% if current_language == 'ar' %}التنقل{% else %}Navigation{% endif %}</div>
+    <nav class="adm-side-nav">
+      <a href="{% url 'admin_dashboard' %}" class="{% if admin_current_page == 'dashboard' %}is-active{% endif %}">
+        <i class="fas fa-chart-pie"></i>
+        <span>{% t "admin.overview" %}</span>
+      </a>
+      {% if has_security_access %}
+      <a href="{% url 'admin_security_reports' %}" class="{% if admin_current_page == 'security' %}is-active{% endif %}">
+        <i class="fas fa-user-shield"></i>
+        <span>{% if current_language == 'ar' %}مركز الأمن{% else %}Security Center{% endif %}</span>
+      </a>
+      {% endif %}
+      {% if has_support_access %}
+      <a href="{% url 'staff_dashboard' %}" class="{% if admin_current_page == 'support' %}is-active{% endif %}">
+        <i class="fas fa-headset"></i>
+        <span>{% t "admin.dash.support_tickets" %}</span>
+      </a>
+      <a href="{% url 'admin_rooms_list' %}" class="{% if admin_current_page == 'rooms' %}is-active{% endif %}">
+        <i class="fas fa-people-arrows"></i>
+        <span>{% t "admin.dash.private_rooms" %}</span>
+      </a>
+      {% endif %}
+      {% if has_operations_access %}
+      <a href="{% url 'escrow_dashboard' %}" class="{% if admin_current_page == 'escrow' %}is-active{% endif %}">
+        <i class="fas fa-vault"></i>
+        <span>{% t "admin.dash.escrow_rooms" %}</span>
+      </a>
+      <a href="{% url 'admin_kyc_list' %}" class="{% if admin_current_page == 'kyc' %}is-active{% endif %}">
+        <i class="fas fa-id-card"></i>
+        <span>{% t "admin.dash.kyc_requests" %}</span>
+      </a>
+      {% endif %}
+      {% if has_finance_access %}
+      <a href="{% url 'admin_withdrawals_list' %}" class="{% if admin_current_page == 'withdrawals' %}is-active{% endif %}">
+        <i class="fas fa-money-bill-transfer"></i>
+        <span>{% t "admin.dash.withdrawal_requests" %}</span>
+      </a>
+      <a href="{% url 'staff_pending_payments' %}" class="{% if admin_current_page == 'payments' %}is-active{% endif %}">
+        <i class="fas fa-receipt"></i>
+        <span>{% if current_language == 'ar' %}مراجعة المدفوعات{% else %}Payment review{% endif %}</span>
+      </a>
+      {% endif %}
+      {% if request.user.is_superuser %}
+      <a href="{% url 'admin_users_list' %}" class="{% if admin_current_page == 'users' %}is-active{% endif %}">
+        <i class="fas fa-users-cog"></i>
+        <span>{% t "admin.dash.user_admin" %}</span>
+      </a>
+      {% endif %}
+    </nav>
+  </div>
+
+  <div class="adm-side-section adm-security-panel">
+    <div class="adm-side-label">{% if current_language == 'ar' %}تنبيه{% else %}Note{% endif %}</div>
+    <p class="adm-side-note">{% if current_language == 'ar' %}هذه اللوحة تعرض ما يحتاج متابعة فقط. التفاصيل الكاملة موجودة داخل كل قسم.{% else %}This panel shows only what needs attention. Full details live inside each section.{% endif %}</p>
+  </div>
+</aside>

@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+{% load site_i18n %}
+{% load static %}
+{% block title %}{% t "payment.success.title" %} - SafouaneEscrow{% endblock %}
+{% block page_type %}payment_success{% endblock %}
+
+{% block content %}
+<div class="se-success-page">
+  <div class="se-success-card">
+    <section class="se-success-hero">
+      <div class="se-success-icon">
+        <i class="fas fa-check"></i>
+      </div>
+      <h1>{% t "payment.success.header" %}</h1>
+      <p>{% t "payment.success.sub" %}</p>
+    </section>
+
+    <section class="se-success-grid">
+      <div class="se-success-panel">
+        <div class="se-success-label">{% t "payment.success.details" %}</div>
+        <div class="se-success-rows">
+          <div class="se-success-row">
+            <span>{% t "payment.success.trx_id" %}</span>
+            <strong class="is-mono">{{ payment.transaction_id }}</strong>
+          </div>
+          <div class="se-success-row">
+            <span>{% t "payment.success.deal" %}</span>
+            <strong>{{ deal.product_title|truncatechars:36 }}</strong>
+          </div>
+          <div class="se-success-row">
+            <span>{% t "payment.success.seller" %}</span>
+            <strong>{{ deal.seller.username }}</strong>
+          </div>
+          <div class="se-success-row is-total">
+            <span>{% t "payment.success.held_amount" %}</span>
+            <strong>${{ payment.amount }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="se-success-panel">
+        <div class="se-success-label">{% t "payment.success.next_title" %}</div>
+        <p class="se-success-copy">{% t "payment.success.next_body" %}</p>
+
+        <div class="se-success-steps">
+          <div class="se-success-step is-done">
+            <span><i class="fas fa-check"></i></span>
+            <div>
+              <strong>{% t "payment.success.stage1_title" %}</strong>
+              <small>{% t "payment.success.stage1_sub" %}</small>
+            </div>
+          </div>
+          <div class="se-success-step is-current">
+            <span><i class="fas fa-truck"></i></span>
+            <div>
+              <strong>{% t "payment.success.stage2_title" %}</strong>
+              <small>{% t "payment.success.stage2_sub" %}</small>
+            </div>
+          </div>
+          <div class="se-success-step">
+            <span><i class="fas fa-box-open"></i></span>
+            <div>
+              <strong>{% t "payment.success.stage3_title" %}</strong>
+              <small>{% t "payment.success.stage3_sub" %}</small>
+            </div>
+          </div>
+          <div class="se-success-step">
+            <span><i class="fas fa-wallet"></i></span>
+            <div>
+              <strong>{% t "payment.success.stage4_title" %}</strong>
+              <small>{% t "payment.success.stage4_sub" %}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="se-success-actions">
+      <a href="{% url 'escrow_room' deal.id %}" class="se-primary-action">
+        <i class="fas fa-comments"></i>
+        <span>{% t "payment.success.enter_room" %}</span>
+      </a>
+      <a href="{% url 'deal_detail' deal.id %}" class="se-secondary-action">
+        <i class="fas fa-eye"></i>
+        <span>{% t "payment.success.view_deal" %}</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+.se-success-page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 28px 0 40px;
+}
+.se-success-card {
+  background: #fff;
+  border: 1px solid rgba(13,27,42,.08);
+  border-radius: 28px;
+  box-shadow: 0 24px 54px rgba(15,23,42,.10);
+  overflow: hidden;
+}
+.se-success-hero {
+  padding: 38px 28px 28px;
+  text-align: center;
+  background: linear-gradient(135deg, var(--navy), #1a2e45);
+  color: #fff;
+}
+.se-success-icon {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy);
+  font-size: 2rem;
+  box-shadow: 0 16px 32px rgba(201,150,59,.28);
+}
+.se-success-hero h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  font-weight: 900;
+  color: #fff;
+}
+.se-success-hero p {
+  margin: 0;
+  color: rgba(255,255,255,.76);
+  font-size: .95rem;
+}
+.se-success-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  padding: 24px;
+}
+.se-success-panel {
+  padding: 22px;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid #edf2f7;
+}
+.se-success-label {
+  margin-bottom: 14px;
+  color: var(--gold-dark);
+  font-size: .78rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.se-success-rows {
+  display: grid;
+  gap: 12px;
+}
+.se-success-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--text-secondary);
+  font-size: .88rem;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #edf2f7;
+}
+.se-success-row strong {
+  color: var(--navy);
+  font-weight: 800;
+  text-align: end;
+}
+.se-success-row.is-total {
+  padding: 14px 0 0;
+  border-bottom: 0;
+}
+.se-success-row.is-total span,
+.se-success-row.is-total strong {
+  color: var(--navy);
+  font-size: 1rem;
+  font-weight: 900;
+}
+.se-success-copy {
+  margin: 0 0 16px;
+  color: var(--text-secondary);
+  font-size: .9rem;
+  line-height: 1.9;
+}
+.se-success-steps {
+  display: grid;
+  gap: 12px;
+}
+.se-success-step {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  opacity: .58;
+}
+.se-success-step span {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #eef3f8;
+  color: #7b8b9b;
+}
+.se-success-step strong,
+.se-success-step small {
+  display: block;
+}
+.se-success-step strong {
+  color: var(--navy);
+  font-size: .9rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.se-success-step small {
+  color: var(--text-secondary);
+  font-size: .79rem;
+  line-height: 1.7;
+}
+.se-success-step.is-done,
+.se-success-step.is-current {
+  opacity: 1;
+}
+.se-success-step.is-done span {
+  background: var(--success);
+  color: #fff;
+}
+.se-success-step.is-current span {
+  background: rgba(201,150,59,.18);
+  color: var(--gold-dark);
+}
+.se-success-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0 24px 24px;
+}
+.se-primary-action,
+.se-secondary-action {
+  min-height: 54px;
+  border-radius: 16px;
+  text-decoration: none;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.se-primary-action {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy);
+  box-shadow: 0 14px 28px rgba(201,150,59,.24);
+}
+.se-secondary-action {
+  background: #f5f7fa;
+  color: var(--navy);
+  border: 1px solid #e2e8f0;
+}
+@media (max-width: 767px) {
+  .se-success-page {
+    padding-top: 18px;
+  }
+  .se-success-card {
+    border-radius: 20px;
+  }
+  .se-success-grid,
+  .se-success-actions {
+    grid-template-columns: 1fr;
+  }
+  .se-success-grid {
+    padding: 18px;
+  }
+  .se-success-panel {
+    padding: 18px;
+    border-radius: 18px;
+  }
+  .se-success-actions {
+    padding: 0 18px 18px;
+  }
+}
+</style>
+{% include "partials/_rooms_light_styles.html" %}
+{% endblock %}

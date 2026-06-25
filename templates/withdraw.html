@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load site_i18n %}
+
+{% block title %}{% t "withdraw.title" %} - {% t "site.name" %}{% endblock %}
+{% block page_type %}profile{% endblock %}
+
+{% block content %}
+<div class="withdraw-page app-page">
+  {% include "partials/withdraw_request_shell.html" %}
+</div>
+
+<style>
+.withdraw-page {
+  min-height: 60vh;
+  padding-top: 18px;
+  padding-bottom: 28px;
+}
+@media (max-width: 767px) {
+  .withdraw-page {
+    padding-top: 10px;
+    padding-bottom: 18px;
+  }
+}
+</style>
+{% include "partials/_profile_light_styles.html" %}
+
+<script>
+  function initWithdrawalMethodHints() {
+    const shell = document.getElementById('withdraw-page-shell');
+    if (!shell) return;
+
+    const methodSelect = shell.querySelector('select[name="method"]');
+    const detailsField = shell.querySelector('textarea[name="details"]');
+    const hintNode = shell.querySelector('#withdrawMethodHint');
+    if (!methodSelect || !detailsField || !hintNode) return;
+
+    const currentLanguage = document.documentElement.lang === 'ar' ? 'ar' : 'en';
+    const hints = {
+      paypal: {
+        placeholder: 'example@paypal.com',
+        ar: 'أدخل بريد PayPal الذي سيستقبل المبلغ.',
+        en: 'Enter the PayPal email that should receive the payout.'
+      },
+      bank: {
+        placeholder: 'Bank name / IBAN / account number',
+        ar: 'أدخل اسم البنك واسم صاحب الحساب ورقم الحساب أو IBAN.',
+        en: 'Enter the bank name, account holder name, and account or IBAN.'
+      },
+      crypto: {
+        placeholder: 'USDT TRC20 wallet address',
+        ar: 'أدخل عنوان محفظة USDT على شبكة TRC20 يبدأ بالحرف T.',
+        en: 'Enter a USDT wallet address on the TRC20 network starting with T.'
+      }
+    };
+
+    function applyMethodHint() {
+      const method = methodSelect.value || 'paypal';
+      const config = hints[method] || hints.paypal;
+      detailsField.placeholder = config.placeholder;
+      hintNode.textContent = currentLanguage === 'ar' ? config.ar : config.en;
+    }
+
+    methodSelect.removeEventListener('change', applyMethodHint);
+    methodSelect.addEventListener('change', applyMethodHint);
+    applyMethodHint();
+  }
+
+  document.addEventListener('DOMContentLoaded', initWithdrawalMethodHints);
+</script>
+{% endblock %}

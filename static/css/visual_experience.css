@@ -1,0 +1,225 @@
+:root {
+  --vx-ink: #0f172a;
+  --vx-muted: #64748b;
+  --vx-line: rgba(15, 23, 42, 0.09);
+  --vx-blue: #2563eb;
+  --vx-blue-deep: #1d4ed8;
+  --vx-gold: #c9963b;
+  --vx-surface: rgba(255, 255, 255, 0.86);
+  --vx-shadow: 0 18px 44px rgba(15, 23, 42, 0.11);
+  --vx-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.se-scroll-progress {
+  position: fixed;
+  top: 0;
+  inset-inline-start: 0;
+  z-index: 4000;
+  width: 100%;
+  height: 3px;
+  pointer-events: none;
+  opacity: 0;
+  transform: scaleX(var(--se-scroll-progress, 0));
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--vx-gold), var(--vx-blue) 58%, #60a5fa);
+  box-shadow: 0 0 18px rgba(37, 99, 235, 0.24);
+  transition: opacity 0.18s ease, transform 0.08s linear;
+}
+
+[dir="rtl"] .se-scroll-progress {
+  transform-origin: right center;
+}
+
+body.se-scrolled .se-scroll-progress {
+  opacity: 1;
+}
+
+.se-visual-field {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 0.98) 42%, rgba(248, 250, 252, 0.96)),
+    linear-gradient(115deg, rgba(37, 99, 235, 0.08), transparent 34%, rgba(201, 150, 59, 0.07) 68%, transparent);
+}
+
+.se-visual-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.42;
+  background:
+    linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 82%);
+}
+
+.se-visual-field::after {
+  content: "";
+  position: absolute;
+  inset: -22% -12%;
+  opacity: 0.5;
+  background:
+    repeating-linear-gradient(
+      112deg,
+      transparent 0,
+      transparent 108px,
+      rgba(37, 99, 235, 0.045) 109px,
+      rgba(37, 99, 235, 0.045) 110px,
+      transparent 111px,
+      transparent 220px
+    );
+  transform: translate3d(calc(var(--vx-scroll, 0) * -18px), calc(var(--vx-scroll, 0) * 24px), 0);
+  transition: transform 0.18s linear;
+}
+
+body[data-page="home"] .se-visual-field {
+  background: #ffffff;
+}
+
+body[data-page="home"] .se-visual-field::before,
+body[data-page="home"] .se-visual-field::after {
+  opacity: 0;
+}
+
+body.se-scrolled .se-navbar {
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.11) !important;
+}
+
+body.se-scrolled .se-navbar-inner {
+  min-height: calc(var(--navbar-h) - 6px);
+}
+
+.se-main :is(a, button, input, textarea, select, .btn, .safo-btn) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.se-main :is(input, textarea, select, .form-control):focus {
+  border-color: rgba(37, 99, 235, 0.48) !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.11) !important;
+}
+
+.se-main :is(.btn, button, .safo-btn, .se-btn-login, .se-btn-register, .email-main-btn, .account-card-btn) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.se-main :is(.card, article, .pf-card, .adm-card, .adm-surface, .email-card, .account-card, .logout-card, .auth-card):not(.se-no-lift):not([class*="chat"]) {
+  transition:
+    transform 0.22s var(--vx-ease),
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.se-main :is(.btn, button, .safo-btn, .email-main-btn, .account-card-btn)::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  opacity: 0;
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.42) 46%, transparent 62%);
+  transform: translateX(var(--vx-sheen-x, 120%));
+  transition: opacity 0.2s ease, transform 0.55s var(--vx-ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .se-main :is(.btn, button, .safo-btn, .email-main-btn, .account-card-btn):hover::after {
+    opacity: 1;
+    --vx-sheen-x: -120%;
+  }
+
+  .se-main :is(.card, article, .pf-card, .adm-card, .adm-surface, .email-card, .account-card, .logout-card, .auth-card):not(.se-no-lift):not([class*="chat"]):hover {
+    transform: translateY(-3px);
+    box-shadow: var(--vx-shadow);
+  }
+}
+
+body[data-page="home"] .safo-hero {
+  overflow: hidden;
+}
+
+body[data-page="home"] .safo-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.72;
+  background:
+    linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.06), transparent),
+    repeating-linear-gradient(90deg, transparent 0, transparent 74px, rgba(15, 23, 42, 0.035) 75px, transparent 76px);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.82), transparent 72%);
+  transform: translate3d(calc(var(--vx-scroll, 0) * 16px), 0, 0);
+  transition: transform 0.18s linear;
+}
+
+body[data-page="home"] .safo-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+body[data-page="home"] .safo-hero-card,
+body[data-page="home"] .safo-cta-box,
+body[data-page="home"] .safo-trust-card,
+body[data-page="home"] .safo-feature-card,
+body[data-page="home"] .safo-deal-card {
+  border-color: rgba(37, 99, 235, 0.11);
+}
+
+body[data-page="home"] .safo-hero-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.58;
+  background: linear-gradient(120deg, transparent 0%, rgba(37, 99, 235, 0.07) 48%, transparent 68%);
+  transform: translateX(calc(var(--vx-scroll, 0) * -26px));
+  transition: transform 0.18s linear;
+}
+
+.is-pressing {
+  transform: translateY(1px) scale(0.992) !important;
+}
+
+@media (max-width: 768px) {
+  .se-scroll-progress {
+    height: 2px;
+    box-shadow: none;
+  }
+
+  .se-visual-field {
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 38%, #f8fafc 100%);
+  }
+
+  .se-visual-field::before,
+  .se-visual-field::after,
+  body[data-page="home"] .safo-hero::before,
+  body[data-page="home"] .safo-hero-card::after {
+    display: none;
+  }
+
+  body.se-scrolled .se-navbar-inner {
+    min-height: var(--navbar-h);
+  }
+
+  .se-main :is(.card, article, .pf-card, .adm-card, .adm-surface, .email-card, .account-card, .logout-card, .auth-card) {
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .se-scroll-progress,
+  .se-visual-field::after,
+  body[data-page="home"] .safo-hero::before,
+  body[data-page="home"] .safo-hero-card::after {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .is-pressing {
+    transform: none !important;
+  }
+}

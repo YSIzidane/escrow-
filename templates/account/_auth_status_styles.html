@@ -1,0 +1,454 @@
+<style>
+  body[data-page="password_reset"],
+  body[data-page="password_reset_done"],
+  body[data-page="password_reset_from_key"],
+  body[data-page="password_reset_from_key_done"],
+  body[data-page="account_verification_sent"],
+  body[data-page="account_email_confirm"],
+  body[data-page="verified_email_required"],
+  body[data-page="signup_closed"],
+  body[data-page="account_inactive"] {
+    background: #f8fafc !important;
+    color: #0d1b2a !important;
+  }
+
+  body[data-page="password_reset"] .page-bg-overlay,
+  body[data-page="password_reset_done"] .page-bg-overlay,
+  body[data-page="password_reset_from_key"] .page-bg-overlay,
+  body[data-page="password_reset_from_key_done"] .page-bg-overlay,
+  body[data-page="account_verification_sent"] .page-bg-overlay,
+  body[data-page="account_email_confirm"] .page-bg-overlay,
+  body[data-page="verified_email_required"] .page-bg-overlay,
+  body[data-page="signup_closed"] .page-bg-overlay,
+  body[data-page="account_inactive"] .page-bg-overlay {
+    background:
+      radial-gradient(circle at 14% 4%, rgba(37, 99, 235, 0.08), transparent 26%),
+      radial-gradient(circle at 86% 0%, rgba(201, 150, 59, 0.1), transparent 24%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 48%, #ffffff 100%) !important;
+  }
+
+  body[data-page="password_reset"] .se-main,
+  body[data-page="password_reset_done"] .se-main,
+  body[data-page="password_reset_from_key"] .se-main,
+  body[data-page="password_reset_from_key_done"] .se-main,
+  body[data-page="account_verification_sent"] .se-main,
+  body[data-page="account_email_confirm"] .se-main,
+  body[data-page="verified_email_required"] .se-main,
+  body[data-page="signup_closed"] .se-main,
+  body[data-page="account_inactive"] .se-main {
+    position: relative;
+    isolation: isolate;
+  }
+
+  body[data-page="password_reset"] .auth-card,
+  body[data-page="password_reset_done"] .auth-status-card,
+  body[data-page="password_reset_from_key"] .reset-key-card,
+  body[data-page="password_reset_from_key_done"] .auth-status-card,
+  body[data-page="account_verification_sent"] .verify-email-card,
+  body[data-page="account_email_confirm"] .email-confirm-card,
+  body[data-page="verified_email_required"] .auth-status-card,
+  body[data-page="signup_closed"] .auth-status-card,
+  body[data-page="account_inactive"] .auth-status-card {
+    border-radius: 24px !important;
+    border: 1px solid rgba(15, 23, 42, 0.09) !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    box-shadow: 0 22px 58px rgba(15, 23, 42, 0.12) !important;
+    overflow: hidden !important;
+    animation: authStatusIn 0.52s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  }
+
+  body[data-page="password_reset"] .auth-card-header,
+  body[data-page="password_reset_done"] .auth-status-header,
+  body[data-page="password_reset_from_key"] .reset-key-header,
+  body[data-page="password_reset_from_key_done"] .auth-status-header,
+  body[data-page="account_verification_sent"] .verify-email-header,
+  body[data-page="account_email_confirm"] .email-confirm-header,
+  body[data-page="verified_email_required"] .auth-status-header,
+  body[data-page="signup_closed"] .auth-status-header,
+  body[data-page="account_inactive"] .auth-status-header {
+    padding: 38px 32px 28px !important;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(37, 99, 235, 0.1), transparent 32%),
+      radial-gradient(circle at 88% 10%, rgba(201, 150, 59, 0.13), transparent 28%),
+      linear-gradient(145deg, #ffffff 0%, #f5f8fd 100%) !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: none !important;
+    color: #0d1b2a !important;
+    overflow: hidden;
+  }
+
+  body[data-page="password_reset"] .auth-card-header::after,
+  body[data-page="password_reset_done"] .auth-status-header::after,
+  body[data-page="password_reset_from_key"] .reset-key-header::after,
+  body[data-page="password_reset_from_key_done"] .auth-status-header::after,
+  body[data-page="account_verification_sent"] .verify-email-header::after,
+  body[data-page="account_email_confirm"] .email-confirm-header::after,
+  body[data-page="verified_email_required"] .auth-status-header::after,
+  body[data-page="signup_closed"] .auth-status-header::after,
+  body[data-page="account_inactive"] .auth-status-header::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+
+  body[data-page="password_reset"] .auth-card-glow,
+  body[data-page="password_reset_done"] .auth-status-glow,
+  body[data-page="password_reset_from_key"] .reset-key-glow,
+  body[data-page="password_reset_from_key_done"] .auth-status-glow,
+  body[data-page="account_verification_sent"] .verify-email-glow,
+  body[data-page="account_email_confirm"] .email-confirm-glow,
+  body[data-page="verified_email_required"] .auth-status-glow,
+  body[data-page="signup_closed"] .auth-status-glow,
+  body[data-page="account_inactive"] .auth-status-glow {
+    display: none !important;
+  }
+
+  body[data-page="password_reset"] .auth-card-icon,
+  body[data-page="password_reset_done"] .auth-status-icon,
+  body[data-page="password_reset_from_key"] .reset-key-icon,
+  body[data-page="password_reset_from_key_done"] .auth-status-icon,
+  body[data-page="account_verification_sent"] .verify-email-icon,
+  body[data-page="account_email_confirm"] .email-confirm-icon,
+  body[data-page="verified_email_required"] .auth-status-icon,
+  body[data-page="signup_closed"] .auth-status-icon,
+  body[data-page="account_inactive"] .auth-status-icon {
+    position: relative;
+    z-index: 1;
+    width: 72px !important;
+    height: 72px !important;
+    border-radius: 20px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.1) !important;
+  }
+
+  body[data-page="password_reset"] .auth-card-icon i,
+  body[data-page="password_reset_done"] .auth-status-icon i,
+  body[data-page="password_reset_from_key"] .reset-key-icon i,
+  body[data-page="password_reset_from_key_done"] .auth-status-icon i,
+  body[data-page="verified_email_required"] .auth-status-icon i,
+  body[data-page="signup_closed"] .auth-status-icon i,
+  body[data-page="account_inactive"] .auth-status-icon i {
+    color: #2563eb !important;
+    font-size: 29px !important;
+  }
+
+  body[data-page="password_reset_done"] .auth-status-icon.success i,
+  body[data-page="password_reset_from_key_done"] .auth-status-icon.success i {
+    color: #16a34a !important;
+  }
+
+  body[data-page="signup_closed"] .auth-status-icon.warning i,
+  body[data-page="account_inactive"] .auth-status-icon.warning i {
+    color: #d97706 !important;
+  }
+
+  body[data-page="account_verification_sent"] .verify-email-icon img,
+  body[data-page="account_email_confirm"] .email-confirm-icon img {
+    width: 58px !important;
+    max-width: 58px !important;
+    filter: none !important;
+  }
+
+  body[data-page="password_reset"] .auth-card-title,
+  body[data-page="password_reset_done"] .auth-status-header h3,
+  body[data-page="password_reset_from_key"] .reset-key-header h3,
+  body[data-page="password_reset_from_key_done"] .auth-status-header h3,
+  body[data-page="account_verification_sent"] .verify-email-header h3,
+  body[data-page="account_email_confirm"] .email-confirm-header h3,
+  body[data-page="verified_email_required"] .auth-status-header h3,
+  body[data-page="signup_closed"] .auth-status-header h3,
+  body[data-page="account_inactive"] .auth-status-header h3 {
+    position: relative;
+    z-index: 1;
+    color: #0d1b2a !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-size: clamp(1.35rem, 2vw, 1.75rem) !important;
+    line-height: 1.28 !important;
+    letter-spacing: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  body[data-page="password_reset"] .auth-card-subtitle,
+  body[data-page="password_reset_done"] .auth-status-header p,
+  body[data-page="password_reset_from_key"] .reset-key-header p,
+  body[data-page="password_reset_from_key_done"] .auth-status-header p,
+  body[data-page="account_verification_sent"] .verify-email-header p,
+  body[data-page="account_email_confirm"] .email-confirm-header p,
+  body[data-page="verified_email_required"] .auth-status-header p,
+  body[data-page="signup_closed"] .auth-status-header p,
+  body[data-page="account_inactive"] .auth-status-header p {
+    position: relative;
+    z-index: 1;
+    color: #5b6b7f !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-size: 0.96rem !important;
+    line-height: 1.75 !important;
+    max-width: 34rem;
+    margin-inline: auto !important;
+  }
+
+  body[data-page="password_reset"] .auth-card-body,
+  body[data-page="password_reset_done"] .auth-status-body,
+  body[data-page="password_reset_from_key"] .reset-key-body,
+  body[data-page="password_reset_from_key_done"] .auth-status-body,
+  body[data-page="account_verification_sent"] .verify-email-body,
+  body[data-page="account_email_confirm"] .email-confirm-body,
+  body[data-page="verified_email_required"] .auth-status-body,
+  body[data-page="signup_closed"] .auth-status-body,
+  body[data-page="account_inactive"] .auth-status-body {
+    padding: 34px 32px !important;
+    background: #ffffff !important;
+  }
+
+  body[data-page="password_reset"] .auth-label,
+  body[data-page="password_reset_from_key"] .reset-key-label {
+    color: #26364a !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-weight: 800 !important;
+  }
+
+  body[data-page="password_reset"] .auth-input,
+  body[data-page="password_reset_from_key"] .reset-key-body .form-control,
+  body[data-page="password_reset_from_key"] .reset-key-body input[type="password"] {
+    min-height: 52px !important;
+    border: 1px solid rgba(15, 23, 42, 0.1) !important;
+    border-radius: 15px !important;
+    background: #f8fafc !important;
+    color: #0d1b2a !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+  }
+
+  body[data-page="password_reset"] .auth-input:focus,
+  body[data-page="password_reset_from_key"] .reset-key-body .form-control:focus,
+  body[data-page="password_reset_from_key"] .reset-key-body input[type="password"]:focus {
+    background: #ffffff !important;
+    border-color: rgba(37, 99, 235, 0.62) !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12) !important;
+  }
+
+  body[data-page="password_reset"] .auth-main-btn,
+  body[data-page="password_reset_done"] .auth-status-btn,
+  body[data-page="password_reset_from_key"] .reset-key-btn,
+  body[data-page="password_reset_from_key_done"] .auth-status-btn,
+  body[data-page="account_verification_sent"] .verify-email-btn,
+  body[data-page="account_email_confirm"] .email-confirm-btn,
+  body[data-page="verified_email_required"] .auth-status-btn,
+  body[data-page="signup_closed"] .auth-status-btn,
+  body[data-page="account_inactive"] .auth-status-btn {
+    min-height: 52px !important;
+    border: 0 !important;
+    border-radius: 15px !important;
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-weight: 800 !important;
+    box-shadow: 0 14px 28px rgba(37, 99, 235, 0.24) !important;
+    transition: transform 0.22s ease, box-shadow 0.22s ease !important;
+  }
+
+  body[data-page="password_reset"] .auth-main-btn:hover,
+  body[data-page="password_reset_done"] .auth-status-btn:hover,
+  body[data-page="password_reset_from_key"] .reset-key-btn:hover,
+  body[data-page="password_reset_from_key_done"] .auth-status-btn:hover,
+  body[data-page="account_verification_sent"] .verify-email-btn:hover,
+  body[data-page="account_email_confirm"] .email-confirm-btn:hover,
+  body[data-page="verified_email_required"] .auth-status-btn:hover,
+  body[data-page="signup_closed"] .auth-status-btn:hover,
+  body[data-page="account_inactive"] .auth-status-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 18px 34px rgba(37, 99, 235, 0.3) !important;
+  }
+
+  body[data-page="verified_email_required"] .auth-status-alt-btn,
+  body[data-page="account_email_confirm"] .email-confirm-secondary {
+    min-height: 52px !important;
+    border-radius: 15px !important;
+    border: 1px solid rgba(15, 23, 42, 0.09) !important;
+    background: #ffffff !important;
+    color: #0d1b2a !important;
+    -webkit-text-fill-color: currentColor !important;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06) !important;
+  }
+
+  body[data-page="password_reset_done"] .auth-status-text,
+  body[data-page="password_reset_done"] .auth-status-note,
+  body[data-page="password_reset_from_key"] .reset-key-copy,
+  body[data-page="password_reset_from_key_done"] .auth-status-text,
+  body[data-page="account_verification_sent"] .verify-email-help,
+  body[data-page="verified_email_required"] .auth-status-text,
+  body[data-page="signup_closed"] .auth-status-text,
+  body[data-page="account_inactive"] .auth-status-text,
+  body[data-page="account_email_confirm"] .email-confirm-copy,
+  body[data-page="account_email_confirm"] .email-confirm-user {
+    color: #5b6b7f !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="account_verification_sent"] .verify-email-note,
+  body[data-page="account_email_confirm"] .email-confirm-box {
+    background: #f8fafc !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    color: #26364a !important;
+    box-shadow: none !important;
+  }
+
+  body[data-page="account_verification_sent"] .verify-email-note i {
+    color: #2563eb !important;
+  }
+
+  body[data-page="account_email_confirm"] .email-confirm-address {
+    color: #0d1b2a !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="password_reset"] .auth-inline-error,
+  body[data-page="password_reset_from_key"] .reset-key-error,
+  body[data-page="account_email_confirm"] .email-confirm-alert.error {
+    background: #fef2f2 !important;
+    border: 1px solid #fecaca !important;
+    color: #b91c1c !important;
+  }
+
+  body[data-page="account_email_confirm"] .email-confirm-alert.warn {
+    background: #fffbeb !important;
+    border: 1px solid #fde68a !important;
+    color: #92400e !important;
+  }
+
+  @media (max-width: 576px) {
+    body[data-page="password_reset"] .auth-card-header,
+    body[data-page="password_reset_done"] .auth-status-header,
+    body[data-page="password_reset_from_key"] .reset-key-header,
+    body[data-page="password_reset_from_key_done"] .auth-status-header,
+    body[data-page="account_verification_sent"] .verify-email-header,
+    body[data-page="account_email_confirm"] .email-confirm-header,
+    body[data-page="verified_email_required"] .auth-status-header,
+    body[data-page="signup_closed"] .auth-status-header,
+    body[data-page="account_inactive"] .auth-status-header {
+      padding: 32px 20px 24px !important;
+    }
+
+    body[data-page="password_reset"] .auth-card-body,
+    body[data-page="password_reset_done"] .auth-status-body,
+    body[data-page="password_reset_from_key"] .reset-key-body,
+    body[data-page="password_reset_from_key_done"] .auth-status-body,
+    body[data-page="account_verification_sent"] .verify-email-body,
+    body[data-page="account_email_confirm"] .email-confirm-body,
+    body[data-page="verified_email_required"] .auth-status-body,
+    body[data-page="signup_closed"] .auth-status-body,
+    body[data-page="account_inactive"] .auth-status-body {
+      padding: 28px 20px !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body[data-page="password_reset"] .auth-card,
+    body[data-page="password_reset_done"] .auth-status-card,
+    body[data-page="password_reset_from_key"] .reset-key-card,
+    body[data-page="password_reset_from_key_done"] .auth-status-card,
+    body[data-page="account_verification_sent"] .verify-email-card,
+    body[data-page="account_email_confirm"] .email-confirm-card,
+    body[data-page="verified_email_required"] .auth-status-card,
+    body[data-page="signup_closed"] .auth-status-card,
+    body[data-page="account_inactive"] .auth-status-card {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  @keyframes authStatusIn {
+    from {
+      opacity: 0;
+      transform: translateY(18px) scale(0.985);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  /* Unified dark account status finish. */
+  body[data-page="password_reset"],
+  body[data-page="password_reset_done"],
+  body[data-page="password_reset_from_key"],
+  body[data-page="password_reset_from_key_done"],
+  body[data-page="account_verification_sent"],
+  body[data-page="account_email_confirm"],
+  body[data-page="verified_email_required"],
+  body[data-page="signup_closed"],
+  body[data-page="account_inactive"] {
+    background:
+      radial-gradient(circle at 16% -6%, rgba(115, 210, 255, 0.15), transparent 30rem),
+      radial-gradient(circle at 86% 5%, rgba(244, 201, 93, 0.14), transparent 28rem),
+      linear-gradient(135deg, #05070d, #0a1018) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="password_reset"] :is(.auth-card, .auth-status-card, .reset-key-card, .verify-email-card, .email-confirm-card),
+  body[data-page="password_reset_done"] :is(.auth-card, .auth-status-card, .reset-key-card, .verify-email-card, .email-confirm-card),
+  body[data-page="password_reset_from_key"] :is(.auth-card, .auth-status-card, .reset-key-card, .verify-email-card, .email-confirm-card),
+  body[data-page="password_reset_from_key_done"] :is(.auth-card, .auth-status-card, .reset-key-card, .verify-email-card, .email-confirm-card),
+  body[data-page="account_verification_sent"] :is(.auth-card, .auth-status-card, .reset-key-card, .verify-email-card, .email-confirm-card),
+  body[data-page="account_email_confirm"] :is(.auth-card, .auth-status-card, .reset-key-card, .verify-email-card, .email-confirm-card),
+  body[data-page="verified_email_required"] :is(.auth-card, .auth-status-card, .reset-key-card, .verify-email-card, .email-confirm-card),
+  body[data-page="signup_closed"] :is(.auth-card, .auth-status-card, .reset-key-card, .verify-email-card, .email-confirm-card),
+  body[data-page="account_inactive"] :is(.auth-card, .auth-status-card, .reset-key-card, .verify-email-card, .email-confirm-card) {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.082), rgba(255, 255, 255, 0.046)) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+    box-shadow: var(--seu-shadow-soft) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  body[data-page="password_reset"] :is(.auth-card-header, .auth-status-header, .reset-key-header, .verify-email-header, .email-confirm-header),
+  body[data-page="password_reset_done"] :is(.auth-card-header, .auth-status-header, .reset-key-header, .verify-email-header, .email-confirm-header),
+  body[data-page="password_reset_from_key"] :is(.auth-card-header, .auth-status-header, .reset-key-header, .verify-email-header, .email-confirm-header),
+  body[data-page="password_reset_from_key_done"] :is(.auth-card-header, .auth-status-header, .reset-key-header, .verify-email-header, .email-confirm-header),
+  body[data-page="account_verification_sent"] :is(.auth-card-header, .auth-status-header, .reset-key-header, .verify-email-header, .email-confirm-header),
+  body[data-page="account_email_confirm"] :is(.auth-card-header, .auth-status-header, .reset-key-header, .verify-email-header, .email-confirm-header),
+  body[data-page="verified_email_required"] :is(.auth-card-header, .auth-status-header, .reset-key-header, .verify-email-header, .email-confirm-header),
+  body[data-page="signup_closed"] :is(.auth-card-header, .auth-status-header, .reset-key-header, .verify-email-header, .email-confirm-header),
+  body[data-page="account_inactive"] :is(.auth-card-header, .auth-status-header, .reset-key-header, .verify-email-header, .email-confirm-header) {
+    background:
+      radial-gradient(circle at 18% 12%, rgba(115, 210, 255, 0.16), transparent 22rem),
+      radial-gradient(circle at 88% 10%, rgba(244, 201, 93, 0.18), transparent 20rem),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.045)) !important;
+    border-color: var(--seu-border) !important;
+  }
+
+  body[data-page="password_reset"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="password_reset_done"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="password_reset_from_key"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="password_reset_from_key_done"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="account_verification_sent"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="account_email_confirm"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="verified_email_required"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="signup_closed"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="account_inactive"] :is(h1, h2, h3, h4, h5, h6, strong) {
+    color: var(--seu-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="password_reset"] :is(p, small, .text-muted),
+  body[data-page="password_reset_done"] :is(p, small, .text-muted),
+  body[data-page="password_reset_from_key"] :is(p, small, .text-muted),
+  body[data-page="password_reset_from_key_done"] :is(p, small, .text-muted),
+  body[data-page="account_verification_sent"] :is(p, small, .text-muted),
+  body[data-page="account_email_confirm"] :is(p, small, .text-muted),
+  body[data-page="verified_email_required"] :is(p, small, .text-muted),
+  body[data-page="signup_closed"] :is(p, small, .text-muted),
+  body[data-page="account_inactive"] :is(p, small, .text-muted) {
+    color: var(--seu-muted) !important;
+  }
+
+  body[data-page="password_reset"] :is(input, select, textarea, .form-control),
+  body[data-page="password_reset_from_key"] :is(input, select, textarea, .form-control) {
+    background: rgba(255, 255, 255, 0.065) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+  }
+</style>

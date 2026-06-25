@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{% t 'deal.create.page_title' %} - Safouane{% endblock %}
+{% block page_type %}create_deal{% endblock %}
+{% block nav_deal %}active{% endblock %}
+
+{% block meta %}
+{{ block.super }}
+{% endblock %}
+
+{% block late_css %}
+<link rel="stylesheet" href="{% static 'css/deals_dark.css' %}?v=20260523a">
+{% endblock %}
+
+{% block content %}
+<main class="dl-page dl-page-create" dir="rtl">
+  <section class="dl-shell dl-create-shell" aria-labelledby="create-deal-title">
+    <header class="dl-hero dl-hero-create">
+      <div>
+        <span class="dl-kicker">
+          <i class="fas fa-shield-halved" aria-hidden="true"></i>
+          {% t 'deal.create.kicker' %}
+        </span>
+        <h1 id="create-deal-title">{% t 'deal.create.page_title' %}</h1>
+        <p>{% t 'deal.create.subtitle' %}. {% t 'deal.create.subtitle_extra' %}</p>
+      </div>
+      <a href="{% url 'listings' %}" class="dl-btn dl-btn-ghost">
+        <i class="fas fa-layer-group" aria-hidden="true"></i>
+        <span>{% t "chat_hub.browse_deals" %}</span>
+      </a>
+    </header>
+
+    <div class="dl-create-grid">
+      <form method="post" enctype="multipart/form-data" id="createDealForm" class="dl-panel dl-form-panel" data-dl-create-form>
+        {% csrf_token %}
+
+        <section class="dl-form-section">
+          <div class="dl-section-head">
+            <span class="dl-section-icon"><i class="fas fa-handshake" aria-hidden="true"></i></span>
+            <div>
+              <h2>{% t 'deal.create.deal_type' %}</h2>
+              <p>{% t 'deal.create.mode_hint' %}</p>
+            </div>
+          </div>
+
+          <div class="dl-segment" role="radiogroup" aria-label="{% t 'deal.create.deal_type' %}">
+            <label class="dl-type-card">
+              <input type="radio" name="deal_type" value="fixed" {% if form_data.deal_type != 'auction' %}checked{% endif %}>
+              <span class="dl-type-icon"><i class="fas fa-tag" aria-hidden="true"></i></span>
+              <span>
+                <strong>{% t 'deal.create.type_fixed' %}</strong>
+                <small>{% t 'deal.create.type_fixed_desc' %}</small>
+              </span>
+            </label>
+            <label class="dl-type-card">
+              <input type="radio" name="deal_type" value="auction" {% if form_data.deal_type == 'auction' %}checked{% endif %}>
+              <span class="dl-type-icon"><i class="fas fa-gavel" aria-hidden="true"></i></span>
+              <span>
+                <strong>{% t 'deal.create.type_auction' %}</strong>
+                <small>{% t 'deal.create.type_auction_desc' %}</small>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="dl-form-section">
+          <div class="dl-section-head">
+            <span class="dl-section-icon"><i class="fas fa-pen-nib" aria-hidden="true"></i></span>
+            <div>
+              <h2>{% t 'deal.create.step1' %}</h2>
+              <p>{% t 'deal.create.details_hint' %}</p>
+            </div>
+          </div>
+
+          <div class="dl-field">
+            <label for="productTitle">{% t 'deal.create.title_label' %} <span>*</span></label>
+            <input id="productTitle" type="text" name="product_title" maxlength="120" required
+                   value="{{ form_data.product_title|default:'' }}"
+                   placeholder="{% t 'deal.create.title_placeholder' %}"
+                   data-dl-count-source="title">
+            <small><span data-dl-count="title">0</span>/120</small>
+          </div>
+
+          <div class="dl-field">
+            <label for="productDescription">{% t 'deal.create.desc_label' %} <span>*</span></label>
+            <textarea id="productDescription" name="product_description" rows="5" required
+                      placeholder="{% t 'deal.create.desc_placeholder' %}"
+                      data-dl-count-source="desc">{{ form_data.product_description|default:'' }}</textarea>
+            <small><span data-dl-count="desc">0</span> {% t 'deal.create.chars' %}</small>
+          </div>
+
+          <div class="dl-field">
+            <label>{% t 'deal.create.category' %} <span>*</span></label>
+            <div class="dl-category-grid">
+              <label class="dl-chip-option">
+                <input type="radio" name="category" value="games" {% if form_data.category == 'games' or not form_data.category %}checked{% endif %}>
+                <span><i class="fas fa-gamepad" aria-hidden="true"></i>{% t "category.games" %}</span>
+              </label>
+              <label class="dl-chip-option">
+                <input type="radio" name="category" value="accounts" {% if form_data.category == 'accounts' %}checked{% endif %}>
+                <span><i class="fas fa-user-circle" aria-hidden="true"></i>{% t "category.accounts" %}</span>
+              </label>
+              <label class="dl-chip-option">
+                <input type="radio" name="category" value="services" {% if form_data.category == 'services' %}checked{% endif %}>
+                <span><i class="fas fa-screwdriver-wrench" aria-hidden="true"></i>{% t "category.services" %}</span>
+              </label>
+              <label class="dl-chip-option">
+                <input type="radio" name="category" value="electronics" {% if form_data.category == 'electronics' %}checked{% endif %}>
+                <span><i class="fas fa-mobile-screen" aria-hidden="true"></i>{% t "category.electronics" %}</span>
+              </label>
+              <label class="dl-chip-option">
+                <input type="radio" name="category" value="digital" {% if form_data.category == 'digital' %}checked{% endif %}>
+                <span><i class="fas fa-cloud-arrow-down" aria-hidden="true"></i>{% t "category.digital" %}</span>
+              </label>
+              <label class="dl-chip-option">
+                <input type="radio" name="category" value="physical" {% if form_data.category == 'physical' %}checked{% endif %}>
+                <span><i class="fas fa-box" aria-hidden="true"></i>{% t "category.physical" %}</span>
+              </label>
+            </div>
+          </div>
+
+          <input type="hidden" name="delivery_type" id="deliveryTypeInput" value="{{ form_data.delivery_type|default:'digital' }}">
+
+          <div class="dl-two-col">
+            <div class="dl-field" data-dl-category-extra="platform" hidden>
+              <label for="platform">{% t "deal.create.platform_optional" %}</label>
+              <input id="platform" type="text" name="platform" maxlength="100"
+                     value="{{ form_data.platform|default:'' }}"
+                     placeholder="{% t 'deal.create.platform_placeholder' %}">
+            </div>
+            <div class="dl-field" data-dl-category-extra="delivery_time" hidden>
+              <label for="deliveryTime">{% t "deal.create.delivery_time_days" %}</label>
+              <input id="deliveryTime" type="number" name="delivery_time" min="1" max="365"
+                     value="{{ form_data.delivery_time|default:'' }}"
+                     placeholder="{% t 'deal.create.delivery_time_placeholder' %}">
+            </div>
+          </div>
+        </section>
+
+        <section class="dl-form-section">
+          <div class="dl-section-head">
+            <span class="dl-section-icon"><i class="fas fa-dollar-sign" aria-hidden="true"></i></span>
+            <div>
+              <h2>{% t 'deal.create.step2' %}</h2>
+              <p>{% t 'deal.create.pricing_hint' %}</p>
+            </div>
+          </div>
+
+          <div data-dl-price-mode="fixed">
+            <div class="dl-field">
+              <label for="price">{% t 'deal.create.price' %} <span>*</span></label>
+              <div class="dl-money-field">
+                <b>$</b>
+                <input id="price" type="number" name="price" min="1" step="0.01"
+                       value="{{ form_data.price|default:'' }}" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+
+          <div class="dl-two-col" data-dl-price-mode="auction" hidden>
+            <div class="dl-field">
+              <label for="startingPrice">{% t 'deal.create.price_start' %} <span>*</span></label>
+              <div class="dl-money-field">
+                <b>$</b>
+                <input id="startingPrice" type="number" name="starting_price" min="1" step="0.01"
+                       value="{{ form_data.starting_price|default:'' }}" placeholder="0.00">
+              </div>
+            </div>
+            <div class="dl-field">
+              <label for="minBidIncrement">{% t 'deal.create.bid_inc' %}</label>
+              <div class="dl-money-field">
+                <b>$</b>
+                <input id="minBidIncrement" type="number" name="min_bid_increment" min="1" step="0.01"
+                       value="{{ form_data.min_bid_increment|default:'5.00' }}" placeholder="5.00">
+              </div>
+            </div>
+            <div class="dl-field dl-field-wide">
+              <label for="auctionEndsAt">{% t 'deal.create.auction_end' %} <span>*</span></label>
+              <input id="auctionEndsAt" type="datetime-local" name="auction_ends_at"
+                     value="{{ form_data.auction_ends_at|default:'' }}">
+            </div>
+          </div>
+        </section>
+
+        <section class="dl-form-section">
+          <div class="dl-section-head">
+            <span class="dl-section-icon"><i class="fas fa-images" aria-hidden="true"></i></span>
+            <div>
+              <h2>{% t 'deal.create.images_title' %}</h2>
+              <p>{% t 'deal.create.media_hint' %}</p>
+            </div>
+          </div>
+
+          <label class="dl-upload-zone" for="dealImages" data-dl-upload-zone>
+            <input id="dealImages" type="file" name="images" multiple accept="image/*" data-dl-images>
+            <span class="dl-upload-icon"><i class="fas fa-cloud-arrow-up" aria-hidden="true"></i></span>
+            <strong>{% t 'deal.create.drag_drop' %}</strong>
+            <small>{% t 'deal.create.img_limits' %}</small>
+          </label>
+          <div class="dl-preview-grid" data-dl-preview></div>
+        </section>
+
+        <div class="dl-submit-row">
+          <div class="dl-protection-note">
+            <i class="fas fa-lock" aria-hidden="true"></i>
+            <span>{% t 'deal.create.protect_desc' %}</span>
+          </div>
+          <button type="submit" class="dl-btn dl-btn-primary" id="submitBtn" data-loading-text="{% t 'deal.create.sending' %}">
+            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+            <span>{% t 'deal.create.submit' %}</span>
+          </button>
+        </div>
+      </form>
+
+      <aside class="dl-panel dl-side-card" aria-label="{% t 'deal.create.notes_label' %}">
+        <div class="dl-side-visual" aria-hidden="true">
+          <span></span>
+          <i class="fas fa-vault"></i>
+        </div>
+        <h2>{% t 'deal.create.side_title' %}</h2>
+        <p>{% t 'deal.create.side_body' %}</p>
+        <div class="dl-side-list">
+          <div><i class="fas fa-check" aria-hidden="true"></i><span>{% t 'deal.create.side_precise' %}</span></div>
+          <div><i class="fas fa-check" aria-hidden="true"></i><span>{% t 'deal.create.side_real_images' %}</span></div>
+          <div><i class="fas fa-check" aria-hidden="true"></i><span>{% t 'deal.create.side_no_external' %}</span></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/deals_dark.js' %}?v=20260522a"></script>
+{% endblock %}

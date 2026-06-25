@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{% t "friends.header" %} - Safouane{% endblock %}
+{% block page_type %}friends{% endblock %}
+
+{% block meta %}
+{{ block.super }}
+{% endblock %}
+
+{% block late_css %}
+<link rel="stylesheet" href="{% static 'css/communication_dark.css' %}?v=20260523a">
+{% endblock %}
+
+{% block content %}
+<main class="cm-page cm-bg-friends" dir="rtl">
+  <section class="cm-shell" aria-labelledby="friends-title">
+    <header class="cm-hero">
+      <div>
+        <span class="cm-kicker">
+          <i class="fas fa-user-shield" aria-hidden="true"></i>
+          {% t "friends.kicker" %}
+        </span>
+        <h1 id="friends-title">{% t "friends.header" %}</h1>
+        <p>{% t "friends.hero_sub" %}</p>
+      </div>
+      <div class="cm-actions">
+        <a href="{% url 'search' %}" class="cm-btn cm-btn-primary">
+          <i class="fas fa-user-plus" aria-hidden="true"></i>
+          <span>{% t "friends.add" %}</span>
+        </a>
+        <a href="{% url 'chat_hub' %}" class="cm-btn cm-btn-ghost">
+          <i class="fas fa-comments" aria-hidden="true"></i>
+          <span>{% t "chat_hub.header" %}</span>
+        </a>
+      </div>
+    </header>
+
+    <section class="cm-stats cm-page-stats" aria-label="{% t 'friends.summary_label' %}">
+      <article>
+        <strong>{{ friends_count|default:0 }}</strong>
+        <span>{% t "friends.count_label" %}</span>
+      </article>
+      <article>
+        <strong>{{ pending_requests_count|default:0 }}</strong>
+        <span>{% t "friends.incoming_requests" %}</span>
+      </article>
+      <article>
+        <strong>{{ user.seller_deals.count }}</strong>
+        <span>{% t "chat_hub.seller_deals" %}</span>
+      </article>
+      <article>
+        <strong>{{ user.buyer_deals.count }}</strong>
+        <span>{% t "chat_hub.buyer_deals" %}</span>
+      </article>
+    </section>
+
+    <div id="friends-sections">
+      {% include "partials/friends_sections.html" %}
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/communication_dark.js' %}?v=20260522a"></script>
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{% t "private_chat.title" %} {{ friend.username }} - Safouane{% endblock %}
+{% block page_type %}private_chat{% endblock %}
+{% block nav_chat %}active{% endblock %}
+
+{% block meta %}
+{{ block.super }}
+{% endblock %}
+
+{% block late_css %}
+<link rel="stylesheet" href="{% static 'css/communication_dark.css' %}?v=20260523a">
+{% endblock %}
+
+{% block content %}
+<main
+  class="cm-page cm-bg-private"
+  dir="rtl"
+  data-private-chat
+  data-friend-id="{{ friend.id }}"
+  data-poll-url="{% url 'poll_private_chat' friend.id %}"
+  data-attached-file="{% t 'private_chat.attached_file' %}"
+  data-click-download="{% t 'private_chat.click_download' %}"
+  data-send-error="{% t 'private_chat.send_error' %}"
+  data-you="{% t 'private_chat.you' %}"
+>
+  <section class="cm-chat-shell">
+    <aside class="cm-panel se-chat-sidebar" aria-label="{% t 'chat_hub.conversations' %}">
+      <header class="cm-panel-head">
+        <div>
+          <span class="cm-kicker">
+            <i class="fas fa-lock" aria-hidden="true"></i>
+            {% t "private_chat.private_kicker" %}
+          </span>
+          <h1>{% t "chat_hub.header" %}</h1>
+          <p>{{ friends.count }} {% t "chat_hub.conversations" %} {% t "private_chat.available_suffix" %}</p>
+        </div>
+        <a href="{% url 'friends_list' %}" class="cm-icon-action" aria-label="{% t 'chat_hub.add_friends' %}">
+          <i class="fas fa-user-plus" aria-hidden="true"></i>
+        </a>
+      </header>
+
+      <label class="cm-search" for="privateChatSearch">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input
+          id="privateChatSearch"
+          type="search"
+          placeholder="{% t 'chat_hub.search_placeholder' %}"
+          data-cm-filter-input
+          data-cm-filter-target="#privateChatList"
+          data-cm-filter-item=".se-chat-side-item"
+        >
+      </label>
+
+      <div class="cm-conversation-list se-chat-side-list" id="privateChatList">
+        {% for person in friends %}
+        <a href="{% url 'private_chat' person.id %}" class="cm-conversation-row se-chat-side-item {% if person.id == friend.id %}is-active{% endif %}" data-cm-filter-name="{{ person.username|lower }}" data-name="{{ person.username|lower }}">
+          <img src="{{ person.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ person.username }}" loading="lazy">
+          <span>
+            <strong>{{ person.username }}{% verification_badge person.profile %}</strong>
+            <small>{% if person.id == friend.id %}{% t "private_chat.current_chat" %}{% else %}{% t "chat_hub.click_to_chat" %}{% endif %}</small>
+          </span>
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        </a>
+        {% empty %}
+        <section class="cm-empty">
+          <span class="cm-empty-icon"><i class="fas fa-comment-slash" aria-hidden="true"></i></span>
+          <h2>{% t "chat_hub.no_conversations" %}</h2>
+        </section>
+        {% endfor %}
+      </div>
+    </aside>
+
+    <section class="cm-panel se-chat-wrapper">
+      <header class="se-chat-header">
+        <div class="se-chat-header-right">
+          <a href="{% url 'chat_hub' %}" class="se-back-btn" aria-label="{% t 'private_chat.back_to_messages' %}">
+            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          </a>
+          <img src="{{ friend.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ friend.username }}" class="se-chat-avatar" loading="lazy">
+          <div class="se-chat-info">
+            <div class="se-chat-name">{{ friend.username }}{% verification_badge friend.profile %}</div>
+            <div class="cm-muted">{% t "private_chat.secure_private_chat" %}</div>
+          </div>
+        </div>
+        <div class="se-chat-actions">
+          <a href="{% url 'user_profile' friend.id %}" class="se-chat-action-btn" aria-label="{% t 'private_chat.view_profile' %}">
+            <i class="fas fa-user" aria-hidden="true"></i>
+          </a>
+        </div>
+      </header>
+
+      <div class="se-chat-body" id="chatBox">
+        {% if chat_messages %}
+        <div class="se-date-sep">
+          <span>{% t "private_chat.conversation_start" %}</span>
+        </div>
+
+        {% for msg in chat_messages %}
+        <div class="se-msg-row {% if msg.sender == user %}se-msg-mine{% else %}se-msg-other{% endif %}" data-msg-id="{{ msg.id }}">
+          {% if msg.sender != user %}
+          <img src="{{ msg.sender.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ msg.sender.username }}" class="se-msg-avatar" loading="lazy">
+          {% endif %}
+
+          <div class="se-msg-content">
+            {% if msg.sender != user %}
+            <div class="se-msg-sender-name">{{ msg.sender.username }}{% verification_badge msg.sender.profile %}</div>
+            {% endif %}
+
+            {% if msg.text %}
+            <div class="se-msg-bubble {% if msg.sender == user %}se-bubble-mine{% else %}se-bubble-other{% endif %}">
+              {{ msg.text }}
+            </div>
+            {% endif %}
+
+            {% if msg.file %}
+            <a href="{% url 'private_message_attachment' msg.id %}" target="_blank" rel="noopener noreferrer" class="se-msg-file {% if msg.sender == user %}se-file-mine{% endif %}">
+              <div class="se-msg-file-icon">
+                <i class="fas fa-file-download" aria-hidden="true"></i>
+              </div>
+              <div>
+                <div class="se-msg-file-name">{% t "private_chat.attached_file" %}</div>
+                <div class="se-msg-file-sub">{% t "private_chat.click_download" %}</div>
+              </div>
+              <i class="fas fa-external-link-alt se-msg-file-arrow" aria-hidden="true"></i>
+            </a>
+            {% endif %}
+
+            <div class="se-msg-time {% if msg.sender == user %}se-time-mine{% endif %}">
+              {{ msg.created_at|date:"H:i" }}
+              {% if msg.sender == user %}<i class="fas fa-check-double se-msg-check" aria-hidden="true"></i>{% endif %}
+            </div>
+          </div>
+
+          {% if msg.sender == user %}
+          <img src="{{ user.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ user.username }}" class="se-msg-avatar" loading="lazy">
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="se-chat-empty" data-empty-chat>
+          <div class="se-chat-empty-icon">
+            <i class="fas fa-comment-dots" aria-hidden="true"></i>
+          </div>
+          <div class="se-chat-empty-title">{% t "private_chat.start_title" %} {{ friend.username }}{% verification_badge friend.profile %}</div>
+          <div class="se-chat-empty-sub">{% t "private_chat.empty_sub" %}</div>
+        </div>
+        {% endif %}
+      </div>
+
+      <button class="se-scroll-bottom" id="scrollBottomBtn" type="button" aria-label="{% t 'private_chat.scroll_bottom' %}">
+        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+      </button>
+
+      <footer class="se-chat-footer">
+        <div class="se-file-preview" id="filePreview" hidden>
+          <i class="fas fa-paperclip" aria-hidden="true"></i>
+          <span id="fileNameText">-</span>
+          <button type="button" class="se-file-remove" aria-label="{% t 'private_chat.remove_file' %}" data-clear-file>
+            <i class="fas fa-times" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" id="msgForm" class="se-chat-form" data-skip-global-ajax="true">
+          {% csrf_token %}
+          <label for="fileInput" class="se-attach-btn" aria-label="{% t 'private_chat.attach_file' %}">
+            <i class="fas fa-paperclip" aria-hidden="true"></i>
+          </label>
+          <input type="file" name="file" id="fileInput" class="cm-file-input">
+
+          <input
+            type="text"
+            name="message"
+            id="msgInput"
+            class="se-msg-input"
+            placeholder="{% t 'private_chat.placeholder' %} {{ friend.username }}..."
+            autocomplete="off"
+            autocapitalize="sentences"
+            inputmode="text"
+            enterkeyhint="send"
+            spellcheck="true"
+            maxlength="2000"
+          >
+
+          <button type="submit" class="se-send-btn" id="sendBtn" aria-label="{% t 'private_chat.send' %}">
+            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+          </button>
+        </form>
+      </footer>
+    </section>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/communication_dark.js' %}?v=20260522a"></script>
+<script src="{% static 'js/premium_private_chat.js' %}?v=20260522a"></script>
+{% endblock %}

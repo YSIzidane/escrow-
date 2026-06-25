@@ -1,0 +1,26 @@
+{
+  "name": "SafouaneEscrow",
+  "short_name": "SafEscrow",
+  "description": "Secure escrow platform",
+  "icons": [
+    {
+      "src": "/static/images/brand/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/images/brand/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/images/brand/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "theme_color": "#0d1b2a",
+  "background_color": "#0d1b2a",
+  "display": "standalone"
+}

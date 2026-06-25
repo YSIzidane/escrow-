@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load site_i18n %}
+{% block title %}{% t "create_room.title" %}{% endblock %}
+{% block page_type %}create_room{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-3 se-publish-form-page">
+  <div class="col-lg-7 col-xl-6">
+    <div class="card border-0 se-publish-form-card" style="animation: fadeInUp 0.6s ease both;">
+      <div class="se-publish-form-hero" style="background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); position: relative; overflow: hidden;">
+        <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(201,150,59,.18) 0%,transparent 70%);"></div>
+        <div style="display:flex;align-items:center;gap:16px;position:relative;z-index:1;">
+          <div style="width: 64px; height: 64px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); border-radius: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 26px; color: var(--navy); box-shadow: 0 6px 20px rgba(201,150,59,0.4);">
+            <i class="fas fa-people-arrows"></i>
+          </div>
+          <div>
+            <h4 class="se-publish-form-title">{% t "create_room.header" %}</h4>
+            <p class="se-publish-form-subtitle">{% t "create_room.sub" %}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body se-publish-form-body">
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label se-publish-field-label">{% t "create_room.title_label" %}</label>
+            <input type="text" name="title" class="form-control se-publish-input" maxlength="120" required value="{{ form_data.title|default:'' }}" placeholder="{% t 'create_room.title_placeholder' %}">
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label se-publish-field-label">{% t "create_room.desc_label" %}</label>
+            <textarea name="description" class="form-control se-publish-textarea" rows="3" maxlength="1000" placeholder="{% t 'create_room.desc_placeholder' %}">{{ form_data.description|default:'' }}</textarea>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label se-publish-field-label">
+              <i class="fas fa-tag" style="color: var(--gold); margin-left: 6px;"></i>
+              {% t "create_room.type_label" %}
+            </label>
+
+            <div class="row g-3 se-publish-option-grid">
+              <div class="col-md-4 col-12">
+                <label style="cursor: pointer; display: block;">
+                  <input type="radio" name="type" value="buy" style="display:none;" class="room-radio" {% if form_data.type == 'buy' %}checked{% endif %}>
+                  <div class="room-option se-publish-option-card" data-selected="{% if form_data.type == 'buy' %}true{% endif %}" style="text-align: center; padding: 18px 10px; border: 2px solid var(--border-light); border-radius: 14px; transition: all 0.25s cubic-bezier(.34,1.56,.64,1);">
+                    <i class="fas fa-shopping-cart" style="font-size: 1.6rem; color: var(--info); margin-bottom: 8px; display: block;"></i>
+                    <div style="font-weight: 700; font-size: 0.85rem; color: var(--navy);">{% t "create_room.buy" %}</div>
+                  </div>
+                </label>
+              </div>
+              <div class="col-md-4 col-12">
+                <label style="cursor: pointer; display: block;">
+                  <input type="radio" name="type" value="sell" style="display:none;" class="room-radio" {% if form_data.type == 'sell' or not form_data.type %}checked{% endif %}>
+                  <div class="room-option se-publish-option-card" data-selected="{% if form_data.type == 'sell' or not form_data.type %}true{% endif %}" style="text-align: center; padding: 18px 10px; border: 2px solid var(--border-light); border-radius: 14px; transition: all 0.25s cubic-bezier(.34,1.56,.64,1);">
+                    <i class="fas fa-store" style="font-size: 1.6rem; color: var(--gold-dark); margin-bottom: 8px; display: block;"></i>
+                    <div style="font-weight: 700; font-size: 0.85rem; color: var(--navy);">{% t "create_room.sell" %}</div>
+                  </div>
+                </label>
+              </div>
+              <div class="col-md-4 col-12">
+                <label style="cursor: pointer; display: block;">
+                  <input type="radio" name="type" value="trade" style="display:none;" class="room-radio" {% if form_data.type == 'trade' %}checked{% endif %}>
+                  <div class="room-option se-publish-option-card" data-selected="{% if form_data.type == 'trade' %}true{% endif %}" style="text-align: center; padding: 18px 10px; border: 2px solid var(--border-light); border-radius: 14px; transition: all 0.25s cubic-bezier(.34,1.56,.64,1);">
+                    <i class="fas fa-exchange-alt" style="font-size: 1.6rem; color: var(--success); margin-bottom: 8px; display: block;"></i>
+                    <div style="font-weight: 700; font-size: 0.85rem; color: var(--navy);">{% t "create_room.trade" %}</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="se-publish-helper" style="margin-bottom: 22px;">
+            <div class="se-publish-helper-title">{% t "create_room.invite_title" %}</div>
+            <div class="se-publish-helper-copy">
+              {% t "create_room.invite_hint_1" %}
+              <br>
+              {% t "create_room.invite_hint_2" %}
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 btn-lg se-publish-primary-btn">
+            <i class="fas fa-plus-circle" style="margin-left: 8px;"></i>
+            {% t "create_room.submit" %}
+          </button>
+
+          <a href="{% url 'join_room' %}" class="se-publish-secondary-link">
+            <i class="fas fa-key" style="margin-left: 5px;"></i>
+            {% t "create_room.has_code" %}
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function paintRoomOptions() {
+  document.querySelectorAll('.room-radio').forEach((radio) => {
+    const selected = radio.nextElementSibling;
+    const isChecked = radio.checked;
+    selected.style.border = isChecked ? '2px solid var(--gold)' : '2px solid var(--border-light)';
+    selected.style.background = isChecked ? 'rgba(201,150,59,0.07)' : '';
+    selected.style.transform = isChecked ? 'translateY(-2px)' : '';
+    selected.style.boxShadow = isChecked ? '0 4px 14px rgba(201,150,59,.2)' : '';
+  });
+}
+
+document.querySelectorAll('.room-radio').forEach((radio) => {
+  radio.addEventListener('change', paintRoomOptions);
+});
+paintRoomOptions();
+</script>
+<style>
+@media (max-width: 768px) {
+  .se-publish-form-page {
+    padding-top: 8px !important;
+    padding-bottom: 20px !important;
+  }
+  .se-publish-form-card {
+    border-radius: 24px !important;
+    overflow: hidden;
+  }
+  .se-publish-form-hero {
+    padding: 18px 16px !important;
+  }
+  .se-publish-form-hero > div:last-child {
+    gap: 12px !important;
+    align-items: flex-start !important;
+  }
+  .se-publish-form-hero > div:last-child > div:first-child {
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 16px !important;
+    font-size: 22px !important;
+  }
+  .se-publish-form-title {
+    font-size: 1.15rem;
+  }
+  .se-publish-form-subtitle {
+    font-size: .84rem;
+    line-height: 1.7;
+  }
+  .se-publish-form-body {
+    padding: 18px 16px !important;
+  }
+  .room-option.se-publish-option-card {
+    padding: 14px 10px !important;
+    border-radius: 16px !important;
+  }
+  .se-publish-primary-btn {
+    min-height: 50px;
+  }
+  .se-publish-secondary-link {
+    display: flex;
+    justify-content: center;
+    margin-top: 14px;
+  }
+}
+</style>
+{% include "partials/_rooms_light_styles.html" %}
+{% endblock %}

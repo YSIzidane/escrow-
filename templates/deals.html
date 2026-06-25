@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{% t "deals.title" %} - Safouane{% endblock %}
+{% block page_type %}listings{% endblock %}
+{% block nav_listing %}active{% endblock %}
+
+{% block meta %}
+{{ block.super }}
+{% endblock %}
+
+{% block late_css %}
+<link rel="stylesheet" href="{% static 'css/deals_dark.css' %}?v=20260525b">
+{% endblock %}
+
+{% block content %}
+<main class="dl-page dl-page-listings" dir="rtl">
+  <section class="dl-shell" aria-labelledby="deals-title">
+    <header class="dl-hero dl-hero-market">
+      <div>
+        <span class="dl-kicker">
+          <i class="fas fa-layer-group" aria-hidden="true"></i>
+          {% t "deals.market_tag" %}
+        </span>
+        <h1 id="deals-title">{% t "deals.header_title" %}</h1>
+        <p>{% t "deals.hero_sub" %}</p>
+      </div>
+
+      <div class="dl-hero-actions">
+        <span class="dl-stat-pill">
+          <i class="fas fa-circle-check" aria-hidden="true"></i>
+          {% if deals %}<b>{{ deals.paginator.count }}</b>{% else %}<b>0</b>{% endif %}
+          {% t "deals.available_now" %}
+        </span>
+        {% if user.is_authenticated %}
+        <a href="{% url 'create_deal' %}" class="dl-btn dl-btn-primary">
+          <i class="fas fa-plus" aria-hidden="true"></i>
+          <span>{% t "deals.add_deal" %}</span>
+        </a>
+        {% endif %}
+      </div>
+    </header>
+
+    <form
+      id="filterForm"
+      class="dl-panel dl-filter-bar"
+      method="get"
+      hx-get="{% url 'listings' %}"
+      hx-target="#deals-container"
+      hx-push-url="true"
+      hx-indicator="#dealsLoading"
+      hx-trigger="submit, change from:select, keyup changed delay:350ms from:#dealSearch"
+    >
+      <label class="dl-search-field" for="dealSearch">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input id="dealSearch" type="text" name="q" value="{{ search_query }}"
+               placeholder="{% t 'deals.quick_search_placeholder' %}" autocomplete="off">
+      </label>
+
+      <div class="dl-filter-controls">
+        <label>
+          <span>{% t "deals.category" %}</span>
+          <select name="category" aria-label="{% t 'deals.category' %}">
+            <option value="" {% if not request.GET.category %}selected{% endif %}>{% t "category.all" %}</option>
+            <option value="games" {% if request.GET.category == 'games' %}selected{% endif %}>{% t "category.games" %}</option>
+            <option value="accounts" {% if request.GET.category == 'accounts' %}selected{% endif %}>{% t "category.accounts" %}</option>
+            <option value="services" {% if request.GET.category == 'services' %}selected{% endif %}>{% t "category.services" %}</option>
+            <option value="electronics" {% if request.GET.category == 'electronics' %}selected{% endif %}>{% t "category.electronics" %}</option>
+            <option value="digital" {% if request.GET.category == 'digital' %}selected{% endif %}>{% t "category.digital" %}</option>
+            <option value="physical" {% if request.GET.category == 'physical' %}selected{% endif %}>{% t "category.physical" %}</option>
+          </select>
+        </label>
+
+        <label>
+          <span>{% t "deals.deal_type" %}</span>
+          <select name="type" aria-label="{% t 'deals.deal_type' %}">
+            <option value="" {% if not request.GET.type %}selected{% endif %}>{% t "deals.all" %}</option>
+            <option value="fixed" {% if request.GET.type == 'fixed' %}selected{% endif %}>{% t "deals.fixed_price" %}</option>
+            <option value="auction" {% if request.GET.type == 'auction' %}selected{% endif %}>{% t "deals.auction" %}</option>
+          </select>
+        </label>
+
+        <label>
+          <span>{% t "deals.sort_label" %}</span>
+          <select name="sort" aria-label="{% t "deals.sort_aria" %}">
+            <option value="" {% if not request.GET.sort %}selected{% endif %}>{% t "deals.newest_first" %}</option>
+            <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>{% t "deals.price_low" %}</option>
+            <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>{% t "deals.price_high" %}</option>
+            <option value="bids" {% if request.GET.sort == 'bids' %}selected{% endif %}>{% t "deals.most_bids" %}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="dl-filter-actions">
+        {% if request.GET.q or request.GET.category or request.GET.type or request.GET.status or request.GET.price_min or request.GET.price_max or request.GET.sort %}
+        <a href="{% url 'listings' %}" class="dl-btn dl-btn-ghost dl-btn-compact">
+          <i class="fas fa-xmark" aria-hidden="true"></i>
+          <span>{% t "deals.clear" %}</span>
+        </a>
+        {% endif %}
+        <button type="submit" class="dl-btn dl-btn-primary dl-btn-compact">
+          <i class="fas fa-sliders" aria-hidden="true"></i>
+          <span>{% t "deals.apply" %}</span>
+        </button>
+      </div>
+    </form>
+
+    <div class="dl-loading htmx-indicator" id="dealsLoading" aria-hidden="true">
+      <span></span>
+      <b>{% t "site.loading" %}</b>
+    </div>
+
+    <div id="deals-container">
+      {% include "partials/deals_grid.html" %}
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script defer src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+<script defer src="{% static 'js/deals_dark.js' %}?v=20260523a"></script>
+{% endblock %}

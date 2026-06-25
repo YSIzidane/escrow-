@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{% t "social.auth_error.title" %}{% endblock %}
+{% block page_type %}auth_error{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+  <div class="col-lg-5 col-md-6">
+    <div class="card border-0 social-error-card">
+      <div class="social-error-header">
+        <div class="social-error-glow"></div>
+        <div class="social-error-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3>{% t "social.auth_error.header" %}</h3>
+        <p>{% t "social.auth_error.sub" %}</p>
+      </div>
+
+      <div class="card-body social-error-body text-center">
+        <p class="social-error-text">{% t "social.auth_error.body" %}</p>
+
+        <div class="social-error-tipbox">
+          <p class="social-error-tip-title">{% t "social.auth_error.dev_tip" %}</p>
+          <ul>
+            <li>{% t "social.auth_error.tip_1" %}</li>
+            <li>{% t "social.auth_error.tip_2" %}</li>
+            <li>{% t "social.auth_error.tip_3" %}</li>
+          </ul>
+        </div>
+
+        <a href="{% url 'account_login' %}{% if redirect_field_value %}?{{ redirect_field_name }}={{ redirect_field_value|urlencode }}{% endif %}" class="btn btn-primary w-100 social-error-btn">
+          {% t "social.auth_error.back" %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .social-error-card {
+    border-radius: 24px !important;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(13,27,42,0.15) !important;
+    animation: fadeInUp 0.6s ease both;
+  }
+  .social-error-header {
+    background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+    padding: 40px 32px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .social-error-glow {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,.1) 0%, transparent 70%);
+  }
+  .social-error-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    animation: scaleIn 0.5s 0.2s ease both;
+  }
+  .social-error-icon i { color: white; font-size: 30px; }
+  .social-error-header h3 { color: white; font-weight: 800; margin-bottom: 8px; font-size: 1.3rem; }
+  .social-error-header p { color: rgba(255,255,255,0.8); font-size: 0.9rem; margin: 0; }
+  .social-error-body { padding: 40px 32px !important; }
+  .social-error-text { color: var(--text-secondary); font-size: 1rem; line-height: 1.6; margin-bottom: 30px; }
+  .social-error-tipbox {
+    background: rgba(0,0,0,0.03);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: start;
+    margin-bottom: 25px;
+  }
+  .social-error-tip-title { font-size: 0.85rem; color: var(--text-light); margin-bottom: 5px; font-weight: 600; }
+  .social-error-tipbox ul { font-size: 0.8rem; color: var(--text-secondary); padding-inline-start: 18px; margin: 0; }
+  .social-error-btn {
+    padding: 13px !important;
+    font-size: 1rem !important;
+    font-weight: 600;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    border: none;
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+  }
+</style>
+{% include "socialaccount/_social_account_styles.html" %}
+{% endblock %}

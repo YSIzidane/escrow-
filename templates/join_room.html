@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load site_i18n %}
+{% block title %}{% t "join_room.title" %}{% endblock %}
+{% block page_type %}join_room{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-3 se-publish-form-page se-join-room-page">
+  <div class="col-lg-5 col-md-7">
+    <div class="card border-0 se-publish-form-card se-join-room-card" style="animation: fadeInUp 0.6s ease both;">
+      <div class="se-publish-form-hero se-join-room-hero" style="background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); text-align: center; position: relative; overflow: hidden;">
+        <div class="se-join-room-glow" style="position:absolute;top:-40px;left:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(201,150,59,.18) 0%,transparent 70%);"></div>
+        <div class="se-join-room-icon" style="width: 64px; height: 64px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); border-radius: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 26px; color: var(--navy); margin-bottom: 14px; box-shadow: 0 6px 20px rgba(201,150,59,0.4);">
+          <i class="fas fa-key"></i>
+        </div>
+        <h4 class="se-publish-form-title">{% t "join_room.header" %}</h4>
+        <p class="se-publish-form-subtitle se-join-room-subtitle" style="margin-inline:auto;">{% t "join_room.sub" %}</p>
+      </div>
+
+      <div class="card-body se-publish-form-body">
+        <form method="post" id="joinForm">
+          {% csrf_token %}
+
+          <div class="mb-4">
+            <label class="form-label se-publish-field-label">
+              <i class="fas fa-hashtag se-join-room-label-icon" style="color: var(--gold); margin-left: 6px;"></i>
+              {% t "join_room.code_label" %}
+            </label>
+            <input type="text" name="code"
+                   class="form-control se-publish-input se-join-room-input"
+                   placeholder="{% t 'join_room.code_placeholder' %}"
+                   required maxlength="8"
+                   autocomplete="off" autofocus
+                   value="{{ initial_code|default:'' }}"
+                   style="text-align: center; font-size: 1.3rem !important; letter-spacing: 6px; font-weight: 800; font-family: 'Tajawal', monospace;">
+            <div class="se-join-room-hint" style="text-align: center; margin-top: 8px; font-size: 0.78rem; color: var(--text-light);">
+              {% t "join_room.code_hint" %}
+            </div>
+          </div>
+
+          <div class="se-publish-helper" style="margin-bottom:20px;">
+            <div class="se-publish-helper-copy">
+            {% t "join_room.privacy_hint_1" %}
+            <br>
+            {% t "join_room.privacy_hint_2" %}
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 btn-lg se-publish-primary-btn" id="joinBtn">
+            <i class="fas fa-sign-in-alt" style="margin-left: 8px;"></i>
+            {% t "join_room.submit" %}
+          </button>
+
+          <a href="{% url 'create_room' %}" class="se-publish-secondary-link">
+            <i class="fas fa-plus-circle" style="margin-left: 5px;"></i>
+            {% t "join_room.create_new" %}
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelector('[name="code"]').addEventListener('input', function() {
+  this.value = this.value.toUpperCase();
+});
+
+document.getElementById('joinForm').addEventListener('submit', function() {
+  const btn = document.getElementById('joinBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> {% t "join_room.joining" %}';
+});
+</script>
+
+<style>
+.se-join-room-page{padding-top:10px;padding-bottom:20px}
+.se-join-room-card{border-radius:28px;overflow:hidden;box-shadow:0 24px 60px rgba(13,27,42,.08)}
+.se-join-room-hero{padding-bottom:34px!important}
+.se-join-room-subtitle{max-width:420px}
+.se-join-room-input{text-transform:uppercase}
+.se-join-room-hint{line-height:1.6}
+
+@media (max-width: 768px){
+  .se-join-room-page{padding-top:4px}
+  .se-join-room-card{border-radius:24px}
+  .se-join-room-hero{padding:26px 20px 28px!important}
+  .se-join-room-icon{width:58px!important;height:58px!important;border-radius:17px!important;font-size:1.35rem!important}
+  .se-join-room-subtitle{font-size:.88rem;max-width:320px}
+  .se-join-room-input{min-height:58px;letter-spacing:4px!important;font-size:1.12rem!important}
+}
+
+@media (max-width: 520px){
+  .se-join-room-page .col-md-7{padding-left:10px;padding-right:10px}
+  .se-join-room-card{border-radius:22px}
+  .se-join-room-hero{padding:24px 18px 24px!important}
+  .se-join-room-glow{width:120px!important;height:120px!important;top:-28px!important;left:-28px!important}
+  .se-join-room-label-icon{margin-left:4px!important}
+  .se-join-room-input{letter-spacing:3px!important;font-size:1rem!important;padding-left:14px!important;padding-right:14px!important}
+  .se-join-room-hint{font-size:.73rem!important}
+  .se-join-room-page .se-publish-helper{padding:14px 15px}
+  .se-join-room-page .se-publish-primary-btn{min-height:52px}
+}
+</style>
+{% include "partials/_rooms_light_styles.html" %}
+{% endblock %}

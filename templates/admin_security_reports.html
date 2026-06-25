@@ -1,0 +1,892 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% if current_language == 'ar' %}مركز الأمن والبلاغات{% else %}Security Reports{% endif %} - {% t "site.name" %}{% endblock %}
+{% block page_type %}admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/admin_control.css' %}?v=20260507c">{% endblock %}
+
+{% block content %}
+<div class="adm-shell security-shell">
+  {% include "partials/admin_control_sidebar.html" %}
+
+  <section class="adm-main">
+    <header class="adm-page-hero security-hero">
+      <div class="adm-page-copy">
+        <span class="adm-page-kicker">
+          <i class="fas fa-user-shield"></i>
+          {% if current_language == 'ar' %}مراجعة البلاغات والنزاعات{% else %}Reports and dispute review{% endif %}
+        </span>
+        <h1 class="adm-page-heading">{% if current_language == 'ar' %}مركز الأمن والبلاغات{% else %}Security Reports Center{% endif %}</h1>
+        <p>
+          {% if current_language == 'ar' %}
+            مكان واحد لمراجعة بلاغات المستخدمين، نزاعات الصفقات، ونزاعات غرف التبديل بدون التنقل بين صفحات كثيرة.
+          {% else %}
+            One focused place to review user reports, deal disputes, and trade-room disputes without jumping across dashboards.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="security-stat-grid">
+        <div class="security-stat is-danger">
+          <i class="fas fa-triangle-exclamation"></i>
+          <span>{% if current_language == 'ar' %}تحتاج مراجعة{% else %}Needs review{% endif %}</span>
+          <strong>{{ stats.total_open }}</strong>
+        </div>
+        <div class="security-stat">
+          <i class="fas fa-flag"></i>
+          <span>{% if current_language == 'ar' %}بلاغات المستخدمين{% else %}User reports{% endif %}</span>
+          <strong>{{ stats.ticket_reports }}</strong>
+        </div>
+        <div class="security-stat">
+          <i class="fas fa-handshake"></i>
+          <span>{% if current_language == 'ar' %}نزاعات الصفقات{% else %}Deal disputes{% endif %}</span>
+          <strong>{{ stats.deal_disputes }}</strong>
+        </div>
+        <div class="security-stat">
+          <i class="fas fa-exchange-alt"></i>
+          <span>{% if current_language == 'ar' %}نزاعات التبديل{% else %}Trade disputes{% endif %}</span>
+          <strong>{{ stats.trade_disputes }}</strong>
+        </div>
+      </div>
+    </header>
+
+    <section class="adm-surface security-chart-card">
+      <div class="adm-section-head">
+        <div>
+          <h2 class="adm-panel-title">{% if current_language == 'ar' %}توزيع البلاغات{% else %}Report mix{% endif %}</h2>
+          <p class="adm-subtle">{% if current_language == 'ar' %}نظرة سريعة على مصادر البلاغات قبل فتح الجدول التفصيلي.{% else %}A quick read of report sources before opening the detailed queue.{% endif %}</p>
+        </div>
+        <span class="security-chart-total">
+          <i class="fas fa-chart-simple"></i>
+          {% if current_language == 'ar' %}إجمالي مفتوح{% else %}Open total{% endif %}: {{ stats.total_open }}
+        </span>
+      </div>
+      <div class="security-chart-grid">
+        {% for item in stats_chart %}
+        <div class="security-chart-row {{ item.class }}">
+          <div class="security-chart-icon"><i class="fas {{ item.icon }}"></i></div>
+          <div class="security-chart-main">
+            <div class="security-chart-label">
+              <span>{{ item.label }}</span>
+              <strong>{{ item.value }}</strong>
+            </div>
+            <div class="security-chart-track" aria-hidden="true">
+              <span style="--bar-width: {{ item.percent }}%;"></span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <div class="adm-filter-card adm-surface">
+      <form method="get" class="adm-filter-form">
+        <label class="adm-search-field">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            name="q"
+            value="{{ search_query }}"
+            placeholder="{% if current_language == 'ar' %}ابحث بالكود، المستخدم، الصفقة، أو سبب البلاغ...{% else %}Search by code, user, deal, or report reason...{% endif %}"
+          >
+        </label>
+        <select name="type" class="adm-select" aria-label="{% if current_language == 'ar' %}نوع البلاغ{% else %}Report type{% endif %}">
+          <option value="" {% if not type_filter %}selected{% endif %}>{% if current_language == 'ar' %}كل الأنواع{% else %}All types{% endif %}</option>
+          <option value="tickets" {% if type_filter == 'tickets' %}selected{% endif %}>{% if current_language == 'ar' %}بلاغات المستخدمين{% else %}User reports{% endif %}</option>
+          <option value="deals" {% if type_filter == 'deals' %}selected{% endif %}>{% if current_language == 'ar' %}نزاعات الصفقات{% else %}Deal disputes{% endif %}</option>
+          <option value="trades" {% if type_filter == 'trades' %}selected{% endif %}>{% if current_language == 'ar' %}نزاعات التبديل{% else %}Trade-room disputes{% endif %}</option>
+        </select>
+        <select name="status" class="adm-select" aria-label="{% if current_language == 'ar' %}الحالة{% else %}Status{% endif %}">
+          <option value="" {% if not status_filter %}selected{% endif %}>{% if current_language == 'ar' %}كل الحالات{% else %}All statuses{% endif %}</option>
+          <option value="open" {% if status_filter == 'open' %}selected{% endif %}>{% if current_language == 'ar' %}تحتاج مراجعة{% else %}Needs review{% endif %}</option>
+          <option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>{% if current_language == 'ar' %}مغلقة أو محلولة{% else %}Resolved or closed{% endif %}</option>
+        </select>
+        <button type="submit" class="adm-filter-submit">{% if current_language == 'ar' %}تصفية{% else %}Filter{% endif %}</button>
+      </form>
+    </div>
+
+    <section class="adm-table-surface security-table-card">
+      <div class="adm-section-head">
+        <div>
+          <h2 class="adm-panel-title">{% if current_language == 'ar' %}قائمة البلاغات الموحدة{% else %}Unified report queue{% endif %}</h2>
+          <p class="adm-subtle">{% if current_language == 'ar' %}ابدأ بالأحمر، ثم راجع التفاصيل داخل صفحة البلاغ أو الغرفة أو الضمان.{% else %}Start with red items, then review the full context in the ticket, room, or escrow page.{% endif %}</p>
+        </div>
+      </div>
+
+      {% if report_rows %}
+      <div class="adm-table-wrap">
+        <table class="adm-table security-table">
+          <thead>
+            <tr>
+              <th>{% if current_language == 'ar' %}النوع{% else %}Type{% endif %}</th>
+              <th>{% if current_language == 'ar' %}البلاغ{% else %}Report{% endif %}</th>
+              <th>{% if current_language == 'ar' %}الأطراف{% else %}People{% endif %}</th>
+              <th>{% if current_language == 'ar' %}الحالة{% else %}Status{% endif %}</th>
+              <th>{% if current_language == 'ar' %}التاريخ{% else %}Date{% endif %}</th>
+              <th>{% if current_language == 'ar' %}المراجعة{% else %}Review{% endif %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in report_rows %}
+            <tr>
+              <td data-label="{% if current_language == 'ar' %}النوع{% else %}Type{% endif %}">
+                <span class="security-type security-type-{{ item.kind }}">
+                  <i class="fas {{ item.icon }}"></i>
+                  {{ item.kind_label }}
+                </span>
+              </td>
+              <td data-label="{% if current_language == 'ar' %}البلاغ{% else %}Report{% endif %}">
+                <div class="security-report-main">
+                  <strong>{{ item.title|truncatechars:60 }}</strong>
+                  <span>{{ item.summary|truncatechars:145 }}</span>
+                  <em>{{ item.reference }}</em>
+                </div>
+              </td>
+              <td data-label="{% if current_language == 'ar' %}الأطراف{% else %}People{% endif %}">
+                <div class="security-people">
+                  <span><i class="fas fa-user"></i> {{ item.reporter }}</span>
+                  <span><i class="fas fa-bullseye"></i> {{ item.target|truncatechars:32 }}</span>
+                </div>
+              </td>
+              <td data-label="{% if current_language == 'ar' %}الحالة{% else %}Status{% endif %}">
+                <div class="security-status-stack">
+                  <span class="adm-status-pill {{ item.status_class }}">{{ item.status_label }}</span>
+                  <span class="adm-status-pill {{ item.priority_class }}">{{ item.priority_label }}</span>
+                </div>
+              </td>
+              <td data-label="{% if current_language == 'ar' %}التاريخ{% else %}Date{% endif %}">
+                <time class="security-date">{{ item.created_at|date:"Y-m-d H:i" }}</time>
+              </td>
+              <td data-label="{% if current_language == 'ar' %}المراجعة{% else %}Review{% endif %}">
+                {% if item.url %}
+                <a href="{{ item.url }}" class="adm-btn adm-btn--light security-open-btn">
+                  <i class="fas fa-external-link-alt"></i>
+                  {{ item.action_label }}
+                </a>
+                {% else %}
+                <span class="security-limited">{% if current_language == 'ar' %}تحتاج صلاحية دعم{% else %}Support role needed{% endif %}</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="adm-empty-state">
+        <i class="fas fa-check-circle"></i>
+        <h3 class="adm-panel-title">{% if current_language == 'ar' %}لا توجد بلاغات مطابقة{% else %}No matching reports{% endif %}</h3>
+        <p>{% if current_language == 'ar' %}جرّب إزالة الفلاتر أو تغيير كلمة البحث.{% else %}Try clearing filters or changing the search text.{% endif %}</p>
+      </div>
+      {% endif %}
+    </section>
+
+    <section class="adm-surface security-guide">
+      <div class="security-guide-item">
+        <i class="fas fa-search"></i>
+        <strong>{% if current_language == 'ar' %}راجع السياق{% else %}Review context{% endif %}</strong>
+        <span>{% if current_language == 'ar' %}افتح البلاغ أو الغرفة واقرأ المحادثة والأدلة قبل أي قرار.{% else %}Open the report or room and read the messages and evidence before acting.{% endif %}</span>
+      </div>
+      <div class="security-guide-item">
+        <i class="fas fa-user-check"></i>
+        <strong>{% if current_language == 'ar' %}عيّن المسؤول{% else %}Assign owner{% endif %}</strong>
+        <span>{% if current_language == 'ar' %}في التذاكر، عيّن البلاغ لمسؤول واضح حتى لا يراجعه أكثر من شخص بدون تنسيق.{% else %}For tickets, assign a clear owner so reviews do not overlap.{% endif %}</span>
+      </div>
+      <div class="security-guide-item">
+        <i class="fas fa-balance-scale"></i>
+        <strong>{% if current_language == 'ar' %}وثّق القرار{% else %}Document decision{% endif %}</strong>
+        <span>{% if current_language == 'ar' %}اكتب الرد أو القرار النهائي داخل صفحة المراجعة حتى يبقى السجل واضحًا.{% else %}Record the final decision in the review page so the audit trail stays clear.{% endif %}</span>
+      </div>
+    </section>
+  </section>
+</div>
+
+<style>
+.security-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+  align-items: center;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(37, 99, 235, 0.1), transparent 30%),
+    linear-gradient(180deg, #ffffff, #f8fafc);
+}
+
+.security-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.security-stat {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 14px;
+}
+
+.security-stat span {
+  display: block;
+  color: #6b7788;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.security-stat strong {
+  display: block;
+  margin-top: 6px;
+  color: #0d1b2a;
+  font-size: 1.55rem;
+  font-weight: 900;
+}
+
+.security-stat.is-danger {
+  background: #fff7f7;
+  border-color: rgba(220, 38, 38, 0.14);
+}
+
+.security-stat.is-danger strong {
+  color: #b42318;
+}
+
+.security-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: #eef4ff;
+  color: #1d4ed8;
+  font-size: 0.76rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.security-type-deal {
+  background: #fff7e8;
+  color: #9a6700;
+}
+
+.security-type-trade {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.security-report-main,
+.security-people,
+.security-status-stack {
+  display: grid;
+  gap: 7px;
+}
+
+.security-report-main strong {
+  color: #0d1b2a;
+  font-weight: 900;
+}
+
+.security-report-main span,
+.security-people span {
+  color: #5b6b7b;
+  line-height: 1.6;
+  font-size: 0.86rem;
+}
+
+.security-report-main em {
+  color: #8a9bab;
+  font-style: normal;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.security-people i {
+  color: #c9963b;
+  margin-inline-end: 5px;
+}
+
+.security-date {
+  color: #5b6b7b;
+  white-space: nowrap;
+}
+
+.security-open-btn {
+  min-height: 38px;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
+.security-limited {
+  display: inline-flex;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #64748b;
+  padding: 7px 10px;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.security-guide {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.security-guide-item {
+  display: grid;
+  gap: 7px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+}
+
+.security-guide-item i {
+  color: #1d4ed8;
+  font-size: 1.05rem;
+}
+
+.security-guide-item strong {
+  color: #0d1b2a;
+  font-weight: 900;
+}
+
+.security-guide-item span {
+  color: #5b6b7b;
+  line-height: 1.7;
+  font-size: 0.86rem;
+}
+
+@media (max-width: 991.98px) {
+  .security-hero,
+  .security-guide {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .security-stat-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+{% include "partials/_admin_light_styles.html" %}
+<style>
+body[data-page="admin"] {
+  background:
+    radial-gradient(1100px 650px at 84% -12%, rgba(99, 102, 241, 0.14), transparent 62%),
+    linear-gradient(180deg, #0b0d12 0%, #08090d 100%) !important;
+  color: #f4f4f5 !important;
+}
+body[data-page="admin"] .page-bg-overlay {
+  background: rgba(8, 9, 13, 0.56) !important;
+}
+body[data-page="admin"] .page-bg-overlay::after {
+  display: none !important;
+}
+.security-shell .adm-brand,
+.security-shell .adm-side-section,
+.security-shell .adm-page-hero,
+.security-shell .adm-surface,
+.security-shell .adm-table-surface,
+.security-shell .security-stat,
+.security-shell .security-guide-item {
+  background: rgba(17, 20, 28, 0.88) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.34) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.security-shell .security-hero {
+  background:
+    linear-gradient(120deg, rgba(91, 98, 232, 0.18), transparent 48%),
+    radial-gradient(circle at 14% 14%, rgba(245, 197, 24, 0.10), transparent 28%),
+    rgba(17, 20, 28, 0.88) !important;
+}
+.security-shell .adm-page-heading,
+.security-shell .adm-panel-title,
+.security-shell .adm-brand-title,
+.security-shell .security-report-main strong,
+.security-shell .security-guide-item strong,
+.security-shell .security-stat strong {
+  color: #f4f4f5 !important;
+}
+.security-shell .adm-page-copy p,
+.security-shell .adm-subtle,
+.security-shell .security-stat span,
+.security-shell .security-report-main span,
+.security-shell .security-report-main em,
+.security-shell .security-people span,
+.security-shell .security-date,
+.security-shell .security-guide-item span,
+.security-shell .adm-brand-kicker,
+.security-shell .adm-side-label,
+.security-shell .adm-role-card span {
+  color: #9099a8 !important;
+}
+.security-shell .adm-role-card,
+.security-shell .security-limited {
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  color: #9099a8 !important;
+}
+.security-shell .adm-role-card strong,
+.security-shell .adm-side-nav a {
+  color: #f4f4f5 !important;
+}
+.security-shell .adm-side-nav a i,
+.security-shell .security-people i,
+.security-shell .security-guide-item i,
+.security-shell .adm-page-kicker i {
+  color: #a5b4fc !important;
+}
+.security-shell .adm-side-nav a:hover {
+  background: rgba(99,102,241,0.12) !important;
+}
+.security-shell .adm-side-nav a.is-active,
+.security-shell .adm-filter-submit {
+  background: linear-gradient(135deg, #5b62e8 0%, #6366f1 100%) !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  box-shadow: 0 14px 30px rgba(99,102,241,0.28) !important;
+}
+.security-shell .adm-search-field,
+.security-shell .adm-select {
+  background: rgba(0,0,0,0.24) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  color: #f4f4f5 !important;
+}
+.security-shell .adm-search-field input {
+  color: #f4f4f5 !important;
+}
+.security-shell .adm-search-field input::placeholder {
+  color: #9099a8 !important;
+}
+.security-shell .adm-select option {
+  background: #11141c;
+  color: #f4f4f5;
+}
+.security-shell .security-stat.is-danger {
+  background: rgba(248, 113, 113, 0.10) !important;
+  border-color: rgba(248, 113, 113, 0.22) !important;
+}
+.security-shell .security-stat.is-danger strong {
+  color: #f87171 !important;
+}
+.security-shell .security-type {
+  background: rgba(99,102,241,0.14) !important;
+  color: #c7d2fe !important;
+  border: 1px solid rgba(99,102,241,0.24);
+}
+.security-shell .security-type-deal {
+  background: rgba(245,197,24,0.12) !important;
+  color: #f5c518 !important;
+  border-color: rgba(245,197,24,0.24);
+}
+.security-shell .security-type-trade {
+  background: rgba(52,211,153,0.12) !important;
+  color: #34d399 !important;
+  border-color: rgba(52,211,153,0.22);
+}
+.security-shell .adm-table {
+  color: #f4f4f5 !important;
+}
+.security-shell .adm-table th {
+  color: #9099a8 !important;
+  border-bottom-color: rgba(255,255,255,0.08) !important;
+}
+.security-shell .adm-table td {
+  color: #d4d7de !important;
+  border-top-color: rgba(255,255,255,0.06) !important;
+}
+.security-shell .adm-btn--light,
+.security-shell .security-open-btn {
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  color: #f4f4f5 !important;
+}
+.security-shell .adm-btn--light:hover,
+.security-shell .security-open-btn:hover {
+  border-color: rgba(99,102,241,0.30) !important;
+  color: #c7d2fe !important;
+}
+
+/* Login reference dark reports redesign */
+body[data-page="admin"] {
+  --ew-bg: #0d1117;
+  --ew-surface: #161b22;
+  --ew-surface-2: #1c2128;
+  --ew-border: rgba(255,255,255,0.10);
+  --ew-text: #f8fafc;
+  --ew-muted: #9aa4b2;
+  --ew-accent: #4f8ef7;
+  --ew-accent-2: #7c3aed;
+  --ew-gradient: linear-gradient(135deg, #2563eb 0%, #4f8ef7 48%, #7c3aed 100%);
+  background: var(--ew-bg) !important;
+  color: var(--ew-text) !important;
+}
+
+body[data-page="admin"] .page-bg-overlay {
+  background: var(--ew-bg) !important;
+}
+
+body[data-page="admin"] .page-bg-overlay::after,
+body[data-page="admin"] .se-visual-field {
+  display: none !important;
+}
+
+body[data-page="admin"] .se-main {
+  max-width: 1480px;
+  padding: 24px 24px 56px;
+}
+
+.security-shell {
+  gap: 24px;
+}
+
+.security-shell .adm-brand,
+.security-shell .adm-side-section,
+.security-shell .adm-page-hero,
+.security-shell .adm-surface,
+.security-shell .adm-table-surface,
+.security-shell .security-stat,
+.security-shell .security-guide-item,
+.security-shell .adm-empty-state {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--ew-border) !important;
+  border-radius: 16px !important;
+  background: var(--ew-surface) !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.security-shell .adm-brand::before,
+.security-shell .adm-side-section::before,
+.security-shell .adm-page-hero::before,
+.security-shell .adm-surface::before,
+.security-shell .adm-table-surface::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  inset-inline: 18px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ew-accent), var(--ew-accent-2));
+  z-index: 1;
+}
+
+.security-shell .security-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 430px);
+  background: var(--ew-surface) !important;
+  color: var(--ew-text) !important;
+}
+
+.security-shell .adm-page-heading,
+.security-shell .adm-panel-title,
+.security-shell .adm-brand-title,
+.security-shell .security-report-main strong,
+.security-shell .security-guide-item strong,
+.security-shell .security-stat strong {
+  color: var(--ew-text) !important;
+  letter-spacing: 0 !important;
+}
+
+.security-shell .adm-page-copy p,
+.security-shell .adm-subtle,
+.security-shell .security-stat span,
+.security-shell .security-report-main span,
+.security-shell .security-report-main em,
+.security-shell .security-people span,
+.security-shell .security-date,
+.security-shell .security-guide-item span,
+.security-shell .adm-brand-kicker,
+.security-shell .adm-side-label,
+.security-shell .adm-role-card span,
+.security-shell .adm-side-note {
+  color: var(--ew-muted) !important;
+}
+
+.security-shell .adm-page-kicker,
+.security-shell .security-type,
+.security-shell .security-limited,
+.security-shell .adm-status-pill,
+.security-chart-total {
+  border-radius: 999px !important;
+  border: 1px solid var(--ew-border) !important;
+  background: rgba(255,255,255,0.04) !important;
+  color: rgba(255,255,255,0.78) !important;
+}
+
+.security-shell .adm-page-kicker i,
+.security-shell .adm-side-nav a i,
+.security-shell .security-guide-item i,
+.security-shell .security-people i,
+.security-chart-total i {
+  color: var(--ew-accent) !important;
+}
+
+.security-shell .adm-brand-mark,
+.security-stat > i,
+.security-chart-icon {
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--ew-gradient) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
+.security-shell .adm-brand-mark {
+  width: 48px;
+  height: 48px;
+}
+
+.security-stat {
+  padding: 16px !important;
+}
+
+.security-stat > i {
+  width: 38px;
+  height: 38px;
+  margin-bottom: 14px;
+  font-size: 0.95rem;
+}
+
+.security-stat.is-danger {
+  background: var(--ew-surface) !important;
+  border-color: rgba(255,255,255,0.10) !important;
+}
+
+.security-stat.is-danger strong {
+  color: var(--ew-text) !important;
+}
+
+.security-chart-card {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+}
+
+.security-chart-total {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  font-size: 0.8rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.security-chart-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.security-chart-row {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--ew-border);
+  background: var(--ew-surface-2);
+}
+
+.security-chart-icon {
+  width: 42px;
+  height: 42px;
+}
+
+.security-chart-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.security-chart-label span {
+  color: var(--ew-muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.security-chart-label strong {
+  color: var(--ew-text);
+  font-size: 0.95rem;
+}
+
+.security-chart-track {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+}
+
+.security-chart-track span {
+  display: block;
+  width: var(--bar-width);
+  min-width: 8px;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--ew-accent), var(--ew-accent-2));
+}
+
+.security-shell .adm-role-card,
+.security-shell .adm-side-nav a {
+  border-radius: 12px !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: var(--ew-text) !important;
+}
+
+.security-shell .adm-role-card {
+  background: var(--ew-surface-2) !important;
+  border-color: var(--ew-border) !important;
+}
+
+.security-shell .adm-side-nav a:hover {
+  background: rgba(79,142,247,0.10) !important;
+  border-color: rgba(79,142,247,0.22) !important;
+}
+
+.security-shell .adm-side-nav a.is-active,
+.security-shell .adm-filter-submit {
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: var(--ew-gradient) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.security-shell .adm-search-field,
+.security-shell .adm-select,
+.security-shell .adm-input,
+.security-shell .adm-textarea {
+  min-height: 48px;
+  border-radius: 8px !important;
+  border: 1px solid var(--ew-border) !important;
+  background: var(--ew-surface-2) !important;
+  color: var(--ew-text) !important;
+  box-shadow: none !important;
+}
+
+.security-shell .adm-search-field input {
+  color: var(--ew-text) !important;
+}
+
+.security-shell .adm-search-field input::placeholder {
+  color: rgba(255,255,255,0.66) !important;
+}
+
+.security-shell .adm-search-field:focus-within,
+.security-shell .adm-select:focus {
+  border-color: rgba(79,142,247,0.48) !important;
+  box-shadow: 0 0 0 3px rgba(79,142,247,0.14) !important;
+}
+
+.security-shell .adm-select option {
+  background: #161b22;
+  color: var(--ew-text);
+}
+
+.security-shell .adm-table {
+  border-collapse: collapse;
+  color: var(--ew-text) !important;
+}
+
+.security-shell .adm-table th {
+  background: transparent !important;
+  color: var(--ew-muted) !important;
+  border-bottom: 1px solid var(--ew-border) !important;
+}
+
+.security-shell .adm-table td {
+  color: #dbe3ee !important;
+  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+  border-top: 0 !important;
+}
+
+.security-shell .adm-table tbody tr:hover {
+  background: rgba(79,142,247,0.06);
+}
+
+.security-shell .security-type-deal {
+  color: #fde68a !important;
+  background: rgba(245,197,24,0.10) !important;
+  border-color: rgba(245,197,24,0.22) !important;
+}
+
+.security-shell .security-type-trade {
+  color: #86efac !important;
+  background: rgba(52,211,153,0.10) !important;
+  border-color: rgba(52,211,153,0.22) !important;
+}
+
+.security-shell .adm-status-pill.is-success {
+  color: #86efac !important;
+  background: rgba(52,211,153,0.10) !important;
+  border-color: rgba(52,211,153,0.22) !important;
+}
+
+.security-shell .adm-status-pill.is-warning {
+  color: #fde68a !important;
+  background: rgba(245,197,24,0.10) !important;
+  border-color: rgba(245,197,24,0.22) !important;
+}
+
+.security-shell .adm-status-pill.is-danger {
+  color: #fca5a5 !important;
+  background: rgba(248,113,113,0.10) !important;
+  border-color: rgba(248,113,113,0.22) !important;
+}
+
+.security-shell .adm-btn--light,
+.security-shell .security-open-btn {
+  min-height: 40px;
+  border-radius: 8px !important;
+  background: transparent !important;
+  border: 1px solid var(--ew-border) !important;
+  color: var(--ew-text) !important;
+  box-shadow: none !important;
+}
+
+.security-shell .security-guide {
+  gap: 16px;
+}
+
+.security-shell .security-guide-item {
+  background: var(--ew-surface) !important;
+}
+
+.security-shell .adm-empty-state {
+  color: var(--ew-muted) !important;
+  border-style: dashed !important;
+}
+
+@media (max-width: 991.98px) {
+  .security-shell .security-hero,
+  .security-guide {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="admin"] .se-main {
+    padding: 12px 12px 104px;
+  }
+
+  .security-shell .adm-table tr {
+    background: var(--ew-surface-2) !important;
+    border-color: var(--ew-border) !important;
+    box-shadow: none !important;
+  }
+
+  .security-shell .adm-table td {
+    border-bottom: 1px dashed rgba(255,255,255,0.10) !important;
+  }
+
+  .security-shell .adm-table td::before {
+    color: var(--ew-muted) !important;
+  }
+}
+</style>
+{% endblock %}

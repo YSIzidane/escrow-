@@ -1,0 +1,409 @@
+/* ═══════════════════════════════════════════════════════════════
+   SAFOUANE ESCROW — Design System v3.0
+   Unified design tokens, utilities, and component polish
+   Inspired by: Stripe, Linear, Wise, Notion
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── 1. DESIGN TOKENS ─── */
+:root {
+  /* Page Backgrounds */
+  --ds-bg-page: #f8f9fb;
+  --ds-bg-page-alt: #f3f5f8;
+  --ds-bg-elevated: #ffffff;
+
+  /* Card System */
+  --ds-card-bg: #ffffff;
+  --ds-card-border: rgba(15, 23, 42, 0.08);
+  --ds-card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --ds-card-shadow-hover: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.06);
+  --ds-card-shadow-elevated: 0 4px 12px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.08);
+  --ds-card-radius: 16px;
+
+  /* Spacing (8px grid) */
+  --ds-space-1: 4px;
+  --ds-space-2: 8px;
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 20px;
+  --ds-space-6: 24px;
+  --ds-space-8: 32px;
+  --ds-space-10: 40px;
+  --ds-space-12: 48px;
+  --ds-space-16: 64px;
+
+  /* Typography */
+  --ds-text-xs: 0.75rem;
+  --ds-text-sm: 0.8125rem;
+  --ds-text-base: 0.875rem;
+  --ds-text-md: 0.9375rem;
+  --ds-text-lg: 1.125rem;
+  --ds-text-xl: 1.375rem;
+  --ds-text-2xl: 1.75rem;
+
+  /* Transitions */
+  --ds-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ds-duration: 0.2s;
+}
+
+
+/* ─── 2. REFINED PAGE BACKGROUNDS ───
+   Subtle CSS-only texture instead of heavy images
+   Uses micro dot grid + soft color spots for depth
+   ─────────────────────────────────────────────── */
+
+/* Base: All inner pages get warm neutral background */
+body[data-page="profile"] .page-bg-overlay,
+body[data-page="deal_detail"] .page-bg-overlay,
+body[data-page="deal_room"] .page-bg-overlay,
+body[data-page="chat_hub"] .page-bg-overlay,
+body[data-page="room"] .page-bg-overlay,
+body[data-page="notifications"] .page-bg-overlay,
+body[data-page="escrow_room"] .page-bg-overlay,
+body[data-page="listings"] .page-bg-overlay,
+body[data-page="staff_dashboard"] .page-bg-overlay,
+body[data-page="create_deal"] .page-bg-overlay,
+body[data-page="create_room"] .page-bg-overlay {
+  background:
+    /* Micro dot grid — adds subtle texture like fine paper */
+    radial-gradient(circle, rgba(15,23,42,0.03) 1px, transparent 1px),
+    /* Soft warm spot top-right */
+    radial-gradient(ellipse at 85% 10%, rgba(201,150,59,0.04) 0%, transparent 50%),
+    /* Soft cool spot bottom-left */
+    radial-gradient(ellipse at 15% 90%, rgba(59,130,246,0.03) 0%, transparent 50%),
+    /* Base */
+    linear-gradient(180deg, #f6f8fb 0%, var(--ds-bg-page) 100%) !important;
+  background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100% !important;
+}
+
+body[data-page="profile"] .page-bg-overlay::after,
+body[data-page="deal_detail"] .page-bg-overlay::after,
+body[data-page="deal_room"] .page-bg-overlay::after,
+body[data-page="chat_hub"] .page-bg-overlay::after,
+body[data-page="room"] .page-bg-overlay::after,
+body[data-page="notifications"] .page-bg-overlay::after,
+body[data-page="escrow_room"] .page-bg-overlay::after,
+body[data-page="listings"] .page-bg-overlay::after,
+body[data-page="staff_dashboard"] .page-bg-overlay::after,
+body[data-page="create_deal"] .page-bg-overlay::after,
+body[data-page="create_room"] .page-bg-overlay::after {
+  display: none !important;
+}
+
+
+/* ─── 3. CARD SYSTEM POLISH ───
+   Consistent elevation, borders, hover states
+   ───────────────────────────── */
+
+/* Base card refinement — applies to ALL .card and similar elements */
+.card,
+.pf-card,
+.pf-info-card,
+.se-deal-card,
+.se-filter-panel {
+  background: var(--ds-card-bg) !important;
+  border: 1px solid var(--ds-card-border) !important;
+  border-radius: var(--ds-card-radius) !important;
+  box-shadow: var(--ds-card-shadow) !important;
+  transition: box-shadow var(--ds-duration) var(--ds-ease),
+              transform var(--ds-duration) var(--ds-ease) !important;
+}
+
+/* Interactive cards get hover lift */
+a.card:hover,
+.se-deal-card:hover,
+.pf-sec-item:hover {
+  box-shadow: var(--ds-card-shadow-hover) !important;
+  transform: translateY(-1px);
+}
+
+/* Form cards stay flat on hover */
+.pf-card:hover {
+  box-shadow: var(--ds-card-shadow) !important;
+  transform: none;
+}
+
+
+/* ─── 4. INPUT & FORM POLISH ───
+   Consistent focus rings, borders, sizing
+   ─────────────────────────────────────── */
+
+/* Unified input styling */
+.pf-input,
+.se-filter-select,
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+textarea,
+select {
+  border: 1.5px solid rgba(15, 23, 42, 0.12) !important;
+  border-radius: 10px !important;
+  transition: border-color var(--ds-duration) ease,
+              box-shadow var(--ds-duration) ease !important;
+}
+
+.pf-input:focus,
+.se-filter-select:focus,
+.form-control:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: rgba(37, 99, 235, 0.4) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08) !important;
+  outline: none !important;
+}
+
+
+/* ─── 5. BUTTON REFINEMENT ───
+   Consistent sizing, transitions, hierarchy
+   ───────────────────────────────────────── */
+
+/* Primary buttons */
+.pf-btn-save,
+.se-dr-add-btn,
+.se-add-deal-btn,
+.btn-primary,
+[class*="btn-primary"] {
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em;
+  transition: all var(--ds-duration) var(--ds-ease) !important;
+}
+
+.pf-btn-save:hover,
+.se-dr-add-btn:hover,
+.se-add-deal-btn:hover,
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+}
+
+.pf-btn-save:active,
+.se-dr-add-btn:active,
+.se-add-deal-btn:active,
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: none !important;
+}
+
+/* Ghost/outline buttons */
+.pf-btn-cancel,
+.se-dr-ghost-btn,
+[class*="btn-outline"] {
+  border-radius: 12px !important;
+  transition: all var(--ds-duration) var(--ds-ease) !important;
+}
+
+.pf-btn-cancel:hover,
+.se-dr-ghost-btn:hover,
+[class*="btn-outline"]:hover {
+  transform: translateY(-1px);
+}
+
+
+/* ─── 6. SECTION HEADERS ───
+   Cleaner, more consistent page headers
+   ──────────────────────────────────── */
+
+/* Tone down the dark headers slightly */
+.pf-header,
+.se-deals-header,
+.se-dr-header {
+  border-radius: var(--ds-card-radius) !important;
+  overflow: hidden;
+}
+
+/* Remove distracting decorative floating images */
+.pv-float-decor {
+  opacity: 0 !important;
+  display: none !important;
+}
+
+.pv-page-decor-topleft {
+  display: none !important;
+}
+
+/* Keep the subtle background textures on headers but remove the floating 3D images */
+.pv-header-bg-img {
+  display: none !important;
+}
+
+/* ─── 7. NOTIFICATION PAGE POLISH ───
+   Professional header + clean items
+   ─────────────────────────────────── */
+
+/* Notification container */
+body[data-page="notifications"] .card {
+  border: 1px solid var(--ds-card-border) !important;
+  border-radius: var(--ds-card-radius) !important;
+  box-shadow: var(--ds-card-shadow) !important;
+}
+
+/* Notification rows — smooth hover, clear read/unread */
+.notif-row {
+  transition: background 0.15s ease !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06) !important;
+}
+
+.notif-row:last-child {
+  border-bottom: none !important;
+}
+
+.notif-row:hover {
+  background: rgba(15, 23, 42, 0.02) !important;
+}
+
+.notif-row.is-unread {
+  background: rgba(201, 150, 59, 0.03) !important;
+  border-right: 3px solid var(--gold) !important;
+}
+
+html[dir="ltr"] .notif-row.is-unread {
+  border-right: none !important;
+  border-left: 3px solid var(--gold) !important;
+}
+
+
+/* ─── 8. PROFILE SIDEBAR CLEANUP ───
+   Remove remaining decorative textures
+   ──────────────────────────────────── */
+
+/* Hide the room-bg texture on user card */
+.pv-card-bg-img {
+  display: none !important;
+}
+
+/* Ensure profile user card stays clean with just CSS gradients */
+.pf-user-card {
+  box-shadow: var(--ds-card-shadow-elevated) !important;
+}
+
+
+/* ─── 9. DEAL ROOM HEADER REFINEMENT ── */
+
+.se-dr-header {
+  background:
+    linear-gradient(135deg, #f8fafd 0%, #edf2f8 100%) !important;
+  border: 1px solid var(--ds-card-border) !important;
+  box-shadow: var(--ds-card-shadow) !important;
+  padding: var(--ds-space-8) !important;
+}
+
+/* Stats cards subtle improvement */
+.se-dr-stat {
+  transition: transform var(--ds-duration) var(--ds-ease),
+              box-shadow var(--ds-duration) var(--ds-ease);
+}
+
+.se-dr-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ds-card-shadow-hover);
+}
+
+
+/* ─── 10. EMPTY STATES ───
+   Clean, subtle, professional
+   ────────────────────────── */
+
+.se-empty-state,
+.pf-wallet-empty {
+  text-align: center;
+  padding: var(--ds-space-12) var(--ds-space-6);
+}
+
+
+/* ─── 11. SUBTLE MICRO-INTERACTIONS ───
+   Tasteful hover/focus states
+   ────────────────────────────── */
+
+/* Smooth page entrance */
+@keyframes dsPageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.app-page,
+.se-market-page,
+.se-dr-shell,
+#deal-room-shell {
+  animation: dsPageIn 0.4s var(--ds-ease) both;
+}
+
+/* Card header accent line — subtle gold bottom border */
+.pf-card-header,
+.se-deals-header .se-deals-tag {
+  position: relative;
+}
+
+/* Smooth scrollbar on WebKit */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.25);
+}
+
+
+/* ─── 12. CONTENT AREA BREATHING ROOM ───
+   Better spacing for main content areas
+   ─────────────────────────────────────── */
+
+/* Give the main content wrapper proper padding */
+body[data-page="notifications"] > div > div:first-child {
+  padding-top: var(--ds-space-6);
+}
+
+/* Links inside cards — consistent underline removal */
+.card a,
+.pf-card a {
+  text-decoration: none;
+}
+
+/* Badge consistency */
+[style*="border-radius:20px"][style*="padding:2px"] {
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ─── 13. RESPONSIVE REFINEMENTS ─── */
+
+@media (max-width: 768px) {
+  .pf-header,
+  .se-deals-header,
+  .se-dr-header {
+    border-radius: 12px !important;
+    padding: 24px 20px !important;
+  }
+
+  .notif-row.is-unread {
+    border-right-width: 2px !important;
+  }
+
+  html[dir="ltr"] .notif-row.is-unread {
+    border-left-width: 2px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .pf-header,
+  .se-deals-header,
+  .se-dr-header {
+    border-radius: 8px !important;
+    padding: 20px 16px !important;
+  }
+}
+

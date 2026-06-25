@@ -1,0 +1,646 @@
+<style>
+  body[data-page="login"],
+  body[data-page="register"] {
+    background: #f8fafc !important;
+    color: #0d1b2a !important;
+  }
+
+  body[data-page="login"] .page-bg-overlay,
+  body[data-page="register"] .page-bg-overlay {
+    background:
+      radial-gradient(circle at 12% 4%, rgba(37, 99, 235, 0.08), transparent 25%),
+      radial-gradient(circle at 88% 2%, rgba(201, 150, 59, 0.1), transparent 24%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 46%, #ffffff 100%) !important;
+  }
+
+  body[data-page="login"] .auth-wrapper,
+  body[data-page="register"] .auth-wrapper {
+    min-height: calc(100vh - 80px) !important;
+    padding: 48px 20px !important;
+    background:
+      radial-gradient(circle at 18% 16%, rgba(37, 99, 235, 0.08), transparent 28%),
+      radial-gradient(circle at 84% 8%, rgba(201, 150, 59, 0.12), transparent 25%),
+      linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%) !important;
+    background-attachment: scroll !important;
+    overflow: hidden;
+  }
+
+  body[data-page="login"] .auth-wrapper {
+    align-items: flex-start !important;
+    min-height: calc(100svh - 72px) !important;
+    padding-block: clamp(18px, 3vh, 34px) !important;
+    overflow: visible !important;
+  }
+
+  body[data-page="login"] .se-main {
+    padding-top: 8px !important;
+  }
+
+  body[data-page="login"] .auth-wrapper::before,
+  body[data-page="register"] .auth-wrapper::before {
+    background:
+      linear-gradient(90deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.36)),
+      radial-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px) !important;
+    background-size: auto, 28px 28px !important;
+    backdrop-filter: none !important;
+  }
+
+  body[data-page="login"] .auth-container,
+  body[data-page="register"] .auth-container {
+    max-width: 1080px !important;
+    border-radius: 26px !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12) !important;
+    overflow: hidden !important;
+    transform-origin: center;
+    animation: authPanelIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  }
+
+  body[data-page="login"] .auth-visuals,
+  body[data-page="register"] .auth-visuals {
+    flex: 0.96 !important;
+    min-height: 620px;
+    padding: 54px 46px !important;
+    background:
+      radial-gradient(circle at 16% 12%, rgba(37, 99, 235, 0.1), transparent 30%),
+      radial-gradient(circle at 88% 14%, rgba(201, 150, 59, 0.13), transparent 28%),
+      linear-gradient(145deg, #ffffff 0%, #f5f8fd 100%) !important;
+    border-inline-end: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: none !important;
+  }
+
+  body[data-page="login"] .auth-visuals {
+    min-height: 590px !important;
+    padding: 42px 44px !important;
+  }
+
+  body[data-page="login"] .auth-visuals::after,
+  body[data-page="register"] .auth-visuals::after {
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0)),
+      radial-gradient(rgba(15, 23, 42, 0.045) 1px, transparent 1px) !important;
+    background-size: auto, 24px 24px !important;
+    opacity: 1 !important;
+  }
+
+  body[data-page="login"] .auth-bg-elements,
+  body[data-page="register"] .auth-bg-elements {
+    display: none !important;
+  }
+
+  body[data-page="login"] .auth-brand-content,
+  body[data-page="register"] .auth-brand-content {
+    max-width: 430px;
+  }
+
+  body[data-page="login"] .auth-logo-box,
+  body[data-page="register"] .auth-logo-box {
+    width: 92px !important;
+    height: 92px !important;
+    margin-bottom: 32px !important;
+    border-radius: 22px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1) !important;
+  }
+
+  body[data-page="login"] .auth-logo-box .auth-logo-img,
+  body[data-page="register"] .auth-logo-box .auth-logo-img {
+    width: 62px !important;
+    filter: none !important;
+  }
+
+  body[data-page="login"] .auth-hero-title,
+  body[data-page="register"] .auth-hero-title {
+    color: #0d1b2a !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-size: clamp(2rem, 3vw, 2.65rem) !important;
+    line-height: 1.12 !important;
+    letter-spacing: 0 !important;
+    margin-bottom: 18px !important;
+  }
+
+  body[data-page="login"] .auth-hero-title .glow,
+  body[data-page="register"] .auth-hero-title .glow {
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    text-shadow: none !important;
+  }
+
+  body[data-page="login"] .auth-hero-desc,
+  body[data-page="register"] .auth-hero-desc {
+    max-width: 38rem !important;
+    color: #526174 !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-size: 1rem !important;
+    line-height: 1.85 !important;
+    margin-bottom: 34px !important;
+  }
+
+  body[data-page="login"] .auth-features,
+  body[data-page="register"] .auth-features {
+    gap: 12px !important;
+  }
+
+  body[data-page="login"] .auth-feat,
+  body[data-page="register"] .auth-feat {
+    padding: 15px 16px !important;
+    border-radius: 16px !important;
+    background: rgba(255, 255, 255, 0.88) !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    color: #26364a !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07) !important;
+    backdrop-filter: blur(10px);
+  }
+
+  body[data-page="login"] .auth-feat i,
+  body[data-page="register"] .auth-feat i {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 auto;
+    background: rgba(37, 99, 235, 0.09);
+    color: #2563eb !important;
+  }
+
+  body[data-page="login"] .auth-feat span,
+  body[data-page="register"] .auth-feat span {
+    color: #26364a !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="login"] .auth-form-side,
+  body[data-page="register"] .auth-form-side {
+    flex: 1 !important;
+    padding: 52px 46px !important;
+    background: #ffffff !important;
+  }
+
+  body[data-page="login"] .auth-form-side {
+    align-items: flex-start !important;
+    padding: 32px 44px 34px !important;
+  }
+
+  body[data-page="register"] .auth-form-side {
+    padding-block: 38px !important;
+  }
+
+  body[data-page="login"] .auth-form-wrapper,
+  body[data-page="register"] .auth-form-wrapper {
+    max-width: 430px !important;
+  }
+
+  body[data-page="login"] .auth-header {
+    margin-bottom: 18px !important;
+  }
+
+  body[data-page="register"] .auth-form-wrapper-wide {
+    max-width: 460px !important;
+  }
+
+  body[data-page="login"] .auth-title,
+  body[data-page="register"] .auth-title {
+    color: #0d1b2a !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-size: clamp(1.55rem, 2vw, 1.9rem) !important;
+    line-height: 1.25 !important;
+    margin-bottom: 8px !important;
+  }
+
+  body[data-page="login"] .auth-subtitle,
+  body[data-page="register"] .auth-subtitle {
+    color: #5b6b7f !important;
+    -webkit-text-fill-color: currentColor !important;
+    line-height: 1.75 !important;
+  }
+
+  body[data-page="login"] .auth-return-note,
+  body[data-page="register"] .signup-policy-note,
+  body[data-page="login"] .auth-inline-point {
+    background: #f8fafc !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: none !important;
+    color: #44546a !important;
+  }
+
+  body[data-page="login"] .auth-return-note {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    padding: 12px 14px !important;
+    margin-bottom: 18px !important;
+    border-radius: 16px !important;
+    text-align: start !important;
+    line-height: 1.55 !important;
+  }
+
+  body[data-page="login"] .auth-return-note strong {
+    display: block;
+    color: #26364a !important;
+    font-size: 0.92rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  body[data-page="login"] .auth-return-note p {
+    margin: 0 !important;
+    color: #64748b !important;
+    font-size: 0.86rem !important;
+  }
+
+  body[data-page="login"] .auth-return-icon,
+  body[data-page="register"] .signup-field-badge {
+    background: rgba(37, 99, 235, 0.1) !important;
+    color: #2563eb !important;
+  }
+
+  body[data-page="login"] .auth-return-icon {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 12px !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    flex: 0 0 34px !important;
+  }
+
+  body[data-page="login"] .auth-form .form-group {
+    margin-bottom: 18px !important;
+  }
+
+  body[data-page="login"] .form-label,
+  body[data-page="register"] .form-label,
+  body[data-page="login"] .checkbox-label {
+    color: #26364a !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-weight: 800 !important;
+  }
+
+  body[data-page="login"] .glass-input,
+  body[data-page="register"] .glass-input,
+  body[data-page="login"] .auth-form input,
+  body[data-page="register"] .auth-form input {
+    min-height: 52px !important;
+    border: 1px solid rgba(15, 23, 42, 0.1) !important;
+    border-radius: 15px !important;
+    background: #f8fafc !important;
+    color: #0d1b2a !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+    transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease !important;
+  }
+
+  body[data-page="login"] .glass-input:focus,
+  body[data-page="register"] .glass-input:focus,
+  body[data-page="login"] .auth-form input:focus,
+  body[data-page="register"] .auth-form input:focus {
+    background: #ffffff !important;
+    border-color: rgba(37, 99, 235, 0.62) !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12) !important;
+    transform: translateY(-1px);
+  }
+
+  body[data-page="login"] .forgot-link,
+  body[data-page="register"] .signup-policy-note a,
+  body[data-page="login"] .auth-footer a,
+  body[data-page="register"] .auth-footer a,
+  body[data-page="login"] .auth-secondary-link {
+    color: #2563eb !important;
+    text-decoration: none !important;
+  }
+
+  body[data-page="login"] .pw-toggle-btn {
+    color: #64748b !important;
+    inset-inline-end: 12px;
+    width: 38px !important;
+    height: 38px !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border-radius: 12px !important;
+    display: grid !important;
+    place-items: center !important;
+    line-height: 1 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body[data-page="login"] .auth-btn,
+  body[data-page="register"] .auth-btn,
+  body[data-page="login"] .auth-form-side button[type="submit"],
+  body[data-page="register"] .auth-form-side button[type="submit"] {
+    min-height: 54px;
+    border-radius: 16px !important;
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    border: 0 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: currentColor !important;
+    box-shadow: 0 14px 28px rgba(37, 99, 235, 0.24) !important;
+  }
+
+  body[data-page="login"] .auth-btn {
+    margin-top: 6px !important;
+  }
+
+  body[data-page="login"] .auth-btn:hover,
+  body[data-page="register"] .auth-btn:hover,
+  body[data-page="login"] .auth-form-side button[type="submit"]:hover,
+  body[data-page="register"] .auth-form-side button[type="submit"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 18px 34px rgba(37, 99, 235, 0.3) !important;
+  }
+
+  body[data-page="login"] .custom-checkbox input[type="checkbox"] {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    min-height: 0 !important;
+    width: 20px !important;
+    height: 20px !important;
+    flex: 0 0 20px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 6px !important;
+    border-color: rgba(15, 23, 42, 0.18) !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  body[data-page="login"] .custom-checkbox input[type="checkbox"]:checked {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+  }
+
+  body[data-page="login"] .custom-checkbox {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-height: 28px !important;
+  }
+
+  body[data-page="login"] .checkbox-label {
+    margin: 0 !important;
+    line-height: 1.4 !important;
+  }
+
+  body[data-page="login"] .caps-lock-note {
+    display: block;
+    margin-top: 8px;
+    color: #b45309 !important;
+    font-size: 0.78rem !important;
+  }
+
+  body[data-page="login"] .oauth-divider::before,
+  body[data-page="login"] .oauth-divider::after,
+  body[data-page="register"] .oauth-divider::before,
+  body[data-page="register"] .oauth-divider::after {
+    border-bottom-color: rgba(15, 23, 42, 0.09) !important;
+  }
+
+  body[data-page="login"] .oauth-btn,
+  body[data-page="register"] .oauth-btn {
+    border: 1px solid rgba(15, 23, 42, 0.09) !important;
+    background: #ffffff !important;
+    color: #0d1b2a !important;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06) !important;
+  }
+
+  body[data-page="login"] .auth-inline-points {
+    gap: 10px !important;
+    margin-top: 18px !important;
+  }
+
+  body[data-page="login"] .auth-inline-point {
+    min-height: 48px !important;
+    padding: 10px 12px !important;
+    border-radius: 14px !important;
+    font-size: 0.8rem !important;
+  }
+
+  body[data-page="login"] .auth-footer,
+  body[data-page="register"] .auth-footer,
+  body[data-page="login"] .auth-secondary-link,
+  body[data-page="register"] .auth-help-text {
+    color: #64748b !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="register"] .auth-help-text ul,
+  body[data-page="register"] .auth-help-text ol {
+    margin: 6px 0 0;
+    padding-inline-start: 18px;
+  }
+
+  @media (max-width: 991px) {
+    body[data-page="login"] .auth-wrapper,
+    body[data-page="register"] .auth-wrapper {
+      min-height: calc(100vh - 72px) !important;
+      padding: 30px 14px !important;
+    }
+
+    body[data-page="login"] .auth-container,
+    body[data-page="register"] .auth-container {
+      max-width: 560px !important;
+      border-radius: 22px !important;
+    }
+
+    body[data-page="login"] .auth-form-side,
+    body[data-page="register"] .auth-form-side {
+      padding: 38px 26px !important;
+    }
+
+    body[data-page="login"] .auth-mobile-logo,
+    body[data-page="register"] .auth-mobile-logo {
+      margin-bottom: 24px !important;
+    }
+  }
+
+  @media (min-width: 992px) and (max-height: 700px) {
+    body[data-page="login"] .se-main {
+      padding-top: 0 !important;
+      padding-bottom: 16px !important;
+    }
+
+    body[data-page="login"] .auth-wrapper {
+      padding-block: 8px !important;
+    }
+
+    body[data-page="login"] .auth-form-side {
+      padding: 18px 44px 20px !important;
+    }
+
+    body[data-page="login"] .auth-visuals {
+      min-height: 500px !important;
+      padding: 30px 42px !important;
+    }
+
+    body[data-page="login"] .auth-logo-box {
+      width: 74px !important;
+      height: 74px !important;
+      border-radius: 19px !important;
+      margin-bottom: 20px !important;
+    }
+
+    body[data-page="login"] .auth-logo-box .auth-logo-img {
+      width: 52px !important;
+    }
+
+    body[data-page="login"] .auth-hero-title {
+      font-size: clamp(1.8rem, 2.6vw, 2.2rem) !important;
+      margin-bottom: 12px !important;
+    }
+
+    body[data-page="login"] .auth-hero-desc {
+      font-size: 0.94rem !important;
+      line-height: 1.65 !important;
+      margin-bottom: 22px !important;
+    }
+
+    body[data-page="login"] .auth-features {
+      gap: 10px !important;
+    }
+
+    body[data-page="login"] .auth-feat {
+      padding: 11px 13px !important;
+      border-radius: 14px !important;
+      font-size: 0.88rem !important;
+    }
+
+    body[data-page="login"] .auth-feat i {
+      width: 30px !important;
+      height: 30px !important;
+      border-radius: 10px !important;
+    }
+
+    body[data-page="login"] .auth-header {
+      margin-bottom: 12px !important;
+    }
+
+    body[data-page="login"] .auth-title {
+      font-size: 1.42rem !important;
+      margin-bottom: 4px !important;
+    }
+
+    body[data-page="login"] .auth-subtitle {
+      font-size: 0.84rem !important;
+      line-height: 1.35 !important;
+    }
+
+    body[data-page="login"] .auth-return-note {
+      padding: 9px 12px !important;
+      margin-bottom: 9px !important;
+      border-radius: 14px !important;
+    }
+
+    body[data-page="login"] .auth-return-icon {
+      width: 30px !important;
+      height: 30px !important;
+      flex-basis: 30px !important;
+    }
+
+    body[data-page="login"] .auth-return-note strong {
+      font-size: 0.86rem !important;
+    }
+
+    body[data-page="login"] .auth-return-note p {
+      font-size: 0.79rem !important;
+      line-height: 1.45 !important;
+    }
+
+    body[data-page="login"] .auth-form .form-group {
+      margin-bottom: 9px !important;
+    }
+
+    body[data-page="login"] .form-label {
+      margin-bottom: 4px !important;
+      font-size: 0.82rem !important;
+    }
+
+    body[data-page="login"] .glass-input,
+    body[data-page="login"] .auth-form input:not([type="checkbox"]):not([type="hidden"]) {
+      min-height: 43px !important;
+      padding-block: 9px !important;
+    }
+
+    body[data-page="login"] .auth-btn {
+      min-height: 46px !important;
+      margin-top: 2px !important;
+    }
+
+    body[data-page="login"] .custom-checkbox {
+      min-height: 24px !important;
+    }
+
+    body[data-page="login"] .auth-inline-points {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 576px) {
+    body[data-page="login"] .auth-wrapper,
+    body[data-page="register"] .auth-wrapper {
+      padding: 18px 10px !important;
+    }
+
+    body[data-page="login"] .auth-form-side,
+    body[data-page="register"] .auth-form-side {
+      padding: 30px 18px !important;
+    }
+
+    body[data-page="login"] .auth-inline-points {
+      flex-direction: column !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body[data-page="login"] .auth-container,
+    body[data-page="register"] .auth-container,
+    body[data-page="login"] .glass-input,
+    body[data-page="register"] .glass-input,
+    body[data-page="login"] .auth-btn,
+    body[data-page="register"] .auth-btn {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  @keyframes authPanelIn {
+    from {
+      opacity: 0;
+      transform: translateY(18px) scale(0.985);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  /* Unified dark login/register finish. */
+  body[data-page="login"],
+  body[data-page="register"] {
+    background:
+      radial-gradient(circle at 16% -6%, rgba(115, 210, 255, 0.15), transparent 30rem),
+      radial-gradient(circle at 86% 5%, rgba(244, 201, 93, 0.14), transparent 28rem),
+      linear-gradient(135deg, #05070d, #0a1018) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="login"] :is(.auth-container, .auth-card, .auth-form-side, .auth-visual-side),
+  body[data-page="register"] :is(.auth-container, .auth-card, .auth-form-side, .auth-visual-side) {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.082), rgba(255, 255, 255, 0.046)) !important;
+    border-color: var(--seu-border) !important;
+    color: var(--seu-text) !important;
+    box-shadow: var(--seu-shadow-soft) !important;
+  }
+
+  body[data-page="login"] :is(h1, h2, h3, h4, h5, h6, strong),
+  body[data-page="register"] :is(h1, h2, h3, h4, h5, h6, strong) {
+    color: var(--seu-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="login"] :is(p, small, .text-muted),
+  body[data-page="register"] :is(p, small, .text-muted) {
+    color: var(--seu-muted) !important;
+  }
+</style>

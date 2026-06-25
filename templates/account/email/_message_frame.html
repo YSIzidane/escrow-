@@ -1,0 +1,157 @@
+{% now "Y" as current_year %}
+<!doctype html>
+<html lang="{{ current_language|default:'en' }}">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ email_title }}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#edf2f7;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">
+    {{ email_preheader }}
+  </div>
+
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#edf2f7;" dir="{% if current_language == 'ar' %}rtl{% else %}ltr{% endif %}">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:680px;background-color:#ffffff;border-radius:28px;overflow:hidden;box-shadow:0 12px 40px rgba(15,23,42,0.12);">
+          {% if brand_hero_email_src or brand_hero_image_url %}
+          <tr>
+            <td style="padding:0;background-color:#0f172a;">
+              <img src="{% firstof brand_hero_email_src brand_hero_image_url %}" alt="{{ site_brand_name|default:'SafouaneEscrow' }}" width="680" style="display:block;width:100%;max-width:680px;height:auto;border:0;">
+            </td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td style="padding:36px 34px 16px;text-align:{% if current_language == 'ar' %}right{% else %}left{% endif %};">
+              {% if brand_logo_email_src or brand_logo_url %}
+              <img src="{% firstof brand_logo_email_src brand_logo_url %}" alt="{{ site_brand_name|default:'SafouaneEscrow' }}" width="190" style="display:block;max-width:190px;width:100%;height:auto;border:0;">
+              {% endif %}
+              <div style="margin-top:20px;display:inline-block;background-color:#fff7e7;color:#9a6b15;border:1px solid #f3ddb0;border-radius:999px;padding:8px 14px;font-size:12px;font-weight:700;letter-spacing:0.3px;">
+                {{ email_badge }}
+              </div>
+              <h1 style="margin:18px 0 10px;font-size:31px;line-height:1.25;font-weight:800;color:#0f172a;">
+                {{ email_title }}
+              </h1>
+              <p style="margin:0;font-size:16px;line-height:1.8;color:#475569;">
+                {{ email_intro }}
+              </p>
+            </td>
+          </tr>
+          {% if email_button_url and email_button_label %}
+          <tr>
+            <td style="padding:0 34px 14px;text-align:{% if current_language == 'ar' %}right{% else %}left{% endif %};">
+              <a href="{{ email_button_url }}" style="display:inline-block;background:linear-gradient(135deg,#d7a74a 0%,#b27a1f 100%);color:#ffffff;text-decoration:none;font-size:16px;font-weight:700;padding:15px 24px;border-radius:14px;">
+                {{ email_button_label }}
+              </a>
+            </td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td style="padding:10px 34px 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:22px;">
+                <tr>
+                  <td style="padding:24px;text-align:{% if current_language == 'ar' %}right{% else %}left{% endif %};">
+                    <h2 style="margin:0 0 10px;font-size:18px;line-height:1.5;color:#0f172a;font-weight:800;">
+                      {{ email_panel_title }}
+                    </h2>
+                    <p style="margin:0 0 12px;font-size:15px;line-height:1.9;color:#334155;">
+                      {{ email_panel_body|linebreaksbr }}
+                    </p>
+                    <p style="margin:0;font-size:14px;line-height:1.8;color:#64748b;">
+                      {{ email_secondary_text|linebreaksbr }}
+                    </p>
+                    {% if email_detail_label_1 and email_detail_value_1 %}
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border-collapse:collapse;">
+                      <tr>
+                        <td style="padding:10px 0;border-top:1px solid #e2e8f0;font-size:13px;line-height:1.6;color:#64748b;font-weight:700;width:34%;">
+                          {{ email_detail_label_1 }}
+                        </td>
+                        <td style="padding:10px 0;border-top:1px solid #e2e8f0;font-size:14px;line-height:1.8;color:#0f172a;word-break:break-word;">
+                          {{ email_detail_value_1 }}
+                        </td>
+                      </tr>
+                      {% if email_detail_label_2 and email_detail_value_2 %}
+                      <tr>
+                        <td style="padding:10px 0;border-top:1px solid #e2e8f0;font-size:13px;line-height:1.6;color:#64748b;font-weight:700;">
+                          {{ email_detail_label_2 }}
+                        </td>
+                        <td style="padding:10px 0;border-top:1px solid #e2e8f0;font-size:14px;line-height:1.8;color:#0f172a;word-break:break-word;">
+                          {{ email_detail_value_2 }}
+                        </td>
+                      </tr>
+                      {% endif %}
+                      {% if email_detail_label_3 and email_detail_value_3 %}
+                      <tr>
+                        <td style="padding:10px 0;border-top:1px solid #e2e8f0;font-size:13px;line-height:1.6;color:#64748b;font-weight:700;">
+                          {{ email_detail_label_3 }}
+                        </td>
+                        <td style="padding:10px 0;border-top:1px solid #e2e8f0;font-size:14px;line-height:1.8;color:#0f172a;word-break:break-word;">
+                          {{ email_detail_value_3 }}
+                        </td>
+                      </tr>
+                      {% endif %}
+                    </table>
+                    {% endif %}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {% if email_code %}
+          <tr>
+            <td style="padding:18px 34px 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:linear-gradient(135deg,#fff7e7 0%,#f8fafc 100%);border:1px solid #f1dfb6;border-radius:22px;">
+                <tr>
+                  <td style="padding:18px 24px;text-align:center;">
+                    <p style="margin:0 0 10px;font-size:12px;line-height:1.6;font-weight:700;color:#9a6b15;letter-spacing:0.4px;text-transform:uppercase;">
+                      {{ email_code_label }}
+                    </p>
+                    <p style="margin:0;font-size:34px;line-height:1.2;font-weight:800;color:#0f172a;letter-spacing:8px;">
+                      {{ email_code }}
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {% endif %}
+          {% if email_button_url %}
+          <tr>
+            <td style="padding:20px 34px 0;text-align:{% if current_language == 'ar' %}right{% else %}left{% endif %};">
+              <p style="margin:0 0 10px;font-size:13px;font-weight:700;color:#0f172a;">
+                {{ email_fallback_label }}
+              </p>
+              <p style="margin:0;font-size:13px;line-height:1.8;color:#2563eb;word-break:break-word;">
+                <a href="{{ email_button_url }}" style="color:#2563eb;text-decoration:none;">{{ email_button_url }}</a>
+              </p>
+            </td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td style="padding:20px 34px 0;text-align:{% if current_language == 'ar' %}right{% else %}left{% endif %};">
+              <div style="border-left:4px solid #d7a74a;background-color:#fffaf0;padding:14px 16px;border-radius:12px;color:#7c5b18;font-size:13px;line-height:1.8;">
+                {{ email_notice }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px 34px 34px;text-align:{% if current_language == 'ar' %}right{% else %}left{% endif %};">
+              <p style="margin:0 0 10px;font-size:12px;line-height:1.8;color:#64748b;">
+                {% if current_language == 'ar' %}
+                هذه رسالة نظامية من {{ site_brand_name|default:'SafouaneEscrow' }}. إذا احتجت مساعدة يمكنك الرد على هذا البريد أو التواصل عبر المنصة.
+                {% else %}
+                This is an automated message from {{ site_brand_name|default:'SafouaneEscrow' }}. If you need help, reply to this email or contact us through the platform.
+                {% endif %}
+              </p>
+              <p style="margin:0;font-size:12px;line-height:1.8;color:#94a3b8;">
+                {{ site_brand_name|default:'SafouaneEscrow' }}{% if site_url %} · <a href="{{ site_url }}" style="color:#64748b;text-decoration:none;">{{ site_url }}</a>{% endif %}{% if support_email %} · <a href="mailto:{{ support_email }}" style="color:#64748b;text-decoration:none;">{{ support_email }}</a>{% endif %} · {{ current_year }}
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

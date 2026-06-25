@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+{% load static site_i18n account socialaccount %}
+
+{% block title %}{% t "social.login.title" %}{% endblock %}
+{% block page_type %}socialaccount_login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+  <div class="col-lg-5 col-md-6">
+    <div class="card border-0 social-login-card">
+      <div class="social-login-header">
+        <div class="social-login-glow top"></div>
+        <div class="social-login-glow bottom"></div>
+
+        <div class="social-login-brandlockup">
+          <div class="social-login-icon">
+            <img src="{% static 'images/brand/icon-192.png' %}" alt="{% t 'site.name' %}" class="social-login-mark" width="192" height="192" decoding="async">
+          </div>
+          <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" class="social-login-wordmark" width="520" height="150" decoding="async">
+        </div>
+
+        <h3>
+          {% if current_language == 'ar' %}
+          أكمل حسابك بخطوة واحدة
+          {% else %}
+          Finish your account in one step
+          {% endif %}
+        </h3>
+        <p>
+          {% if current_language == 'ar' %}
+          سنستخدم بريد Google الموثق، وما عليك إلا اختيار اسم مستخدم مناسب داخل المنصة.
+          {% else %}
+          We will use your verified Google email. You only need to choose a clean platform username.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="card-body social-login-body">
+        <div class="text-center social-login-intro">
+          <p>
+            {% if provider_id == 'google' %}
+            {% if current_language == 'ar' %}
+            تم التحقق من هويتك عبر <strong>Google</strong>.
+            {% else %}
+            Your identity was verified through <strong>Google</strong>.
+            {% endif %}
+            {% endif %}
+          </p>
+
+          {% if sociallogin.account.get_profile_name %}
+          <div class="social-login-profile-box">
+            <p class="social-login-profile-name">{{ sociallogin.account.get_profile_name }}</p>
+            <p class="social-login-profile-email">{{ sociallogin.account.user.email }}</p>
+          </div>
+          {% endif %}
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+
+          {{ form.email }}
+          {% if form.email.errors %}
+          <div class="social-login-alert">{{ form.email.errors.0 }}</div>
+          {% endif %}
+          {% if form.non_field_errors %}
+          <div class="social-login-alert">{{ form.non_field_errors.0 }}</div>
+          {% endif %}
+
+          <div class="mb-4">
+            <label class="social-login-label" for="id_username">
+              <i class="fas fa-user"></i>
+              {% if current_language == 'ar' %}اسم المستخدم{% else %}Username{% endif %}
+            </label>
+            <input
+              type="text"
+              name="username"
+              id="id_username"
+              class="form-control social-login-input"
+              placeholder="{% if current_language == 'ar' %}مثال: safouane.store{% else %}Example: safouane.store{% endif %}"
+              required
+              autofocus
+              value="{{ form.username.value|default:'' }}"
+            >
+            {% if form.username.errors %}
+            <small class="social-login-error">{{ form.username.errors.0 }}</small>
+            {% endif %}
+            <small class="social-login-help">
+              {% if current_language == 'ar' %}
+              هذا الاسم سيظهر داخل الصفقات والملف الشخصي ويمكنك تعديله لاحقًا إذا أضفت شاشة مخصصة لذلك.
+              {% else %}
+              This is the name shown across your profile and deals.
+              {% endif %}
+            </small>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 social-login-btn">
+            <i class="fas fa-check"></i>
+            {% if current_language == 'ar' %}دخول وإنشاء الحساب{% else %}Continue and create account{% endif %}
+          </button>
+        </form>
+
+        <div class="social-login-footer">
+          <p>
+            {% if current_language == 'ar' %}
+            تريد العودة لتسجيل الدخول العادي؟
+            {% else %}
+            Prefer the normal sign-in page?
+            {% endif %}
+            <a href="{% url 'account_login' %}{% if redirect_field_value %}?{{ redirect_field_name }}={{ redirect_field_value|urlencode }}{% endif %}">
+              {% if current_language == 'ar' %}العودة{% else %}Go back{% endif %}
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .social-login-card {
+    border-radius: 24px !important;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(13,27,42,0.15) !important;
+    animation: fadeInUp 0.6s ease both;
+  }
+  .social-login-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 40px 32px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .social-login-glow {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,150,59,.18) 0%, transparent 70%);
+  }
+  .social-login-glow.top { top: -40px; right: -40px; width: 150px; height: 150px; }
+  .social-login-glow.bottom { bottom: -20px; left: -20px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(201,150,59,.12) 0%, transparent 70%); }
+  .social-login-brandlockup {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .social-login-icon {
+    width: 76px;
+    height: 76px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 14px 34px rgba(7, 13, 22, 0.32), inset 0 1px 0 rgba(255,255,255,.08);
+    animation: scaleIn 0.5s 0.2s ease both;
+    backdrop-filter: blur(8px);
+  }
+  .social-login-mark {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 16px rgba(201,150,59,.22));
+  }
+  .social-login-wordmark {
+    height: 26px;
+    width: auto;
+    max-width: min(180px, 70vw);
+    object-fit: contain;
+    opacity: .96;
+  }
+  .social-login-header h3 { color: white; font-weight: 800; margin-bottom: 8px; font-size: 1.3rem; }
+  .social-login-header p { color: rgba(255,255,255,0.65); font-size: 0.9rem; margin: 0; }
+  .social-login-body { padding: 40px 32px !important; }
+  .social-login-intro { margin-bottom: 32px; }
+  .social-login-intro p { color: var(--text-secondary); font-size: 0.95rem; margin: 0 0 16px; }
+  .social-login-profile-box {
+    background: rgba(201,150,59,0.08);
+    border: 1px solid rgba(201,150,59,0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+    animation: fadeInUp 0.4s 0.1s ease both;
+  }
+  .social-login-profile-name { color: var(--text-primary); font-weight: 600; margin: 0 0 4px; }
+  .social-login-profile-email { color: var(--text-light); font-size: 0.85rem; margin: 0; }
+  .social-login-alert {
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #b91c1c;
+    font-size: 0.88rem;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+  }
+  .social-login-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .social-login-label i { color: var(--gold); margin-inline-end: 8px; }
+  .social-login-input {
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+  }
+  .social-login-error { color: #ef4444; display: block; margin-top: 4px; }
+  .social-login-help { color: var(--text-light); display: block; margin-top: 8px; font-size: 0.82rem; line-height: 1.6; }
+  .social-login-btn {
+    padding: 13px !important;
+    font-size: 1rem !important;
+    font-weight: 600;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    border: none;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.4s 0.3s ease both;
+  }
+  .social-login-btn i { margin-inline-end: 8px; }
+  .social-login-footer {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-light);
+  }
+  .social-login-footer p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+  .social-login-footer a {
+    color: var(--gold-dark);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .social-login-footer a:hover { color: var(--gold); }
+  @media (max-width: 576px) {
+    .social-login-header {
+      padding: 34px 22px 24px;
+    }
+    .social-login-body {
+      padding: 28px 22px !important;
+    }
+    .social-login-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 22px;
+    }
+    .social-login-mark {
+      width: 38px;
+      height: 38px;
+    }
+    .social-login-wordmark {
+      height: 22px;
+      max-width: 150px;
+    }
+  }
+</style>
+{% include "socialaccount/_social_account_styles.html" %}
+{% endblock %}

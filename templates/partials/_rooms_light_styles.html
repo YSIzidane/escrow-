@@ -1,0 +1,224 @@
+{% load static %}
+<style>
+  /*
+    Legacy filename retained for include compatibility.
+    Room, chat, join/create room, escrow room, and success flows now share the dark platform UI.
+  */
+
+  body[data-page="chat_hub"],
+  body[data-page="private_chat"],
+  body[data-page="deal_room"],
+  body[data-page="room"],
+  body[data-page="create_room"],
+  body[data-page="join_room"],
+  body[data-page="escrow_room"],
+  body[data-page="payment_success"] {
+    background:
+      radial-gradient(circle at 14% -6%, rgba(115, 210, 255, 0.15), transparent 30rem),
+      radial-gradient(circle at 86% 4%, rgba(244, 201, 93, 0.13), transparent 28rem),
+      linear-gradient(135deg, #05070d 0%, #0a1018 100%) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="chat_hub"] .page-bg-overlay,
+  body[data-page="private_chat"] .page-bg-overlay,
+  body[data-page="deal_room"] .page-bg-overlay,
+  body[data-page="room"] .page-bg-overlay,
+  body[data-page="create_room"] .page-bg-overlay,
+  body[data-page="join_room"] .page-bg-overlay,
+  body[data-page="escrow_room"] .page-bg-overlay,
+  body[data-page="payment_success"] .page-bg-overlay {
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+      radial-gradient(circle at 18% 12%, rgba(115, 210, 255, 0.16), transparent 26rem),
+      radial-gradient(circle at 86% 6%, rgba(244, 201, 93, 0.14), transparent 24rem),
+      linear-gradient(135deg, rgba(5, 7, 13, 0.98), rgba(9, 13, 22, 0.98)) !important;
+    background-size: 56px 56px, 56px 56px, auto, auto, auto !important;
+  }
+
+  body[data-page="private_chat"] .se-chat-wrapper,
+  body[data-page="deal_room"] :is(.se-dr-header, .se-dr-stat, .se-dr-toolbar, .se-dr-filters, .se-dr-table-card),
+  body[data-page="room"] :is(.se-room-chat-card, .se-room-sidebar-card),
+  body[data-page="create_room"] .se-publish-form-card,
+  body[data-page="join_room"] .se-join-room-card,
+  body[data-page="escrow_room"] :is(.se-room-chat-card, .se-room-sidebar-card, .escrow-room-card, .escrow-panel, .er-guide-card, .er-chat-card, .er-admin-card),
+  body[data-page="payment_success"] :is(.se-success-card, .se-success-panel) {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.082), rgba(255, 255, 255, 0.046)) !important;
+    border: 1px solid var(--seu-border) !important;
+    border-radius: var(--seu-radius-lg) !important;
+    box-shadow: var(--seu-shadow-soft) !important;
+    color: var(--seu-text) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  body[data-page="create_room"] .se-publish-form-hero,
+  body[data-page="join_room"] .se-publish-form-hero,
+  body[data-page="deal_room"] .se-dr-header,
+  body[data-page="payment_success"] .se-success-hero {
+    background:
+      radial-gradient(circle at 16% 12%, rgba(115, 210, 255, 0.16), transparent 22rem),
+      radial-gradient(circle at 88% 10%, rgba(244, 201, 93, 0.18), transparent 20rem),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.045)) !important;
+    border-color: var(--seu-border) !important;
+  }
+
+  body[data-page="private_chat"] :is(.se-chat-name, .se-chat-empty-title),
+  body[data-page="deal_room"] .se-dr-title,
+  body[data-page="room"] .se-room-title,
+  body[data-page="create_room"] .se-publish-form-title,
+  body[data-page="join_room"] .se-publish-form-title,
+  body[data-page="payment_success"] .se-success-hero h1 {
+    color: var(--seu-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="private_chat"] .se-chat-empty-sub,
+  body[data-page="deal_room"] .se-dr-sub,
+  body[data-page="room"] .se-room-description,
+  body[data-page="create_room"] .se-publish-form-subtitle,
+  body[data-page="join_room"] .se-publish-form-subtitle,
+  body[data-page="payment_success"] :is(.se-success-hero p, .se-success-copy) {
+    color: var(--seu-muted) !important;
+  }
+
+  body[data-page="private_chat"] :is(.se-chat-body, .se-chat-header, .se-chat-footer),
+  body[data-page="room"] :is(.se-room-chat-box, .se-room-header, .se-room-chat-card > div),
+  body[data-page="escrow_room"] :is(.se-room-chat-box, .se-room-header, .se-room-chat-card > div) {
+    background: rgba(255, 255, 255, 0.045) !important;
+    border-color: var(--seu-border) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="private_chat"] .se-bubble-mine {
+    background: linear-gradient(135deg, var(--seu-primary), #ffe18a) !important;
+    color: #15110a !important;
+    box-shadow: 0 12px 26px rgba(244, 201, 93, 0.18) !important;
+  }
+
+  body[data-page="private_chat"] .se-bubble-mine * {
+    color: #15110a !important;
+  }
+
+  body[data-page="private_chat"] .se-bubble-other {
+    background: rgba(255, 255, 255, 0.075) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="private_chat"] .se-msg-input,
+  body[data-page="room"] .se-publish-input,
+  body[data-page="create_room"] :is(.se-publish-input, .se-publish-textarea),
+  body[data-page="join_room"] .se-publish-input,
+  body[data-page="escrow_room"] .se-publish-input {
+    background: rgba(255, 255, 255, 0.065) !important;
+    border: 1px solid var(--seu-border) !important;
+    border-radius: var(--seu-radius-sm) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="private_chat"] .se-send-btn,
+  body[data-page="room"] .se-room-action-btn.btn-primary,
+  body[data-page="create_room"] .se-publish-primary-btn,
+  body[data-page="join_room"] .se-publish-primary-btn,
+  body[data-page="payment_success"] .se-primary-action {
+    background: linear-gradient(135deg, var(--seu-primary), #ffe18a) !important;
+    border-color: rgba(255, 225, 138, 0.45) !important;
+    color: #15110a !important;
+    box-shadow: 0 14px 30px rgba(244, 201, 93, 0.22) !important;
+  }
+
+  body[data-page="deal_room"] :is(.se-dr-ghost-btn, .se-dr-filter-btn, .se-dr-role-btn),
+  body[data-page="room"] .se-room-action-btn,
+  body[data-page="create_room"] .se-publish-secondary-link,
+  body[data-page="join_room"] .se-publish-secondary-link,
+  body[data-page="payment_success"] .se-secondary-action {
+    background: rgba(255, 255, 255, 0.065) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+    border-radius: var(--seu-radius-sm) !important;
+  }
+
+  body[data-page="deal_room"] :is(.se-dr-add-btn, .se-dr-role-btn.active, .se-dr-filter-btn.active),
+  body[data-page="payment_success"] .se-success-step.is-done span {
+    background: rgba(244, 201, 93, 0.15) !important;
+    border-color: rgba(244, 201, 93, 0.34) !important;
+    color: var(--seu-primary) !important;
+  }
+
+  body[data-page="deal_room"] .se-dr-tag,
+  body[data-page="payment_success"] .se-success-label {
+    background: rgba(255, 255, 255, 0.075) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+    border-radius: 999px !important;
+  }
+
+  body[data-page="create_room"] .se-publish-form-hero > div:first-child,
+  body[data-page="join_room"] .se-join-room-glow,
+  body[data-page="escrow_room"] .se-brand-logo-admin-note {
+    display: none !important;
+  }
+
+  body[data-page="escrow_room"] :is(.er-chat-head, .er-chat-body, .er-chat-footer, .er-chat-form, .er-admin-body, .er-admin-actions, .er-admin-divider),
+  body[data-page="room"] :is(.room-side-card-head, .room-participant-list, .room-meta-chip, .room-code-chip, .room-copy-btn, .room-message-row, .room-message-bubble) {
+    background: rgba(255, 255, 255, 0.055) !important;
+    border-color: var(--seu-border) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="escrow_room"] :is(.er-guide-title, .er-chat-name, .er-admin-row strong, .er-admin-total span, .er-actions-title, .er-mono),
+  body[data-page="room"] :is(.room-participant-list strong, .room-meta-chip, .room-code-chip code) {
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="escrow_room"] :is(.er-guide-text, .er-chat-sub, .er-admin-row span, .er-chat-empty, .er-msg-other .er-time),
+  body[data-page="room"] :is(.room-participant-list span, .room-meta-chip span) {
+    color: var(--seu-muted) !important;
+  }
+
+  body[data-page="escrow_room"] .er-msg-other,
+  body[data-page="room"] .room-message-bubble:not(.is-mine) {
+    background: rgba(255, 255, 255, 0.075) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="escrow_room"] .er-msg-me,
+  body[data-page="room"] .room-message-bubble.is-mine {
+    background: linear-gradient(135deg, var(--seu-primary), #ffe18a) !important;
+    color: #15110a !important;
+  }
+
+  body[data-page="escrow_room"] .er-chat-input {
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="escrow_room"] :is(.er-chat-submit, .er-scroll-bottom),
+  body[data-page="room"] :is(.room-copy-btn.is-primary, .room-primary-btn) {
+    background: linear-gradient(135deg, var(--seu-primary), #ffe18a) !important;
+    border-color: rgba(255, 225, 138, 0.45) !important;
+    color: #15110a !important;
+  }
+
+  body[data-page="escrow_room"] :is(.er-btn-view, .er-btn-dark),
+  body[data-page="room"] :is(.room-back-button, .room-copy-btn) {
+    background: rgba(255, 255, 255, 0.065) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="escrow_room"] :is(.er-chat-closed, .er-alert-danger),
+  body[data-page="room"] .room-danger-btn {
+    background: rgba(255, 107, 124, 0.15) !important;
+    border-color: rgba(255, 107, 124, 0.34) !important;
+    color: #ffd1d7 !important;
+  }
+
+  @media (max-width: 768px) {
+    body[data-page="private_chat"] .se-chat-wrapper {
+      border-radius: var(--seu-radius-md) !important;
+      min-height: calc(100dvh - 120px) !important;
+    }
+  }
+</style>

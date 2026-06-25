@@ -1,0 +1,524 @@
+{% load site_i18n %}
+<div class="pf-card withdraw-shell" id="withdraw-page-shell" style="width:100%; max-width:1080px; box-shadow: 0 24px 64px rgba(13,27,42,.12); border-radius: 28px; overflow:hidden;">
+  <div class="withdraw-shell-hero" style="background:linear-gradient(135deg, #0D1B2A 0%, #1A2E45 55%, #243B55 100%); color:white; padding: 28px 24px; position:relative; overflow:hidden;">
+    <div style="position:absolute; top:-34px; left:-24px; width:140px; height:140px; border-radius:50%; background:radial-gradient(circle, rgba(201,150,59,.18), transparent 70%);"></div>
+    <div style="position:absolute; bottom:-34px; right:-24px; width:120px; height:120px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,.08), transparent 72%);"></div>
+    <div style="position:relative; z-index:1; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:18px;">
+      <div style="max-width:620px;">
+        <div style="display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); font-size:.76rem; font-weight:800; margin-bottom:14px;">
+          <i class="fas fa-flask" style="color:#E8B96A;"></i>
+          {% if current_language == 'ar' %}وضع تجريبي{% else %}Testing mode{% endif %}
+        </div>
+        <h1 style="font-size:clamp(1.4rem, 3vw, 2rem); font-weight:900; margin:0 0 10px;">{% t "withdraw.header" %}</h1>
+        <p style="margin:0; color:rgba(255,255,255,.74); line-height:1.9; font-size:.95rem;">
+          {% if current_language == 'ar' %}
+          هذا التدفق مخصص لاختبار تجربة سحب الأرباح في موقعك قبل الربط النهائي مع التحويل الحقيقي. يمكنك الآن إرسال الطلب، متابعة حالته، ومراجعة الملاحظات من الإدارة بسهولة.
+          {% else %}
+          This flow lets you test earnings withdrawals before connecting a real payout provider. You can now submit a request, track its status, and review admin feedback in one place.
+          {% endif %}
+        </p>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; min-width:min(100%, 380px); flex:1;">
+        <div style="padding:16px 18px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1);">
+          <div style="font-size:.78rem; color:rgba(255,255,255,.62); margin-bottom:6px;">{% t "withdraw.balance_label" %}</div>
+          <div style="font-size:1.45rem; font-weight:900;">${{ profile.balance|floatformat:2 }}</div>
+        </div>
+        <div style="padding:16px 18px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1);">
+          <div style="font-size:.78rem; color:rgba(255,255,255,.62); margin-bottom:6px;">{% if current_language == 'ar' %}آخر حالة{% else %}Current status{% endif %}</div>
+          <div style="font-size:1rem; font-weight:800;">
+            {% if withdraw_block_reason == 'pending_withdrawal' %}
+            {% if current_language == 'ar' %}بانتظار المراجعة{% else %}Pending review{% endif %}
+            {% elif withdraw_block_reason %}
+            {% if current_language == 'ar' %}مقيد مؤقتًا{% else %}Temporarily blocked{% endif %}
+            {% else %}
+            {% if current_language == 'ar' %}جاهز للإرسال{% else %}Ready to submit{% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pf-card-body" style="padding: 24px;">
+    <div style="display:grid; grid-template-columns:minmax(0, 1.05fr) minmax(0, .95fr); gap:24px;">
+      <section>
+        {% if withdraw_block_reason == 'missing_kyc' %}
+        <div class="withdraw-alert withdraw-alert-danger">
+          <i class="fas fa-shield-alt"></i>
+          <div>
+            <strong>{% if current_language == 'ar' %}التوثيق مطلوب أولًا{% else %}Verification is required first{% endif %}</strong>
+            <p>{% if current_language == 'ar' %}يجب توثيق حسابك والموافقة عليه قبل أن تتمكن من سحب الأرباح.{% else %}Your account must be verified and approved before you can withdraw earnings.{% endif %}</p>
+          </div>
+        </div>
+        {% elif withdraw_block_reason == 'pending_kyc' %}
+        <div class="withdraw-alert withdraw-alert-warn">
+          <i class="fas fa-hourglass-half"></i>
+          <div>
+            <strong>{% if current_language == 'ar' %}طلب التوثيق قيد المراجعة{% else %}Verification is still under review{% endif %}</strong>
+            <p>{% if current_language == 'ar' %}سيتاح السحب مباشرة بعد اعتماد طلب التوثيق.{% else %}Withdrawals will become available once your verification request is approved.{% endif %}</p>
+          </div>
+        </div>
+        {% elif withdraw_block_reason == 'rejected_kyc' %}
+        <div class="withdraw-alert withdraw-alert-danger">
+          <i class="fas fa-triangle-exclamation"></i>
+          <div>
+            <strong>{% if current_language == 'ar' %}تم رفض التوثيق الحالي{% else %}Your current verification was rejected{% endif %}</strong>
+            <p>{% if current_language == 'ar' %}حدّث مستندات التوثيق من الملف الشخصي ثم أعد المحاولة.{% else %}Update your verification documents from the profile page, then try again.{% endif %}</p>
+          </div>
+        </div>
+        {% elif has_pending_withdrawal %}
+        <div class="withdraw-alert withdraw-alert-info">
+          <i class="fas fa-clock"></i>
+          <div>
+            <strong>{% if current_language == 'ar' %}يوجد طلب سحب معلق{% else %}You already have a pending request{% endif %}</strong>
+            <p>{% if current_language == 'ar' %}لن تتمكن من إرسال طلب جديد حتى تتم مراجعة الطلب الحالي.{% else %}You cannot submit another request until the current one is reviewed.{% endif %}</p>
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="pf-card" style="box-shadow:none; border:1px solid rgba(13,27,42,.08); border-radius:22px;">
+          <div class="pf-card-header" style="padding:18px 20px; background:linear-gradient(180deg, rgba(13,27,42,.03), rgba(13,27,42,.015)); border-bottom:1px solid rgba(13,27,42,.06);">
+            <span style="font-size:1rem; font-weight:800; color:var(--pf-navy);">
+              <i class="fas fa-paper-plane" style="color:var(--pf-gold);"></i>
+              {% if current_language == 'ar' %}إرسال طلب سحب{% else %}Submit a withdrawal request{% endif %}
+            </span>
+          </div>
+
+          <div class="pf-card-body" style="padding:20px;">
+            <form method="post" data-async-form data-refresh-target="#withdraw-page-shell" data-refresh-url="{% url 'request_withdrawal' %}" data-after-refresh="initWithdrawalMethodHints">
+              {% csrf_token %}
+
+              <div class="pf-field" style="margin-bottom:16px;">
+                <label class="pf-label withdraw-label" for="{{ form.amount.id_for_label }}">
+                  <i class="fas fa-dollar-sign"></i> {% t "withdraw.amount_label" %}
+                </label>
+                {{ form.amount }}
+                {% if form.amount.errors %}
+                <small class="withdraw-error">{{ form.amount.errors.0 }}</small>
+                {% endif %}
+              </div>
+
+              <div class="pf-field" style="margin-bottom:16px;">
+                <label class="pf-label withdraw-label" for="{{ form.method.id_for_label }}">
+                  <i class="fas fa-building-columns"></i> {% t "withdraw.method_label" %}
+                </label>
+                {{ form.method }}
+                {% if form.method.errors %}
+                <small class="withdraw-error">{{ form.method.errors.0 }}</small>
+                {% endif %}
+              </div>
+
+              <div class="pf-field" style="margin-bottom:18px;">
+                <label class="pf-label withdraw-label" for="{{ form.details.id_for_label }}">
+                  <i class="fas fa-file-invoice"></i> {% t "withdraw.details_label" %}
+                </label>
+                {{ form.details }}
+                <small id="withdrawMethodHint" class="withdraw-hint">
+                  {% if current_language == 'ar' %}
+                  {{ method_hints.paypal.hint_ar }}
+                  {% else %}
+                  {{ method_hints.paypal.hint_en }}
+                  {% endif %}
+                </small>
+                {% if form.details.errors %}
+                <small class="withdraw-error">{{ form.details.errors.0 }}</small>
+                {% endif %}
+              </div>
+
+              <div class="withdraw-mini-note">
+                <i class="fas fa-circle-info"></i>
+                {% if current_language == 'ar' %}
+                في وضع الاختبار، يتم خصم الرصيد محليًا داخل المنصة حتى تتمكن من تجربة دورة السحب بالكامل.
+                {% else %}
+                In testing mode, the balance is deducted locally inside the platform so you can test the full withdrawal lifecycle.
+                {% endif %}
+              </div>
+
+              <div class="pf-form-actions" style="display:flex; gap:12px; margin-top:20px; flex-wrap:wrap;">
+                <button type="submit" class="pf-btn-save withdraw-submit-btn" {% if withdraw_block_reason or has_pending_withdrawal %}disabled{% endif %}>
+                  <i class="fas fa-paper-plane"></i> {% t "withdraw.submit" %}
+                </button>
+                <a href="{% if withdraw_block_reason == 'missing_kyc' or withdraw_block_reason == 'pending_kyc' or withdraw_block_reason == 'rejected_kyc' %}{% url 'profile' %}{% else %}{% url 'profile' %}{% endif %}" class="pf-btn-cancel withdraw-cancel-btn">
+                  {% if withdraw_block_reason == 'missing_kyc' or withdraw_block_reason == 'pending_kyc' or withdraw_block_reason == 'rejected_kyc' %}
+                  {% if current_language == 'ar' %}العودة إلى التوثيق{% else %}Back to verification{% endif %}
+                  {% else %}
+                  {% if current_language == 'ar' %}العودة إلى الحساب{% else %}Back to account{% endif %}
+                  {% endif %}
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <aside>
+        <div class="pf-card" style="box-shadow:none; border:1px solid rgba(13,27,42,.08); border-radius:22px; height:100%;">
+          <div class="pf-card-header" style="padding:18px 20px; background:linear-gradient(180deg, rgba(13,27,42,.03), rgba(13,27,42,.015)); border-bottom:1px solid rgba(13,27,42,.06);">
+            <span style="font-size:1rem; font-weight:800; color:var(--pf-navy);">
+              <i class="fas fa-timeline" style="color:var(--pf-gold);"></i>
+              {% if current_language == 'ar' %}سجل طلبات السحب{% else %}Withdrawal history{% endif %}
+            </span>
+          </div>
+
+          <div class="pf-card-body" style="padding:20px;">
+            {% if recent_withdrawals %}
+            <div style="display:grid; gap:12px;">
+              {% for withdrawal in recent_withdrawals %}
+              <div class="withdraw-history-card">
+                <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start;">
+                  <div>
+                    <div style="font-weight:900; color:var(--pf-navy); margin-bottom:4px;">${{ withdrawal.amount|floatformat:2 }}</div>
+                    <div style="font-size:.82rem; color:#5A6A7A;">
+                      {% if withdrawal.method == 'paypal' %}
+                      PayPal
+                      {% elif withdrawal.method == 'bank' %}
+                      {% if current_language == 'ar' %}تحويل بنكي{% else %}Bank transfer{% endif %}
+                      {% else %}
+                      USDT TRC20
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="withdraw-status-badge withdraw-status-{{ withdrawal.status }}">
+                    {% if withdrawal.status == 'pending' %}
+                    {% if current_language == 'ar' %}قيد المراجعة{% else %}Pending{% endif %}
+                    {% elif withdrawal.status == 'processed' %}
+                    {% if current_language == 'ar' %}تم التحويل{% else %}Processed{% endif %}
+                    {% else %}
+                    {% if current_language == 'ar' %}مرفوض{% else %}Rejected{% endif %}
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div style="font-size:.78rem; color:#7B8794; margin-top:10px; line-height:1.8;">
+                  <div>{{ withdrawal.created_at|date:"Y-m-d H:i" }}</div>
+                  <div style="margin-top:6px; word-break:break-word;">{{ withdrawal.details }}</div>
+                </div>
+
+                {% if withdrawal.payout_reference %}
+                <div class="withdraw-history-note withdraw-history-note-success">
+                  {% if current_language == 'ar' %}مرجع التحويل:{% else %}Payout reference:{% endif %} {{ withdrawal.payout_reference }}
+                </div>
+                {% endif %}
+                {% if withdrawal.rejection_reason %}
+                <div class="withdraw-history-note withdraw-history-note-danger">
+                  {% if current_language == 'ar' %}سبب الرفض:{% else %}Rejection reason:{% endif %} {{ withdrawal.rejection_reason }}
+                </div>
+                {% endif %}
+                {% if withdrawal.admin_note %}
+                <div class="withdraw-history-note">
+                  {% if current_language == 'ar' %}ملاحظة الإدارة:{% else %}Admin note:{% endif %} {{ withdrawal.admin_note }}
+                </div>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div style="padding:18px; border-radius:18px; background:rgba(13,27,42,.03); text-align:center; color:#5A6A7A; line-height:1.8;">
+              <i class="fas fa-money-bill-transfer" style="display:block; font-size:1.6rem; color:rgba(201,150,59,.5); margin-bottom:10px;"></i>
+              {% if current_language == 'ar' %}
+              لم ترسل أي طلب سحب بعد. سيظهر السجل هنا بعد أول طلب.
+              {% else %}
+              You have not submitted a withdrawal request yet. Your history will appear here after the first one.
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<style>
+  .withdraw-shell {
+    width: 100%;
+    max-width: 1080px;
+    box-shadow: 0 24px 64px rgba(13,27,42,.12);
+    border-radius: 28px;
+    overflow: hidden;
+  }
+
+  .withdraw-shell-hero > div:last-child {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  .withdraw-shell-hero > div:last-child > div:first-child {
+    max-width: 620px;
+  }
+
+  .withdraw-shell-hero > div:last-child > div:last-child {
+    min-width: min(100%, 380px);
+    flex: 1;
+  }
+
+  .withdraw-shell .pf-card-body > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+    gap: 24px;
+  }
+
+  .withdraw-shell .pf-form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .withdraw-shell .pf-input,
+  .withdraw-shell .pf-textarea,
+  .withdraw-shell select {
+    width: 100%;
+    padding: 14px;
+    border: 1.5px solid rgba(13,27,42,.10);
+    border-radius: 14px;
+    font-size: .93rem;
+    transition: .2s ease;
+    font-weight: 600;
+    background: #fff;
+  }
+
+  .withdraw-shell .pf-input:focus,
+  .withdraw-shell .pf-textarea:focus,
+  .withdraw-shell select:focus {
+    outline: 0;
+    border-color: rgba(201,150,59,.8);
+    box-shadow: 0 0 0 4px rgba(201,150,59,.10);
+  }
+
+  .withdraw-label {
+    display:block;
+    font-size:.84rem;
+    font-weight:800;
+    color:#5A6A7A;
+    margin-bottom:8px;
+  }
+
+  .withdraw-error {
+    display:block;
+    margin-top:6px;
+    color:#dc2626;
+    font-size:.82rem;
+    font-weight:700;
+  }
+
+  .withdraw-hint {
+    display:block;
+    margin-top:8px;
+    color:#7B8794;
+    font-size:.8rem;
+    line-height:1.7;
+  }
+
+  .withdraw-mini-note {
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    padding:14px 15px;
+    border-radius:16px;
+    background:rgba(201,150,59,.08);
+    border:1px solid rgba(201,150,59,.18);
+    color:#6E5418;
+    font-size:.84rem;
+    line-height:1.75;
+  }
+
+  .withdraw-submit-btn {
+    flex:1;
+    min-height:52px;
+    border:none;
+    border-radius:14px;
+    font-weight:900;
+    font-size:.92rem;
+    cursor:pointer;
+    background:linear-gradient(135deg, #C9963B, #E8B96A);
+    color:#0D1B2A;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    box-shadow:0 10px 22px rgba(201,150,59,.24);
+    transition:.2s;
+  }
+
+  .withdraw-submit-btn:disabled {
+    opacity:.55;
+    cursor:not-allowed;
+    box-shadow:none;
+  }
+
+  .withdraw-cancel-btn {
+    min-height:52px;
+    padding:14px 18px;
+    border:1.5px solid rgba(13,27,42,.08);
+    border-radius:14px;
+    font-weight:800;
+    font-size:.9rem;
+    color:#5A6A7A;
+    background:#fff;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:.2s;
+  }
+
+  .withdraw-alert {
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    padding:16px 18px;
+    border-radius:18px;
+    margin-bottom:18px;
+  }
+
+  .withdraw-alert i {
+    margin-top:2px;
+  }
+
+  .withdraw-alert strong {
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .withdraw-alert p {
+    margin:0;
+    font-size:.86rem;
+    line-height:1.8;
+  }
+
+  .withdraw-alert-danger {
+    background:rgba(239,68,68,.08);
+    border:1px solid rgba(239,68,68,.18);
+    color:#991b1b;
+  }
+
+  .withdraw-alert-warn {
+    background:rgba(201,150,59,.10);
+    border:1px solid rgba(201,150,59,.22);
+    color:#7c5a13;
+  }
+
+  .withdraw-alert-info {
+    background:rgba(59,130,246,.08);
+    border:1px solid rgba(59,130,246,.18);
+    color:#1d4ed8;
+  }
+
+  .withdraw-history-card {
+    padding:16px;
+    border-radius:18px;
+    border:1px solid rgba(13,27,42,.08);
+    background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(247,249,252,.98));
+  }
+
+  .withdraw-status-badge {
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:.74rem;
+    font-weight:800;
+    white-space:nowrap;
+  }
+
+  .withdraw-status-pending {
+    background:rgba(201,150,59,.12);
+    color:#946200;
+  }
+
+  .withdraw-status-processed {
+    background:rgba(34,197,94,.12);
+    color:#15803d;
+  }
+
+  .withdraw-status-rejected {
+    background:rgba(239,68,68,.10);
+    color:#dc2626;
+  }
+
+  .withdraw-history-note {
+    margin-top:10px;
+    padding:10px 12px;
+    border-radius:12px;
+    background:rgba(13,27,42,.04);
+    color:#425466;
+    font-size:.8rem;
+    line-height:1.75;
+    word-break:break-word;
+  }
+
+  .withdraw-history-note-success {
+    background:rgba(34,197,94,.08);
+    color:#166534;
+  }
+
+  .withdraw-history-note-danger {
+    background:rgba(239,68,68,.08);
+    color:#b91c1c;
+  }
+
+  @media (max-width: 991.98px) {
+    .withdraw-shell .pf-card-body > div {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .withdraw-shell {
+      border-radius: 22px !important;
+    }
+
+    .withdraw-shell-hero {
+      padding: 22px 16px !important;
+    }
+
+    .withdraw-shell-hero > div:last-child {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .withdraw-shell-hero > div:last-child > div:first-child,
+    .withdraw-shell-hero > div:last-child > div:last-child {
+      max-width: none !important;
+      min-width: 100% !important;
+    }
+
+    .withdraw-shell-hero > div:last-child > div:last-child {
+      grid-template-columns: 1fr !important;
+    }
+
+    .withdraw-shell-hero h1 {
+      font-size: 1.5rem !important;
+      margin-bottom: 8px !important;
+    }
+
+    .withdraw-shell-hero p {
+      font-size: .88rem !important;
+      line-height: 1.8 !important;
+    }
+
+    .withdraw-shell .pf-card-body {
+      padding: 16px !important;
+    }
+
+    .withdraw-shell .pf-card-header,
+    .withdraw-shell .pf-card-body {
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+    }
+
+    .withdraw-shell .pf-form-actions,
+    .withdraw-history-card > div:first-child {
+      flex-direction: column;
+    }
+
+    .withdraw-submit-btn,
+    .withdraw-cancel-btn {
+      width:100%;
+    }
+  }
+</style>

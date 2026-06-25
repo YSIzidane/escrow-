@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+{% load site_i18n socialaccount %}
+
+{% block title %}{% t "social.connections.title" %}{% endblock %}
+{% block page_type %}socialaccount_connections{% endblock %}
+
+{% block content %}
+{% with connected_count=form.accounts|length %}
+<div class="row justify-content-center py-5">
+  <div class="col-xl-7 col-lg-8 col-md-10">
+    <div class="card border-0 connections-card">
+      <div class="connections-header">
+        <div class="connections-glow"></div>
+        <div class="connections-icon">
+          <i class="fas fa-link"></i>
+        </div>
+        <h3>{% t "social.connections.header" %}</h3>
+        <p>{% t "social.connections.sub" %}</p>
+      </div>
+
+      <div class="card-body connections-body">
+        <div class="connections-status-grid">
+          <div class="connections-status-card">
+            <span class="connections-status-label">{% if current_language == 'ar' %}الدخول الاجتماعي{% else %}Social sign-in{% endif %}</span>
+            <strong class="connections-status-value">
+              {% if connected_count %}
+              {% if current_language == 'ar' %}مفعّل{% else %}Active{% endif %}
+              {% else %}
+              {% if current_language == 'ar' %}غير مربوط{% else %}Not connected{% endif %}
+              {% endif %}
+            </strong>
+          </div>
+          <div class="connections-status-card">
+            <span class="connections-status-label">{% if current_language == 'ar' %}كلمة المرور المحلية{% else %}Local password{% endif %}</span>
+            <strong class="connections-status-value">
+              {% if user.has_usable_password %}
+              {% if current_language == 'ar' %}جاهزة{% else %}Ready{% endif %}
+              {% else %}
+              {% if current_language == 'ar' %}غير مضافة{% else %}Not added yet{% endif %}
+              {% endif %}
+            </strong>
+          </div>
+        </div>
+
+        {% if form.accounts and not user.has_usable_password and form.accounts|length == 1 %}
+        <div class="connections-alert connections-alert-warning">
+          <div class="connections-alert-icon"><i class="fas fa-shield-alt"></i></div>
+          <div>
+            <strong>{% if current_language == 'ar' %}فصل Google غير آمن الآن{% else %}Google disconnect is blocked for now{% endif %}</strong>
+            <p>
+              {% if current_language == 'ar' %}
+              هذا هو حساب الدخول السريع الوحيد لديك، ولا توجد كلمة مرور محلية بعد. أضف كلمة مرور أولًا حتى لا تفقد القدرة على تسجيل الدخول.
+              {% else %}
+              This is your only social sign-in method and you do not have a local password yet. Add a password first so you do not lose access to your account.
+              {% endif %}
+            </p>
+            <a href="{% url 'account_set_password' %}" class="btn btn-primary connections-inline-btn">
+              {% if current_language == 'ar' %}إضافة كلمة مرور محلية{% else %}Add a local password{% endif %}
+            </a>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if form.accounts %}
+        <p class="connections-title">{% t "social.connections.current" %}</p>
+        <form method="post" action="{% url 'socialaccount_connections' %}">
+          {% csrf_token %}
+          <div class="connections-list">
+            {% for base_account in form.accounts %}
+              {% with base_account.get_provider_account as account %}
+              <div class="form-check connections-item">
+                <input id="id_account_{{ base_account.id }}" type="radio" name="account" value="{{ base_account.id }}" class="form-check-input connections-radio">
+                <label for="id_account_{{ base_account.id }}" class="form-check-label connections-label">
+                  <span class="connections-brand">
+                    <i class="fab fa-{{ account.get_brand.id }}"></i>
+                    {{ account.get_brand.name }}
+                  </span>
+                  <span class="connections-account">({{ account }})</span>
+                </label>
+              </div>
+              {% endwith %}
+            {% endfor %}
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-danger w-100 connections-remove"
+            {% if not user.has_usable_password and form.accounts|length == 1 %}disabled title="{% if current_language == 'ar' %}أضف كلمة مرور محلية أولًا{% else %}Add a local password first{% endif %}"{% endif %}
+            onclick="return confirm('{% t "social.connections.remove_confirm" %}')"
+          >
+            {% t "social.connections.remove" %}
+          </button>
+        </form>
+        {% else %}
+        <div class="connections-empty">
+          <i class="fas fa-info-circle"></i>
+          {% t "social.connections.empty" %}
+        </div>
+        {% endif %}
+
+        <div class="connections-add">
+          <p class="connections-title">{% t "social.connections.add_header" %}</p>
+          {% if form.accounts %}
+          <div class="connections-alert connections-alert-success">
+            <div class="connections-alert-icon"><i class="fas fa-check-circle"></i></div>
+            <div>
+              <strong>{% if current_language == 'ar' %}Google مربوط بالفعل{% else %}Google is already connected{% endif %}</strong>
+              <p>
+                {% if current_language == 'ar' %}
+                يمكنك الاستمرار في استخدامه لتسجيل الدخول السريع، أو إضافة كلمة مرور محلية كخيار احتياطي.
+                {% else %}
+                You can keep using it for quick sign-in, or add a local password as a backup method.
+                {% endif %}
+              </p>
+            </div>
+          </div>
+          {% else %}
+          <a href="{% provider_login_url 'google' process='connect' %}" class="btn btn-light w-100 connections-google-btn">
+            <span class="connections-google-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+            </span>
+            <span class="connections-google-copy">
+              <strong>{% t "social.connections.google" %}</strong>
+              <small>{% if current_language == 'ar' %}ربط آمن وسريع بحسابك الحالي{% else %}Securely connect it to your current account{% endif %}</small>
+            </span>
+            <i class="fas fa-arrow-left connections-google-arrow" aria-hidden="true"></i>
+          </a>
+          {% endif %}
+
+          <div class="connections-helper-links">
+            {% if user.has_usable_password %}
+            <a href="{% url 'profile' %}">
+              {% if current_language == 'ar' %}العودة إلى الملف الشخصي{% else %}Back to profile{% endif %}
+            </a>
+            {% else %}
+            <a href="{% url 'account_set_password' %}">
+              {% if current_language == 'ar' %}إضافة كلمة مرور احتياطية{% else %}Add a backup password{% endif %}
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endwith %}
+
+<style>
+  .connections-card {
+    border-radius: 24px !important;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(13,27,42,0.15) !important;
+  }
+  .connections-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 40px 32px 28px;
+    text-align: center;
+    position: relative;
+  }
+  .connections-glow {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,150,59,.18) 0%, transparent 70%);
+  }
+  .connections-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 20px rgba(201,150,59,0.2);
+  }
+  .connections-icon i { color: var(--gold); font-size: 28px; }
+  .connections-header h3 { color: white; font-weight: 800; margin-bottom: 8px; font-size: 1.3rem; }
+  .connections-header p { color: rgba(255,255,255,0.65); font-size: 0.9rem; margin: 0; }
+  .connections-body { padding: 40px 32px !important; }
+  .connections-status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .connections-status-card {
+    background: linear-gradient(180deg, rgba(13,27,42,.03), rgba(13,27,42,.01));
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 16px 18px;
+  }
+  .connections-status-label {
+    display: block;
+    color: var(--text-light);
+    font-size: 0.82rem;
+    margin-bottom: 6px;
+  }
+  .connections-status-value {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 800;
+  }
+  .connections-title { font-weight: 600; color: var(--text-primary); margin-bottom: 16px; }
+  .connections-alert {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 22px;
+  }
+  .connections-alert strong {
+    display: block;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .connections-alert p {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    margin: 0;
+    line-height: 1.7;
+  }
+  .connections-alert-warning {
+    background: rgba(201,150,59,0.08);
+    border: 1px solid rgba(201,150,59,0.25);
+  }
+  .connections-alert-success {
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.18);
+  }
+  .connections-alert-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,.65);
+    color: var(--gold-dark);
+    flex-shrink: 0;
+  }
+  .connections-inline-btn {
+    margin-top: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    padding: 10px 14px;
+  }
+  .connections-list {
+    background: rgba(201,150,59,0.03);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  .connections-item { margin-bottom: 12px; display: flex; align-items: center; }
+  .connections-item:last-child { margin-bottom: 0; }
+  .connections-radio { margin-top: 0; margin-inline-end: 12px; width: 18px; height: 18px; cursor: pointer; }
+  .connections-label { cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  .connections-brand { font-weight: 600; color: var(--text-primary); font-size: 1.05rem; }
+  .connections-brand i { margin-inline-end: 4px; color: var(--text-secondary); }
+  .connections-account { color: var(--text-light); font-size: 0.9rem; }
+  .connections-remove {
+    padding: 12px !important;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .connections-remove:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+  }
+  .connections-empty {
+    background: rgba(201,150,59,0.08);
+    border: 1px solid rgba(201,150,59,0.2);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    text-align: center;
+  }
+  .connections-empty i { font-size: 24px; color: var(--gold); display: block; margin-bottom: 8px; }
+  .connections-add {
+    border-top: 1px solid var(--border-light);
+    padding-top: 24px;
+    margin-top: 24px;
+  }
+  .connections-google-btn {
+    text-decoration: none;
+    padding: 14px 16px !important;
+    font-weight: 600;
+    border: 1px solid var(--border-light);
+    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.98));
+    color: var(--text-primary);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    box-shadow: 0 14px 30px rgba(13,27,42,.08);
+  }
+  .connections-google-btn:hover {
+    color: var(--text-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 18px 34px rgba(13,27,42,.12);
+  }
+  .connections-google-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #fff;
+    border: 1px solid rgba(226,232,240,.9);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.85);
+  }
+  .connections-google-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: start;
+    min-width: 0;
+    gap: 2px;
+    flex: 1;
+  }
+  .connections-google-copy strong {
+    color: var(--text-primary);
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+  .connections-google-copy small {
+    color: var(--text-secondary);
+    font-size: .82rem;
+    line-height: 1.5;
+  }
+  .connections-google-arrow {
+    color: #94a3b8;
+    flex-shrink: 0;
+    font-size: .9rem;
+  }
+  html[dir="rtl"] .connections-google-arrow {
+    transform: rotate(180deg);
+  }
+  .connections-helper-links {
+    text-align: center;
+    margin-top: 18px;
+  }
+  .connections-helper-links a {
+    color: var(--gold-dark);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .connections-helper-links a:hover { color: var(--gold); }
+  @media (max-width: 576px) {
+    .connections-body {
+      padding: 28px 20px !important;
+    }
+    .connections-google-btn {
+      padding: 14px !important;
+      gap: 12px;
+    }
+    .connections-google-icon {
+      width: 44px;
+      height: 44px;
+    }
+    .connections-google-copy strong {
+      font-size: .96rem;
+    }
+    .connections-google-copy small {
+      font-size: .78rem;
+    }
+  }
+</style>
+{% include "socialaccount/_social_account_styles.html" %}
+{% endblock %}

@@ -1,0 +1,103 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.python-version
+
+# =========================
+# Virtual Environments
+# =========================
+venv/
+.venv/
+env/
+ENV/
+vanv
+
+# =========================
+# Django
+# =========================
+db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+*.sqlite3-journal
+media/
+staticfiles/
+local_settings.py
+
+# =========================
+# Environment / Secrets
+# =========================
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets.json
+
+!.env.example
+!.env.production.example
+
+# =========================
+# Logs / Runtime / Temp
+# =========================
+*.log
+*.out
+*.err
+*.pid
+*.pid.lock
+*.tmp
+*.temp
+tmp/
+temp/
+.tmp*/
+.tmp-local-ssl/
+
+# =========================
+# Testing / Tooling
+# =========================
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.hypothesis/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+
+# =========================
+# Build / Packaging
+# =========================
+build/
+dist/
+site/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# =========================
+# IDE / Editor
+# =========================
+.idea/
+.vscode/
+*.code-workspace
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Project-Specific Local Files
+# =========================
+sqlite_export.json
+ss.txt

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{% t "search.title" %} - Safouane{% endblock %}
+{% block page_type %}search{% endblock %}
+{% block nav_search %}active{% endblock %}
+
+{% block meta %}
+{{ block.super }}
+{% endblock %}
+
+{% block late_css %}
+<link rel="stylesheet" href="{% static 'css/search_dark.css' %}?v=20260523a">
+{% endblock %}
+
+{% block content %}
+<main class="sr-page" dir="rtl">
+  <section class="sr-shell" aria-labelledby="search-title">
+    <header class="sr-hero">
+      <div>
+        <span class="sr-kicker">
+          <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+          {% if current_language == 'ar' %}بحث داخل السوق{% else %}Marketplace search{% endif %}
+        </span>
+        <h1 id="search-title">{% t "search.header" %}</h1>
+        <p>{% t "search.hero_sub" %}</p>
+      </div>
+      <a href="{% url 'listings' %}" class="sr-btn sr-btn-ghost">
+        <i class="fas fa-layer-group" aria-hidden="true"></i>
+        <span>{% t "search.browse_all_deals" %}</span>
+      </a>
+    </header>
+
+    <form
+      method="get"
+      class="sr-card sr-search-form"
+      hx-get="{% url 'search' %}"
+      hx-target="#search-results"
+      hx-push-url="true"
+      hx-indicator="#searchLoading"
+      hx-trigger="submit, keyup changed delay:350ms from:#searchQuery"
+    >
+      <div class="sr-search-row">
+        <label class="sr-search-field" for="searchQuery">
+          <i class="fas fa-search" aria-hidden="true"></i>
+          <input
+            id="searchQuery"
+            type="text"
+            name="q"
+            value="{{ query }}"
+            placeholder="{% t 'search.placeholder' %}"
+            autocomplete="off"
+            aria-describedby="searchHelp"
+          >
+        </label>
+        <button class="sr-btn sr-btn-primary" type="submit">
+          <i class="fas fa-search" aria-hidden="true"></i>
+          <span>{% t "search.button" %}</span>
+        </button>
+      </div>
+
+      <div class="sr-form-bottom">
+        <p id="searchHelp">{% t "search.min_chars" %}</p>
+        <div class="sr-tabs" aria-label="{% if current_language == 'ar' %}مرشحات البحث{% else %}Search filters{% endif %}">
+          <button type="button" class="sr-tab is-active" data-search-tab="deals" onclick="setSearchTab('deals')">
+            <i class="fas fa-store" aria-hidden="true"></i>
+            <span>{% t "search.deals_tab" %}</span>
+          </button>
+          <button type="button" class="sr-tab" data-search-tab="users" onclick="setSearchTab('users')">
+            <i class="fas fa-users" aria-hidden="true"></i>
+            <span>{% t "search.users_tab" %}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sr-suggestions">
+        <span>{% if current_language == 'ar' %}اقتراحات{% else %}Popular{% endif %}</span>
+        <button class="sr-chip" type="button" data-sr-search-fill="{% if current_language == 'ar' %}هاتف{% else %}phone{% endif %}">{% if current_language == 'ar' %}هاتف{% else %}phone{% endif %}</button>
+        <button class="sr-chip" type="button" data-sr-search-fill="{% if current_language == 'ar' %}تصميم{% else %}design{% endif %}">{% if current_language == 'ar' %}تصميم{% else %}design{% endif %}</button>
+        <button class="sr-chip" type="button" data-sr-search-fill="{% if current_language == 'ar' %}خدمة{% else %}service{% endif %}">{% if current_language == 'ar' %}خدمة{% else %}service{% endif %}</button>
+      </div>
+    </form>
+
+    <div id="searchLoading" class="sr-loading htmx-indicator" aria-hidden="true">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+
+    <div id="search-results">
+      {% include "partials/search_results.html" %}
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script defer src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+<script defer src="{% static 'js/search_dark.js' %}?v=20260523a"></script>
+{% endblock %}

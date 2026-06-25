@@ -1,0 +1,1099 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{{ room.display_title }}{% endblock %}
+{% block page_type %}room{% endblock %}
+
+{% block content %}
+<div class="room-shell se-room-shell">
+  <div class="se-room-header room-modern-header" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(245, 248, 253, 0.92)), url('{% static 'images/brand/room-bg.webp' %}') center/cover no-repeat; display:flex;align-items:flex-start;justify-content:space-between;gap:18px;animation:fadeInUp .4s ease both;flex-wrap:wrap; border-radius: 26px; margin-bottom: 24px;">
+    <div class="room-header-main" style="display:flex;align-items:flex-start;gap:14px;min-width:0;">
+      <a href="{% url 'chat_hub' %}" style="width: 40px; height: 40px; border-radius: 10px; background: white; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-decoration: none; box-shadow: var(--shadow-sm);" class="back-btn room-back-button">
+        <i class="fas fa-arrow-right" style="font-size: 13px;"></i>
+      </a>
+      <div class="room-header-content" style="min-width:0;">
+        <div class="room-title-line" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div class="room-type-mark" style="width: 46px; height: 46px; background: linear-gradient(135deg, var(--navy), var(--navy-mid)); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink:0;">
+            {% if room.room_type == 'buy' %}
+              <i class="fas fa-shopping-cart" style="color: var(--gold); font-size: 16px;"></i>
+            {% elif room.room_type == 'sell' %}
+              <i class="fas fa-store" style="color: var(--gold); font-size: 16px;"></i>
+            {% else %}
+              <i class="fas fa-exchange-alt" style="color: var(--gold); font-size: 16px;"></i>
+            {% endif %}
+          </div>
+          <div class="room-title-wrap" style="min-width:0;">
+            <div class="se-room-title">{{ room.display_title }}</div>
+            <div class="se-room-meta" style="display:flex;flex-wrap:wrap;align-items:center;">
+              <span class="room-meta-chip">{{ room.get_room_type_display }}</span>
+              <span class="room-meta-chip room-code-chip">{% t "room.room_code" %} <code style="background: #F0F4F8; padding: 2px 8px; border-radius: 6px; font-weight: 700; color: var(--navy); letter-spacing: 2px;">{{ room.code }}</code></span>
+              {% if room.is_active %}
+              <span class="room-meta-chip room-status-chip is-active" style="background:rgba(34,197,94,.12);color:#0e7c5a;border-radius:999px;padding:3px 10px;font-weight:800;">{% t "room.status_active" %}</span>
+              {% else %}
+              <span class="room-meta-chip room-status-chip is-closed" style="background:rgba(239,68,68,.1);color:#c0392b;border-radius:999px;padding:3px 10px;font-weight:800;">{% t "room.status_closed" %}</span>
+              {% endif %}
+              {% if is_staff_view and not is_owner %}
+              <span class="room-meta-chip room-status-chip is-staff" style="background:rgba(59,130,246,.12);color:#2563eb;border-radius:999px;padding:3px 10px;font-weight:800;">{% t "room.staff_view" %}</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% if room.description %}
+        <p class="se-room-description">{{ room.description }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="se-room-actions" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <button onclick="copyCode()" class="se-room-action-btn room-copy-btn" style="background: white; border: 1px solid var(--border-light); color: var(--text-secondary); cursor: pointer; font-family: inherit;" id="copyBtn">
+        <i class="fas fa-copy" style="margin-left: 5px;"></i>{% t "room.copy_code" %}
+      </button>
+      <button onclick="copyInviteLink()" class="se-room-action-btn room-copy-btn" style="background: white; border: 1px solid var(--border-light); color: var(--text-secondary); cursor: pointer; font-family: inherit;" id="copyInviteBtn">
+        <i class="fas fa-link" style="margin-left: 5px;"></i>{% t "room.copy_invite" %}
+      </button>
+      {% if can_manage_room %}
+        {% if room.is_active %}
+        <form method="post" action="{% url 'close_room' room.code %}" onsubmit="return confirm('{% t "room.confirm_close" %}')" style="margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="se-room-action-btn room-admin-btn room-danger-btn" style="background: var(--danger-light); border: 1px solid var(--danger); color: var(--danger);">
+            <i class="fas fa-lock" style="margin-left: 5px;"></i>{% t "room.close_room" %}
+          </button>
+        </form>
+        {% else %}
+        <form method="post" action="{% url 'reopen_room' room.code %}" style="margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="se-room-action-btn room-admin-btn room-success-btn" style="background: rgba(34,197,94,.08); border: 1px solid rgba(34,197,94,.5); color: #0e7c5a;">
+            <i class="fas fa-unlock" style="margin-left: 5px;"></i>{% t "room.reopen_room" %}
+          </button>
+        </form>
+        {% endif %}
+        <form method="post" action="{% url 'delete_room' room.code %}" onsubmit="return confirm('{% t "room.confirm_delete" %}')" style="margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="se-room-action-btn room-admin-btn room-danger-btn" style="background: #fff7f7; border: 1px solid rgba(192,57,43,.28); color: #c0392b;">
+            <i class="fas fa-trash" style="margin-left: 5px;"></i>{% t "room.delete_room" %}
+          </button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-8">
+      {% if not room.is_active %}
+      <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.18);border-radius:16px;padding:14px 16px;margin-bottom:14px;color:#a2362c;">
+        <strong>{% t "room.closed_notice_title" %}</strong>
+        <div style="margin-top:4px;">{% t "room.closed_notice_body" %}</div>
+      </div>
+      {% endif %}
+
+      <div class="card border-0 se-room-chat-card" style="animation: fadeInUp 0.4s 0.1s ease both;">
+        <div class="room-chat-head">
+          <div class="room-chat-title-wrap">
+            <span class="room-chat-icon"><i class="fas fa-comments"></i></span>
+            <div>
+              <div class="room-chat-title">{% t "room.chat_title" %}</div>
+              <div class="room-chat-subtitle">{% t "room.chat_subtitle" %}</div>
+            </div>
+          </div>
+          <span class="room-chat-count">
+            <i class="fas fa-user-friends"></i>
+            {{ participants|length }}
+          </span>
+        </div>
+        <div id="chatBox" class="se-room-chat-box" style="overflow-y:auto;background:#F4F6FA;scroll-behavior:smooth;display:flex;flex-direction:column;">
+          {% if room_messages %}
+            {% for msg in room_messages %}
+            <div data-message-id="{{ msg.id }}" style="display:flex;{% if msg.sender == user %}justify-content:flex-end;{% else %}justify-content:flex-start;{% endif %}margin-bottom: 16px; animation: fadeInUp 0.3s ease both;">
+              {% if msg.sender != user %}
+              <img src="{{ msg.sender.profile.avatar|file_url:'images/default_avatar.jpg' }}" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; margin-left: 10px; align-self: flex-end; flex-shrink: 0;">
+              {% endif %}
+              <div style="max-width: 72%;">
+                <div style="font-size: 0.72rem; color: var(--text-light); font-weight: 700; margin-bottom: 3px; padding-right: 4px; display:flex;align-items:center;gap:6px;{% if msg.sender == user %}justify-content:flex-end;{% endif %}">
+                  <span>{{ msg.sender.username }}</span>
+                  {% if msg.sender_id == room.creator_id %}
+                  <span class="room-role-badge room-role-owner">{% t "room.owner_badge" %}</span>
+                  {% elif msg.sender.is_staff %}
+                  <span class="room-role-badge room-role-staff">{% t "room.staff_badge" %}</span>
+                  {% endif %}
+                </div>
+                <div style="
+                  padding: 11px 16px; font-size: 0.9rem; line-height: 1.7;
+                  {% if msg.sender == user %}
+                    background: linear-gradient(135deg, var(--navy), var(--navy-mid)); color: white;
+                    border-radius: 18px 18px 18px 4px;
+                  {% else %}
+                    background: white; color: var(--text-primary); border: 1px solid var(--border-light);
+                    border-radius: 18px 18px 4px 18px;
+                  {% endif %}
+                  box-shadow: var(--shadow-sm);
+                ">{{ msg.text }}</div>
+                <div style="font-size: 0.7rem; color: var(--text-light); margin-top: 4px; {% if msg.sender == user %}text-align: right;{% else %}text-align: left;{% endif %}">
+                  {{ msg.created_at|date:"H:i" }}
+                </div>
+              </div>
+              {% if msg.sender == user %}
+              <img src="{{ msg.sender.profile.avatar|file_url:'images/default_avatar.jpg' }}" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; margin-right: 10px; align-self: flex-end; flex-shrink: 0;">
+              {% endif %}
+            </div>
+            {% endfor %}
+          {% else %}
+          <div data-empty-chat style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
+            <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #F0F4F8, #E8EDF2); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+              <i class="fas fa-comment-dots" style="font-size: 24px; color: #BDC7D3;"></i>
+            </div>
+            <div style="font-weight: 700; font-size: 0.95rem;">{% t "room.no_messages" %}</div>
+            <div style="font-size: 0.82rem; margin-top: 4px;">{% t "room.be_first" %}</div>
+          </div>
+          {% endif %}
+        </div>
+
+        <div style="padding: 18px 20px; background: white; border-top: 1px solid var(--border-light);">
+          <form method="post" id="msgForm" data-skip-global-ajax="true">
+            {% csrf_token %}
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <input type="text" name="message"
+                     id="msgInput"
+                     class="form-control se-publish-input"
+                     placeholder="{% if room.is_active %}{% t 'room.msg_placeholder' %}{% else %}{% t 'room.closed_input_placeholder' %}{% endif %}"
+                     autocomplete="off"
+                     autocapitalize="sentences"
+                     inputmode="text"
+                     enterkeyhint="send"
+                     spellcheck="true"
+                     {% if room.is_active %}required{% endif %}
+                     {% if not room.is_active %}disabled{% endif %}
+                     style="flex: 1; font-size: 16px;">
+              <button type="submit" class="btn btn-primary se-room-action-btn" id="sendBtn"
+                      {% if not room.is_active %}disabled{% endif %}
+                      style="width: 48px; min-width: 48px; padding: 0 !important; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <i class="fas fa-paper-plane" style="font-size: 16px;"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      {% if room.room_type == 'trade' and trade_exchange %}
+      <div class="card border-0 se-room-sidebar-card trade-panel">
+        <div class="trade-panel-head">
+          <div>
+            <div class="se-sidebar-section-title">{% t "trade.panel_title" %}</div>
+            <div class="se-sidebar-section-subtitle">{% t "trade.panel_subtitle" %}</div>
+          </div>
+          <span class="trade-status trade-status-{{ trade_exchange.status }}">
+            {% if trade_exchange.status == 'completed' %}
+              {% t "trade.status_completed" %}
+            {% elif trade_exchange.status == 'disputed' %}
+              {% t "trade.status_disputed" %}
+            {% elif trade_exchange.status == 'ready_to_exchange' %}
+              {% t "trade.status_ready" %}
+            {% elif trade_exchange.status == 'receiving' %}
+              {% t "trade.status_receiving" %}
+            {% elif trade_exchange.status == 'waiting_partner' %}
+              {% t "trade.status_waiting" %}
+            {% else %}
+              {% t "trade.status_draft" %}
+            {% endif %}
+          </span>
+        </div>
+
+        <div class="trade-steps">
+          <div class="trade-step {% if trade_exchange.owner_item_description and trade_exchange.member_item_description %}is-done{% endif %}">
+            <span>1</span>
+            <strong>{% t "trade.step_items" %}</strong>
+          </div>
+          <div class="trade-step {% if trade_exchange.both_ready %}is-done{% endif %}">
+            <span>2</span>
+            <strong>{% t "trade.step_ready" %}</strong>
+          </div>
+          <div class="trade-step {% if trade_exchange.status == 'completed' %}is-done{% endif %}">
+            <span>3</span>
+            <strong>{% t "trade.step_receive" %}</strong>
+          </div>
+        </div>
+
+        <div class="trade-items">
+          <div class="trade-item-card">
+            <span>{% t "trade.owner_side" %}</span>
+            <p>{% if trade_exchange.owner_item_description %}{{ trade_exchange.owner_item_description }}{% else %}{% t "trade.item_empty" %}{% endif %}</p>
+            {% if trade_exchange.owner_ready_at %}<small>{% t "trade.ready_badge" %}</small>{% endif %}
+            {% if trade_exchange.owner_received_at %}<small>{% t "trade.received_badge" %}</small>{% endif %}
+          </div>
+          <div class="trade-item-card">
+            <span>{% t "trade.member_side" %}</span>
+            <p>{% if trade_exchange.member_item_description %}{{ trade_exchange.member_item_description }}{% else %}{% t "trade.item_empty" %}{% endif %}</p>
+            {% if trade_exchange.member_ready_at %}<small>{% t "trade.ready_badge" %}</small>{% endif %}
+            {% if trade_exchange.member_received_at %}<small>{% t "trade.received_badge" %}</small>{% endif %}
+          </div>
+        </div>
+
+        {% if trade_participant_key == 'owner' or trade_participant_key == 'member' %}
+          {% if trade_exchange.status != 'completed' and trade_exchange.status != 'disputed' and room.is_active %}
+          {% if trade_can_edit %}
+          <form method="post" action="{% url 'trade_room_action' room.code %}" class="trade-form">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="update_item">
+            <label>{% t "trade.my_item_label" %}</label>
+            <textarea name="item_description" rows="3" maxlength="1200" placeholder="{% t 'trade.my_item_placeholder' %}">{% if trade_participant_key == 'owner' %}{{ trade_exchange.owner_item_description }}{% else %}{{ trade_exchange.member_item_description }}{% endif %}</textarea>
+            <button type="submit" class="trade-btn trade-btn-light">
+              <i class="fas fa-pen"></i>{% t "trade.save_item" %}
+            </button>
+          </form>
+          {% endif %}
+
+          <div class="trade-actions-grid">
+            <form method="post" action="{% url 'trade_room_action' room.code %}">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="mark_ready">
+              <button type="submit" class="trade-btn trade-btn-primary" {% if participants|length < 2 or trade_user_ready %}disabled{% endif %}>
+                <i class="fas fa-check"></i>{% t "trade.mark_ready" %}
+              </button>
+            </form>
+            <form method="post" action="{% url 'trade_room_action' room.code %}">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="confirm_received">
+              <button type="submit" class="trade-btn trade-btn-success" {% if not trade_exchange.both_ready or trade_user_received %}disabled{% endif %}>
+                <i class="fas fa-handshake"></i>{% t "trade.confirm_received" %}
+              </button>
+            </form>
+          </div>
+
+          <details class="trade-dispute-box">
+            <summary><i class="fas fa-triangle-exclamation"></i>{% t "trade.report_issue" %}</summary>
+            <form method="post" action="{% url 'trade_room_action' room.code %}">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="report_issue">
+              <textarea name="reason" rows="3" maxlength="1500" placeholder="{% t 'trade.issue_placeholder' %}" required></textarea>
+              <button type="submit" class="trade-btn trade-btn-danger">
+                {% t "trade.request_admin" %}
+              </button>
+            </form>
+          </details>
+          {% endif %}
+        {% else %}
+          <div class="trade-staff-note">{% t "trade.staff_note" %}</div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <div class="card border-0 se-room-sidebar-card room-participants-card">
+        <div class="room-side-card-head" style="padding:18px 18px 12px;border-bottom:1px solid var(--border-light);background:white;">
+          <div class="se-sidebar-section-title">{% t "room.participants_title" %}</div>
+          <div class="se-sidebar-section-subtitle">{% t "room.participants_sub" %}</div>
+        </div>
+        <div class="room-participant-list" style="padding:16px;background:#fff;">
+          {% for participant in participants %}
+          <div class="room-participant-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.05);">
+            <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+              <img src="{{ participant.user.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ participant.user.username }}" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:1.5px solid var(--gold);">
+              <div style="min-width:0;">
+                <div style="font-weight:800;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ participant.user.username }}</div>
+                <div style="font-size:.75rem;color:var(--text-light);">{{ participant.joined_at|date:"Y-m-d H:i" }}</div>
+              </div>
+            </div>
+            {% if participant.role == 'owner' %}
+            <span class="room-role-badge room-role-owner">{% t "room.owner_badge" %}</span>
+            {% else %}
+            <span class="room-role-badge room-role-member">{% t "room.member_badge" %}</span>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="card border-0 se-room-sidebar-card room-share-card" style="margin-top:14px;">
+        <div style="padding:18px;background:white;">
+          <div class="se-sidebar-section-title" style="margin-bottom:8px;">{% t "room.share_title" %}</div>
+          <div class="se-sidebar-section-subtitle" style="margin-bottom:14px;">{% t "room.share_body" %}</div>
+          <div class="room-share-box" style="background:#f7f9fc;border:1px dashed rgba(13,27,42,.12);border-radius:14px;padding:12px 14px;">
+            <div style="font-size:.72rem;color:var(--text-light);margin-bottom:6px;">{% t "room.join_link" %}</div>
+            <div class="se-room-join-link">{{ invite_url }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.back-btn:hover { background: var(--navy) !important; color: white !important; border-color: var(--navy) !important; }
+#chatBox::-webkit-scrollbar { width: 5px; }
+#chatBox::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+#chatBox { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
+.room-role-badge {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  padding:3px 8px;
+  font-size:.68rem;
+  font-weight:800;
+}
+.room-role-owner { background:rgba(201,150,59,.14); color:#9b6b1d; }
+.room-role-member { background:rgba(13,27,42,.08); color:#445464; }
+.room-role-staff { background:rgba(59,130,246,.12); color:#2563eb; }
+.trade-panel {
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.trade-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px;
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  border-bottom: 1px solid var(--border-light);
+}
+.trade-status {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0 10px;
+  background: rgba(13,27,42,.07);
+  color: var(--navy);
+  font-size: .7rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.trade-status-completed { background: rgba(34,197,94,.12); color: #0e7c5a; }
+.trade-status-disputed { background: rgba(239,68,68,.1); color: #c0392b; }
+.trade-status-ready_to_exchange,
+.trade-status-receiving { background: rgba(59,130,246,.12); color: #2563eb; }
+.trade-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 14px 16px;
+  background: #fff;
+}
+.trade-step {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  text-align: center;
+  color: var(--text-light);
+  font-size: .68rem;
+  font-weight: 800;
+}
+.trade-step span {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 999px;
+  background: #edf2f7;
+  color: var(--text-secondary);
+  font-size: .72rem;
+}
+.trade-step.is-done { color: #0e7c5a; }
+.trade-step.is-done span { background: rgba(34,197,94,.12); color: #0e7c5a; }
+.trade-items {
+  display: grid;
+  gap: 8px;
+  padding: 0 16px 14px;
+  background: #fff;
+}
+.trade-item-card {
+  border: 1px solid rgba(13,27,42,.08);
+  border-radius: 14px;
+  padding: 11px 12px;
+  background: #f8fafc;
+}
+.trade-item-card span,
+.trade-form label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-light);
+  font-size: .72rem;
+  font-weight: 900;
+}
+.trade-item-card p {
+  margin: 0;
+  color: var(--navy);
+  font-size: .82rem;
+  line-height: 1.7;
+}
+.trade-item-card small {
+  display: inline-flex;
+  margin-top: 8px;
+  margin-inline-end: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(34,197,94,.1);
+  color: #0e7c5a;
+  font-size: .66rem;
+  font-weight: 900;
+}
+.trade-form,
+.trade-actions-grid,
+.trade-dispute-box {
+  padding: 0 16px 14px;
+  background: #fff;
+}
+.trade-form textarea,
+.trade-dispute-box textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1.5px solid var(--border-light);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--navy);
+  font: inherit;
+  font-size: .86rem;
+  outline: 0;
+}
+.trade-form textarea:focus,
+.trade-dispute-box textarea:focus {
+  border-color: rgba(201,150,59,.62);
+  box-shadow: 0 0 0 4px rgba(201,150,59,.09);
+}
+.trade-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.trade-btn {
+  display: inline-flex;
+  width: 100%;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 12px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+.trade-btn:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+.trade-btn-light {
+  margin-top: 8px;
+  background: rgba(13,27,42,.06);
+  color: var(--navy);
+}
+.trade-btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy);
+}
+.trade-btn-success {
+  background: rgba(34,197,94,.12);
+  color: #0e7c5a;
+}
+.trade-btn-danger {
+  margin-top: 8px;
+  background: rgba(239,68,68,.1);
+  color: #c0392b;
+}
+.trade-dispute-box summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #c0392b;
+  font-size: .8rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+.trade-staff-note {
+  margin: 0 16px 16px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(59,130,246,.09);
+  color: #2563eb;
+  font-size: .8rem;
+  line-height: 1.7;
+  font-weight: 800;
+}
+@media (max-width: 768px) {
+  .se-room-header {
+    gap: 14px !important;
+  }
+  .se-room-actions {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px !important;
+  }
+  .se-room-action-btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+  .se-room-meta {
+    gap: 6px !important;
+    line-height: 1.8;
+  }
+  .se-room-description {
+    margin-top: 10px;
+    font-size: .86rem;
+    line-height: 1.8;
+  }
+  #chatBox {
+    min-height: 340px;
+    padding: 16px !important;
+  }
+}
+@media (max-width: 520px) {
+  .se-room-actions {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+{% include "partials/_rooms_light_styles.html" %}
+<style>
+body[data-page="room"] .room-shell.se-room-shell {
+  max-width: 1180px;
+  display: grid;
+  gap: 18px;
+}
+
+body[data-page="room"] .room-modern-header {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 4px !important;
+  padding: 22px !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  border-radius: 26px !important;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(245, 248, 253, 0.98)) !important;
+  box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08) !important;
+}
+
+body[data-page="room"] .room-modern-header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #2563eb, #c9963b, #22c55e);
+}
+
+body[data-page="room"] .room-header-main {
+  flex: 1 1 520px;
+}
+
+body[data-page="room"] .room-back-button {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+}
+
+body[data-page="room"] .room-type-mark {
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, #eef4ff, #fff7e8) !important;
+  border: 1px solid rgba(37, 99, 235, 0.1);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+}
+
+body[data-page="room"] .room-type-mark i {
+  color: #1d4ed8 !important;
+}
+
+body[data-page="room"] .se-room-title {
+  font-size: clamp(1.25rem, 2vw, 1.8rem) !important;
+  line-height: 1.28;
+}
+
+body[data-page="room"] .se-room-meta {
+  gap: 8px !important;
+  margin-top: 8px;
+}
+
+body[data-page="room"] .room-meta-chip {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+  padding: 4px 10px;
+  color: #42526a;
+  font-size: 0.78rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+body[data-page="room"] .room-code-chip code {
+  background: #eef4ff !important;
+  color: #1d4ed8 !important;
+}
+
+body[data-page="room"] .room-status-chip.is-active {
+  border-color: rgba(34, 197, 94, 0.18);
+  background: #ecfdf5 !important;
+  color: #047857 !important;
+}
+
+body[data-page="room"] .room-status-chip.is-closed {
+  border-color: rgba(239, 68, 68, 0.18);
+  background: #fef2f2 !important;
+  color: #b42318 !important;
+}
+
+body[data-page="room"] .room-status-chip.is-staff {
+  border-color: rgba(37, 99, 235, 0.16);
+  background: #eef4ff !important;
+  color: #1d4ed8 !important;
+}
+
+body[data-page="room"] .se-room-description {
+  max-width: 720px;
+  margin-top: 12px !important;
+  font-size: 0.92rem !important;
+}
+
+body[data-page="room"] .se-room-actions {
+  align-items: stretch !important;
+  gap: 9px !important;
+}
+
+body[data-page="room"] .se-room-actions form {
+  margin: 0;
+}
+
+body[data-page="room"] .se-room-action-btn {
+  min-height: 44px;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+}
+
+body[data-page="room"] .room-copy-btn:hover,
+body[data-page="room"] .room-back-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(37, 99, 235, 0.24) !important;
+  background: #eef4ff !important;
+  color: #1d4ed8 !important;
+}
+
+body[data-page="room"] .room-danger-btn {
+  background: #fff7f7 !important;
+  border-color: rgba(220, 38, 38, 0.18) !important;
+  color: #b42318 !important;
+}
+
+body[data-page="room"] .room-success-btn {
+  background: #ecfdf5 !important;
+  border-color: rgba(34, 197, 94, 0.2) !important;
+  color: #047857 !important;
+}
+
+body[data-page="room"] .se-room-chat-card,
+body[data-page="room"] .se-room-sidebar-card {
+  border-radius: 24px !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08) !important;
+}
+
+body[data-page="room"] .room-chat-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff !important;
+}
+
+body[data-page="room"] .room-chat-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+body[data-page="room"] .room-chat-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 14px;
+  background: #eef4ff;
+  color: #1d4ed8;
+}
+
+body[data-page="room"] .room-chat-title {
+  color: #0d1b2a;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+body[data-page="room"] .room-chat-subtitle {
+  color: #6b7788;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+body[data-page="room"] .room-chat-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 7px 10px;
+  color: #1d4ed8;
+  font-weight: 900;
+  font-size: 0.78rem;
+}
+
+body[data-page="room"] #chatBox.se-room-chat-box {
+  height: min(58vh, 560px) !important;
+  min-height: 430px;
+  background:
+    linear-gradient(180deg, #f8fafc 0%, #f3f7fc 100%) !important;
+  padding: 22px 24px !important;
+}
+
+body[data-page="room"] #chatBox [data-message-id] {
+  margin-bottom: 14px !important;
+}
+
+body[data-page="room"] #chatBox [data-message-id] > div {
+  max-width: min(76%, 600px) !important;
+}
+
+body[data-page="room"] #chatBox [style*="padding: 11px 16px"],
+body[data-page="room"] #chatBox [style*="padding:11px 16px"] {
+  border-radius: 18px !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07) !important;
+}
+
+body[data-page="room"] .se-room-chat-card > div:last-child {
+  padding: 14px 16px !important;
+  background: #ffffff !important;
+}
+
+body[data-page="room"] #msgForm > div {
+  gap: 10px !important;
+}
+
+body[data-page="room"] #msgInput {
+  min-height: 50px;
+  border-radius: 16px !important;
+  background: #f8fafc !important;
+}
+
+body[data-page="room"] #sendBtn {
+  width: 50px !important;
+  min-width: 50px !important;
+  height: 50px !important;
+  border-radius: 16px !important;
+}
+
+body[data-page="room"] .trade-panel {
+  margin-bottom: 14px;
+}
+
+body[data-page="room"] .trade-panel-head,
+body[data-page="room"] .room-side-card-head {
+  background: linear-gradient(135deg, #ffffff, #f8fafc) !important;
+}
+
+body[data-page="room"] .trade-steps {
+  padding-top: 16px;
+}
+
+body[data-page="room"] .trade-step span {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body[data-page="room"] .trade-item-card {
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+body[data-page="room"] .trade-actions-grid {
+  grid-template-columns: 1fr;
+}
+
+body[data-page="room"] .trade-btn {
+  min-height: 42px;
+  border-radius: 14px;
+}
+
+body[data-page="room"] .room-participant-list {
+  display: grid;
+  gap: 8px;
+}
+
+body[data-page="room"] .room-participant-row {
+  border: 1px solid rgba(15, 23, 42, 0.06) !important;
+  border-radius: 16px;
+  padding: 10px !important;
+  background: #ffffff;
+}
+
+body[data-page="room"] .room-participant-row:last-child {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06) !important;
+}
+
+body[data-page="room"] .room-share-box {
+  border-color: rgba(37, 99, 235, 0.22) !important;
+  background: #f8fbff !important;
+}
+
+@media (max-width: 991.98px) {
+  body[data-page="room"] .room-modern-header {
+    padding: 18px !important;
+  }
+
+  body[data-page="room"] .se-room-actions {
+    width: 100%;
+  }
+
+  body[data-page="room"] .se-room-actions > button,
+  body[data-page="room"] .se-room-actions > form {
+    flex: 1 1 calc(50% - 8px);
+  }
+}
+
+@media (max-width: 767.98px) {
+  body[data-page="room"] .room-title-line {
+    align-items: flex-start !important;
+  }
+
+  body[data-page="room"] .room-type-mark {
+    width: 46px !important;
+    height: 46px !important;
+  }
+
+  body[data-page="room"] .se-room-meta {
+    align-items: flex-start !important;
+  }
+
+  body[data-page="room"] .room-meta-chip {
+    white-space: normal;
+  }
+
+  body[data-page="room"] #chatBox.se-room-chat-box {
+    height: 430px !important;
+    min-height: 380px;
+    padding: 18px 14px !important;
+  }
+
+  body[data-page="room"] #chatBox [data-message-id] > div {
+    max-width: 82% !important;
+  }
+
+  body[data-page="room"] .room-chat-head {
+    padding: 14px !important;
+  }
+
+  body[data-page="room"] .room-chat-subtitle {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  body[data-page="room"] .room-modern-header {
+    border-radius: 20px !important;
+  }
+
+  body[data-page="room"] .room-header-main {
+    flex-direction: column;
+  }
+
+  body[data-page="room"] .se-room-actions {
+    display: grid !important;
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="room"] .se-room-actions > button,
+  body[data-page="room"] .se-room-actions > form {
+    width: 100%;
+  }
+
+  body[data-page="room"] #chatBox [data-message-id] > div {
+    max-width: 88% !important;
+  }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+{{ participant_roles|json_script:"participant-roles-data" }}
+<script>
+const chatBox = document.getElementById('chatBox');
+const msgForm = document.getElementById('msgForm');
+const msgInput = document.getElementById('msgInput');
+const sendBtn = document.getElementById('sendBtn');
+const participantRoles = JSON.parse(document.getElementById('participant-roles-data').textContent);
+let lastMessageId = (() => {
+  const messages = chatBox.querySelectorAll('[data-message-id]');
+  if (!messages.length) return 0;
+  return Number(messages[messages.length - 1].dataset.messageId || 0);
+})();
+let pollTimer = null;
+
+chatBox.scrollTop = chatBox.scrollHeight;
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, function(char) {
+    return ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    })[char];
+  });
+}
+
+function roleBadge(role, isStaff = false) {
+  if (role === 'owner') {
+    return '<span class="room-role-badge room-role-owner">{% t "room.owner_badge" %}</span>';
+  }
+  if (isStaff) {
+    return '<span class="room-role-badge room-role-staff">{% t "room.staff_badge" %}</span>';
+  }
+  return '';
+}
+
+function buildMessageBubble(message) {
+  const safeText = escapeHtml(message.text);
+  const safeTime = escapeHtml(message.time);
+  const safeAvatar = escapeHtml(message.avatar);
+  const safeUsername = escapeHtml(message.username);
+  const role = escapeHtml(message.role || '');
+  const isMe = Boolean(message.is_me);
+  const wrapper = document.createElement('div');
+  wrapper.dataset.messageId = String(message.id || 0);
+  wrapper.style.cssText = `display:flex;${isMe ? 'justify-content:flex-end;' : 'justify-content:flex-start;'}margin-bottom:16px;animation:fadeInUp .3s ease both;`;
+  wrapper.innerHTML = `
+    ${isMe ? '' : `<img src="${safeAvatar}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;margin-left:10px;align-self:flex-end;flex-shrink:0;">`}
+    <div style="max-width:72%;">
+      <div style="font-size:.72rem;color:var(--text-light);font-weight:700;margin-bottom:3px;padding-right:4px;display:flex;align-items:center;gap:6px;${isMe ? 'justify-content:flex-end;' : ''}">
+        <span>${safeUsername}</span>
+        ${roleBadge(role)}
+      </div>
+      <div style="padding:11px 16px;font-size:.9rem;line-height:1.7;${isMe ? 'background:linear-gradient(135deg,var(--navy),var(--navy-mid));color:white;border-radius:18px 18px 18px 4px;' : 'background:white;color:var(--text-primary);border:1px solid var(--border-light);border-radius:18px 18px 4px 18px;'}box-shadow:var(--shadow-sm);">${safeText}</div>
+      <div style="font-size:.7rem;color:var(--text-light);margin-top:4px;${isMe ? 'text-align:right;' : 'text-align:left;'}">${safeTime}</div>
+    </div>
+    ${isMe ? `<img src="${safeAvatar}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;margin-right:10px;align-self:flex-end;flex-shrink:0;">` : ''}
+  `;
+  return wrapper;
+}
+
+function appendMessages(messages) {
+  if (!messages.length) return;
+  const emptyState = chatBox.querySelector('[data-empty-chat]');
+  if (emptyState) emptyState.remove();
+  messages.forEach((message) => {
+    if (message.id && message.id <= lastMessageId) return;
+    if (!message.role && message.username) {
+      const roleKey = Object.entries(participantRoles).find(([userId]) => Number(userId) === Number(message.user_id));
+      if (roleKey) message.role = roleKey[1];
+    }
+    chatBox.appendChild(buildMessageBubble(message));
+    lastMessageId = Math.max(lastMessageId, Number(message.id || 0));
+  });
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function nextPollDelay() {
+  if (document.hidden) return 9000;
+  if (window.matchMedia('(max-width: 768px), (pointer: coarse)').matches) return 5000;
+  return 2600;
+}
+
+async function pollRoomMessages() {
+  if (document.hidden && !window.matchMedia('(pointer: coarse)').matches) {
+    schedulePoll();
+    return;
+  }
+  try {
+    const response = await fetch(`{% url 'poll_room_chat' room.code %}?after=${lastMessageId}`, {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      cache: 'no-store',
+    });
+    if (!response.ok) throw new Error('poll_failed');
+    const data = await response.json();
+    appendMessages(data.messages || []);
+  } catch (error) {
+  } finally {
+    schedulePoll();
+  }
+}
+
+function schedulePoll() {
+  clearTimeout(pollTimer);
+  pollTimer = window.setTimeout(pollRoomMessages, nextPollDelay());
+}
+
+if (msgInput) {
+  msgInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      msgForm.requestSubmit();
+    }
+  });
+}
+
+if (msgForm) {
+  msgForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const text = msgInput.value.trim();
+    if (!text) return;
+
+    sendBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+    sendBtn.disabled = true;
+
+    fetch(window.location.href, {
+      method: 'POST',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      body: new FormData(msgForm),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status !== 'ok') {
+        throw new Error(data.message || 'send_failed');
+      }
+      data.is_me = true;
+      appendMessages([data]);
+      msgInput.value = '';
+    })
+    .catch((error) => {
+      if (window.SE?.toast) {
+        window.SE.toast(error.message || '{% t "room.send_failed" %}', 'error');
+      }
+    })
+    .finally(() => {
+      sendBtn.innerHTML = '<i class="fas fa-paper-plane" style="font-size: 16px;"></i>';
+      sendBtn.disabled = false;
+    });
+  });
+}
+
+function copyCode() {
+  SE.copy('{{ room.code }}', '{% t "room.code_copied" %}');
+  const btn = document.getElementById('copyBtn');
+  const orig = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-check" style="margin-left:5px;color:var(--success);"></i>{% t "room.copied" %}';
+  setTimeout(() => { btn.innerHTML = orig; }, 2000);
+}
+
+function copyInviteLink() {
+  SE.copy('{{ invite_url|escapejs }}', '{% t "room.invite_copied" %}');
+  const btn = document.getElementById('copyInviteBtn');
+  const orig = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-check" style="margin-left:5px;color:var(--success);"></i>{% t "room.copied" %}';
+  setTimeout(() => { btn.innerHTML = orig; }, 2000);
+}
+
+document.addEventListener('visibilitychange', schedulePoll);
+window.addEventListener('beforeunload', () => clearTimeout(pollTimer));
+schedulePoll();
+</script>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "account/email/base_message.txt" %}
+
+{% block content %}
+{% if current_language == 'ar' %}
+أهلاً بك في {{ site_brand_name|default:"SafouaneEscrow" }}.
+
+أكّد عنوان بريدك الإلكتروني عبر الرابط التالي:
+{{ activate_url }}
+
+إذا لم تطلب إنشاء هذا الحساب، يمكنك تجاهل هذه الرسالة.
+{% else %}
+Welcome to {{ site_brand_name|default:"SafouaneEscrow" }}.
+
+Confirm your email address using the link below:
+{{ activate_url }}
+
+If you did not request this account, you can ignore this email.
+{% endif %}
+{% endblock %}

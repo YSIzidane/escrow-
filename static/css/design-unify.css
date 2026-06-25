@@ -1,0 +1,684 @@
+/* ═══════════════════════════════════════════════════════════════
+   SAFOUANE ESCROW — Design Unification Layer v1.0
+   Loads LAST — resolves all cross-file conflicts
+   Inspired by: Stripe, Linear, Wise
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── 1. UNIFIED DESIGN TOKENS ─── */
+:root {
+  /* Brand — Single source of truth */
+  --u-navy: #0f1d2f;
+  --u-navy-mid: #1a2e45;
+  --u-navy-light: #243b55;
+  --u-gold: #c9963b;
+  --u-gold-soft: #e8b96a;
+  --u-gold-dark: #a87828;
+
+  /* Surfaces */
+  --u-bg: #f6f8fb;
+  --u-bg-alt: #f0f4f8;
+  --u-bg-subtle: #eef2f7;
+  --u-surface: #ffffff;
+  --u-surface-hover: #fafbfc;
+
+  /* Text */
+  --u-text: #0f1d2f;
+  --u-text-2: #475569;
+  --u-text-3: #94a3b8;
+
+  /* Borders */
+  --u-border: rgba(15, 23, 42, 0.08);
+  --u-border-strong: rgba(15, 23, 42, 0.14);
+
+  /* Shadows — 3-tier elevation */
+  --u-shadow-1: 0 1px 2px rgba(15,23,42,0.04), 0 4px 12px rgba(15,23,42,0.03);
+  --u-shadow-2: 0 2px 6px rgba(15,23,42,0.05), 0 12px 28px rgba(15,23,42,0.06);
+  --u-shadow-3: 0 6px 16px rgba(15,23,42,0.06), 0 24px 48px rgba(15,23,42,0.09);
+
+  /* Radius */
+  --u-r: 14px;
+  --u-r-lg: 20px;
+  --u-r-sm: 10px;
+
+  /* Motion */
+  --u-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --u-duration: 0.24s;
+
+  /* Semantic */
+  --u-success: #16a34a;
+  --u-danger: #dc2626;
+  --u-warning: #d97706;
+  --u-info: #2563eb;
+}
+
+
+/* ─── 2. BACKGROUND DEPTH SYSTEM ───
+   Fixes the "too flat / too white" problem
+   Adds subtle warmth and texture without heaviness
+   ─────────────────────────────────────────────── */
+
+/* Global page background — warm neutral with micro-texture */
+body {
+  background-color: var(--u-bg) !important;
+  background-image:
+    radial-gradient(ellipse at 15% 0%, rgba(201,150,59,0.05) 0%, transparent 40%),
+    radial-gradient(ellipse at 85% 5%, rgba(15,23,42,0.03) 0%, transparent 35%),
+    radial-gradient(circle, rgba(15,23,42,0.018) 1px, transparent 1px) !important;
+  background-size: 100%, 100%, 24px 24px !important;
+  background-attachment: fixed, fixed, fixed !important;
+}
+
+/* Remove the old noise overlay */
+body::after {
+  display: none !important;
+}
+
+/* Page background overlay — consistent across all inner pages */
+.page-bg-overlay {
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(201,150,59,0.06) 0%, transparent 36%),
+    radial-gradient(ellipse at 88% 8%, rgba(15,23,42,0.035) 0%, transparent 30%),
+    linear-gradient(180deg, #f8fafd 0%, var(--u-bg) 40%, #eef2f7 100%) !important;
+}
+
+.page-bg-overlay::after {
+  background:
+    radial-gradient(circle, rgba(15,23,42,0.02) 1px, transparent 1px) !important;
+  background-size: 24px 24px !important;
+  opacity: 0.6 !important;
+}
+
+/* Specific page overrides — remove flat overrides from backgrounds.css */
+body[data-page="profile"] .page-bg-overlay,
+body[data-page="deal_detail"] .page-bg-overlay,
+body[data-page="deal_room"] .page-bg-overlay,
+body[data-page="chat_hub"] .page-bg-overlay,
+body[data-page="room"] .page-bg-overlay,
+body[data-page="notifications"] .page-bg-overlay,
+body[data-page="escrow_room"] .page-bg-overlay,
+body[data-page="listings"] .page-bg-overlay,
+body[data-page="staff_dashboard"] .page-bg-overlay,
+body[data-page="create_deal"] .page-bg-overlay,
+body[data-page="create_room"] .page-bg-overlay,
+body[data-page="admin"] .page-bg-overlay {
+  background:
+    radial-gradient(ellipse at 10% 0%, rgba(201,150,59,0.055) 0%, transparent 34%),
+    radial-gradient(ellipse at 90% 6%, rgba(15,23,42,0.03) 0%, transparent 28%),
+    linear-gradient(180deg, #f8fafd 0%, #f5f7fb 30%, #f0f3f8 100%) !important;
+}
+
+
+/* ─── 3. CARD & SURFACE SYSTEM ───
+   Unified elevation, consistent borders, refined hover
+   ─────────────────────────────────────────────── */
+
+.card,
+.pf-card,
+.pf-info-card,
+.se-deal-card,
+.se-filter-panel,
+.se-content-glass,
+.app-card,
+.app-surface,
+.ed-rooms-card,
+.ed-stat-card,
+.safo-deal-card,
+.safo-feature-card,
+.safo-trust-card {
+  background: var(--u-surface) !important;
+  border: 1px solid var(--u-border) !important;
+  border-radius: var(--u-r) !important;
+  box-shadow: var(--u-shadow-1) !important;
+  transition: box-shadow var(--u-duration) var(--u-ease),
+              transform var(--u-duration) var(--u-ease),
+              border-color var(--u-duration) ease !important;
+}
+
+/* Interactive card hover — subtle, professional */
+a.card:hover,
+.se-deal-card:hover,
+.ed-stat-card:hover,
+.deal-card:hover,
+.hover-shadow:hover {
+  box-shadow: var(--u-shadow-2) !important;
+  transform: translateY(-3px) !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+/* Non-interactive cards stay flat */
+.pf-card:hover,
+.se-filter-panel:hover {
+  box-shadow: var(--u-shadow-1) !important;
+  transform: none !important;
+}
+
+/* Card header sections */
+.card-header,
+.ed-rooms-header {
+  background: #f8fafc !important;
+  border-bottom: 1px solid var(--u-border) !important;
+}
+
+/* Elevated cards (modals, buy boxes, sticky panels) */
+.se-buy-box,
+.buy-box,
+.modal-content {
+  box-shadow: var(--u-shadow-3) !important;
+  border: 1px solid var(--u-border) !important;
+  border-radius: var(--u-r-lg) !important;
+}
+
+
+/* ─── 4. BUTTON SYSTEM — Unified ───
+   Gold gradient primary = brand identity
+   Clean secondary, ghost, danger variants
+   ─────────────────────────────────────── */
+
+/* Primary — Gold gradient (brand identity) */
+.btn-primary,
+.se-dr-add-btn,
+.se-add-deal-btn,
+.pf-btn-save,
+.ed-btn-enter,
+.app-btn--primary {
+  background: linear-gradient(135deg, var(--u-gold), var(--u-gold-soft)) !important;
+  color: var(--u-navy) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(201,150,59,0.22) !important;
+  transition: all var(--u-duration) var(--u-ease) !important;
+  letter-spacing: -0.01em;
+}
+
+.btn-primary:hover,
+.se-dr-add-btn:hover,
+.se-add-deal-btn:hover,
+.pf-btn-save:hover,
+.ed-btn-enter:hover,
+.app-btn--primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(201,150,59,0.32) !important;
+  color: var(--u-navy) !important;
+}
+
+.btn-primary:active,
+.se-dr-add-btn:active,
+.se-add-deal-btn:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 8px rgba(201,150,59,0.2) !important;
+}
+
+/* Secondary — Clean outline */
+.btn-secondary,
+.btn-outline-primary,
+.pf-btn-cancel,
+.se-dr-ghost-btn,
+.app-btn--secondary {
+  background: var(--u-surface) !important;
+  border: 1.5px solid var(--u-border-strong) !important;
+  color: var(--u-text) !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 3px rgba(15,23,42,0.04) !important;
+  transition: all var(--u-duration) var(--u-ease) !important;
+}
+
+.btn-secondary:hover,
+.btn-outline-primary:hover,
+.pf-btn-cancel:hover,
+.app-btn--secondary:hover {
+  border-color: rgba(201,150,59,0.35) !important;
+  box-shadow: var(--u-shadow-1) !important;
+  transform: translateY(-1px) !important;
+  color: var(--u-text) !important;
+}
+
+/* Success, Danger, Warning buttons keep their semantic colors */
+.btn-success {
+  background: linear-gradient(135deg, #16a34a, #15803d) !important;
+  border: none !important;
+  color: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(22,163,74,0.22) !important;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+  border: none !important;
+  color: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(220,38,38,0.22) !important;
+}
+
+
+/* ─── 5. FORM SYSTEM — Consistent ───
+   Clean inputs, professional focus states
+   ─────────────────────────────────────── */
+
+.form-control,
+.form-select,
+.pf-input,
+.se-filter-select,
+.se-price-input,
+.app-input,
+.app-select,
+.app-textarea,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+textarea,
+select {
+  background: #fafbfc !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.12) !important;
+  border-radius: var(--u-r-sm) !important;
+  color: var(--u-text) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
+}
+
+.form-control:hover:not(:focus),
+.form-select:hover:not(:focus),
+input:hover:not(:focus),
+textarea:hover:not(:focus),
+select:hover:not(:focus) {
+  border-color: rgba(15, 23, 42, 0.2) !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+.pf-input:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  background: var(--u-surface) !important;
+  border-color: rgba(201, 150, 59, 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(201, 150, 59, 0.1) !important;
+  outline: none !important;
+}
+
+.form-label {
+  font-weight: 700 !important;
+  color: var(--u-text) !important;
+  font-size: 0.84rem !important;
+  margin-bottom: 6px !important;
+}
+
+
+/* ─── 6. SECTION HEADERS — Refined ───
+   Professional dark headers with warm accents
+   ─────────────────────────────────────────── */
+
+.se-page-header,
+.se-card-hero-header,
+.pf-header,
+.se-deals-header .se-deals-header-bg,
+.ed-header {
+  border-radius: var(--u-r-lg) !important;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Light mode page headers — warm gradient instead of flat dark */
+@media (min-width: 769px) and (hover: hover) {
+  .se-page-header,
+  .se-card-hero-header {
+    background:
+      radial-gradient(ellipse at 90% 10%, rgba(201,150,59,0.08) 0%, transparent 40%),
+      linear-gradient(135deg, #ffffff 0%, #f8fafd 100%) !important;
+    border: 1px solid var(--u-border) !important;
+    box-shadow: var(--u-shadow-2) !important;
+  }
+
+  .se-page-header h1,
+  .se-page-header h2,
+  .se-card-hero-header h1,
+  .se-card-hero-header h2,
+  .ed-title,
+  .pf-header-title {
+    color: var(--u-navy) !important;
+  }
+
+  .se-page-header p,
+  .se-card-hero-header p,
+  .ed-subtitle,
+  .ed-desc,
+  .pf-header-desc,
+  .pf-header-sub,
+  .pf-breadcrumb {
+    color: var(--u-text-2) !important;
+  }
+
+  .pf-breadcrumb a {
+    color: var(--u-navy-light) !important;
+  }
+}
+
+
+/* ─── 7. TABLE POLISH ─── */
+
+.table {
+  border-radius: var(--u-r) !important;
+  overflow: hidden;
+  box-shadow: var(--u-shadow-1) !important;
+}
+
+.table thead th {
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.table tbody tr {
+  transition: background 0.15s ease !important;
+}
+
+.table tbody tr:hover {
+  background: rgba(201, 150, 59, 0.03) !important;
+}
+
+
+/* ─── 8. ALERT SYSTEM — Refined ─── */
+
+.se-alert,
+.alert {
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  border-width: 1px !important;
+}
+
+
+/* ─── 9. BADGE SYSTEM ─── */
+
+.badge,
+.se-status-badge,
+.ed-status-badge {
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  font-size: 0.74rem !important;
+  letter-spacing: 0.01em;
+}
+
+
+/* ─── 10. EMPTY STATES — Warmer ─── */
+
+.se-empty-state,
+.ed-empty-state,
+.safo-empty,
+.app-empty,
+.pf-wallet-empty {
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(201,150,59,0.04) 0%, transparent 60%),
+    linear-gradient(180deg, #fafbfd, #f5f7fb) !important;
+  border-radius: var(--u-r-lg) !important;
+  border: 2px dashed rgba(15, 23, 42, 0.06) !important;
+  padding: 48px 24px !important;
+}
+
+
+/* ─── 11. NAVBAR REFINEMENT ─── */
+
+/* Desktop navbar — warm glass */
+@media (min-width: 769px) and (hover: hover) {
+  .se-navbar {
+    background: rgba(255, 255, 255, 0.94) !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06) !important;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.04), 0 8px 24px rgba(15,23,42,0.04) !important;
+    backdrop-filter: blur(20px) saturate(1.4) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+  }
+
+  /* Subtle gold accent line under navbar */
+  .se-navbar::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 10%,
+      rgba(201,150,59,0.2) 30%,
+      rgba(201,150,59,0.35) 50%,
+      rgba(201,150,59,0.2) 70%,
+      transparent 90%) !important;
+  }
+}
+
+
+/* ─── 12. FOOTER REFINEMENT ─── */
+
+@media (min-width: 769px) and (hover: hover) {
+  .se-footer {
+    background:
+      radial-gradient(ellipse at 85% 0%, rgba(201,150,59,0.06) 0%, transparent 30%),
+      linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%) !important;
+    border-top: 1px solid var(--u-border) !important;
+    box-shadow: 0 -1px 3px rgba(15,23,42,0.02) !important;
+  }
+
+  .se-footer-brand,
+  .se-footer-copyline {
+    color: var(--u-text-2) !important;
+  }
+
+  .se-footer-links a {
+    color: var(--u-text-3) !important;
+  }
+
+  .se-footer-links a:hover {
+    color: var(--u-gold) !important;
+  }
+
+  .se-footer-brand strong {
+    color: var(--u-gold-dark) !important;
+  }
+}
+
+
+/* ─── 13. NOTIFICATION ROWS ─── */
+
+.notif-row {
+  transition: background 0.15s ease !important;
+  border-bottom: 1px solid var(--u-border) !important;
+}
+
+.notif-row:last-child {
+  border-bottom: none !important;
+}
+
+.notif-row:hover {
+  background: rgba(201, 150, 59, 0.025) !important;
+}
+
+.notif-row.is-unread {
+  background: rgba(201, 150, 59, 0.04) !important;
+}
+
+
+/* ─── 14. SCROLLBAR ─── */
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.12);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.22);
+}
+
+
+/* ─── 15. SELECTION ─── */
+
+::selection {
+  background: rgba(201, 150, 59, 0.15);
+  color: var(--u-navy);
+}
+
+
+/* ─── 16. SECTION DIVIDERS — Visual rhythm between content blocks ─── */
+
+.se-main > .card + .card,
+.se-main > .row + .row,
+.se-main > div + .card {
+  margin-top: 20px;
+}
+
+
+/* ─── 17. DEAL CARDS — Refined hover ─── */
+
+.se-deal-card::before,
+.deal-card::before {
+  height: 2px !important;
+  background: linear-gradient(90deg, var(--u-gold), var(--u-gold-soft)) !important;
+}
+
+.se-deal-card:hover,
+.deal-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--u-shadow-2) !important;
+  border-color: rgba(201, 150, 59, 0.15) !important;
+}
+
+
+/* ─── 18. STAT CARDS ─── */
+
+.se-dr-stat,
+.stat-box,
+.ed-stat-card {
+  background: var(--u-surface) !important;
+  border: 1px solid var(--u-border) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--u-shadow-1) !important;
+  transition: all var(--u-duration) var(--u-ease) !important;
+}
+
+.se-dr-stat:hover,
+.stat-box:hover,
+.ed-stat-card:hover {
+  box-shadow: var(--u-shadow-2) !important;
+  transform: translateY(-2px) !important;
+}
+
+
+/* ─── 19. CHAT REFINEMENT ─── */
+
+#chatBox,
+#dealChatBox {
+  background:
+    radial-gradient(ellipse at 0% 100%, rgba(201,150,59,0.03) 0%, transparent 50%),
+    #f7f9fb !important;
+}
+
+
+/* ─── 20. MODAL REFINEMENT ─── */
+
+.modal-content {
+  border-radius: var(--u-r-lg) !important;
+  border: 1px solid var(--u-border) !important;
+  box-shadow: var(--u-shadow-3) !important;
+}
+
+.modal-header {
+  background: linear-gradient(135deg, var(--u-navy), var(--u-navy-mid)) !important;
+  border: none !important;
+}
+
+
+/* ─── 21. LINK ACCENT COLOR ─── */
+
+a:not(.btn):not(.nav-link):not(.se-nav-links a):not(.dropdown-item):not([class*="btn"]) {
+  color: var(--u-gold-dark);
+}
+
+a:not(.btn):not(.nav-link):not([class*="btn"]):hover {
+  color: var(--u-gold);
+}
+
+
+/* ─── 22. SMOOTH PAGE ENTRANCE ─── */
+
+.app-page,
+.se-market-page,
+.se-dr-shell,
+#deal-room-shell,
+.ed-container {
+  animation: uPageIn 0.35s var(--u-ease) both;
+}
+
+@keyframes uPageIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ─── 23. RESPONSIVE REFINEMENTS ─── */
+
+@media (max-width: 768px) {
+  .card,
+  .pf-card,
+  .se-deal-card,
+  .ed-stat-card {
+    border-radius: 12px !important;
+  }
+
+  .se-page-header,
+  .ed-header {
+    border-radius: 14px !important;
+    padding: 24px 18px !important;
+  }
+
+  .se-deal-card:hover,
+  .deal-card:hover {
+    transform: none !important;
+  }
+
+  /* Reduce shadow intensity on mobile */
+  .card,
+  .app-card,
+  .ed-stat-card {
+    box-shadow: 0 1px 3px rgba(15,23,42,0.05) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .se-page-header,
+  .ed-header {
+    border-radius: 10px !important;
+    padding: 20px 14px !important;
+  }
+}
+
+/* ─── 24. REDUCED MOTION ─── */
+
+@media (prefers-reduced-motion: reduce) {
+  .app-page,
+  .se-market-page,
+  .se-dr-shell,
+  .ed-container {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+
+/* ─── 25. PRINT ─── */
+
+@media print {
+  body {
+    background: white !important;
+    background-image: none !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+}

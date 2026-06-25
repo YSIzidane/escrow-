@@ -1,0 +1,12 @@
+{% extends "account/base_confirm_code.html" %}
+
+{% block title %}{% if current_language == "ar" %}رمز تسجيل الدخول{% else %}Sign-In Code{% endif %}{% endblock %}
+{% block code_title %}{% if current_language == "ar" %}أدخل رمز تسجيل الدخول{% else %}Enter sign-in code{% endif %}{% endblock %}
+{% block recipient %}
+  {% if email %}
+    <a href="mailto:{{ email }}">{{ email }}</a>
+  {% else %}
+    <a href="tel:{{ phone }}">{{ phone }}</a>
+  {% endif %}
+{% endblock %}
+{% block action_url %}{% url 'account_confirm_login_code' %}{% endblock %}

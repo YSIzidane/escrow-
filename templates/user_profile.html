@@ -1,0 +1,1516 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{{ display_name }} - {% t "uprofile.profile_title" %}{% endblock %}
+{% block page_type %}profile{% endblock %}
+
+{% block content %}
+<header class="up-topbar">
+  <div class="up-topbar-inner">
+    <a class="up-brand" href="{% url 'home' %}" aria-label="{% t 'site.name' %}">
+      <picture class="up-brand-logo-picture">
+        <source media="(max-width: 768px)" srcset="{% static 'images/brand/icon-192.png' %}">
+        <img class="up-brand-logo-img" src="{% static 'images/brand/logo-white-small.webp' %}" alt="{% t 'site.name' %}" width="520" height="150" decoding="async" fetchpriority="high">
+      </picture>
+    </a>
+
+    <nav class="up-nav-links" aria-label="{% t 'ui.menu' %}">
+      <a class="up-nav-link" href="{% url 'home' %}">
+        <svg class="up-icon up-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+        <span>{% t "nav.home" %}</span>
+        <span class="up-latin">Dashboard</span>
+      </a>
+      <a class="up-nav-link" href="{% url 'my_deals' %}">
+        <svg class="up-icon up-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
+        <span>{% t "nav.my_deals" %}</span>
+        <span class="up-latin">Transactions</span>
+      </a>
+      <a class="up-nav-link" href="{% url 'my_tickets' %}">
+        <svg class="up-icon up-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+        <span>{% t "nav.support" %}</span>
+        <span class="up-latin">Disputes</span>
+      </a>
+      <a class="up-nav-link" href="{% url 'chat_hub' %}">
+        <svg class="up-icon up-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 11-3-6.2L21 4v6h-6"/></svg>
+        <span>{% t "nav.messages" %}</span>
+        <span class="up-latin">Messages</span>
+      </a>
+    </nav>
+
+    <div class="up-nav-actions">
+      <div class="up-account-menu" id="upAccountMenu">
+        <button class="up-account-button" type="button" aria-haspopup="menu" aria-expanded="false">
+          <svg class="up-icon up-icon-sm up-crown" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l2-9 5 5 2-7 2 7 5-5 2 9z"/><path d="M3 20h18"/></svg>
+          <span>{% t "nav.profile" %}</span>
+          <svg class="up-icon up-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="up-account-dropdown" role="menu">
+          <a class="up-dropdown-item" href="{% url 'profile' %}">
+            <svg class="up-icon up-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>
+            <span>{% t "nav.profile" %}</span>
+          </a>
+          <a class="up-dropdown-item" href="{% url 'my_deals' %}">
+            <svg class="up-icon up-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
+            <span>{% t "nav.my_deals" %}</span>
+          </a>
+          <a class="up-dropdown-item" href="{% url 'friends_list' %}">
+            <svg class="up-icon up-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 10-8 0"/><path d="M3 21a7 7 0 0114 0"/><path d="M19 8v6M22 11h-6"/></svg>
+            <span>{% t "nav.friends" %}</span>
+          </a>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button class="up-dropdown-item is-danger" type="submit">
+              <svg class="up-icon up-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+              <span>{% t "nav.logout" %}</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <a class="up-nav-icon-button" href="{% url 'notifications' %}" aria-label="{% t 'nav.notifications' %}">
+        <svg class="up-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16v-5a6 6 0 10-12 0v5l-2 3h16z"/><path d="M10 21a2 2 0 004 0"/></svg>
+        {% if unread_notif_count %}<span class="up-notification-dot">{{ unread_notif_count }}</span>{% endif %}
+      </a>
+
+      <a class="up-avatar-button" href="{% url 'profile' %}" aria-label="{% t 'nav.profile' %}">
+        <img class="up-nav-avatar" src="{{ user.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ user.get_full_name|default:user.username }}" loading="lazy">
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="up-shell">
+  <section class="up-profile-card" aria-label="{% t 'uprofile.profile_title' %}">
+    <div class="up-cover">
+      <svg class="up-cover-mesh" viewBox="0 0 1200 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="upMeshGrad" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stop-color="#4f6ef7" stop-opacity="0.55"/>
+            <stop offset="60%" stop-color="#7c3aed" stop-opacity="0.40"/>
+            <stop offset="100%" stop-color="#f5c518" stop-opacity="0.22"/>
+          </linearGradient>
+          <linearGradient id="upMeshFade" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#fff" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke="url(#upMeshGrad)" stroke-width="1">
+          <polygon points="900,40 1020,110 1020,210 900,280 780,210 780,110" opacity="0.65"/>
+          <polygon points="900,80 990,130 990,200 900,250 810,200 810,130" opacity="0.45"/>
+          <polygon points="900,120 960,150 960,190 900,220 840,190 840,150" opacity="0.35"/>
+        </g>
+        <g fill="#fff" opacity="0.18">
+          <circle cx="120" cy="60" r="1.4"/>
+          <circle cx="180" cy="60" r="1.4"/>
+          <circle cx="240" cy="60" r="1.4"/>
+          <circle cx="120" cy="120" r="1.4"/>
+          <circle cx="180" cy="120" r="1.4"/>
+          <circle cx="240" cy="120" r="1.4"/>
+          <circle cx="120" cy="180" r="1.4"/>
+          <circle cx="180" cy="180" r="1.4"/>
+          <circle cx="240" cy="180" r="1.4"/>
+        </g>
+        <g stroke="url(#upMeshFade)" stroke-width="1.5" fill="none">
+          <line x1="0" y1="220" x2="1200" y2="60"/>
+          <line x1="0" y1="260" x2="1200" y2="100"/>
+        </g>
+        <g fill="none" stroke="#fff" stroke-opacity="0.10" stroke-width="1.2">
+          <path d="M520 40 L600 60 L600 150 Q600 200 520 220 Q440 200 440 150 L440 60 Z"/>
+        </g>
+      </svg>
+
+      <nav class="up-breadcrumb" aria-label="{% t 'ui.breadcrumb' %}">
+        <a href="{% url 'home' %}">{% t "uprofile.breadcrumb_home" %}</a>
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        <a href="{% url 'search' %}">{% t "uprofile.breadcrumb_users" %}</a>
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        <span>{{ profile_user.username }}</span>
+      </nav>
+
+      <div class="up-cover-fade"></div>
+    </div>
+
+    <div class="up-profile-body">
+      <div class="up-avatar-wrap">
+        <img class="up-avatar" src="{{ profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ display_name }}" loading="lazy">
+      </div>
+
+      <div class="up-identity-row">
+        <div class="up-name-line">
+          <h1 class="up-profile-name">{{ display_name }}</h1>
+          {% if profile.is_gold_verified %}
+          <span class="up-verified-badge is-gold" title="{% t 'uprofile.gold_verified_owner' %}">
+            <i class="fas fa-crown"></i>
+            <span>{% t "uprofile.gold_verified_owner" %}</span>
+          </span>
+          {% elif profile.is_verified %}
+          <span class="up-verified-badge" title="{% t 'profile.verified_account' %}">
+            <i class="fas fa-shield-check"></i>
+            <span>{% t "profile.verified_account" %}</span>
+          </span>
+          {% elif completed_sales >= 10 %}
+          <span class="up-verified-badge">
+            <i class="fas fa-shield-halved"></i>
+            <span>{% t "uprofile.trusted_seller" %}</span>
+          </span>
+          {% endif %}
+        </div>
+
+        <p class="up-user-handle">
+          <span class="up-latin">@{{ profile_user.username }}</span>
+          <span class="up-dot">·</span>
+          <span>{% t "uprofile.sub" %}</span>
+        </p>
+      </div>
+
+      <div class="up-stats-grid" role="list">
+        <article class="up-stat-card is-primary" role="listitem">
+          <span class="up-stat-icon"><i class="fas fa-calendar-days"></i></span>
+          <span class="up-stat-label">{% t "uprofile.joined_in" %} <span class="up-latin">Member</span></span>
+          <span class="up-stat-value">{{ profile.created_at|date:"Y" }}</span>
+        </article>
+        <article class="up-stat-card is-gold" role="listitem">
+          <span class="up-stat-icon"><i class="fas fa-star"></i></span>
+          <span class="up-stat-label">{% t "uprofile.stat_rating" %} <span class="up-latin">Rating</span></span>
+          <span class="up-stat-value">{% if avg_rating %}{{ avg_rating|floatformat:1 }}{% else %}-{% endif %}</span>
+        </article>
+        <article class="up-stat-card is-green" role="listitem">
+          <span class="up-stat-icon"><i class="fas fa-circle-check"></i></span>
+          <span class="up-stat-label">{% t "uprofile.completed_deals" %} <span class="up-latin">Completed</span></span>
+          <span class="up-stat-value">{{ completed_deals_total|default:0 }}</span>
+        </article>
+        <article class="up-stat-card is-purple" role="listitem">
+          <span class="up-stat-icon"><i class="fas fa-gem"></i></span>
+          <span class="up-stat-label">{% t "uprofile.active_listings" %} <span class="up-latin">Listings</span></span>
+          <span class="up-stat-value">{{ user_deals|length }}</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="up-about-grid">
+    <article class="up-panel">
+      <header class="up-section-header">
+        <span class="up-section-icon"><i class="fas fa-circle-info"></i></span>
+        <h2>{% t "uprofile.bio" %} <span>About</span></h2>
+      </header>
+
+      <p class="up-about-text">
+        {% if profile.bio %}
+          {{ profile.bio|linebreaksbr }}
+        {% else %}
+          {% t "uprofile.no_bio" %}
+        {% endif %}
+      </p>
+
+      <div class="up-meta-grid">
+        <div class="up-meta-item">
+          <span class="up-meta-icon"><i class="fas fa-shield-halved"></i></span>
+          <div>
+            <div class="up-meta-label">{% t "uprofile.account_status" %}</div>
+            <div class="up-meta-value">
+              {% if profile.is_verified %}
+                {% if profile.is_gold_verified %}{% t "uprofile.gold_verified_owner" %}{% else %}{% t "profile.verified_account" %}{% endif %}
+              {% else %}
+                {% t "uprofile.community_member" %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="up-meta-item">
+          <span class="up-meta-icon"><i class="fas fa-clock"></i></span>
+          <div>
+            <div class="up-meta-label">{% t "uprofile.last_activity" %}</div>
+            <div class="up-meta-value">
+              {% if profile_user.last_login %}
+                {{ profile_user.last_login|timesince }} {% t "uprofile.time_ago" %}
+              {% else %}
+                {% t "uprofile.no_activity" %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="up-meta-item">
+          <span class="up-meta-icon"><i class="fas fa-store"></i></span>
+          <div>
+            <div class="up-meta-label">{% t "uprofile.stat_seller" %}</div>
+            <div class="up-meta-value">{{ seller_deals_count }}</div>
+          </div>
+        </div>
+        <div class="up-meta-item">
+          <span class="up-meta-icon"><i class="fas fa-bag-shopping"></i></span>
+          <div>
+            <div class="up-meta-label">{% t "uprofile.stat_buyer" %}</div>
+            <div class="up-meta-value">{{ buyer_deals_count }}</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    {% if user.is_authenticated and user != profile_user %}
+    <aside class="up-panel up-actions-card">
+      <header class="up-section-header">
+        <span class="up-section-icon"><i class="fas fa-bolt"></i></span>
+        <h2>{% if current_language == 'ar' %}إجراءات سريعة{% else %}Quick Actions{% endif %} <span>Actions</span></h2>
+      </header>
+
+      <div class="up-actions-list">
+        <a class="up-action-btn is-primary" href="{% url 'create_deal' %}?seller={{ profile_user.username }}">
+          <span class="up-action-icon"><i class="fas fa-handshake"></i></span>
+          <span>{% t "uprofile.start_deal" %}</span>
+          <i class="fas fa-chevron-left"></i>
+        </a>
+        <a class="up-action-btn" href="{% url 'private_chat' profile_user.id %}">
+          <span class="up-action-icon"><i class="fas fa-comment-dots"></i></span>
+          <span>{% t "uprofile.contact" %}</span>
+          <i class="fas fa-chevron-left"></i>
+        </a>
+        <a class="up-action-btn is-danger" href="{% url 'create_ticket' %}?mode=report&reported_user_id={{ profile_user.id }}">
+          <span class="up-action-icon"><i class="fas fa-flag"></i></span>
+          <span>{% if current_language == 'ar' %}الإبلاغ عن الحساب{% else %}Report account{% endif %}</span>
+          <i class="fas fa-chevron-left"></i>
+        </a>
+
+        <div id="friend-action-slot-{{ profile_user.id }}">
+          {% if is_friend %}
+            <button class="up-action-btn up-action-disabled" disabled>
+              <span class="up-action-icon"><i class="fas fa-user-check"></i></span>
+              <span>{% t "nav.friends" %}</span>
+            </button>
+          {% elif request_sent %}
+            <button class="up-action-btn up-action-disabled" disabled>
+              <span class="up-action-icon"><i class="fas fa-clock"></i></span>
+              <span>{% t "deal.detail.req_sent" %}</span>
+            </button>
+          {% else %}
+            <form method="post" action="{% url 'send_friend_request' profile_user.id %}" data-async-form>
+              {% csrf_token %}
+              <button type="submit" class="up-action-btn">
+                <span class="up-action-icon"><i class="fas fa-user-plus"></i></span>
+                <span>{% t "deal.detail.add_friend" %}</span>
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </aside>
+    {% endif %}
+  </section>
+
+  <section class="up-panel">
+    <header class="up-section-header up-section-split">
+      <div>
+        <span class="up-section-icon"><i class="fas fa-store"></i></span>
+        <h2>{% t "uprofile.latest_listings" %} <span>Listings</span></h2>
+      </div>
+      <span class="up-count-pill">{{ user_deals|length }} {% t "uprofile.active_listings" %}</span>
+    </header>
+
+    {% if user_deals %}
+    <div class="up-deals-grid">
+      {% for deal in user_deals %}
+      <article class="up-deal-card">
+        <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="up-deal-media">
+          {% if deal.images.exists %}
+            <img src="{{ deal.images.first.image|file_url:'images/brand/og-card.webp' }}" alt="{{ deal.product_title }}" loading="lazy" decoding="async" width="640" height="420">
+          {% else %}
+            <div class="up-deal-empty"><i class="fas fa-image"></i></div>
+          {% endif %}
+          <span class="up-deal-badge">
+            {% if deal.is_auction %}<i class="fas fa-gavel"></i> {% t "deals.auction" %}{% else %}<i class="fas fa-tag"></i> {% t "deals.fixed_price" %}{% endif %}
+          </span>
+        </a>
+        <div class="up-deal-body">
+          <a class="up-deal-title" href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}">{{ deal.product_title|truncatechars:58 }}</a>
+          <p>{{ deal.product_description|truncatechars:92 }}</p>
+          <div class="up-deal-footer">
+            <div>
+              <span>{% if deal.is_auction %}{% t "deals.starts_from" %}{% else %}{% t "common.price" %}{% endif %}</span>
+              <strong>${% if deal.is_auction %}{{ deal.starting_price }}{% else %}{{ deal.price }}{% endif %}</strong>
+            </div>
+            <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}">
+              {% t "home.view_details" %}
+            </a>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="up-empty-state">
+      <i class="fas fa-store-slash"></i>
+      <strong>{% t "uprofile.no_active_listings" %}</strong>
+      <span>{% t "uprofile.no_active_listings_sub" %}</span>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="up-panel">
+    <header class="up-section-header up-section-split">
+      <div>
+        <span class="up-section-icon"><i class="fas fa-star"></i></span>
+        <h2>{% t "uprofile.reviews_title" %} <span>Reviews</span></h2>
+      </div>
+      <span class="up-count-pill">{{ reviews.count }} {% t "uprofile.review_count" %}</span>
+    </header>
+
+    {% if reviews %}
+    <div class="up-reviews-list">
+      {% for review in reviews|slice:":8" %}
+      <article class="up-review-row">
+        <img src="{{ review.reviewer.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ review.reviewer.username }}" loading="lazy">
+        <div class="up-review-body">
+          <div class="up-review-top">
+            <a href="{% url 'user_profile' review.reviewer.id %}">{{ review.reviewer.username }}</a>
+            <div class="up-stars">
+              {% for i in "12345" %}
+                <i class="{% if forloop.counter <= review.rating %}fas{% else %}far{% endif %} fa-star"></i>
+              {% endfor %}
+            </div>
+          </div>
+          {% if review.comment %}<p>{{ review.comment }}</p>{% endif %}
+          <time><i class="fas fa-clock"></i> {{ review.created_at|timesince }} {% t "uprofile.time_ago" %}</time>
+        </div>
+      </article>
+      {% endfor %}
+
+      {% if reviews.count > 8 %}
+      <div class="up-more-row">{{ reviews.count|add:"-8" }} {% t "uprofile.more_reviews" %}</div>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="up-empty-state">
+      <i class="fas fa-star"></i>
+      <strong>{% t "uprofile.no_reviews" %}</strong>
+      <span>{% t "uprofile.no_reviews_sub" %}</span>
+    </div>
+    {% endif %}
+  </section>
+</main>
+
+<style>
+body[data-page="profile"] {
+  --up-bg: #0b0d12;
+  --up-bg-2: #08090d;
+  --up-card: #11141c;
+  --up-card-2: #161a23;
+  --up-card-3: #1c2030;
+  --up-primary: #6366f1;
+  --up-primary-2: #818cf8;
+  --up-green: #34d399;
+  --up-danger: #f87171;
+  --up-text: #f4f4f5;
+  --up-muted: #9099a8;
+  --up-border: rgba(255,255,255,0.06);
+  --up-border-2: rgba(255,255,255,0.12);
+  --up-gradient: linear-gradient(135deg, #5b62e8 0%, #6366f1 100%);
+  --up-gradient-soft: linear-gradient(135deg, rgba(99,102,241,0.10), rgba(99,102,241,0.04));
+  --up-shadow: 0 24px 70px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.20);
+  --up-glow: 0 0 0 1px rgba(99,102,241,0.14), 0 18px 50px rgba(0,0,0,0.35);
+  background:
+    radial-gradient(1200px 700px at 85% -10%, rgba(99,102,241,0.10), transparent 60%),
+    radial-gradient(900px 600px at 5% 10%, rgba(99,102,241,0.05), transparent 65%),
+    linear-gradient(180deg, var(--up-bg) 0%, var(--up-bg-2) 100%) !important;
+  color: var(--up-text);
+}
+
+body[data-page="profile"] .page-bg-overlay {
+  background: transparent !important;
+}
+
+body[data-page="profile"] .page-bg-overlay::after,
+body[data-page="profile"] .se-visual-field {
+  display: none !important;
+}
+
+body[data-page="profile"] .se-main {
+  max-width: none;
+  padding: 0 0 80px;
+}
+
+body[data-page="profile"] .se-navbar {
+  display: none !important;
+}
+
+body[data-page="profile"] .se-chat-fab,
+body[data-page="profile"] .se-bottom-nav,
+body[data-page="profile"] .se-footer {
+  display: none !important;
+}
+
+.up-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(13,15,26,0.82);
+  border-bottom: 1px solid var(--up-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.up-topbar-inner {
+  max-width: 1240px;
+  min-height: 74px;
+  margin: 0 auto;
+  padding: 0 28px;
+  display: grid;
+  grid-template-columns: auto minmax(0,1fr) auto;
+  align-items: center;
+  gap: 24px;
+}
+
+.up-brand {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.up-brand-logo-picture {
+  display: inline-flex;
+  align-items: center;
+  height: 46px;
+  max-width: 190px;
+}
+
+.up-brand-logo-img {
+  display: block;
+  width: auto;
+  height: 42px;
+  max-width: 190px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,0.28));
+}
+
+.up-nav-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.up-nav-link {
+  min-height: 42px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--up-muted);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all .2s ease;
+}
+
+.up-nav-link:hover,
+.up-nav-link.is-active {
+  color: var(--up-text);
+  border-color: rgba(79,110,247,0.30);
+  background: rgba(79,110,247,0.09);
+}
+
+.up-nav-link .up-latin {
+  font-size: 12px;
+  opacity: .75;
+}
+
+.up-nav-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.up-account-menu {
+  position: relative;
+}
+
+.up-account-button,
+.up-nav-icon-button,
+.up-avatar-button {
+  min-height: 44px;
+  border: 1px solid var(--up-border);
+  background: rgba(18,23,43,0.76);
+  color: var(--up-text);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: all .2s ease;
+}
+
+.up-account-button {
+  padding: 0 15px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.up-account-button:hover,
+.up-nav-icon-button:hover,
+.up-avatar-button:hover {
+  color: var(--up-text);
+  border-color: var(--up-border-2);
+  background: rgba(23,29,53,0.98);
+  transform: translateY(-1px);
+}
+
+.up-crown {
+  color: #d4d4d8;
+}
+
+.up-nav-icon-button {
+  position: relative;
+  width: 44px;
+  padding: 0;
+}
+
+.up-notification-dot {
+  position: absolute;
+  top: 7px;
+  left: 8px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--up-danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--up-bg);
+}
+
+.up-avatar-button {
+  width: 44px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.up-nav-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.14);
+}
+
+.up-account-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 240px;
+  padding: 10px;
+  border-radius: 18px;
+  background: rgba(18,23,43,0.98);
+  border: 1px solid var(--up-border);
+  box-shadow: var(--up-shadow);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.up-account-menu.is-open .up-account-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.up-dropdown-item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--up-muted);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.up-account-dropdown form {
+  margin: 0;
+}
+
+.up-dropdown-item:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--up-text);
+}
+
+.up-dropdown-item.is-danger {
+  color: rgba(248,113,113,0.88);
+}
+
+.up-icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex: 0 0 auto;
+}
+
+.up-icon-sm {
+  width: 16px;
+  height: 16px;
+}
+
+.up-shell {
+  max-width: 1240px;
+  margin: 32px auto 0;
+  padding: 0 28px;
+  display: grid;
+  gap: 28px;
+}
+
+.up-latin,
+.up-stat-value,
+.up-user-handle {
+  font-family: "Manrope", "Cairo", system-ui, sans-serif;
+}
+
+.up-profile-card,
+.up-panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--up-card);
+  border: 1px solid var(--up-border);
+  box-shadow: var(--up-shadow);
+  transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+
+.up-profile-card {
+  border-radius: 28px;
+}
+
+.up-profile-card:hover,
+.up-panel:hover {
+  border-color: rgba(79,110,247,0.32);
+  box-shadow: var(--up-shadow), var(--up-glow);
+}
+
+.up-cover {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(8,9,13,0.46) 0%, rgba(8,9,13,0.06) 46%, rgba(8,9,13,0.18) 100%),
+    linear-gradient(180deg, rgba(8,9,13,0.02) 0%, rgba(8,9,13,0.22) 100%),
+    url("{% static 'images/visuals/profile_background_new.webp' %}") center / cover no-repeat,
+    radial-gradient(circle at 82% 20%, rgba(99,102,241,0.22), transparent 42%),
+    radial-gradient(circle at 20% 110%, rgba(99,102,241,0.10), transparent 50%),
+    linear-gradient(135deg, #141821, #1a1f2c);
+}
+
+.up-cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg,
+      transparent 0 40%,
+      rgba(255,255,255,0.025) 40.2%, transparent 41% 70%,
+      rgba(255,255,255,0.018) 70.2%, transparent 71%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+}
+
+.up-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 96px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 96px);
+  mask-image: radial-gradient(ellipse at center, #000 40%, transparent 100%);
+  opacity: 0.22;
+}
+
+.up-cover-mesh {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+.up-cover-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 120px;
+  background: linear-gradient(180deg, transparent, rgba(18,23,43,0.95));
+  pointer-events: none;
+}
+
+.up-breadcrumb {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(13,15,26,0.42);
+  color: var(--up-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.up-breadcrumb a {
+  color: var(--up-primary-2);
+  text-decoration: none;
+}
+
+.up-breadcrumb i {
+  font-size: 0.62rem;
+}
+
+.up-profile-body {
+  position: relative;
+  padding: 40px 40px 36px;
+}
+
+.up-avatar-wrap {
+  position: absolute;
+  top: -72px;
+  left: 40px;
+  width: 148px;
+  height: 148px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--up-gradient);
+  box-shadow:
+    0 0 0 7px rgba(18,23,43,0.96),
+    0 0 36px rgba(79,110,247,0.55),
+    0 0 70px rgba(124,58,237,0.38);
+}
+
+.up-avatar-wrap::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.20);
+}
+
+.up-avatar {
+  width: 134px;
+  height: 134px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--up-card);
+  background: #1f2540;
+}
+
+.up-identity-row {
+  min-height: 84px;
+  padding-left: 188px;
+  display: grid;
+  gap: 12px;
+}
+
+.up-name-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.up-profile-name {
+  margin: 0;
+  font-size: clamp(28px, 3.2vw, 38px);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.up-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  color: #d1fae5;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18), transparent 30%),
+    linear-gradient(135deg, rgba(52,211,153,0.18), rgba(52,211,153,0.10));
+  border: 1px solid rgba(22,163,74,0.55);
+  box-shadow: 0 0 28px rgba(22,163,74,0.22);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.up-verified-badge.is-gold {
+  color: #fde68a;
+  background: linear-gradient(135deg, rgba(245,197,24,0.18), rgba(99,102,241,0.08));
+  border-color: rgba(245,197,24,0.38);
+}
+
+.up-user-handle {
+  margin: 0;
+  color: var(--up-muted);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.up-dot {
+  opacity: .5;
+  margin: 0 6px;
+}
+
+.up-stats-grid {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 16px;
+}
+
+.up-stat-card {
+  position: relative;
+  min-height: 158px;
+  padding: 22px 20px;
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+    var(--up-card-2);
+  border: 1px solid var(--up-border);
+  overflow: hidden;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.up-stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent, var(--up-gradient));
+}
+
+.up-stat-card::after {
+  content: "";
+  position: absolute;
+  top: -40px;
+  left: -40px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: var(--accent-glow, radial-gradient(circle, rgba(79,110,247,0.18), transparent 70%));
+  pointer-events: none;
+}
+
+.up-stat-card.is-primary { --accent: var(--up-gradient); --accent-glow: radial-gradient(circle, rgba(99,102,241,0.18), transparent 70%); }
+.up-stat-card.is-gold { --accent: linear-gradient(135deg, #e4e4e7, #a1a1aa); --accent-glow: radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%); }
+.up-stat-card.is-green { --accent: linear-gradient(135deg, #34d399, #10b981); --accent-glow: radial-gradient(circle, rgba(52,211,153,0.14), transparent 70%); }
+.up-stat-card.is-purple { --accent: var(--up-gradient); --accent-glow: radial-gradient(circle, rgba(99,102,241,0.18), transparent 70%); }
+
+.up-stat-icon {
+  position: relative;
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(79,110,247,0.15);
+  color: var(--up-primary-2);
+  border: 1px solid rgba(79,110,247,0.30);
+}
+
+.up-stat-label {
+  color: var(--up-muted);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.up-stat-label .up-latin {
+  font-size: 11px;
+  opacity: .7;
+}
+
+.up-stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--up-text);
+  line-height: 1;
+}
+
+.up-about-grid {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+.up-panel {
+  padding: 28px;
+}
+
+.up-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.up-section-header > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.up-section-split {
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.up-section-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--up-gradient-soft);
+  color: var(--up-primary-2);
+  border: 1px solid rgba(79,110,247,0.28);
+}
+
+.up-section-header h2 {
+  margin: 0;
+  color: var(--up-text);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.up-section-header h2 span {
+  color: var(--up-muted);
+  font-size: 13px;
+  font-weight: 700;
+  margin-inline-start: 8px;
+}
+
+.up-about-text {
+  color: #d1d5db;
+  font-size: 15px;
+  line-height: 1.85;
+  margin: 0;
+}
+
+.up-meta-grid {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 14px;
+}
+
+.up-meta-item,
+.up-action-btn,
+.up-review-row,
+.up-empty-state {
+  border: 1px solid var(--up-border);
+  background: rgba(255,255,255,0.025);
+  border-radius: 14px;
+}
+
+.up-meta-item {
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.up-meta-icon,
+.up-action-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99,102,241,0.10);
+  color: var(--up-primary-2);
+  border: 1px solid rgba(99,102,241,0.22);
+  flex: 0 0 auto;
+}
+
+.up-meta-label {
+  color: var(--up-muted);
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 3px;
+}
+
+.up-meta-value {
+  color: var(--up-text);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.up-actions-list {
+  display: grid;
+  gap: 12px;
+}
+
+.up-actions-list form {
+  margin: 0;
+}
+
+.up-action-btn {
+  width: 100%;
+  min-height: 56px;
+  padding: 9px 12px;
+  display: grid;
+  grid-template-columns: 38px minmax(0,1fr) 16px;
+  align-items: center;
+  gap: 11px;
+  color: var(--up-text);
+  text-decoration: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  text-align: start;
+  transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+
+.up-action-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(79,110,247,0.32);
+  background: rgba(255,255,255,0.045);
+  color: var(--up-text);
+}
+
+.up-action-btn.is-primary {
+  background: var(--up-gradient);
+  border-color: transparent;
+  color: #fff;
+}
+
+.up-action-btn.is-primary .up-action-icon {
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+  border-color: rgba(255,255,255,0.18);
+}
+
+.up-action-btn.is-danger .up-action-icon {
+  background: rgba(248,113,113,0.10);
+  color: var(--up-danger);
+  border-color: rgba(248,113,113,0.20);
+}
+
+.up-action-disabled {
+  color: rgba(255,255,255,0.35) !important;
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+.up-count-pill {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 13px;
+  border-radius: 999px;
+  background: rgba(99,102,241,0.12);
+  color: var(--up-primary-2);
+  border: 1px solid rgba(99,102,241,0.24);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.up-deals-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.up-deal-card {
+  overflow: hidden;
+  border: 1px solid var(--up-border);
+  border-radius: 18px;
+  background: rgba(255,255,255,0.02);
+  transition: transform .24s ease, border-color .24s ease, background .24s ease;
+}
+
+.up-deal-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(99,102,241,0.30);
+  background: rgba(255,255,255,0.04);
+}
+
+.up-deal-media {
+  position: relative;
+  display: block;
+  height: 190px;
+  background: rgba(0,0,0,0.2);
+}
+
+.up-deal-media img,
+.up-deal-empty {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.up-deal-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.12);
+  font-size: 2rem;
+}
+
+.up-deal-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(13,15,26,0.72);
+  border: 1px solid rgba(255,255,255,0.12);
+  font-size: 12px;
+  font-weight: 800;
+  backdrop-filter: blur(10px);
+}
+
+.up-deal-body {
+  padding: 16px;
+}
+
+.up-deal-title {
+  display: block;
+  color: var(--up-text);
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.55;
+  text-decoration: none;
+}
+
+.up-deal-title:hover {
+  color: var(--up-primary-2);
+}
+
+.up-deal-body p {
+  color: var(--up-muted);
+  font-size: 13px;
+  line-height: 1.7;
+  min-height: 44px;
+  margin: 8px 0 14px;
+}
+
+.up-deal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 12px;
+}
+
+.up-deal-footer span {
+  display: block;
+  color: var(--up-muted);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.up-deal-footer strong {
+  display: block;
+  color: var(--up-text);
+  font-size: 19px;
+  line-height: 1;
+}
+
+.up-deal-footer a {
+  color: var(--up-primary-2);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.up-reviews-list {
+  display: grid;
+  gap: 12px;
+}
+
+.up-review-row {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 44px minmax(0,1fr);
+  gap: 14px;
+}
+
+.up-review-row img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--up-primary);
+}
+
+.up-review-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.up-review-top a {
+  color: var(--up-text);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.up-stars i {
+  color: var(--up-primary-2);
+  font-size: 12px;
+}
+
+.up-review-body p {
+  color: #d1d5db;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0 0 7px;
+}
+
+.up-review-body time {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--up-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.up-more-row {
+  text-align: center;
+  color: var(--up-muted);
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.025);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.up-empty-state {
+  min-height: 190px;
+  padding: 28px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  text-align: center;
+  border-style: dashed;
+  color: var(--up-muted);
+}
+
+.up-empty-state i {
+  font-size: 2.3rem;
+  color: rgba(255,255,255,0.12);
+}
+
+.up-empty-state strong {
+  color: var(--up-text);
+  font-size: 16px;
+}
+
+.up-empty-state span {
+  color: var(--up-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+@media (max-width: 1080px) {
+  .up-nav-links {
+    display: none;
+  }
+
+  .up-topbar-inner {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .up-about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .up-deals-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="profile"] .se-main {
+    padding: 0 0 96px;
+  }
+
+  .up-topbar-inner {
+    min-height: 64px;
+    padding: 0 16px;
+  }
+
+  .up-brand-logo-picture {
+    height: 42px;
+    max-width: 54px;
+  }
+
+  .up-brand-logo-img {
+    height: 40px;
+    max-width: 54px;
+  }
+
+  .up-account-button {
+    padding: 0 12px;
+  }
+
+  .up-account-button span {
+    display: none;
+  }
+
+  .up-shell {
+    margin-top: 20px;
+    padding: 0 16px;
+  }
+
+  .up-cover {
+    height: 200px;
+    background:
+      linear-gradient(90deg, rgba(8,9,13,0.46) 0%, rgba(8,9,13,0.06) 46%, rgba(8,9,13,0.18) 100%),
+      linear-gradient(180deg, rgba(8,9,13,0.02) 0%, rgba(8,9,13,0.22) 100%),
+      url("{% static 'images/visuals/profile-background-mobile.webp' %}") center / cover no-repeat,
+      linear-gradient(135deg, #141821, #1a1f2c);
+  }
+
+  .up-breadcrumb {
+    top: 14px;
+    left: 14px;
+    max-width: calc(100% - 28px);
+    overflow: hidden;
+  }
+
+  .up-profile-body {
+    padding: 28px 20px 24px;
+  }
+
+  .up-avatar-wrap {
+    width: 110px;
+    height: 110px;
+    top: -56px;
+    left: 20px;
+  }
+
+  .up-avatar {
+    width: 96px;
+    height: 96px;
+  }
+
+  .up-identity-row {
+    padding-left: 0;
+    padding-top: 70px;
+  }
+
+  .up-profile-name {
+    font-size: 26px;
+  }
+
+  .up-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .up-stat-card {
+    min-height: 138px;
+    padding: 18px 16px;
+  }
+
+  .up-stat-value {
+    font-size: 26px;
+  }
+
+  .up-panel {
+    padding: 22px 18px;
+  }
+
+  .up-meta-grid,
+  .up-deals-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .up-review-top,
+  .up-section-split {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 420px) {
+  .up-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+<script>
+  (function () {
+    var menu = document.getElementById('upAccountMenu');
+    if (!menu) return;
+
+    var button = menu.querySelector('.up-account-button');
+    if (!button) return;
+
+    button.addEventListener('click', function (event) {
+      event.stopPropagation();
+      var isOpen = menu.classList.toggle('is-open');
+      button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!menu.contains(event.target)) {
+        menu.classList.remove('is-open');
+        button.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        menu.classList.remove('is-open');
+        button.setAttribute('aria-expanded', 'false');
+      }
+    });
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% load site_i18n %}
+{% block title %}{{ ticket.ticket_number }} - {% t "support.staff_label" %}{% endblock %}
+{% block page_type %}admin{% endblock %}
+
+{% block content %}
+<div class="staff-ticket-shell" style="max-width:900px;margin:0 auto;animation:fadeInUp .5s ease both;">
+
+  <!-- Header -->
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap;">
+    <a href="{% url 'staff_dashboard' %}" style="width:38px;height:38px;border-radius:10px;background:white;border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);text-decoration:none;box-shadow:var(--shadow-sm);" class="back-btn">
+      <i class="fas fa-arrow-right" style="font-size:13px;"></i>
+    </a>
+    <div style="flex:1;">
+      <h4 style="font-weight:900;color:var(--navy);margin:0;font-size:1.1rem;">{{ ticket.subject }}</h4>
+      <div style="font-size:.78rem;color:var(--text-secondary);margin-top:2px;">
+        <code style="background:#F0F4F8;padding:2px 6px;border-radius:4px;font-size:.72rem;">{{ ticket.ticket_number }}</code>
+        &nbsp;·&nbsp; {% t "support.staff_detail.from" %} <strong>{{ ticket.user.username }}</strong>
+        &nbsp;·&nbsp; {{ ticket.created_at|date:"d/m/Y H:i" }}
+      </div>
+    </div>
+    <span style="font-size:.8rem;font-weight:700;padding:6px 16px;border-radius:20px;
+      {% if ticket.status == 'open' %}background:#FEE2E2;color:#EF4444;
+      {% elif ticket.status == 'in_progress' %}background:#FEF3C7;color:#D97706;
+      {% elif ticket.status == 'resolved' %}background:#D1FAE5;color:#059669;
+      {% else %}background:#F0F4F8;color:#6B7280;{% endif %}">
+      {{ ticket.get_status_display }}
+    </span>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- المحادثة (يمين) -->
+    <div class="col-lg-8">
+
+      <!-- التذكرة الأصلية -->
+      <div class="card border-0 mb-3" style="border-radius:16px!important;overflow:hidden;box-shadow:var(--shadow-sm)!important;">
+        <div style="background:linear-gradient(135deg,var(--navy),var(--navy-mid));padding:14px 20px;display:flex;align-items:center;gap:10px;">
+          <img src="{{ ticket.user.profile.avatar|file_url:'images/default_avatar.jpg' }}" loading="lazy" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;">
+          <div>
+            <div style="color:white;font-weight:700;font-size:.85rem;">{{ ticket.user.username }}</div>
+            <div style="color:rgba(255,255,255,.5);font-size:.7rem;">{{ ticket.get_category_display }}</div>
+          </div>
+        </div>
+        <div class="card-body p-4">
+          <p style="color:var(--text-primary);line-height:1.8;margin:0;white-space:pre-wrap;">{{ ticket.description }}</p>
+          {% if ticket.attachment %}
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid #F0F4F8;">
+            <a href="{% url 'ticket_attachment' ticket.id %}" target="_blank" style="color:var(--info);font-size:.82rem;text-decoration:none;"><i class="fas fa-paperclip" style="margin-left:4px;"></i>{% t "support.staff_detail.user_attachment" %}</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- الردود -->
+      {% for reply in replies %}
+      <div style="display:flex;{% if reply.is_staff_reply %}justify-content:flex-start;{% else %}justify-content:flex-end;{% endif %};margin-bottom:12px;">
+        <div style="max-width:78%;">
+          {% if reply.is_staff_reply %}
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--navy);"><i class="fas fa-tools"></i></div>
+            <span style="font-size:.72rem;font-weight:700;color:var(--gold-dark);">{{ reply.sender.username }} · {% t "support.staff_label" %}</span>
+            <span style="font-size:.68rem;color:var(--text-light);">{{ reply.created_at|date:"d/m H:i" }}</span>
+          </div>
+          {% else %}
+          <div style="text-align:left;margin-bottom:4px;">
+            <span style="font-size:.72rem;font-weight:700;color:var(--text-secondary);">{{ reply.sender.username }}</span>
+            <span style="font-size:.68rem;color:var(--text-light);margin-right:6px;">{{ reply.created_at|date:"d/m H:i" }}</span>
+          </div>
+          {% endif %}
+          <div style="padding:11px 16px;border-radius:{% if reply.is_staff_reply %}4px 16px 16px 16px{% else %}16px 16px 4px 16px{% endif %};
+            {% if reply.is_staff_reply %}background:linear-gradient(135deg,#FDF8F0,#F5EDD8);border:1px solid rgba(201,150,59,.2);color:var(--text-primary);
+            {% else %}background:linear-gradient(135deg,var(--navy),var(--navy-mid));color:white;{% endif %}
+            font-size:.88rem;line-height:1.7;box-shadow:var(--shadow-sm);">
+            {{ reply.message }}
+          </div>
+          {% if reply.attachment %}
+          <div style="margin-top:4px;{% if not reply.is_staff_reply %}text-align:left;{% endif %}">
+            <a href="{% url 'ticket_reply_attachment' reply.id %}" target="_blank" style="font-size:.72rem;color:var(--info);text-decoration:none;"><i class="fas fa-paperclip" style="margin-left:3px;"></i>{% t "support.detail.attachment" %}</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+
+      <!-- رد Staff -->
+      <div class="card border-0 mt-3" style="border-radius:14px!important;box-shadow:var(--shadow-sm)!important;">
+        <div class="card-body p-4">
+          <h6 style="font-weight:800;color:var(--navy);margin-bottom:12px;font-size:.88rem;">
+            <i class="fas fa-reply" style="color:var(--gold);margin-left:6px;"></i>{% t "support.staff_detail.reply_user" %}
+          </h6>
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="reply">
+            <textarea name="message" rows="4" class="form-control mb-3" placeholder="{% t 'support.staff_detail.reply_placeholder' %}" required></textarea>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+              <input type="file" name="attachment" class="form-control" style="flex:1;min-width:160px;" accept="image/*,.pdf">
+              <button type="submit" class="btn btn-primary px-4">
+                <i class="fas fa-paper-plane" style="margin-left:6px;"></i>{% t "support.staff_detail.send_reply" %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- الجانب الأيسر — إجراءات -->
+    <div class="col-lg-4">
+
+      <!-- معلومات التذكرة -->
+      <div class="card border-0 mb-3" style="border-radius:14px!important;box-shadow:var(--shadow-sm)!important;">
+        <div class="card-body p-4">
+          <h6 style="font-weight:800;color:var(--navy);margin-bottom:14px;font-size:.88rem;">
+            <i class="fas fa-info-circle" style="color:var(--gold);margin-left:6px;"></i>{% t "support.staff_detail.ticket_info" %}
+          </h6>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:.82rem;">
+            <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8F9FC;border-radius:8px;">
+              <span style="color:var(--text-secondary);font-weight:600;">{% t "support.staff_detail.category" %}</span>
+              <span style="font-weight:700;color:var(--navy);">{{ ticket.get_category_display }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8F9FC;border-radius:8px;">
+              <span style="color:var(--text-secondary);font-weight:600;">{% t "support.staff_detail.priority" %}</span>
+              <span style="font-weight:700;
+                {% if ticket.priority == 'urgent' %}color:#EF4444;
+                {% elif ticket.priority == 'high' %}color:#D97706;
+                {% elif ticket.priority == 'medium' %}color:#3B82F6;
+                {% else %}color:#6B7280;{% endif %}">{{ ticket.get_priority_display }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8F9FC;border-radius:8px;">
+              <span style="color:var(--text-secondary);font-weight:600;">{% t "support.staff_detail.reply_count" %}</span>
+              <span style="font-weight:700;color:var(--navy);">{{ replies.count }}</span>
+            </div>
+            {% if ticket.assigned_to %}
+            <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8F9FC;border-radius:8px;">
+              <span style="color:var(--text-secondary);font-weight:600;">{% t "support.staff_detail.assigned_to" %}</span>
+              <span style="font-weight:700;color:var(--navy);">{{ ticket.assigned_to.username }}</span>
+            </div>
+            {% endif %}
+            {% if ticket.deal %}
+            <div style="padding:8px 10px;background:#F8F9FC;border-radius:8px;">
+              <div style="color:var(--text-secondary);font-weight:600;margin-bottom:4px;">{% t "support.staff_detail.related_deal" %}</div>
+              <a href="{% url 'deal_detail' ticket.deal.id %}" style="font-weight:700;color:var(--gold-dark);text-decoration:none;font-size:.8rem;">
+                <i class="fas fa-handshake" style="margin-left:4px;"></i>{% t "support.detail.deal_link" %} #{{ ticket.deal.id }} — {{ ticket.deal.product_title|truncatechars:25 }}
+              </a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- تغيير الحالة -->
+      <div class="card border-0 mb-3" style="border-radius:14px!important;box-shadow:var(--shadow-sm)!important;">
+        <div class="card-body p-4">
+          <h6 style="font-weight:800;color:var(--navy);margin-bottom:12px;font-size:.88rem;">
+            <i class="fas fa-exchange-alt" style="color:var(--gold);margin-left:6px;"></i>{% t "support.staff_detail.change_status" %}
+          </h6>
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="change_status">
+            <select name="status" class="form-control mb-3" style="font-family:'Cairo',sans-serif;font-size:.85rem;">
+              <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>{% t "support.filter.open" %}</option>
+              <option value="in_progress" {% if ticket.status == 'in_progress' %}selected{% endif %}>{% t "support.filter.in_progress" %}</option>
+              <option value="resolved" {% if ticket.status == 'resolved' %}selected{% endif %}>{% t "support.filter.resolved" %}</option>
+              <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>{% t "support.filter.closed" %}</option>
+            </select>
+            <button type="submit" class="btn btn-outline-primary w-100 btn-sm">
+              <i class="fas fa-save" style="margin-left:6px;"></i>{% t "support.staff_detail.save_status" %}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- تغيير الأولوية -->
+      <div class="card border-0 mb-3" style="border-radius:14px!important;box-shadow:var(--shadow-sm)!important;">
+        <div class="card-body p-4">
+          <h6 style="font-weight:800;color:var(--navy);margin-bottom:12px;font-size:.88rem;">
+            <i class="fas fa-flag" style="color:var(--gold);margin-left:6px;"></i>{% t "support.staff_detail.change_priority" %}
+          </h6>
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="change_priority">
+            <select name="priority" class="form-control mb-3" style="font-family:'Cairo',sans-serif;font-size:.85rem;">
+              <option value="low" {% if ticket.priority == 'low' %}selected{% endif %}>{% t "support.filter.low" %}</option>
+              <option value="medium" {% if ticket.priority == 'medium' %}selected{% endif %}>{% t "support.filter.medium" %}</option>
+              <option value="high" {% if ticket.priority == 'high' %}selected{% endif %}>{% t "support.filter.high" %}</option>
+              <option value="urgent" {% if ticket.priority == 'urgent' %}selected{% endif %}>{% t "support.filter.urgent" %}</option>
+            </select>
+            <button type="submit" class="btn btn-outline-warning w-100 btn-sm">
+              <i class="fas fa-save" style="margin-left:6px;"></i>{% t "support.staff_detail.save_priority" %}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- تعيين لي -->
+      {% if not ticket.assigned_to or ticket.assigned_to != user %}
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="assign">
+        <button type="submit" class="btn btn-outline-secondary w-100 btn-sm" style="border-radius:10px!important;padding:10px!important;">
+          <i class="fas fa-user-check" style="margin-left:6px;"></i>{% t "support.staff_detail.assign_me" %}
+        </button>
+      </form>
+      {% endif %}
+<!-- إغلاق وحذف -->
+      <div class="card border-0 mt-3" style="border-radius:14px!important;box-shadow:var(--shadow-sm)!important;">
+        <div class="card-body p-4">
+          <h6 style="font-weight:800;color:var(--danger);margin-bottom:12px;font-size:.88rem;">
+            <i class="fas fa-exclamation-triangle" style="margin-left:6px;"></i>{% t "support.staff_detail.danger_zone" %}
+          </h6>
+
+          {% if ticket.status != 'closed' %}
+          <form method="post" class="mb-2">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="close_ticket">
+            <button type="submit" class="btn btn-warning w-100 btn-sm" style="border-radius:10px!important;padding:10px!important;">
+              <i class="fas fa-lock" style="margin-left:6px;"></i>{% t "support.staff_detail.close_ticket" %}
+            </button>
+          </form>
+          {% endif %}
+
+          <form method="post" onsubmit="return confirm('{% t "support.staff_detail.delete_confirm" %}')">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete_ticket">
+            <button type="submit" class="btn btn-danger w-100 btn-sm" style="border-radius:10px!important;padding:10px!important;">
+              <i class="fas fa-trash" style="margin-left:6px;"></i>{% t "support.staff_detail.delete_ticket" %}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.back-btn:hover{background:var(--navy)!important;color:white!important;border-color:var(--navy)!important;}
+</style>
+{% include "partials/_admin_light_styles.html" %}
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% t "support.staff_dashboard.title" %}{% endblock %}
+{% block page_type %}admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/admin_control.css' %}?v=20260507a">{% endblock %}
+
+{% block content %}
+<div class="adm-shell">
+  {% include "partials/admin_control_sidebar.html" %}
+
+  <section class="adm-main">
+    <div class="adm-page-hero">
+      <div class="adm-page-copy">
+        <div class="adm-page-kicker"><i class="fas fa-headset"></i> {% if current_language == 'ar' %}مكتب الدعم الداخلي{% else %}Support operations desk{% endif %}</div>
+        <h1 class="adm-page-heading">{% t "support.staff_dashboard.header" %}</h1>
+        <p>{% t "support.staff_dashboard.sub" %}</p>
+      </div>
+
+      <div class="adm-summary-grid">
+        <div class="adm-summary-card">
+          <span>{% t "support.stat.open" %}</span>
+          <strong>{{ stats.open }}</strong>
+        </div>
+        <div class="adm-summary-card">
+          <span>{% t "support.stat.in_progress" %}</span>
+          <strong>{{ stats.in_progress }}</strong>
+        </div>
+        <div class="adm-summary-card">
+          <span>{% t "support.stat.resolved" %}</span>
+          <strong>{{ stats.resolved }}</strong>
+        </div>
+        <div class="adm-summary-card">
+          <span>{% t "support.stat.urgent" %}</span>
+          <strong>{{ stats.urgent }}</strong>
+        </div>
+        <div class="adm-summary-card">
+          <span>{% t "support.report_count" %}</span>
+          <strong>{{ stats.reports }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="adm-filter-card adm-surface">
+      <form method="get" class="adm-filter-form">
+        <label class="adm-search-field">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            name="q"
+            value="{{ search_query }}"
+            placeholder="{% if current_language == 'ar' %}{% t 'support.filter.search_placeholder' %}{% else %}Ticket number, user, or subject...{% endif %}"
+          >
+        </label>
+        <select name="status" class="adm-select" aria-label="{% t 'support.filter.status' %}">
+          <option value="" {% if not status_filter %}selected{% endif %}>{% t "support.filter.all" %}</option>
+          <option value="open" {% if status_filter == 'open' %}selected{% endif %}>{% t "support.filter.open" %}</option>
+          <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>{% t "support.filter.in_progress" %}</option>
+          <option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>{% t "support.filter.resolved" %}</option>
+          <option value="closed" {% if status_filter == 'closed' %}selected{% endif %}>{% t "support.filter.closed" %}</option>
+        </select>
+        <select name="priority" class="adm-select" aria-label="{% t 'support.filter.priority' %}">
+          <option value="" {% if not priority_filter %}selected{% endif %}>{% t "support.filter.all" %}</option>
+          <option value="urgent" {% if priority_filter == 'urgent' %}selected{% endif %}>{% t "support.filter.urgent" %}</option>
+          <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>{% t "support.filter.high" %}</option>
+          <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>{% t "support.filter.medium" %}</option>
+          <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>{% t "support.filter.low" %}</option>
+        </select>
+        <select name="category" class="adm-select" aria-label="{% t 'support.filter.category' %}">
+          <option value="" {% if not category_filter %}selected{% endif %}>{% t "support.filter.all" %}</option>
+          <option value="payment" {% if category_filter == 'payment' %}selected{% endif %}>{% t "support.filter.payment" %}</option>
+          <option value="deal" {% if category_filter == 'deal' %}selected{% endif %}>{% t "support.filter.deal" %}</option>
+          <option value="account" {% if category_filter == 'account' %}selected{% endif %}>{% t "support.filter.account" %}</option>
+          <option value="technical" {% if category_filter == 'technical' %}selected{% endif %}>{% t "support.filter.technical" %}</option>
+          <option value="other" {% if category_filter == 'other' %}selected{% endif %}>{% t "support.filter.other" %}</option>
+        </select>
+        <button type="submit" class="adm-filter-submit">{% if current_language == 'ar' %}بحث{% else %}Search{% endif %}</button>
+      </form>
+    </div>
+
+    <div class="adm-table-surface">
+      {% if tickets %}
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>{% t "support.table.ticket_no" %}</th>
+              <th>{% t "support.table.user" %}</th>
+              <th>{% t "support.table.subject" %}</th>
+              <th>{% t "support.table.category" %}</th>
+              <th>{% t "support.table.priority" %}</th>
+              <th>{% t "support.table.status" %}</th>
+              <th>{% t "support.table.date" %}</th>
+              <th>{% t "support.table.action" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ticket in tickets %}
+            <tr>
+              <td data-label="{% t 'support.table.ticket_no' %}"><span class="adm-tag">{{ ticket.ticket_number }}</span></td>
+              <td data-label="{% t 'support.table.user' %}">
+                <div class="adm-avatar-link">
+                  <img src="{{ ticket.user.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ ticket.user.username }}" class="adm-avatar" loading="lazy">
+                  <span>{{ ticket.user.username }}</span>
+                </div>
+              </td>
+              <td data-label="{% t 'support.table.subject' %}">{{ ticket.subject|truncatechars:44 }}</td>
+              <td data-label="{% t 'support.table.category' %}">{{ ticket.get_category_display }}</td>
+              <td data-label="{% t 'support.table.priority' %}">
+                <span class="adm-status-pill {% if ticket.priority == 'urgent' %}is-danger{% elif ticket.priority == 'high' %}is-warning{% endif %}">{{ ticket.get_priority_display }}</span>
+              </td>
+              <td data-label="{% t 'support.table.status' %}">
+                <span class="adm-status-pill {% if ticket.status == 'resolved' %}is-success{% elif ticket.status == 'open' %}is-danger{% elif ticket.status == 'in_progress' %}is-warning{% endif %}">{{ ticket.get_status_display }}</span>
+              </td>
+              <td data-label="{% t 'support.table.date' %}">{{ ticket.created_at|date:"d/m/Y" }}</td>
+              <td data-label="{% t 'support.table.action' %}">
+                <a href="{% url 'staff_ticket_detail' ticket.id %}" class="adm-btn adm-btn--light">{% t "support.table.open_btn" %}</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="adm-empty-state">
+        <i class="fas fa-check-circle"></i>
+        <h3 class="adm-panel-title">{% t "support.empty" %}</h3>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% include "partials/_admin_light_styles.html" %}
+{% endblock %}

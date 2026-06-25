@@ -1,0 +1,14 @@
+{% load site_i18n %}
+{% if deal.status == "completed" %}
+<span class="se-status-badge se-s-completed"><i class="fas fa-check-circle"></i> {% t "my_deals.status_completed" %}</span>
+{% elif deal.status == "reserved" %}
+<span class="se-status-badge se-s-reserved"><i class="fas fa-lock"></i> {% t "my_deals.status_reserved" %}</span>
+{% elif deal.status == "new" %}
+<span class="se-status-badge se-s-new"><i class="fas fa-star"></i> {% t "my_deals.status_new" %}</span>
+{% elif deal.status == "shipped" %}
+<span class="se-status-badge se-s-shipped"><i class="fas fa-shipping-fast"></i> {% t "my_deals.status_shipped" %}</span>
+{% elif deal.status == "disputed" %}
+<span class="se-status-badge se-s-disputed"><i class="fas fa-exclamation-triangle"></i> {% t "my_deals.status_disputed" %}</span>
+{% else %}
+<span class="se-status-badge se-s-cancelled"><i class="fas fa-ban"></i> {% t "my_deals.status_cancelled" %}</span>
+{% endif %}

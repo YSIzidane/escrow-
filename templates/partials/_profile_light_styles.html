@@ -1,0 +1,122 @@
+{% load static %}
+<style>
+  /*
+    Legacy filename retained for include compatibility.
+    Profile, wallet, and withdrawal surfaces now use the unified dark platform system.
+  */
+
+  body[data-page="profile"] {
+    background:
+      radial-gradient(circle at 14% -6%, rgba(115, 210, 255, 0.15), transparent 30rem),
+      radial-gradient(circle at 86% 4%, rgba(244, 201, 93, 0.13), transparent 28rem),
+      linear-gradient(135deg, #05070d 0%, #0a1018 100%) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="profile"] .page-bg-overlay {
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+      radial-gradient(circle at 18% 12%, rgba(115, 210, 255, 0.16), transparent 26rem),
+      radial-gradient(circle at 86% 6%, rgba(244, 201, 93, 0.14), transparent 24rem),
+      linear-gradient(135deg, rgba(5, 7, 13, 0.98), rgba(9, 13, 22, 0.98)) !important;
+    background-size: 56px 56px, 56px 56px, auto, auto, auto !important;
+  }
+
+  body[data-page="profile"] :is(.pf-header-bg, .pf-user-card-bg, .pf-user-card-orb, .pf-wallet-bg, .withdraw-shell-hero > div[style*="position:absolute"]) {
+    display: none !important;
+  }
+
+  body[data-page="profile"] :is(.pf-header, .pf-user-card, .pf-info-card, .pf-card, .pf-deal-card, .pf-review-row, .pf-modal, .pf-modal-content, .withdraw-shell, .withdraw-history-card, .withdraw-card, .wallet-card) {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.082), rgba(255, 255, 255, 0.046)) !important;
+    border: 1px solid var(--seu-border) !important;
+    border-radius: var(--seu-radius-lg) !important;
+    box-shadow: var(--seu-shadow-soft) !important;
+    color: var(--seu-text) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  body[data-page="profile"] :is(.pf-header, .pf-card-header, .pf-header-dark, .withdraw-shell-hero, .pf-modal-header) {
+    background:
+      radial-gradient(circle at 16% 12%, rgba(115, 210, 255, 0.16), transparent 22rem),
+      radial-gradient(circle at 88% 10%, rgba(244, 201, 93, 0.18), transparent 20rem),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.045)) !important;
+    border-color: var(--seu-border) !important;
+    color: var(--seu-text) !important;
+  }
+
+  body[data-page="profile"] :is(.pf-header-title, .pf-user-name, .pf-card-title, .pf-card-header span, .pf-info-val, .pf-sec-title, .pf-deal-title, .pf-deal-price, .pf-empty-text, .pf-perf-num, .pf-rev-name, .pf-wallet-amount, .withdraw-shell-hero h1, .withdraw-history-card h2) {
+    color: var(--seu-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  body[data-page="profile"] :is(.pf-header-sub, .pf-user-handle, .pf-stat-lbl, .pf-progress-top, .pf-earned span, .pf-joined, .pf-info-label, .pf-bio-text, .pf-sec-sub, .pf-deal-desc, .pf-deal-price-label, .pf-empty-sub, .pf-rev-text, .pf-wallet-label, .withdraw-shell-hero p, .withdraw-history-card p, .text-muted) {
+    color: var(--seu-muted) !important;
+  }
+
+  body[data-page="profile"] :is(.pf-avatar-ring, .pf-user-avatar, .pf-wallet-icon, .pf-card-icon, .withdraw-shell-icon) {
+    border-color: rgba(244, 201, 93, 0.34) !important;
+    background: rgba(244, 201, 93, 0.14) !important;
+    color: var(--seu-primary) !important;
+  }
+
+  body[data-page="profile"] :is(.pf-tab, .pf-action, .pf-btn, .pf-filter-btn, .withdraw-secondary-btn, .withdraw-cancel-btn, .btn-outline-secondary, .btn-outline-primary) {
+    background: rgba(255, 255, 255, 0.065) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+    border-radius: var(--seu-radius-sm) !important;
+  }
+
+  body[data-page="profile"] :is(.pf-tab.active, .pf-tab.is-active, .pf-primary-btn, .pf-btn-primary, .withdraw-primary-btn, .withdraw-submit-btn, button[type="submit"]) {
+    background: linear-gradient(135deg, var(--seu-primary), #ffe18a) !important;
+    border-color: rgba(255, 225, 138, 0.45) !important;
+    color: #15110a !important;
+    box-shadow: 0 14px 30px rgba(244, 201, 93, 0.22) !important;
+  }
+
+  body[data-page="profile"] :is(.pf-tab.active, .pf-tab.is-active, .pf-primary-btn, .pf-btn-primary, .withdraw-primary-btn, .withdraw-submit-btn, button[type="submit"]) * {
+    color: #15110a !important;
+  }
+
+  body[data-page="profile"] :is(input, select, textarea, .form-control, .form-select, .pf-input, .pf-select, .withdraw-input) {
+    background: rgba(255, 255, 255, 0.065) !important;
+    border: 1px solid var(--seu-border) !important;
+    border-radius: var(--seu-radius-sm) !important;
+    color: var(--seu-text) !important;
+    box-shadow: none !important;
+  }
+
+  body[data-page="profile"] :is(input, select, textarea, .form-control, .form-select, .pf-input, .pf-select, .withdraw-input):focus {
+    border-color: rgba(244, 201, 93, 0.55) !important;
+    box-shadow: var(--seu-ring) !important;
+    outline: none !important;
+  }
+
+  body[data-page="profile"] :is(.pf-progress-bar, .pf-wallet-progress, .progress-bar) {
+    background: linear-gradient(90deg, var(--seu-primary), var(--seu-primary-2)) !important;
+  }
+
+  body[data-page="profile"] :is(.pf-progress-track, .progress, .pf-stat-box) {
+    background: rgba(255, 255, 255, 0.07) !important;
+    border: 1px solid var(--seu-border) !important;
+  }
+
+  body[data-page="profile"] :is(.withdraw-label, .withdraw-hint, .withdraw-mini-note) {
+    color: var(--seu-muted) !important;
+  }
+
+  body[data-page="profile"] .withdraw-mini-note {
+    background: rgba(244, 201, 93, 0.11) !important;
+    border: 1px solid rgba(244, 201, 93, 0.26) !important;
+  }
+
+  body[data-page="profile"] .withdraw-error {
+    color: #ffd1d7 !important;
+  }
+
+  @media (max-width: 768px) {
+    body[data-page="profile"] :is(.pf-header, .pf-user-card, .pf-card, .withdraw-shell) {
+      border-radius: var(--seu-radius-md) !important;
+    }
+  }
+</style>

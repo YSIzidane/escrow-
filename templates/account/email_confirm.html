@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{% t "account.email_confirm.title" %}{% endblock %}
+{% block page_type %}account_email_confirm{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+  <div class="col-lg-6 col-md-8">
+    <div class="card border-0 email-confirm-card">
+      <div class="email-confirm-header">
+        <div class="email-confirm-glow"></div>
+        <div class="email-confirm-icon">
+          <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" class="se-brand-logo-panel" width="520" height="150" decoding="async">
+        </div>
+        <h3>{% t "account.email_confirm.header" %}</h3>
+        <p>{% t "account.email_confirm.ready" %}</p>
+      </div>
+
+      <div class="card-body email-confirm-body">
+        {% if confirmation %}
+          {% if can_confirm %}
+          <div class="email-confirm-box">
+            <p class="email-confirm-copy">{% t "account.email_confirm.confirm_label" %}</p>
+            <div class="email-confirm-address">{{ confirmation.email_address.email }}</div>
+            <div class="email-confirm-user">@{{ confirmation.email_address.user.username }}</div>
+          </div>
+
+          <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+            {% csrf_token %}
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+            {% endif %}
+            <button type="submit" class="btn btn-primary w-100 email-confirm-btn">
+              <i class="fas fa-check"></i>
+              {% t "account.email_confirm.confirm" %}
+            </button>
+          </form>
+          {% else %}
+          <div class="email-confirm-alert error">
+            <i class="fas fa-circle-exclamation"></i>
+            <span>{% t "account.email_confirm.already_used" %}</span>
+          </div>
+          {% endif %}
+        {% else %}
+        <div class="email-confirm-alert warn">
+          <i class="fas fa-link-slash"></i>
+          <span>{% t "account.email_confirm.invalid" %}</span>
+        </div>
+        <a href="{% url 'account_email' %}" class="btn btn-light w-100 email-confirm-secondary">
+          {% t "account.email_confirm.request_new" %}
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .email-confirm-card {
+    border-radius: 24px !important;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(13, 27, 42, 0.15) !important;
+  }
+  .email-confirm-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 40px 32px 28px;
+    text-align: center;
+    position: relative;
+  }
+  .email-confirm-glow {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 150, 59, .18) 0%, transparent 70%);
+  }
+  .email-confirm-icon {
+    width: 88px;
+    height: 88px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 20px rgba(201,150,59,0.2);
+  }
+  .email-confirm-header h3 {
+    color: #fff;
+    font-weight: 800;
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+  }
+  .email-confirm-header p {
+    color: rgba(255,255,255,0.7);
+    margin: 0;
+  }
+  .email-confirm-body {
+    padding: 36px 32px !important;
+  }
+  .email-confirm-box {
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(201,150,59,0.08);
+    border: 1px solid rgba(201,150,59,0.18);
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .email-confirm-copy {
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+  .email-confirm-address {
+    font-weight: 800;
+    color: var(--navy);
+    word-break: break-word;
+  }
+  .email-confirm-user {
+    color: var(--text-secondary);
+    margin-top: 6px;
+  }
+  .email-confirm-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px;
+    border-radius: 16px;
+    margin-bottom: 18px;
+  }
+  .email-confirm-alert.warn {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    color: #92400e;
+  }
+  .email-confirm-alert.error {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.18);
+    color: #991b1b;
+  }
+  .email-confirm-btn {
+    padding: 13px !important;
+    border-radius: 12px !important;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    border: none;
+  }
+  .email-confirm-secondary {
+    padding: 13px !important;
+    border-radius: 12px !important;
+    font-weight: 700;
+    border: 1px solid var(--border-light);
+  }
+</style>
+{% include "account/_auth_status_styles.html" %}
+{% endblock %}

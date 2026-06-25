@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% t "admin.kyc.page_title" %} - {% t "site.name" %}{% endblock %}
+{% block page_type %}admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/admin_control.css' %}?v=20260507a">{% endblock %}
+
+{% block content %}
+<div class="adm-shell">
+  {% include "partials/admin_control_sidebar.html" %}
+
+  <section class="adm-main">
+    <div class="adm-page-hero">
+      <div class="adm-page-copy">
+        <div class="adm-page-kicker"><i class="fas fa-id-card"></i> {% if current_language == 'ar' %}التحقق التشغيلي{% else %}Operations verification{% endif %}</div>
+        <h1 class="adm-page-heading">{% t "admin.kyc.panel_title" %}</h1>
+        <p>
+          {% if current_language == 'ar' %}
+            راجع ملفات KYC من نفس لوحة التحكم الخاصة، وافتح المستند، ثم اعتمد أو ارفض الطلب مع مسار واضح وسريع للفريق.
+          {% else %}
+            Review KYC files from the private control panel, open the protected document, then approve or reject each request with a clear operational flow.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="adm-summary-grid">
+        <div class="adm-summary-card">
+          <span>{% if current_language == 'ar' %}إجمالي الطلبات{% else %}Total requests{% endif %}</span>
+          <strong>{{ kyc_profiles|length }}</strong>
+        </div>
+        <div class="adm-summary-card">
+          <span>{% if current_language == 'ar' %}الطلبات الظاهرة{% else %}Visible requests{% endif %}</span>
+          <strong>{{ kyc_profiles|length }}</strong>
+        </div>
+        <div class="adm-summary-card">
+          <span>{% if current_language == 'ar' %}الحالة الحالية{% else %}Active filter{% endif %}</span>
+          <strong>{% if status_filter %}{{ status_filter }}{% else %}{% if current_language == 'ar' %}الكل{% else %}All{% endif %}{% endif %}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="adm-filter-card adm-surface">
+      <form method="get" class="adm-filter-form">
+        <select name="status" class="adm-select" onchange="this.form.submit()">
+          <option value="">{% t "admin.kyc.status_all" %}</option>
+          <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>{% t "admin.kyc.status_pending" %}</option>
+          <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>{% t "admin.kyc.status_approved" %}</option>
+          <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>{% t "admin.kyc.status_rejected" %}</option>
+        </select>
+      </form>
+    </div>
+
+    <div class="adm-table-surface">
+      {% if kyc_profiles %}
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>{% t "admin.kyc.table_user" %}</th>
+              <th>{% t "admin.kyc.table_document" %}</th>
+              <th>{% t "admin.kyc.table_status" %}</th>
+              <th>{% t "admin.kyc.table_registered" %}</th>
+              <th>{% t "admin.kyc.table_action" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for prof in kyc_profiles %}
+            <tr>
+              <td data-label="{% t 'admin.kyc.table_user' %}">
+                <a href="{% url 'user_profile' prof.user.id %}" class="adm-avatar-link">
+                  <img src="{{ prof.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ prof.user.username }}" class="adm-avatar" loading="lazy">
+                  <span>{{ prof.user.username }}</span>
+                </a>
+              </td>
+              <td data-label="{% t 'admin.kyc.table_document' %}">
+                {% if prof.kyc_document %}
+                <a href="{% url 'admin_kyc_document' prof.id %}" target="_blank" class="adm-btn adm-btn--light">{% t "admin.kyc.document_view" %}</a>
+                {% else %}
+                <span class="adm-subtle">{% t "admin.kyc.no_document" %}</span>
+                {% endif %}
+              </td>
+              <td data-label="{% t 'admin.kyc.table_status' %}">
+                {% if prof.kyc_status == 'pending' %}
+                <span class="adm-status-pill is-warning">{% t "admin.kyc.status_pending" %}</span>
+                {% elif prof.kyc_status == 'approved' %}
+                <span class="adm-status-pill is-success">{% t "admin.kyc.status_approved" %}</span>
+                {% elif prof.kyc_status == 'rejected' %}
+                <span class="adm-status-pill is-danger">{% t "admin.kyc.status_rejected" %}</span>
+                {% endif %}
+              </td>
+              <td data-label="{% t 'admin.kyc.table_registered' %}">{{ prof.user.date_joined|date:"Y-m-d" }}</td>
+              <td data-label="{% t 'admin.kyc.table_action' %}">
+                {% if prof.kyc_status == 'pending' %}
+                <div class="adm-inline-actions">
+                  <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_id" value="{{ prof.id }}">
+                    <button type="submit" name="action" value="approve" class="adm-btn adm-btn--gold" onclick="return confirm('{% t "admin.kyc.confirm_approve" %}');">{% t "admin.kyc.approve" %}</button>
+                  </form>
+                  <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_id" value="{{ prof.id }}">
+                    <button type="submit" name="action" value="reject" class="adm-btn adm-btn--ghost" onclick="return confirm('{% t "admin.kyc.confirm_reject" %}');">{% t "admin.kyc.reject" %}</button>
+                  </form>
+                </div>
+                {% else %}
+                <span class="adm-subtle">{% t "admin.kyc.processed" %}</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="adm-empty-state">
+        <i class="fas fa-id-card"></i>
+        <h3 class="adm-panel-title">{% if current_language == 'ar' %}لا توجد طلبات توثيق{% else %}No verification requests{% endif %}</h3>
+        <p class="mb-0">{% t "admin.kyc.empty" %}</p>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% include "partials/_admin_light_styles.html" %}
+{% endblock %}

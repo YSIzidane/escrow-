@@ -1,0 +1,718 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+{% block title %}{% t "admin.withdrawals.page_title" %} - {% t "site.name" %}{% endblock %}
+{% block page_type %}admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/admin_control.css' %}?v=20260507a">{% endblock %}
+
+{% block content %}
+<div class="adm-shell">
+  {% include "partials/admin_control_sidebar.html" %}
+
+  <section class="adm-main admin-withdrawals-main">
+    <div class="pf-card admin-withdrawals-hero">
+      <div class="admin-withdrawals-hero-copy">
+        <div class="admin-withdrawals-kicker">
+          <i class="fas fa-money-check-dollar"></i>
+          {% if current_language == 'ar' %}لوحة المراجعة المالية{% else %}Finance review desk{% endif %}
+        </div>
+        <h1>{% t "admin.withdrawals.panel_title" %}</h1>
+        <p>
+          {% if current_language == 'ar' %}
+            راجع طلبات السحب، أكّد التحويلات اليدوية، وأعد الرصيد بأمان عند الحاجة مع توثيق واضح لكل حالة.
+          {% else %}
+            Review withdrawal requests, confirm manual payouts, and safely restore balances when needed with clear audit context.
+          {% endif %}
+        </p>
+      </div>
+      <div class="admin-withdrawals-summary">
+        <div class="admin-stat-card">
+          <span>{% if current_language == 'ar' %}إجمالي الطلبات{% else %}Total requests{% endif %}</span>
+          <strong>{{ stats.total }}</strong>
+        </div>
+        <div class="admin-stat-card">
+          <span>{% t "admin.withdrawals.status_pending" %}</span>
+          <strong>{{ stats.pending }}</strong>
+        </div>
+        <div class="admin-stat-card">
+          <span>{% if current_language == 'ar' %}قيمة المعلّق{% else %}Pending value{% endif %}</span>
+          <strong>${{ stats.pending_amount|floatformat:2 }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-stats-grid">
+      <div class="pf-card admin-metric-card">
+        <span>{% t "admin.withdrawals.status_pending" %}</span>
+        <strong>{{ stats.pending }}</strong>
+      </div>
+      <div class="pf-card admin-metric-card admin-metric-success">
+        <span>{% t "admin.withdrawals.status_processed" %}</span>
+        <strong>{{ stats.processed }}</strong>
+      </div>
+      <div class="pf-card admin-metric-card admin-metric-danger">
+        <span>{% t "admin.withdrawals.status_rejected" %}</span>
+        <strong>{{ stats.rejected }}</strong>
+      </div>
+    </div>
+
+    <div class="pf-card">
+      <div class="pf-card-body">
+        <form method="get" class="admin-withdrawals-filters">
+          <div class="admin-filter-input">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              name="q"
+              value="{{ search_query }}"
+              placeholder="{% if current_language == 'ar' %}ابحث باسم المستخدم أو البريد أو المرجع أو رقم الطلب{% else %}Search username, email, reference, or request ID{% endif %}"
+            >
+          </div>
+          <select name="status" class="pf-input">
+            <option value="">{% t "admin.withdrawals.status_all" %}</option>
+            <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>{% t "admin.withdrawals.status_pending" %}</option>
+            <option value="processed" {% if status_filter == 'processed' %}selected{% endif %}>{% t "admin.withdrawals.status_processed" %}</option>
+            <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>{% t "admin.withdrawals.status_rejected" %}</option>
+          </select>
+          <select name="method" class="pf-input">
+            <option value="">{% if current_language == 'ar' %}كل الطرق{% else %}All methods{% endif %}</option>
+            <option value="paypal" {% if method_filter == 'paypal' %}selected{% endif %}>{% t "admin.withdrawals.method_paypal" %}</option>
+            <option value="bank" {% if method_filter == 'bank' %}selected{% endif %}>{% t "admin.withdrawals.method_bank" %}</option>
+            <option value="crypto" {% if method_filter == 'crypto' %}selected{% endif %}>{% t "admin.withdrawals.method_crypto" %}</option>
+          </select>
+          <button type="submit" class="admin-filter-submit">
+            <i class="fas fa-sliders"></i>
+            {% if current_language == 'ar' %}تطبيق{% else %}Apply{% endif %}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    {% if withdrawals %}
+    <div class="admin-withdrawal-cards">
+      {% for w in withdrawals %}
+      <article class="pf-card admin-withdrawal-card">
+        <div class="admin-withdrawal-top">
+          <a href="{% url 'user_profile' w.user.id %}" class="admin-withdrawal-user">
+            <img src="{{ w.user.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ w.user.username }}" loading="lazy">
+            <div>
+              <div class="admin-withdrawal-user-name">{{ w.user.username }}</div>
+              <div class="admin-withdrawal-user-meta">{{ w.user.email|default:"-" }}</div>
+            </div>
+          </a>
+          <div class="admin-withdrawal-amount-block">
+            <strong>${{ w.amount|floatformat:2 }}</strong>
+            <span class="admin-status-badge admin-status-{{ w.status }}">
+              {% if w.status == 'pending' %}
+                {% t "admin.withdrawals.status_pending" %}
+              {% elif w.status == 'processed' %}
+                {% t "admin.withdrawals.status_processed" %}
+              {% else %}
+                {% t "admin.withdrawals.status_rejected" %}
+              {% endif %}
+            </span>
+          </div>
+        </div>
+
+        <div class="admin-withdrawal-meta-grid">
+          <div>
+            <span>{% if current_language == 'ar' %}رقم الطلب{% else %}Request ID{% endif %}</span>
+            <strong>#{{ w.id }}</strong>
+          </div>
+          <div>
+            <span>{% if current_language == 'ar' %}تاريخ الإرسال{% else %}Submitted at{% endif %}</span>
+            <strong>{{ w.created_at|date:"Y-m-d H:i" }}</strong>
+          </div>
+          <div>
+            <span>{% t "admin.withdrawals.table_method" %}</span>
+            <strong>
+              {% if w.method == 'paypal' %}
+                <i class="fab fa-paypal"></i> {% t "admin.withdrawals.method_paypal" %}
+              {% elif w.method == 'bank' %}
+                <i class="fas fa-university"></i> {% t "admin.withdrawals.method_bank" %}
+              {% else %}
+                <i class="fab fa-bitcoin"></i> {% t "admin.withdrawals.method_crypto" %}
+              {% endif %}
+            </strong>
+          </div>
+        </div>
+
+        <div class="admin-withdrawal-section">
+          <div class="admin-section-label">{% t "admin.withdrawals.table_details" %}</div>
+          <div class="admin-detail-box">{{ w.details }}</div>
+        </div>
+
+        {% if w.payout_reference or w.rejection_reason or w.admin_note or w.reviewed_by %}
+        <div class="admin-withdrawal-audit">
+          {% if w.payout_reference %}
+          <div class="admin-audit-item admin-audit-success">
+            <span>{% if current_language == 'ar' %}مرجع التحويل{% else %}Payout reference{% endif %}</span>
+            <strong>{{ w.payout_reference }}</strong>
+          </div>
+          {% endif %}
+          {% if w.rejection_reason %}
+          <div class="admin-audit-item admin-audit-danger">
+            <span>{% if current_language == 'ar' %}سبب الرفض{% else %}Rejection reason{% endif %}</span>
+            <strong>{{ w.rejection_reason }}</strong>
+          </div>
+          {% endif %}
+          {% if w.admin_note %}
+          <div class="admin-audit-item">
+            <span>{% if current_language == 'ar' %}ملاحظة داخلية{% else %}Internal note{% endif %}</span>
+            <strong>{{ w.admin_note }}</strong>
+          </div>
+          {% endif %}
+          {% if w.reviewed_by %}
+          <div class="admin-audit-item">
+            <span>{% if current_language == 'ar' %}تمت المراجعة بواسطة{% else %}Reviewed by{% endif %}</span>
+            <strong>{{ w.reviewed_by.username }}{% if w.reviewed_at %} · {{ w.reviewed_at|date:"Y-m-d H:i" }}{% endif %}</strong>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {% if w.status == 'pending' %}
+        <div class="admin-action-grid">
+          <form method="post" class="admin-action-card admin-action-card-success">
+            {% csrf_token %}
+            <input type="hidden" name="req_id" value="{{ w.id }}">
+            <div class="admin-action-title">
+              <i class="fas fa-check-circle"></i>
+              {% t "admin.withdrawals.action_process" %}
+            </div>
+            <input
+              type="text"
+              name="payout_reference"
+              class="pf-input"
+              placeholder="{% if current_language == 'ar' %}أدخل مرجع التحويل أو رقم العملية{% else %}Enter payout reference or transfer ID{% endif %}"
+              required
+            >
+            <textarea
+              name="admin_note"
+              rows="3"
+              class="pf-textarea"
+              placeholder="{% if current_language == 'ar' %}ملاحظة داخلية اختيارية{% else %}Optional internal note{% endif %}"
+            ></textarea>
+            <button type="submit" name="action" value="process" class="admin-action-btn admin-action-btn-success" onclick="return confirm('{% t "admin.withdrawals.confirm_process" %}');">
+              <i class="fas fa-paper-plane"></i> {% t "admin.withdrawals.action_process" %}
+            </button>
+          </form>
+
+          <form method="post" class="admin-action-card admin-action-card-danger">
+            {% csrf_token %}
+            <input type="hidden" name="req_id" value="{{ w.id }}">
+            <div class="admin-action-title">
+              <i class="fas fa-rotate-left"></i>
+              {% t "admin.withdrawals.action_reject" %}
+            </div>
+            <textarea
+              name="rejection_reason"
+              rows="3"
+              class="pf-textarea"
+              placeholder="{% if current_language == 'ar' %}اشرح سبب رفض الطلب للمستخدم{% else %}Explain why the request is being rejected{% endif %}"
+              required
+            ></textarea>
+            <textarea
+              name="admin_note"
+              rows="3"
+              class="pf-textarea"
+              placeholder="{% if current_language == 'ar' %}ملاحظة داخلية اختيارية{% else %}Optional internal note{% endif %}"
+            ></textarea>
+            <button type="submit" name="action" value="reject" class="admin-action-btn admin-action-btn-danger" onclick="return confirm('{% t "admin.withdrawals.confirm_reject" %}');">
+              <i class="fas fa-ban"></i> {% t "admin.withdrawals.action_reject" %}
+            </button>
+          </form>
+        </div>
+        {% else %}
+        <div class="admin-complete-note">
+          <i class="fas fa-lock"></i>
+          {% if current_language == 'ar' %}
+            تمت مراجعة هذا الطلب بالفعل ولا يمكن معالجته مرة أخرى من هذه الصفحة.
+          {% else %}
+            This request has already been reviewed and can no longer be processed from this page.
+          {% endif %}
+        </div>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="pf-card">
+      <div class="pf-card-body admin-empty-state">
+        <i class="fas fa-money-bill-transfer"></i>
+        <h3>{% if current_language == 'ar' %}لا توجد نتائج حاليًا{% else %}No requests found{% endif %}</h3>
+        <p>{% t "admin.withdrawals.empty" %}</p>
+      </div>
+    </div>
+    {% endif %}
+  </section>
+</div>
+
+<style>
+  .admin-withdrawals-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 80vh;
+    margin: 40px auto;
+    gap: 24px;
+  }
+
+  .admin-withdrawals-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+  }
+
+  .admin-sidebar-head {
+    background: var(--pf-navy);
+    color: white;
+  }
+
+  .admin-sidebar-body {
+    padding: 0;
+  }
+
+  .admin-sidebar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .admin-sidebar-links li a {
+    display: block;
+    padding: 16px 20px;
+    color: var(--pf-navy);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .admin-sidebar-links li i {
+    width: 24px;
+    color: var(--pf-gold);
+  }
+
+  .admin-sidebar-links li.is-active {
+    background: rgba(201, 150, 59, 0.08);
+    border-inline-start: 4px solid var(--pf-gold);
+  }
+
+  .admin-sidebar-links li.is-active a {
+    color: var(--pf-gold);
+    font-weight: 800;
+  }
+
+  .admin-withdrawals-main {
+    flex: 1;
+    display: grid;
+    gap: 20px;
+  }
+
+  .admin-withdrawals-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(280px, .9fr);
+    gap: 20px;
+    padding: 24px;
+    background:
+      radial-gradient(circle at top right, rgba(201, 150, 59, 0.28), transparent 34%),
+      linear-gradient(135deg, #0D1B2A 0%, #16273A 60%, #233A54 100%);
+    color: white;
+    overflow: hidden;
+  }
+
+  .admin-withdrawals-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .admin-withdrawals-hero h1 {
+    margin: 0 0 10px;
+    font-size: clamp(1.4rem, 2.8vw, 2.15rem);
+    font-weight: 900;
+  }
+
+  .admin-withdrawals-hero p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.8;
+    max-width: 680px;
+  }
+
+  .admin-withdrawals-summary {
+    display: grid;
+    gap: 12px;
+  }
+
+  .admin-stat-card,
+  .admin-metric-card {
+    border-radius: 20px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .admin-stat-card span,
+  .admin-metric-card span {
+    display: block;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+  }
+
+  .admin-stat-card strong,
+  .admin-metric-card strong {
+    display: block;
+    font-size: 1.45rem;
+    font-weight: 900;
+  }
+
+  .admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .admin-metric-card {
+    background: white;
+    border: 1px solid rgba(13, 27, 42, 0.08);
+    box-shadow: 0 12px 32px rgba(13, 27, 42, 0.06);
+  }
+
+  .admin-metric-card span {
+    color: #6B7A90;
+  }
+
+  .admin-metric-card strong {
+    color: var(--pf-navy);
+  }
+
+  .admin-metric-success strong {
+    color: #15803d;
+  }
+
+  .admin-metric-danger strong {
+    color: #b91c1c;
+  }
+
+  .admin-withdrawals-filters {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(180px, .7fr)) auto;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .admin-filter-input {
+    position: relative;
+  }
+
+  .admin-filter-input i {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    inset-inline-start: 14px;
+    color: #8A9BAB;
+  }
+
+  .admin-filter-input input {
+    width: 100%;
+    height: 50px;
+    border-radius: 14px;
+    border: 1px solid rgba(13, 27, 42, 0.12);
+    background: #F8FAFC;
+    padding-inline-start: 42px;
+    padding-inline-end: 14px;
+  }
+
+  .admin-filter-submit {
+    height: 50px;
+    border: none;
+    border-radius: 14px;
+    padding: 0 18px;
+    background: var(--pf-navy);
+    color: white;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .admin-withdrawal-cards {
+    display: grid;
+    gap: 18px;
+  }
+
+  .admin-withdrawal-card {
+    padding: 22px;
+    box-shadow: 0 18px 44px rgba(13, 27, 42, 0.08);
+  }
+
+  .admin-withdrawal-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .admin-withdrawal-user {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--pf-navy);
+    text-decoration: none;
+    min-width: 0;
+  }
+
+  .admin-withdrawal-user img {
+    width: 52px;
+    height: 52px;
+    border-radius: 18px;
+    object-fit: cover;
+    box-shadow: 0 12px 24px rgba(13, 27, 42, 0.14);
+  }
+
+  .admin-withdrawal-user-name {
+    font-weight: 900;
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+
+  .admin-withdrawal-user-meta {
+    color: #6B7A90;
+    font-size: 0.82rem;
+    word-break: break-word;
+  }
+
+  .admin-withdrawal-amount-block {
+    display: grid;
+    justify-items: end;
+    gap: 10px;
+    text-align: end;
+  }
+
+  .admin-withdrawal-amount-block strong {
+    font-size: 1.35rem;
+    color: var(--pf-navy);
+  }
+
+  .admin-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 800;
+  }
+
+  .admin-status-pending {
+    background: rgba(201, 150, 59, 0.12);
+    color: var(--pf-gold);
+  }
+
+  .admin-status-processed {
+    background: rgba(34, 197, 94, 0.12);
+    color: #15803d;
+  }
+
+  .admin-status-rejected {
+    background: rgba(239, 68, 68, 0.12);
+    color: #b91c1c;
+  }
+
+  .admin-withdrawal-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .admin-withdrawal-meta-grid > div,
+  .admin-audit-item {
+    padding: 14px;
+    border-radius: 16px;
+    background: #F8FAFC;
+    border: 1px solid rgba(13, 27, 42, 0.08);
+  }
+
+  .admin-withdrawal-meta-grid span,
+  .admin-audit-item span,
+  .admin-section-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #6B7A90;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .admin-withdrawal-meta-grid strong,
+  .admin-audit-item strong {
+    color: var(--pf-navy);
+    font-weight: 800;
+    word-break: break-word;
+  }
+
+  .admin-withdrawal-section {
+    margin-bottom: 16px;
+  }
+
+  .admin-detail-box {
+    padding: 16px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #FCFDFE 0%, #F6F9FC 100%);
+    border: 1px solid rgba(13, 27, 42, 0.08);
+    color: var(--pf-navy);
+    line-height: 1.8;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+
+  .admin-withdrawal-audit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .admin-audit-success {
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(34, 197, 94, 0.16);
+  }
+
+  .admin-audit-danger {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.16);
+  }
+
+  .admin-action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .admin-action-card {
+    padding: 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(13, 27, 42, 0.08);
+    background: white;
+    display: grid;
+    gap: 12px;
+  }
+
+  .admin-action-card-success {
+    background: linear-gradient(180deg, rgba(240, 253, 244, 0.9) 0%, white 100%);
+  }
+
+  .admin-action-card-danger {
+    background: linear-gradient(180deg, rgba(254, 242, 242, 0.95) 0%, white 100%);
+  }
+
+  .admin-action-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 900;
+    color: var(--pf-navy);
+  }
+
+  .admin-action-btn {
+    min-height: 48px;
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .admin-action-btn-success {
+    background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+  }
+
+  .admin-action-btn-danger {
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  }
+
+  .admin-complete-note {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(13, 27, 42, 0.04);
+    color: #516074;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+  }
+
+  .admin-empty-state {
+    padding: 56px 24px;
+    text-align: center;
+    color: #6B7A90;
+  }
+
+  .admin-empty-state i {
+    font-size: 3rem;
+    color: rgba(201, 150, 59, 0.45);
+    margin-bottom: 12px;
+  }
+
+  .admin-empty-state h3 {
+    color: var(--pf-navy);
+    margin-bottom: 8px;
+    font-weight: 900;
+  }
+
+  @media (max-width: 1100px) {
+    .admin-withdrawals-layout {
+      flex-direction: column;
+    }
+
+    .admin-withdrawals-sidebar {
+      width: 100%;
+    }
+
+    .admin-withdrawals-hero,
+    .admin-withdrawals-filters,
+    .admin-action-grid,
+    .admin-withdrawal-meta-grid,
+    .admin-stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .admin-withdrawals-layout {
+      margin: 20px auto 32px;
+      gap: 16px;
+    }
+
+    .admin-withdrawal-card,
+    .admin-withdrawals-hero {
+      padding: 18px;
+    }
+
+    .admin-withdrawal-top {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .admin-withdrawal-amount-block {
+      justify-items: start;
+      text-align: start;
+    }
+  }
+</style>
+{% include "partials/_admin_light_styles.html" %}
+{% endblock %}

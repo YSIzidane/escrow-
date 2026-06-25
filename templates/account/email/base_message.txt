@@ -1,0 +1,11 @@
+{% block content %}{% endblock %}
+
+{% if current_language == 'ar' %}
+هذه رسالة نظامية من {{ site_brand_name|default:"SafouaneEscrow" }}.
+{% if site_url %}المنصة: {{ site_url }}{% endif %}
+{% if support_email %}الدعم: {{ support_email }}{% endif %}
+{% else %}
+This is an automated message from {{ site_brand_name|default:"SafouaneEscrow" }}.
+{% if site_url %}Platform: {{ site_url }}{% endif %}
+{% if support_email %}Support: {{ support_email }}{% endif %}
+{% endif %}

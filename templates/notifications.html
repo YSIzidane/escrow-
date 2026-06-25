@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block title %}{% t "notifications.header" %} - Safouane{% endblock %}
+{% block page_type %}notifications{% endblock %}
+
+{% block meta %}
+{{ block.super }}
+{% endblock %}
+
+{% block late_css %}
+<link rel="stylesheet" href="{% static 'css/notifications_dark.css' %}?v=20260523a">
+{% endblock %}
+
+{% block content %}
+<main class="sn-simple-page" dir="rtl">
+  <section class="sn-card-shell" aria-labelledby="notifications-title">
+    <header class="sn-header">
+      <div>
+        <span class="sn-kicker">
+          <svg class="sn-svg sn-svg-sm" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
+          {% t "notifications.kicker" %}
+        </span>
+        <h1 id="notifications-title">{% t "notifications.header" %}</h1>
+        <p>{% t "notifications.subtitle" %}</p>
+      </div>
+
+      <div class="sn-header-actions">
+        <span class="sn-count-badge" data-sn-count-badge data-zero-text="0 {% t 'notifications.new_count' %}">
+          <svg class="sn-svg sn-svg-sm" viewBox="0 0 24 24"><path d="M18 16v-5a6 6 0 10-12 0v5l-2 3h16z"/><path d="M10 21a2 2 0 004 0"/></svg>
+          <span>{{ unread_count|default:0 }} {% t "notifications.new_count" %}</span>
+        </span>
+        <span class="sn-total-badge">
+          <svg class="sn-svg sn-svg-sm" viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
+          <span>{{ total_count|default:0 }} {% t "notifications.total_label" %}</span>
+        </span>
+        {% if unread_count %}
+        <form method="post" data-sn-mark-all>
+          {% csrf_token %}
+          <input type="hidden" name="action" value="mark_all_read">
+          <button type="submit" class="sn-mark-btn">
+            <svg class="sn-svg sn-svg-sm" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/><path d="M21 12L10 23l-5-5"/></svg>
+            <span>{% t "notifications.mark_all_read" %}</span>
+          </button>
+        </form>
+        {% else %}
+        <span class="sn-read-state">
+          <svg class="sn-svg sn-svg-sm" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          <span>{% t "notifications.all_read" %}</span>
+        </span>
+        {% endif %}
+      </div>
+    </header>
+
+    <div class="sn-tabs" role="tablist" aria-label="{% t 'notifications.filter_label' %}">
+      <button type="button" role="tab" aria-selected="true" class="sn-tab is-active" data-sn-filter="all">{% t "deals.all" %}</button>
+      <button type="button" role="tab" aria-selected="false" class="sn-tab" data-sn-filter="unread">{% t "notifications.filter_unread" %}</button>
+      <button type="button" role="tab" aria-selected="false" class="sn-tab" data-sn-filter="payment">{% t "notifications.filter_payment" %}</button>
+      <button type="button" role="tab" aria-selected="false" class="sn-tab" data-sn-filter="message">{% t "nav.messages" %}</button>
+      <button type="button" role="tab" aria-selected="false" class="sn-tab" data-sn-filter="ticket">{% t "nav.support" %}</button>
+    </div>
+
+    {% if notifications %}
+    <div class="sn-list" data-sn-list role="list" aria-live="polite">
+      {% for notif in notifications %}
+      <article
+        class="sn-row {% if not notif.is_read %}is-unread{% else %}is-read{% endif %}
+        {% if notif.notif_type == 'message' %}sn-message
+        {% elif notif.notif_type == 'payment' or notif.notif_type == 'withdrawal' %}sn-payment
+        {% elif notif.notif_type == 'dispute' %}sn-dispute
+        {% elif notif.notif_type == 'ticket' %}sn-ticket
+        {% else %}sn-system{% endif %}"
+        data-sn-card
+        data-state="{% if notif.is_read %}read{% else %}unread{% endif %}"
+        data-type="{% if notif.notif_type == 'message' %}message{% elif notif.notif_type == 'payment' or notif.notif_type == 'withdrawal' %}payment{% elif notif.notif_type == 'ticket' %}ticket{% elif notif.notif_type == 'dispute' %}dispute{% else %}system{% endif %}"
+        role="listitem"
+      >
+        <span class="sn-unread-dot" aria-hidden="true"></span>
+
+        <form method="post" action="{% url 'mark_notification_read' notif.id %}" class="sn-open-form">
+          {% csrf_token %}
+          <button type="submit" class="sn-open-btn">
+            <span class="sn-row-icon" aria-hidden="true">
+              {% if notif.notif_type == 'message' %}
+              <svg class="sn-svg" viewBox="0 0 24 24"><path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4z"/></svg>
+              {% elif notif.notif_type == 'payment' or notif.notif_type == 'withdrawal' %}
+              <svg class="sn-svg" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg>
+              {% elif notif.notif_type == 'dispute' %}
+              <svg class="sn-svg" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+              {% elif notif.notif_type == 'ticket' %}
+              <svg class="sn-svg" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0116 0v2"/><path d="M4 14a2 2 0 004 0v-2a2 2 0 00-4 0z"/><path d="M16 14a2 2 0 004 0v-2a2 2 0 00-4 0z"/><path d="M12 20h3a3 3 0 003-3"/></svg>
+              {% else %}
+              <svg class="sn-svg" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/></svg>
+              {% endif %}
+            </span>
+
+            <span class="sn-row-text">
+              <strong>
+                {% if notif.title %}{{ notif.title }}
+                {% elif notif.notif_type == 'payment' or notif.notif_type == 'withdrawal' %}{% t "notifications.type_payment_title" %}
+                {% elif notif.notif_type == 'message' %}{% t "notifications.type_message_title" %}
+                {% elif notif.notif_type == 'ticket' %}{% t "notifications.type_ticket_title" %}
+                {% elif notif.notif_type == 'dispute' %}{% t "notifications.type_dispute_title" %}
+                {% else %}{% t "notifications.type_system_title" %}{% endif %}
+              </strong>
+              <span>
+                {% if notif.body %}{{ notif.body }}
+                {% elif notif.notif_type == 'payment' or notif.notif_type == 'withdrawal' %}{% t "notifications.type_payment_body" %}
+                {% elif notif.notif_type == 'message' %}{% t "notifications.type_message_body" %}
+                {% elif notif.notif_type == 'ticket' %}{% t "notifications.type_ticket_body" %}
+                {% elif notif.notif_type == 'dispute' %}{% t "notifications.type_dispute_body" %}
+                {% else %}{% t "notifications.type_system_body" %}{% endif %}
+              </span>
+            </span>
+          </button>
+        </form>
+
+        <time class="sn-time">
+          <svg class="sn-svg sn-svg-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span>{{ notif.created_at|timesince }} {% t "notifications.time_ago" %}</span>
+        </time>
+
+        <form method="post" action="{% url 'delete_notification' notif.id %}" class="sn-delete-form" data-sn-delete>
+          {% csrf_token %}
+          <button type="submit" class="sn-delete-btn" title="{% t 'notifications.delete' %}" aria-label="{% t 'notifications.delete' %}">
+            <svg class="sn-svg sn-svg-sm" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 15H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          </button>
+        </form>
+      </article>
+      {% endfor %}
+    </div>
+    <section class="sn-filter-empty" data-sn-filter-empty hidden>
+      <svg class="sn-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+      <h2>{% t "notifications.filter_empty_title" %}</h2>
+      <p>{% t "notifications.filter_empty_sub" %}</p>
+    </section>
+    {% else %}
+    <section class="sn-empty">
+      <svg class="sn-svg" viewBox="0 0 24 24"><path d="M18 16v-5a6 6 0 10-12 0v5l-2 3h16z"/><path d="M10 21a2 2 0 004 0"/><path d="M3 3l18 18"/></svg>
+      <h2>{% t "notifications.empty_title" %}</h2>
+      <p>{% t "notifications.empty_sub" %}</p>
+    </section>
+    {% endif %}
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/notifications_dark.js' %}?v=20260522f"></script>
+{% endblock %}
