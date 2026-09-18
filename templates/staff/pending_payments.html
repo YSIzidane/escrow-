@@ -279,10 +279,11 @@
     width: 100%;
     height: 50px;
     border-radius: 14px;
-    border: 1px solid rgba(13,27,42,.12);
-    background: #F8FAFC;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.065);
     padding-inline-start: 42px;
     padding-inline-end: 14px;
+    color: var(--seu-text, #f7f8fb);
   }
 
   .ccp-filter-btn {
@@ -290,8 +291,8 @@
     height: 50px;
     border: none;
     border-radius: 14px;
-    background: var(--pf-navy);
-    color: white;
+    background: linear-gradient(135deg, var(--seu-primary, #f4c95d), #ffe18a);
+    color: #15110a;
     font-weight: 800;
     display: inline-flex;
     align-items: center;
@@ -419,22 +420,22 @@
   .ccp-review-note {
     padding: 14px 16px;
     border-radius: 16px;
-    background: #F8FAFC;
-    border: 1px solid rgba(13,27,42,.08);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .ccp-meta-box span,
   .ccp-review-note strong {
     display: block;
     margin-bottom: 8px;
-    color: #6B7A90;
+    color: var(--seu-muted, #aeb8c8);
     font-size: .78rem;
     font-weight: 800;
   }
 
   .ccp-meta-box strong,
   .ccp-review-note span {
-    color: var(--pf-navy);
+    color: var(--seu-text, #f7f8fb);
     word-break: break-word;
   }
 

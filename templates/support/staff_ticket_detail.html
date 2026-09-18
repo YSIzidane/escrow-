@@ -8,22 +8,22 @@
 
   <!-- Header -->
   <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap;">
-    <a href="{% url 'staff_dashboard' %}" style="width:38px;height:38px;border-radius:10px;background:white;border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);text-decoration:none;box-shadow:var(--shadow-sm);" class="back-btn">
+    <a href="{% url 'staff_dashboard' %}" style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid var(--seu-border);display:flex;align-items:center;justify-content:center;color:var(--seu-text);text-decoration:none;box-shadow:var(--seu-shadow-soft);" class="back-btn">
       <i class="fas fa-arrow-right" style="font-size:13px;"></i>
     </a>
     <div style="flex:1;">
-      <h4 style="font-weight:900;color:var(--navy);margin:0;font-size:1.1rem;">{{ ticket.subject }}</h4>
-      <div style="font-size:.78rem;color:var(--text-secondary);margin-top:2px;">
-        <code style="background:#F0F4F8;padding:2px 6px;border-radius:4px;font-size:.72rem;">{{ ticket.ticket_number }}</code>
+      <h4 style="font-weight:900;color:var(--seu-text);margin:0;font-size:1.1rem;">{{ ticket.subject }}</h4>
+      <div style="font-size:.78rem;color:var(--seu-muted);margin-top:2px;">
+        <code style="background:rgba(255,255,255,0.08);color:var(--seu-text);padding:2px 6px;border-radius:4px;font-size:.72rem;border:1px solid var(--seu-border);">{{ ticket.ticket_number }}</code>
         &nbsp;·&nbsp; {% t "support.staff_detail.from" %} <strong>{{ ticket.user.username }}</strong>
         &nbsp;·&nbsp; {{ ticket.created_at|date:"d/m/Y H:i" }}
       </div>
     </div>
     <span style="font-size:.8rem;font-weight:700;padding:6px 16px;border-radius:20px;
-      {% if ticket.status == 'open' %}background:#FEE2E2;color:#EF4444;
-      {% elif ticket.status == 'in_progress' %}background:#FEF3C7;color:#D97706;
-      {% elif ticket.status == 'resolved' %}background:#D1FAE5;color:#059669;
-      {% else %}background:#F0F4F8;color:#6B7280;{% endif %}">
+      {% if ticket.status == 'open' %}background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.25);
+      {% elif ticket.status == 'in_progress' %}background:rgba(244,201,93,0.15);color:var(--seu-primary);border:1px solid rgba(244,201,93,0.25);
+      {% elif ticket.status == 'resolved' %}background:rgba(34,197,94,0.15);color:#86efac;border:1px solid rgba(34,197,94,0.25);
+      {% else %}background:rgba(255,255,255,0.06);color:var(--seu-muted);border:1px solid var(--seu-border);{% endif %}">
       {{ ticket.get_status_display }}
     </span>
   </div>
@@ -34,19 +34,19 @@
     <div class="col-lg-8">
 
       <!-- التذكرة الأصلية -->
-      <div class="card border-0 mb-3" style="border-radius:16px!important;overflow:hidden;box-shadow:var(--shadow-sm)!important;">
-        <div style="background:linear-gradient(135deg,var(--navy),var(--navy-mid));padding:14px 20px;display:flex;align-items:center;gap:10px;">
-          <img src="{{ ticket.user.profile.avatar|file_url:'images/default_avatar.jpg' }}" loading="lazy" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;">
+      <div class="card border-0 mb-3" style="border-radius:16px!important;overflow:hidden;box-shadow:var(--seu-shadow-soft)!important;">
+        <div style="background:rgba(255,255,255,0.06);padding:14px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--seu-border);">
+          <img src="{{ ticket.user.profile.avatar|file_url:'images/default_avatar.jpg' }}" loading="lazy" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--seu-primary);object-fit:cover;">
           <div>
-            <div style="color:white;font-weight:700;font-size:.85rem;">{{ ticket.user.username }}</div>
-            <div style="color:rgba(255,255,255,.5);font-size:.7rem;">{{ ticket.get_category_display }}</div>
+            <div style="color:var(--seu-text);font-weight:700;font-size:.85rem;">{{ ticket.user.username }}</div>
+            <div style="color:var(--seu-muted);font-size:.7rem;">{{ ticket.get_category_display }}</div>
           </div>
         </div>
         <div class="card-body p-4">
-          <p style="color:var(--text-primary);line-height:1.8;margin:0;white-space:pre-wrap;">{{ ticket.description }}</p>
+          <p style="color:var(--seu-text);line-height:1.8;margin:0;white-space:pre-wrap;">{{ ticket.description }}</p>
           {% if ticket.attachment %}
-          <div style="margin-top:12px;padding-top:12px;border-top:1px solid #F0F4F8;">
-            <a href="{% url 'ticket_attachment' ticket.id %}" target="_blank" style="color:var(--info);font-size:.82rem;text-decoration:none;"><i class="fas fa-paperclip" style="margin-left:4px;"></i>{% t "support.staff_detail.user_attachment" %}</a>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--seu-border);">
+            <a href="{% url 'ticket_attachment' ticket.id %}" target="_blank" style="color:var(--seu-primary);font-size:.82rem;text-decoration:none;"><i class="fas fa-paperclip" style="margin-left:4px;"></i>{% t "support.staff_detail.user_attachment" %}</a>
           </div>
           {% endif %}
         </div>
@@ -58,25 +58,25 @@
         <div style="max-width:78%;">
           {% if reply.is_staff_reply %}
           <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <div style="width:22px;height:22px;border-radius:6px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--navy);"><i class="fas fa-tools"></i></div>
-            <span style="font-size:.72rem;font-weight:700;color:var(--gold-dark);">{{ reply.sender.username }} · {% t "support.staff_label" %}</span>
-            <span style="font-size:.68rem;color:var(--text-light);">{{ reply.created_at|date:"d/m H:i" }}</span>
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--seu-primary);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#15110a;"><i class="fas fa-tools"></i></div>
+            <span style="font-size:.72rem;font-weight:700;color:var(--seu-primary);">{{ reply.sender.username }} · {% t "support.staff_label" %}</span>
+            <span style="font-size:.68rem;color:var(--seu-muted);">{{ reply.created_at|date:"d/m H:i" }}</span>
           </div>
           {% else %}
           <div style="text-align:left;margin-bottom:4px;">
-            <span style="font-size:.72rem;font-weight:700;color:var(--text-secondary);">{{ reply.sender.username }}</span>
-            <span style="font-size:.68rem;color:var(--text-light);margin-right:6px;">{{ reply.created_at|date:"d/m H:i" }}</span>
+            <span style="font-size:.72rem;font-weight:700;color:var(--seu-text);">{{ reply.sender.username }}</span>
+            <span style="font-size:.68rem;color:var(--seu-muted);margin-right:6px;">{{ reply.created_at|date:"d/m H:i" }}</span>
           </div>
           {% endif %}
           <div style="padding:11px 16px;border-radius:{% if reply.is_staff_reply %}4px 16px 16px 16px{% else %}16px 16px 4px 16px{% endif %};
-            {% if reply.is_staff_reply %}background:linear-gradient(135deg,#FDF8F0,#F5EDD8);border:1px solid rgba(201,150,59,.2);color:var(--text-primary);
-            {% else %}background:linear-gradient(135deg,var(--navy),var(--navy-mid));color:white;{% endif %}
-            font-size:.88rem;line-height:1.7;box-shadow:var(--shadow-sm);">
+            {% if reply.is_staff_reply %}background:rgba(255,255,255,0.04);border:1px solid rgba(244,201,93,0.25);color:var(--seu-text);
+            {% else %}background:rgba(255,255,255,0.08);border:1px solid var(--seu-border);color:var(--seu-text);{% endif %}
+            font-size:.88rem;line-height:1.7;box-shadow:var(--seu-shadow-soft);">
             {{ reply.message }}
           </div>
           {% if reply.attachment %}
           <div style="margin-top:4px;{% if not reply.is_staff_reply %}text-align:left;{% endif %}">
-            <a href="{% url 'ticket_reply_attachment' reply.id %}" target="_blank" style="font-size:.72rem;color:var(--info);text-decoration:none;"><i class="fas fa-paperclip" style="margin-left:3px;"></i>{% t "support.detail.attachment" %}</a>
+            <a href="{% url 'ticket_reply_attachment' reply.id %}" target="_blank" style="font-size:.72rem;color:var(--seu-primary);text-decoration:none;"><i class="fas fa-paperclip" style="margin-left:3px;"></i>{% t "support.detail.attachment" %}</a>
           </div>
           {% endif %}
         </div>
@@ -84,10 +84,10 @@
       {% endfor %}
 
       <!-- رد Staff -->
-      <div class="card border-0 mt-3" style="border-radius:14px!important;box-shadow:var(--shadow-sm)!important;">
+      <div class="card border-0 mt-3" style="border-radius:14px!important;box-shadow:var(--seu-shadow-soft)!important;">
         <div class="card-body p-4">
-          <h6 style="font-weight:800;color:var(--navy);margin-bottom:12px;font-size:.88rem;">
-            <i class="fas fa-reply" style="color:var(--gold);margin-left:6px;"></i>{% t "support.staff_detail.reply_user" %}
+          <h6 style="font-weight:800;color:var(--seu-text);margin-bottom:12px;font-size:.88rem;">
+            <i class="fas fa-reply" style="color:var(--seu-primary);margin-left:6px;"></i>{% t "support.staff_detail.reply_user" %}
           </h6>
           <form method="post" enctype="multipart/form-data">
             {% csrf_token %}

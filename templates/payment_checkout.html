@@ -4,51 +4,22 @@
 {% block title %}{% t "payment.checkout.title" %} {{ deal.product_title }}{% endblock %}
 {% block page_type %}payment{% endblock %}
 {% block content %}
-<div class="se-payment-page app-page app-page--narrow">
-  <section class="se-payment-hero">
-    <div class="se-payment-hero-icon">
-      <i class="fas fa-shield-alt"></i>
-    </div>
-    <div class="se-payment-hero-copy">
-      <h1>{% t "payment.checkout.header" %}</h1>
-      <p>{% t "payment.checkout.sub" %}</p>
-    </div>
-    <div class="se-payment-overview">
-      <div class="se-payment-overview-item">
-        <span>{% t "payment.checkout.total" %}</span>
-        <strong>${{ deal.price }}</strong>
-      </div>
-      <div class="se-payment-overview-item">
-        <span>{% t "payment.checkout.seller" %}</span>
-        <strong>{{ deal.seller.username }}</strong>
-      </div>
-      <div class="se-payment-overview-item">
-        <span>{% t "payment.checkout.trx_id" %}</span>
-        <strong class="is-mono">{{ payment.transaction_id }}</strong>
-      </div>
-    </div>
-  </section>
-
-  <section class="se-payment-steps" aria-label="{% t 'payment.checkout.steps_aria' %}">
-    <article class="se-step-card is-active">
-      <span class="se-step-number">1</span>
-      <strong>{% t "payment.checkout.step1_title" %}</strong>
-      <p>{% t "payment.checkout.step1_text" %}</p>
-    </article>
-    <article class="se-step-card">
-      <span class="se-step-number">2</span>
-      <strong>{% t "payment.checkout.step2_title" %}</strong>
-      <p>{% t "payment.checkout.step2_text" %}</p>
-    </article>
-    <article class="se-step-card">
-      <span class="se-step-number">3</span>
-      <strong>{% t "payment.checkout.step3_title" %}</strong>
-      <p>{% t "payment.checkout.step3_text" %}</p>
-    </article>
-  </section>
-
+<div class="se-payment-page app-page">
   <div class="se-payment-layout">
+    
+    <!-- LEFT COLUMN: Summary & Secure Escrow Stepper -->
     <aside class="se-payment-summary">
+      <div class="se-summary-head-badge">
+        <div class="se-shield-glow-icon">
+          <i class="fas fa-shield-halved"></i>
+        </div>
+        <div class="se-summary-head-copy">
+          <h1>{% t "payment.checkout.header" %}</h1>
+          <p>{% t "payment.checkout.sub" %}</p>
+        </div>
+      </div>
+
+      <!-- Product Summary Card -->
       <div class="se-payment-card">
         <div class="se-card-head">
           <span class="se-card-label">{% t "payment.checkout.summary" %}</span>
@@ -75,18 +46,53 @@
             <strong class="is-mono">{{ payment.transaction_id }}</strong>
           </div>
         </div>
+      </div>
 
-        <div class="se-total-box">
-          <span>{% t "payment.checkout.total" %}</span>
-          <strong>${{ deal.price }}</strong>
-          <small>{% t "payment.checkout.held_info" %}</small>
+      <!-- Vertical Escrow Timeline Steps -->
+      <div class="se-payment-card se-stepper-card">
+        <div class="se-card-head">
+          <span class="se-card-label">{% if current_language == 'ar' %}خطوات الضمان الآمن{% else %}Secure Escrow Process{% endif %}</span>
         </div>
-
-        <div class="se-quiet-note">{% t "payment.checkout.buyer_note" %}</div>
+        <div class="se-vertical-stepper">
+          <div class="se-v-step is-active">
+            <span class="se-v-step-number">1</span>
+            <div class="se-v-step-copy">
+              <strong>{% t "payment.checkout.step1_title" %}</strong>
+              <p>{% t "payment.checkout.step1_text" %}</p>
+            </div>
+          </div>
+          <div class="se-v-step">
+            <span class="se-v-step-number">2</span>
+            <div class="se-v-step-copy">
+              <strong>{% t "payment.checkout.step2_title" %}</strong>
+              <p>{% t "payment.checkout.step2_text" %}</p>
+            </div>
+          </div>
+          <div class="se-v-step">
+            <span class="se-v-step-number">3</span>
+            <div class="se-v-step-copy">
+              <strong>{% t "payment.checkout.step3_title" %}</strong>
+              <p>{% t "payment.checkout.step3_text" %}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </aside>
 
+    <!-- RIGHT COLUMN: Payment Options & Details -->
     <section class="se-payment-methods">
+      
+      <!-- Total Price Display Card -->
+      <div class="se-payment-card se-price-summary-card">
+        <div class="se-total-badge-box">
+          <span>{% if current_language == 'ar' %}المبلغ الإجمالي المطلوب{% else %}Total Amount Due{% endif %}</span>
+          <strong>${{ deal.price }}</strong>
+          <small>{% t "payment.checkout.held_info" %}</small>
+        </div>
+        <div class="se-quiet-note">{% t "payment.checkout.buyer_note" %}</div>
+      </div>
+
+      <!-- Payment Method Form Card -->
       <div class="se-payment-card">
         <div class="se-method-tabs" role="tablist" aria-label="Payment methods">
           <button type="button" class="se-method-tab is-active" onclick="showTab('stripe')" id="tab-stripe">
@@ -99,6 +105,7 @@
           </button>
         </div>
 
+        <!-- Stripe Card Payment -->
         <div id="panel-stripe" class="se-method-panel">
           <div class="se-panel-head">
             <h3>{% t "payment.checkout.card_info" %}</h3>
@@ -106,17 +113,6 @@
           </div>
 
           <div class="se-info-strip">{% t "payment.checkout.card_note" %}</div>
-
-          <div class="se-price-box">
-            <div class="se-price-row">
-              <span>{% t "payment.checkout.product_price" %}</span>
-              <strong>${{ deal.price }}</strong>
-            </div>
-            <div class="se-price-row is-total">
-              <span>{% t "payment.checkout.final_total" %}</span>
-              <strong>${{ deal.price }}</strong>
-            </div>
-          </div>
 
           <form method="post" action="{% url 'payment_confirm' deal.id %}">
             {% csrf_token %}
@@ -127,6 +123,7 @@
           </form>
         </div>
 
+        <!-- CCP / BaridiMob Bank Transfer -->
         <div id="panel-ccp" class="se-method-panel" hidden>
           <div class="se-panel-head">
             <h3>{% t "payment.checkout.ccp_title" %}</h3>
@@ -135,26 +132,27 @@
 
           <div class="se-ccp-steps">
             <div class="se-ccp-step">
-              <span>1</span>
+              <span class="se-ccp-step-num">1</span>
               <p>{% t "payment.checkout.ccp_step1_before" %} <strong>${{ deal.price }}</strong> {% t "payment.checkout.ccp_step1_after" %}</p>
             </div>
             <div class="se-ccp-step">
-              <span>2</span>
+              <span class="se-ccp-step-num">2</span>
               <p>
                 {% t "payment.checkout.ccp_step2" %}
                 <code>{{ payment.transfer_code }}</code>
               </p>
             </div>
             <div class="se-ccp-step">
-              <span>3</span>
+              <span class="se-ccp-step-num">3</span>
               <p>{% t "payment.checkout.ccp_step3" %}</p>
             </div>
             <div class="se-ccp-step">
-              <span>4</span>
+              <span class="se-ccp-step-num">4</span>
               <p>{% t "payment.checkout.ccp_step4" %}</p>
             </div>
           </div>
 
+          <!-- Account details for transfer -->
           <div class="se-transfer-card">
             <div class="se-transfer-title">{% t "payment.checkout.transfer_details" %}</div>
             <div class="se-meta-row">
@@ -219,6 +217,7 @@
           </form>
         </div>
 
+        <!-- Checkout footer -->
         <div class="se-payment-footer">
           <a href="{% url 'deal_detail' deal.id %}">
             <i class="fas fa-arrow-right"></i>
@@ -236,133 +235,76 @@
 
 <style>
 .se-payment-page {
-  max-width: 1080px;
+  --navy: var(--seu-text, #f7f8fb);
+  --text-secondary: var(--seu-muted, #aeb8c8);
+  --text-light: var(--seu-faint, #778297);
+  
+  max-width: 1140px;
   margin: 0 auto;
-  padding: 18px 0 40px;
+  padding: 24px 0 48px;
 }
-.se-payment-hero {
-  display: grid;
-  gap: 14px;
-  margin-bottom: 18px;
-}
-.se-payment-hero-icon {
-  width: 68px;
-  height: 68px;
-  margin: 0;
-  border-radius: 22px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  color: var(--navy);
-  box-shadow: 0 14px 34px rgba(201,150,59,.28);
-  font-size: 1.5rem;
-}
-.se-payment-hero-copy {
-  display: grid;
-  gap: 6px;
-}
-.se-payment-hero h1 {
-  margin: 0 0 8px;
-  color: var(--navy);
-  font-size: clamp(1.7rem, 3vw, 2.4rem);
-  font-weight: 900;
-}
-.se-payment-hero p {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: .96rem;
-}
-.se-payment-overview {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-.se-payment-overview-item {
-  padding: 12px 14px;
-  border-radius: 16px;
-  background: #fff;
-  border: 1px solid rgba(13,27,42,.08);
-  box-shadow: 0 12px 28px rgba(15,23,42,.06);
-}
-.se-payment-overview-item span {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--text-light);
-  font-size: .72rem;
-  font-weight: 800;
-}
-.se-payment-overview-item strong {
-  display: block;
-  color: var(--navy);
-  font-size: .92rem;
-  font-weight: 900;
-}
-.se-payment-steps {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 22px;
-}
-.se-step-card,
-.se-payment-card {
-  background: #fff;
-  border: 1px solid rgba(13,27,42,.08);
-  border-radius: 22px;
-  box-shadow: 0 18px 42px rgba(15,23,42,.08);
-}
-.se-step-card {
-  padding: 18px;
-}
-.se-step-number {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: inline-grid;
-  place-items: center;
-  background: rgba(201,150,59,.14);
-  color: var(--gold-dark);
-  font-weight: 900;
-  margin-bottom: 10px;
-}
-.se-step-card strong,
-.se-panel-head h3,
-.se-card-head h2 {
-  display: block;
-  color: var(--navy);
-  font-weight: 800;
-}
-.se-step-card p,
-.se-panel-head p,
-.se-quiet-note,
-.se-info-strip,
-.se-ccp-step p,
-.se-payment-footer a,
-.se-secure-note {
-  color: var(--text-secondary);
-}
-.se-step-card p {
-  margin: 8px 0 0;
-  line-height: 1.8;
-  font-size: .88rem;
-}
-.se-step-card.is-active {
-  border-color: rgba(201,150,59,.35);
-}
+
+/* 2-Column Fintech Layout */
 .se-payment-layout {
   display: grid;
-  grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
-  gap: 18px;
+  grid-template-columns: minmax(320px, 400px) minmax(0, 1fr);
+  gap: 24px;
   align-items: start;
 }
-.se-payment-summary {
-  position: sticky;
-  top: calc(var(--app-navbar-height) + 20px);
+
+/* Summary Header */
+.se-summary-head-badge {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 6px 4px;
 }
+.se-shield-glow-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: rgba(244, 201, 93, 0.12);
+  border: 1px solid rgba(244, 201, 93, 0.28);
+  color: var(--seu-primary, #f4c95d);
+  font-size: 1.3rem;
+  box-shadow: 0 8px 24px rgba(244, 201, 93, 0.15);
+  flex-shrink: 0;
+}
+.se-summary-head-copy h1 {
+  margin: 0 0 4px;
+  color: var(--seu-text, #f7f8fb) !important;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+.se-summary-head-copy p {
+  margin: 0;
+  color: var(--seu-muted, #aeb8c8) !important;
+  font-size: 0.88rem;
+}
+
+/* Premium Glass Cards */
 .se-payment-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)) !important;
+  border: 1px solid var(--seu-border, rgba(255, 255, 255, 0.1)) !important;
+  border-radius: 22px;
+  box-shadow: var(--seu-shadow-soft) !important;
+  backdrop-filter: blur(18px);
   padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
 }
+.se-payment-card:last-child {
+  margin-bottom: 0;
+}
+
 .se-card-head {
-  margin-bottom: 16px;
+  border-bottom: 1px solid var(--seu-border, rgba(255, 255, 255, 0.08));
+  padding-bottom: 12px;
 }
 .se-card-label {
   display: inline-block;
@@ -370,20 +312,23 @@
   font-size: .74rem;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--gold-dark);
+  color: var(--seu-primary, #f4c95d) !important;
   font-weight: 900;
 }
 .se-card-head h2 {
   margin: 0;
-  font-size: 1.2rem;
-  line-height: 1.5;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  color: var(--seu-text, #f7f8fb) !important;
 }
+
+/* Product Media & Metadata */
 .se-summary-media {
-  height: 190px;
-  border-radius: 18px;
+  height: 180px;
+  border-radius: 16px;
   overflow: hidden;
-  background: #f4f7fa;
-  margin-bottom: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--seu-border, rgba(255, 255, 255, 0.08));
 }
 .se-summary-media img {
   width: 100%;
@@ -392,7 +337,11 @@
 }
 .se-summary-meta {
   display: grid;
-  gap: 10px;
+  gap: 8px;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 .se-meta-row {
   display: flex;
@@ -400,89 +349,163 @@
   justify-content: space-between;
   gap: 16px;
   padding: 10px 0;
-  border-bottom: 1px solid #edf2f7;
+  border-bottom: 1px solid var(--seu-border, rgba(255, 255, 255, 0.08)) !important;
 }
 .se-meta-row:last-child {
-  border-bottom: 0;
+  border-bottom: 0 !important;
 }
 .se-meta-row span {
-  color: var(--text-secondary);
+  color: var(--seu-muted, #aeb8c8) !important;
   font-size: .88rem;
 }
 .se-meta-row strong {
-  color: var(--navy);
-  font-size: .9rem;
+  color: var(--seu-text, #f7f8fb) !important;
+  font-size: .92rem;
   font-weight: 800;
   text-align: end;
 }
 .is-mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: .8rem;
+  word-break: break-all !important;
 }
-.se-total-box {
-  margin-top: 14px;
-  padding: 18px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(201,150,59,.12), rgba(201,150,59,.05));
-  border: 1px solid rgba(201,150,59,.22);
-  text-align: center;
+
+/* Vertical Escrow Stepper */
+.se-vertical-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  padding-left: 8px;
 }
-.se-total-box span,
-.se-total-box small {
-  display: block;
+.se-v-step {
+  display: flex;
+  gap: 14px;
+  position: relative;
 }
-.se-total-box span {
-  font-size: .8rem;
-  color: var(--text-secondary);
+.se-v-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 30px;
+  left: 15px;
+  width: 2px;
+  height: calc(100% - 10px);
+  background: var(--seu-border, rgba(255, 255, 255, 0.08));
+}
+.se-v-step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--seu-border, rgba(255, 255, 255, 0.08));
+  color: var(--seu-muted, #aeb8c8);
+  font-size: 0.85rem;
+  font-weight: 800;
+  z-index: 2;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+.se-v-step.is-active .se-v-step-number {
+  background: rgba(244, 201, 93, 0.15);
+  border-color: rgba(244, 201, 93, 0.45);
+  color: var(--seu-primary, #f4c95d);
+  box-shadow: 0 0 12px rgba(244, 201, 93, 0.2);
+}
+.se-v-step-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 4px;
+}
+.se-v-step-copy strong {
+  color: var(--seu-text, #f7f8fb);
+  font-size: 0.92rem;
   font-weight: 700;
 }
-.se-total-box strong {
-  display: block;
-  margin: 6px 0;
-  color: var(--gold-dark);
-  font-size: 2rem;
+.se-v-step.is-active .se-v-step-copy strong {
+  color: var(--seu-primary, #f4c95d);
+}
+.se-v-step-copy p {
+  margin: 0;
+  color: var(--seu-muted, #aeb8c8) !important;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+/* Overview Box & Pricing */
+.se-price-summary-card {
+  padding: 20px;
+}
+.se-total-badge-box {
+  text-align: center;
+  padding: 24px 18px;
+  background: linear-gradient(135deg, rgba(244, 201, 93, 0.12), rgba(244, 201, 93, 0.03)) !important;
+  border: 1px solid rgba(244, 201, 93, 0.24) !important;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.se-total-badge-box span {
+  font-size: 0.85rem;
+  color: var(--seu-muted, #aeb8c8);
+  font-weight: 700;
+}
+.se-total-badge-box strong {
+  font-size: 2.6rem;
+  color: var(--seu-primary, #f4c95d);
   font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 18px rgba(244, 201, 93, 0.15);
 }
-.se-total-box small {
-  color: var(--text-light);
-  font-size: .76rem;
+.se-total-badge-box small {
+  font-size: 0.76rem;
+  color: var(--seu-faint, #778297);
 }
+
 .se-quiet-note {
   margin-top: 14px;
   padding: 14px 16px;
-  border-radius: 16px;
-  background: #f8fafc;
-  border: 1px solid #e8eef5;
-  line-height: 1.8;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid var(--seu-border, rgba(255, 255, 255, 0.08)) !important;
+  line-height: 1.7;
   font-size: .84rem;
+  color: var(--seu-muted, #aeb8c8) !important;
 }
 .se-quiet-note.is-success {
-  background: #f6fbf7;
-  border-color: rgba(39,174,96,.16);
-  color: #24633e;
+  background: rgba(85, 214, 165, 0.1) !important;
+  border-color: rgba(85, 214, 165, 0.25) !important;
+  color: #8beec9 !important;
 }
 .se-quiet-note.is-warning {
-  background: #fff9ed;
-  border-color: rgba(201,150,59,.24);
-  color: #8a6111;
+  background: rgba(244, 201, 93, 0.1) !important;
+  border-color: rgba(244, 201, 93, 0.25) !important;
+  color: #ffe89e !important;
 }
 .se-quiet-note.is-danger {
-  background: #fff3f2;
-  border-color: rgba(220,38,38,.18);
-  color: #9f2330;
+  background: rgba(255, 107, 124, 0.1) !important;
+  border-color: rgba(255, 107, 124, 0.25) !important;
+  color: #ffb3bc !important;
 }
+
+/* Method Selector Tabs */
 .se-method-tabs {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin-bottom: 22px;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 .se-method-tab {
   min-height: 52px;
   border-radius: 16px;
-  border: 1px solid #dbe4ee;
-  background: #fff;
-  color: var(--navy);
+  border: 1px solid var(--seu-border, rgba(255, 255, 255, 0.08)) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: var(--seu-text, #f7f8fb) !important;
   font-family: inherit;
   font-size: .92rem;
   font-weight: 800;
@@ -491,61 +514,163 @@
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  transition: .2s ease;
+  transition: all 0.3s ease;
+}
+.se-method-tab:hover:not(.is-active) {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
 }
 .se-method-tab.is-active {
-  border-color: rgba(201,150,59,.45);
-  background: linear-gradient(135deg, rgba(201,150,59,.18), rgba(201,150,59,.08));
+  border-color: rgba(244, 201, 93, 0.55) !important;
+  background: rgba(244, 201, 93, 0.12) !important;
+  box-shadow: 0 14px 34px rgba(244, 201, 93, 0.14) !important;
+  color: var(--seu-primary, #f4c95d) !important;
 }
+
+/* Panels */
 .se-method-panel {
   display: grid;
-  gap: 18px;
+  gap: 20px;
+  padding-top: 10px;
 }
 .se-panel-head h3 {
   margin: 0 0 6px;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--seu-text, #f7f8fb);
 }
 .se-panel-head p {
   margin: 0;
-  font-size: .88rem;
+  font-size: 0.88rem;
+  color: var(--seu-muted, #aeb8c8);
 }
 .se-info-strip {
   padding: 14px 16px;
-  border-radius: 16px;
-  background: #f8fbff;
-  border: 1px solid #e3ebf3;
-  font-size: .88rem;
-  line-height: 1.8;
+  border-radius: 14px;
+  background: rgba(115, 210, 255, 0.08) !important;
+  border: 1px solid rgba(115, 210, 255, 0.2) !important;
+  color: #9cdbff !important;
+  font-size: 0.88rem;
+  line-height: 1.6;
 }
-.se-price-box {
+
+/* Forms & Fields */
+.se-form-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+.se-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.se-field label {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--seu-text, #f7f8fb);
+}
+.se-field input[type="text"],
+.se-field input[type="file"] {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--seu-border, rgba(255, 255, 255, 0.1)) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: var(--seu-text, #f7f8fb) !important;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+.se-field input[type="text"]:focus,
+.se-field input[type="file"]:focus {
+  border-color: rgba(244, 201, 93, 0.55) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  outline: none !important;
+  box-shadow: var(--seu-ring) !important;
+}
+.se-field small {
+  font-size: 0.78rem;
+  color: var(--seu-faint, #778297) !important;
+  line-height: 1.5;
+}
+
+/* Stepper inside CCP */
+.se-ccp-steps {
+  display: grid;
+  gap: 12px;
+}
+.se-ccp-step {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid var(--seu-border, rgba(255, 255, 255, 0.06)) !important;
+}
+.se-ccp-step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(244, 201, 93, 0.1) !important;
+  border: 1px solid rgba(244, 201, 93, 0.2) !important;
+  color: var(--seu-primary, #f4c95d) !important;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+.se-ccp-step p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--seu-muted, #aeb8c8) !important;
+}
+.se-ccp-step code {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(244, 201, 93, 0.15) !important;
+  color: var(--seu-primary, #f4c95d) !important;
+  border: 1px solid rgba(244, 201, 93, 0.25) !important;
+  font-size: 0.82rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Bank Details Card */
+.se-transfer-card {
   padding: 18px;
   border-radius: 18px;
-  background: #f8fafc;
-  border: 1px solid #edf2f7;
+  background: linear-gradient(135deg, #0c152b 0%, #152446 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: var(--seu-shadow-soft);
 }
-.se-price-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 6px 0;
-  color: var(--text-secondary);
-}
-.se-price-row strong {
-  color: var(--navy);
+.se-transfer-title {
+  margin-bottom: 12px;
+  color: var(--seu-primary, #f4c95d) !important;
+  font-size: .8rem;
   font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
-.se-price-row.is-total {
-  margin-top: 8px;
-  padding-top: 14px;
-  border-top: 1px solid #e2e8f0;
+.se-transfer-card .se-meta-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 8px 0;
 }
-.se-price-row.is-total span,
-.se-price-row.is-total strong {
-  color: var(--navy);
-  font-size: 1rem;
-  font-weight: 900;
+.se-transfer-card .se-meta-row:last-child {
+  border-bottom: 0 !important;
 }
+.se-transfer-card .se-meta-row span {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+.se-transfer-card .se-meta-row strong {
+  color: #fff !important;
+}
+
+/* High Contrast Buttons */
 .se-primary-btn,
 .se-success-btn {
   width: 100%;
@@ -554,221 +679,130 @@
   border-radius: 16px;
   font-family: inherit;
   font-size: 1rem;
-  font-weight: 900;
+  font-weight: 800;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   cursor: pointer;
-  transition: transform .18s ease, box-shadow .18s ease;
-}
-.se-success-btn[disabled],
-.se-success-btn[aria-disabled="true"] {
-  opacity: .62;
-  cursor: not-allowed;
-  filter: grayscale(.12);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .se-primary-btn {
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  color: var(--navy);
-  box-shadow: 0 14px 28px rgba(201,150,59,.28);
+  background: linear-gradient(135deg, var(--seu-primary, #f4c95d), #ffe18a) !important;
+  border: 1px solid rgba(255, 225, 138, 0.45) !important;
+  color: #15110a !important;
+  box-shadow: 0 14px 30px rgba(244, 201, 93, 0.22) !important;
 }
 .se-success-btn {
-  background: linear-gradient(135deg, #27AE60, #2ECC71);
-  color: #fff;
-  box-shadow: 0 14px 28px rgba(39,174,96,.24);
+  background: linear-gradient(135deg, var(--seu-success, #55d6a5), #1e8751) !important;
+  color: #fff !important;
+  box-shadow: 0 14px 28px rgba(85, 214, 165, 0.18) !important;
+  border: 0 !important;
 }
-.se-primary-btn:hover,
-.se-success-btn:hover {
-  transform: translateY(-1px);
+.se-primary-btn:hover:not(:disabled),
+.se-success-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
 }
-.se-ccp-steps {
-  display: grid;
-  gap: 10px;
+.se-primary-btn:hover:not(:disabled) {
+  box-shadow: 0 18px 40px rgba(244, 201, 93, 0.35) !important;
 }
-.se-ccp-step {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: 12px;
-  align-items: start;
-  padding: 14px;
-  border-radius: 16px;
-  background: #f8fafc;
-  border: 1px solid #edf2f7;
+.se-success-btn:hover:not(:disabled) {
+  box-shadow: 0 18px 36px rgba(85, 214, 165, 0.3) !important;
 }
-.se-ccp-step span {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: rgba(201,150,59,.18);
-  color: var(--gold-dark);
-  font-weight: 900;
+
+/* Disabled State Styling */
+.se-payment-page input:disabled,
+.se-payment-page button:disabled,
+.se-payment-page .se-success-btn[disabled],
+.se-payment-page .se-success-btn[aria-disabled="true"] {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-color: rgba(255, 255, 255, 0.04) !important;
+  color: rgba(255, 255, 255, 0.2) !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
+  opacity: 0.5;
 }
-.se-ccp-step p {
-  margin: 0;
-  font-size: .88rem;
-  line-height: 1.8;
+
+/* Placeholders & Bold Texts */
+.se-payment-page input::placeholder {
+  color: var(--seu-faint, #778297) !important;
+  opacity: 0.8;
 }
-.se-ccp-step code {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 8px;
-  background: #fff7e8;
-  color: #b7791f;
-  font-size: .82rem;
+.se-payment-page input::-webkit-input-placeholder {
+  color: var(--seu-faint, #778297) !important;
+  opacity: 0.8;
 }
-.se-transfer-card {
-  padding: 18px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, var(--navy), #1a2e45);
-  color: #fff;
+.se-payment-page input::-moz-placeholder {
+  color: var(--seu-faint, #778297) !important;
+  opacity: 0.8;
 }
-.se-transfer-title {
-  margin-bottom: 10px;
-  color: rgba(255,255,255,.72);
-  font-size: .78rem;
-  font-weight: 800;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-.se-transfer-card .se-meta-row {
-  border-bottom-color: rgba(255,255,255,.08);
-}
-.se-transfer-card .se-meta-row span {
-  color: rgba(255,255,255,.68);
-}
-.se-transfer-card .se-meta-row strong {
-  color: #fff;
-}
-.se-form-grid {
-  display: grid;
-  gap: 14px;
-  margin-bottom: 18px;
-}
-.se-field label {
-  display: block;
-  margin-bottom: 7px;
-  color: var(--navy);
-  font-size: .85rem;
+.se-payment-page p strong {
+  color: var(--seu-primary, #f4c95d) !important;
   font-weight: 800;
 }
-.se-field input[type="text"],
-.se-field input[type="file"] {
-  width: 100%;
-  min-height: 50px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid #dbe4ee;
-  background: #f8fafc;
-  box-sizing: border-box;
-}
-.se-field small {
-  display: block;
-  margin-top: 6px;
-  color: var(--text-light);
-  font-size: .74rem;
-}
+
+/* Footer & Notes */
 .se-payment-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 22px;
+  margin-top: 14px;
   padding-top: 18px;
-  border-top: 1px solid #edf2f7;
+  border-top: 1px solid var(--seu-border, rgba(255, 255, 255, 0.08)) !important;
 }
-.se-payment-footer a,
-.se-secure-note {
+.se-payment-footer a {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: .82rem;
+  font-size: .84rem;
+  font-weight: 700;
+  color: var(--seu-muted, #aeb8c8) !important;
   text-decoration: none;
+  transition: color 0.2s ease;
+}
+.se-payment-footer a:hover {
+  color: var(--seu-text, #f7f8fb) !important;
+}
+.se-secure-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--seu-muted, #aeb8c8) !important;
 }
 .se-secure-note i {
-  color: var(--success);
+  color: var(--seu-success, #55d6a5) !important;
 }
+
+/* Responsive Breakpoints */
 @media (max-width: 991px) {
   .se-payment-layout {
     grid-template-columns: 1fr;
-  }
-  .se-payment-summary {
-    position: static;
-  }
-  .se-payment-methods {
-    order: -1;
+    gap: 20px;
   }
 }
 @media (max-width: 767px) {
-  .se-payment-page {
-    padding-top: 8px;
-  }
-  .se-payment-hero {
+  .se-summary-head-badge {
     gap: 12px;
-    margin-bottom: 14px;
-  }
-  .se-payment-hero-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 18px;
-    font-size: 1.2rem;
-  }
-  .se-payment-hero h1 {
-    margin-bottom: 4px;
-    font-size: 1.55rem;
-  }
-  .se-payment-hero p {
-    font-size: .88rem;
-    line-height: 1.75;
-  }
-  .se-payment-overview {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-  .se-payment-overview-item {
-    padding: 10px 12px;
-  }
-  .se-method-tabs {
-    grid-template-columns: 1fr;
-  }
-  .se-payment-steps {
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(220px, 78%);
-    grid-template-columns: none;
-    overflow-x: auto;
-    padding-bottom: 4px;
     margin-bottom: 16px;
-    scroll-snap-type: x proximity;
   }
-  .se-step-card,
-  .se-payment-card {
-    border-radius: 18px;
+  .se-shield-glow-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    font-size: 1.1rem;
   }
-  .se-step-card {
-    min-height: 100%;
-    padding: 14px;
-    scroll-snap-align: start;
-  }
-  .se-step-card p {
-    display: none;
-  }
-  .se-step-card strong {
-    font-size: .9rem;
+  .se-summary-head-copy h1 {
+    font-size: 1.3rem;
   }
   .se-payment-card {
     padding: 18px;
+    border-radius: 18px;
   }
-  .se-summary-media {
-    height: 170px;
-  }
-  .se-info-strip,
-  .se-quiet-note,
-  .se-ccp-step p,
-  .se-panel-head p,
-  .se-field small {
-    font-size: .8rem;
+  .se-total-badge-box strong {
+    font-size: 2.2rem;
   }
   .se-primary-btn,
   .se-success-btn,
@@ -778,6 +812,7 @@
   .se-payment-footer {
     flex-direction: column;
     align-items: stretch;
+    gap: 14px;
   }
   .se-payment-footer a,
   .se-secure-note {
@@ -786,6 +821,191 @@
 }
 </style>
 {% include "partials/_deal_flow_light_styles.html" %}
+
+<!-- Override enterprise_unify.css white backgrounds for payment page -->
+<style>
+  /* Neutralize enterprise_unify.css white card backgrounds */
+  body[data-page="payment"] .se-payment-card,
+  body[data-page="payment"] .se-payment-card::before {
+    background: linear-gradient(180deg, rgba(255,255,255,0.082), rgba(255,255,255,0.046)) !important;
+    border: 1px solid var(--seu-border) !important;
+    box-shadow: var(--seu-shadow-soft) !important;
+    backdrop-filter: blur(18px) !important;
+  }
+  body[data-page="payment"] .se-payment-card::before {
+    background: linear-gradient(90deg, transparent, rgba(244,201,93,0.25), transparent) !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Neutralize enterprise_unify.css white backgrounds on inner elements */
+  body[data-page="payment"] .se-summary-meta,
+  body[data-page="payment"] .se-total-box,
+  body[data-page="payment"] .se-total-badge-box {
+    background: linear-gradient(135deg, rgba(244,201,93,0.12), rgba(244,201,93,0.03)) !important;
+    border: 1px solid rgba(244,201,93,0.24) !important;
+    box-shadow: none !important;
+    color: var(--seu-text) !important;
+  }
+  body[data-page="payment"] .se-summary-meta {
+    background: transparent !important;
+    border: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  body[data-page="payment"] .se-transfer-card {
+    background: linear-gradient(135deg, #0c152b 0%, #152446 100%) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    box-shadow: var(--seu-shadow-soft) !important;
+  }
+
+  body[data-page="payment"] .se-info-strip {
+    background: rgba(115,210,255,0.08) !important;
+    border: 1px solid rgba(115,210,255,0.2) !important;
+    color: #9cdbff !important;
+    border-radius: 14px !important;
+    box-shadow: none !important;
+  }
+
+  body[data-page="payment"] .se-quiet-note {
+    background: rgba(255,255,255,0.03) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-muted) !important;
+    border-radius: 14px !important;
+    box-shadow: none !important;
+  }
+  body[data-page="payment"] .se-quiet-note.is-success {
+    background: rgba(85,214,165,0.1) !important;
+    border-color: rgba(85,214,165,0.25) !important;
+    color: #8beec9 !important;
+  }
+  body[data-page="payment"] .se-quiet-note.is-warning {
+    background: rgba(244,201,93,0.1) !important;
+    border-color: rgba(244,201,93,0.25) !important;
+    color: #ffe89e !important;
+  }
+  body[data-page="payment"] .se-quiet-note.is-danger {
+    background: rgba(255,107,124,0.1) !important;
+    border-color: rgba(255,107,124,0.25) !important;
+    color: #ffb3bc !important;
+  }
+
+  /* Neutralize enterprise_unify white on CCP step cards and price box */
+  body[data-page="payment"] .se-price-box,
+  body[data-page="payment"] .se-ccp-step {
+    background: rgba(255,255,255,0.02) !important;
+    border: 1px solid var(--seu-border) !important;
+    box-shadow: none !important;
+    color: var(--seu-text) !important;
+  }
+
+  /* Neutralize enterprise_unify white on step cards */
+  body[data-page="payment"] .se-step-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.082), rgba(255,255,255,0.046)) !important;
+    border: 1px solid var(--seu-border) !important;
+    box-shadow: var(--seu-shadow-soft) !important;
+    color: var(--seu-text) !important;
+  }
+  body[data-page="payment"] .se-step-card.is-active {
+    border-color: rgba(244,201,93,0.55) !important;
+    box-shadow: 0 0 24px rgba(244,201,93,0.15) !important;
+  }
+
+  /* Fix shield icon and summary header for enterprise override */
+  body[data-page="payment"] .se-shield-glow-icon,
+  body[data-page="payment"] .se-payment-hero-icon {
+    background: rgba(244,201,93,0.14) !important;
+    border: 1px solid rgba(244,201,93,0.28) !important;
+    color: var(--seu-primary) !important;
+  }
+
+  /* Ensure text colors survive enterprise_unify */
+  body[data-page="payment"] .se-meta-row span,
+  body[data-page="payment"] .se-ccp-step p,
+  body[data-page="payment"] .se-v-step-copy p,
+  body[data-page="payment"] .se-panel-head p,
+  body[data-page="payment"] .se-field small,
+  body[data-page="payment"] .se-payment-footer a,
+  body[data-page="payment"] .se-secure-note {
+    color: var(--seu-muted) !important;
+  }
+  body[data-page="payment"] .se-meta-row strong,
+  body[data-page="payment"] .se-v-step-copy strong,
+  body[data-page="payment"] .se-panel-head h3,
+  body[data-page="payment"] .se-card-head h2,
+  body[data-page="payment"] .se-summary-head-copy h1 {
+    color: var(--seu-text) !important;
+  }
+  body[data-page="payment"] .se-total-badge-box strong,
+  body[data-page="payment"] .se-card-label,
+  body[data-page="payment"] .se-ccp-step-num,
+  body[data-page="payment"] .se-transfer-title {
+    color: var(--seu-primary) !important;
+  }
+
+  /* Fix method tabs surviving enterprise override */
+  body[data-page="payment"] .se-method-tab {
+    background: rgba(255,255,255,0.03) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+  }
+  body[data-page="payment"] .se-method-tab.is-active {
+    border-color: rgba(244,201,93,0.55) !important;
+    background: rgba(244,201,93,0.12) !important;
+    box-shadow: 0 14px 34px rgba(244,201,93,0.14) !important;
+    color: var(--seu-primary) !important;
+  }
+
+  /* Fix inputs surviving enterprise override */
+  body[data-page="payment"] .se-field input,
+  body[data-page="payment"] .se-field textarea,
+  body[data-page="payment"] .se-field select {
+    background: rgba(255,255,255,0.065) !important;
+    border: 1px solid var(--seu-border) !important;
+    color: var(--seu-text) !important;
+  }
+  body[data-page="payment"] .se-field input:focus,
+  body[data-page="payment"] .se-field textarea:focus,
+  body[data-page="payment"] .se-field select:focus {
+    border-color: rgba(244,201,93,0.55) !important;
+    box-shadow: var(--seu-ring) !important;
+  }
+
+  /* Disabled state override */
+  body[data-page="payment"] input:disabled,
+  body[data-page="payment"] button:disabled,
+  body[data-page="payment"] .se-success-btn[disabled],
+  body[data-page="payment"] .se-success-btn[aria-disabled="true"] {
+    background: rgba(255,255,255,0.02) !important;
+    border-color: rgba(255,255,255,0.04) !important;
+    color: rgba(255,255,255,0.2) !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    opacity: 0.5;
+  }
+
+  /* Buttons override */
+  body[data-page="payment"] .se-primary-btn {
+    background: linear-gradient(135deg, var(--seu-primary), #ffe18a) !important;
+    border: 1px solid rgba(255,225,138,0.45) !important;
+    color: #15110a !important;
+    box-shadow: 0 14px 30px rgba(244,201,93,0.22) !important;
+  }
+  body[data-page="payment"] .se-success-btn:not([disabled]) {
+    background: linear-gradient(135deg, var(--seu-success, #55d6a5), #1e8751) !important;
+    color: #fff !important;
+    box-shadow: 0 14px 28px rgba(85,214,165,0.18) !important;
+    border: 0 !important;
+  }
+
+  /* Placeholder text */
+  body[data-page="payment"] input::placeholder {
+    color: var(--seu-faint, #778297) !important;
+    opacity: 0.8;
+  }
+</style>
 
 <script>
 function showTab(tab) {

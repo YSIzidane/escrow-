@@ -2,10 +2,15 @@
   const doc = document.documentElement;
   const body = document.body;
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  const compactMotion = window.matchMedia?.('(max-width: 768px), (pointer: coarse)').matches;
+  const liteEffects = document.documentElement.classList.contains('se-lite-effects');
+  const compactMotion = liteEffects || window.matchMedia?.('(max-width: 768px), (pointer: coarse)').matches;
+  let maxScroll = 1;
+
+  function refreshScrollBounds() {
+    maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
+  }
 
   function updateScrollExperience() {
-    const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
     const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
 
     if (!compactMotion) {
@@ -59,9 +64,20 @@
     });
   }, { passive: true });
 
-  window.addEventListener('resize', updateScrollExperience, { passive: true });
-  window.addEventListener('load', updateScrollExperience, { once: true });
+  window.addEventListener('resize', () => {
+    refreshScrollBounds();
+    updateScrollExperience();
+  }, { passive: true });
+  window.addEventListener('load', () => {
+    refreshScrollBounds();
+    updateScrollExperience();
+  }, { once: true });
 
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(refreshScrollBounds).observe(document.body);
+  }
+
+  refreshScrollBounds();
   updateScrollExperience();
   setupPressFeedback();
 })();

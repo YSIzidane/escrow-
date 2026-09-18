@@ -561,11 +561,11 @@ body[data-page="room"] .room-modern-header {
   overflow: hidden;
   margin-bottom: 4px !important;
   padding: 22px !important;
-  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  border: 1px solid var(--seu-border, rgba(255, 255, 255, 0.1)) !important;
   border-radius: 26px !important;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(245, 248, 253, 0.98)) !important;
-  box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)) !important;
+  box-shadow: var(--seu-shadow-soft) !important;
+  backdrop-filter: blur(18px);
 }
 
 body[data-page="room"] .room-modern-header::before {
@@ -573,7 +573,7 @@ body[data-page="room"] .room-modern-header::before {
   position: absolute;
   inset: 0 0 auto;
   height: 4px;
-  background: linear-gradient(90deg, #2563eb, #c9963b, #22c55e);
+  background: linear-gradient(90deg, #2563eb, var(--seu-primary, #f4c95d), #22c55e);
 }
 
 body[data-page="room"] .room-header-main {
@@ -584,24 +584,32 @@ body[data-page="room"] .room-back-button {
   width: 44px !important;
   height: 44px !important;
   border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: var(--seu-text, #f7f8fb) !important;
+  box-shadow: none !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 body[data-page="room"] .room-type-mark {
   width: 52px !important;
   height: 52px !important;
   border-radius: 16px !important;
-  background: linear-gradient(135deg, #eef4ff, #fff7e8) !important;
-  border: 1px solid rgba(37, 99, 235, 0.1);
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+  background: rgba(244, 201, 93, 0.12) !important;
+  border: 1px solid rgba(244, 201, 93, 0.25) !important;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15) !important;
 }
 
 body[data-page="room"] .room-type-mark i {
-  color: #1d4ed8 !important;
+  color: var(--seu-primary, #f4c95d) !important;
 }
 
 body[data-page="room"] .se-room-title {
   font-size: clamp(1.25rem, 2vw, 1.8rem) !important;
   line-height: 1.28;
+  color: var(--seu-text, #f7f8fb) !important;
 }
 
 body[data-page="room"] .se-room-meta {
@@ -615,42 +623,43 @@ body[data-page="room"] .room-meta-chip {
   align-items: center;
   gap: 6px;
   border-radius: 999px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
   padding: 4px 10px;
-  color: #42526a;
+  color: var(--seu-muted, #aeb8c8) !important;
   font-size: 0.78rem;
   font-weight: 850;
   white-space: nowrap;
 }
 
 body[data-page="room"] .room-code-chip code {
-  background: #eef4ff !important;
-  color: #1d4ed8 !important;
+  background: rgba(244, 201, 93, 0.12) !important;
+  color: var(--seu-primary, #f4c95d) !important;
 }
 
 body[data-page="room"] .room-status-chip.is-active {
-  border-color: rgba(34, 197, 94, 0.18);
-  background: #ecfdf5 !important;
-  color: #047857 !important;
+  border-color: rgba(34, 197, 94, 0.2) !important;
+  background: rgba(34, 197, 94, 0.1) !important;
+  color: #55d6a5 !important;
 }
 
 body[data-page="room"] .room-status-chip.is-closed {
-  border-color: rgba(239, 68, 68, 0.18);
-  background: #fef2f2 !important;
-  color: #b42318 !important;
+  border-color: rgba(239, 68, 68, 0.2) !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #ef4444 !important;
 }
 
 body[data-page="room"] .room-status-chip.is-staff {
-  border-color: rgba(37, 99, 235, 0.16);
-  background: #eef4ff !important;
-  color: #1d4ed8 !important;
+  border-color: rgba(59, 130, 246, 0.2) !important;
+  background: rgba(59, 130, 246, 0.1) !important;
+  color: #73d2ff !important;
 }
 
 body[data-page="room"] .se-room-description {
   max-width: 720px;
   margin-top: 12px !important;
   font-size: 0.92rem !important;
+  color: var(--seu-muted, #aeb8c8) !important;
 }
 
 body[data-page="room"] .se-room-actions {
@@ -666,33 +675,37 @@ body[data-page="room"] .se-room-action-btn {
   min-height: 44px;
   border-radius: 14px !important;
   box-shadow: none !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: var(--seu-text, #f7f8fb) !important;
 }
 
 body[data-page="room"] .room-copy-btn:hover,
 body[data-page="room"] .room-back-button:hover {
   transform: translateY(-1px);
-  border-color: rgba(37, 99, 235, 0.24) !important;
-  background: #eef4ff !important;
-  color: #1d4ed8 !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: var(--seu-text, #f7f8fb) !important;
 }
 
 body[data-page="room"] .room-danger-btn {
-  background: #fff7f7 !important;
-  border-color: rgba(220, 38, 38, 0.18) !important;
-  color: #b42318 !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.2) !important;
+  color: #ef4444 !important;
 }
 
 body[data-page="room"] .room-success-btn {
-  background: #ecfdf5 !important;
+  background: rgba(34, 197, 94, 0.1) !important;
   border-color: rgba(34, 197, 94, 0.2) !important;
-  color: #047857 !important;
+  color: #55d6a5 !important;
 }
 
 body[data-page="room"] .se-room-chat-card,
 body[data-page="room"] .se-room-sidebar-card {
   border-radius: 24px !important;
-  border: 1px solid rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08) !important;
+  border: 1px solid var(--seu-border, rgba(255, 255, 255, 0.1)) !important;
+  box-shadow: var(--seu-shadow-soft) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)) !important;
 }
 
 body[data-page="room"] .room-chat-head {
@@ -701,8 +714,8 @@ body[data-page="room"] .room-chat-head {
   justify-content: space-between;
   gap: 14px;
   padding: 16px 18px !important;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-  background: #ffffff !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
 }
 
 body[data-page="room"] .room-chat-title-wrap {
@@ -719,18 +732,18 @@ body[data-page="room"] .room-chat-icon {
   flex: 0 0 auto;
   place-items: center;
   border-radius: 14px;
-  background: #eef4ff;
-  color: #1d4ed8;
+  background: rgba(244, 201, 93, 0.12) !important;
+  color: var(--seu-primary, #f4c95d) !important;
 }
 
 body[data-page="room"] .room-chat-title {
-  color: #0d1b2a;
+  color: var(--seu-text, #f7f8fb) !important;
   font-size: 1rem;
   font-weight: 900;
 }
 
 body[data-page="room"] .room-chat-subtitle {
-  color: #6b7788;
+  color: var(--seu-muted, #aeb8c8) !important;
   font-size: 0.78rem;
   line-height: 1.6;
 }
@@ -740,10 +753,10 @@ body[data-page="room"] .room-chat-count {
   align-items: center;
   gap: 6px;
   border-radius: 999px;
-  background: #f8fafc;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   padding: 7px 10px;
-  color: #1d4ed8;
+  color: var(--seu-primary, #f4c95d) !important;
   font-weight: 900;
   font-size: 0.78rem;
 }
@@ -751,8 +764,7 @@ body[data-page="room"] .room-chat-count {
 body[data-page="room"] #chatBox.se-room-chat-box {
   height: min(58vh, 560px) !important;
   min-height: 430px;
-  background:
-    linear-gradient(180deg, #f8fafc 0%, #f3f7fc 100%) !important;
+  background: rgba(0, 0, 0, 0.2) !important;
   padding: 22px 24px !important;
 }
 
@@ -764,15 +776,40 @@ body[data-page="room"] #chatBox [data-message-id] > div {
   max-width: min(76%, 600px) !important;
 }
 
+/* Override inline JavaScript styles for other participants' messages (white backgrounds) */
+body[data-page="room"] #chatBox [style*="background:white"],
+body[data-page="room"] #chatBox [style*="background: white"] {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--seu-text, #f7f8fb) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: none !important;
+}
+
+/* Override inline JavaScript styles for own messages (navy gradients) */
+body[data-page="room"] #chatBox [style*="background:linear-gradient"],
+body[data-page="room"] #chatBox [style*="background: linear-gradient"] {
+  background: linear-gradient(135deg, var(--seu-primary, #f4c95d), #ffe18a) !important;
+  color: #15110a !important;
+  border: 0 !important;
+  box-shadow: 0 4px 12px rgba(244, 201, 93, 0.15) !important;
+}
+
+/* Adjust Username display inside chatBox */
+body[data-page="room"] #chatBox [style*="color:var(--text-light)"],
+body[data-page="room"] #chatBox [style*="color: var(--text-light)"] {
+  color: var(--seu-muted, #aeb8c8) !important;
+}
+
 body[data-page="room"] #chatBox [style*="padding: 11px 16px"],
 body[data-page="room"] #chatBox [style*="padding:11px 16px"] {
   border-radius: 18px !important;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07) !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15) !important;
 }
 
 body[data-page="room"] .se-room-chat-card > div:last-child {
   padding: 14px 16px !important;
-  background: #ffffff !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
 body[data-page="room"] #msgForm > div {
@@ -782,7 +819,15 @@ body[data-page="room"] #msgForm > div {
 body[data-page="room"] #msgInput {
   min-height: 50px;
   border-radius: 16px !important;
-  background: #f8fafc !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: var(--seu-text, #f7f8fb) !important;
+  box-sizing: border-box;
+}
+body[data-page="room"] #msgInput:focus {
+  outline: none !important;
+  border-color: rgba(244, 201, 93, 0.55) !important;
+  box-shadow: var(--seu-ring) !important;
 }
 
 body[data-page="room"] #sendBtn {
@@ -790,6 +835,10 @@ body[data-page="room"] #sendBtn {
   min-width: 50px !important;
   height: 50px !important;
   border-radius: 16px !important;
+  background: linear-gradient(135deg, var(--seu-primary, #f4c95d), #ffe18a) !important;
+  border: 1px solid rgba(255, 225, 138, 0.45) !important;
+  color: #15110a !important;
+  box-shadow: 0 4px 14px rgba(244, 201, 93, 0.22) !important;
 }
 
 body[data-page="room"] .trade-panel {
@@ -798,7 +847,13 @@ body[data-page="room"] .trade-panel {
 
 body[data-page="room"] .trade-panel-head,
 body[data-page="room"] .room-side-card-head {
-  background: linear-gradient(135deg, #ffffff, #f8fafc) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+body[data-page="room"] .room-side-card-head h3,
+body[data-page="room"] .trade-panel-head h3 {
+  color: var(--seu-text, #f7f8fb) !important;
 }
 
 body[data-page="room"] .trade-steps {
@@ -806,12 +861,13 @@ body[data-page="room"] .trade-steps {
 }
 
 body[data-page="room"] .trade-step span {
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 body[data-page="room"] .trade-item-card {
   border-radius: 14px;
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
 body[data-page="room"] .trade-actions-grid {
@@ -829,19 +885,19 @@ body[data-page="room"] .room-participant-list {
 }
 
 body[data-page="room"] .room-participant-row {
-  border: 1px solid rgba(15, 23, 42, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
   border-radius: 16px;
   padding: 10px !important;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.02) !important;
 }
 
 body[data-page="room"] .room-participant-row:last-child {
-  border-bottom: 1px solid rgba(15, 23, 42, 0.06) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
 body[data-page="room"] .room-share-box {
-  border-color: rgba(37, 99, 235, 0.22) !important;
-  background: #f8fbff !important;
+  border-color: rgba(244, 201, 93, 0.22) !important;
+  background: rgba(244, 201, 93, 0.06) !important;
 }
 
 @media (max-width: 991.98px) {

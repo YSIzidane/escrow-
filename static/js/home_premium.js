@@ -11,6 +11,7 @@
 
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const isMobile = window.matchMedia?.('(max-width: 768px), (pointer: coarse)').matches;
+  const liteEffects = document.documentElement.classList.contains('se-lite-effects');
 
   /* ═══════════════════════════════════════
      1. Navbar Scroll Sync
@@ -68,16 +69,23 @@
   /* ═══════════════════════════════════════
      3. Desktop Cursor Glow Effect
      ═══════════════════════════════════════ */
-  if (!isMobile) {
+  if (!isMobile && !liteEffects) {
     const glowCards = home.querySelectorAll('[data-glow-card], .hp-glass-card, .hp-deal-card, .hp-feature-card, .hp-proof-card, .hp-lane-card, .hp-testimonial, .hp-price-card, .hp-visual-pipeline-card, .hp-about-visual .hp-glass-card');
     
     glowCards.forEach((card) => {
+      let framePending = false;
+      let pointerEvent = null;
       card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
+        pointerEvent = e;
+        if (framePending) return;
+        framePending = true;
+        requestAnimationFrame(() => {
+          framePending = false;
+          if (!pointerEvent) return;
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty('--mouse-x', `${pointerEvent.clientX - rect.left}px`);
+          card.style.setProperty('--mouse-y', `${pointerEvent.clientY - rect.top}px`);
+        });
       });
     });
   }
@@ -85,24 +93,30 @@
   /* ═══════════════════════════════════════
      4. 3D Card Tilt Parallax Effect
      ═══════════════════════════════════════ */
-  if (!isMobile && !reduceMotion) {
+  if (!isMobile && !reduceMotion && !liteEffects) {
     const tiltCards = home.querySelectorAll('.hp-glass-glow-card, .hp-price-card, .hp-deal-card, .hp-visual-pipeline-card');
     
     tiltCards.forEach((card) => {
       card.style.transition = 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease';
+      let framePending = false;
+      let pointerEvent = null;
       
       card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        const rotateX = ((centerY - y) / centerY) * 5; // Max 5 deg tilt
-        const rotateY = ((x - centerX) / centerX) * 5;
-        
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        pointerEvent = e;
+        if (framePending) return;
+        framePending = true;
+        requestAnimationFrame(() => {
+          framePending = false;
+          if (!pointerEvent) return;
+          const rect = card.getBoundingClientRect();
+          const x = pointerEvent.clientX - rect.left;
+          const y = pointerEvent.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((centerY - y) / centerY) * 5;
+          const rotateY = ((x - centerX) / centerX) * 5;
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
       });
       
       card.addEventListener('mouseleave', () => {
@@ -255,7 +269,7 @@
      ═══════════════════════════════════════ */
   const pipelineSteps = home.querySelectorAll('.hp-pipeline-steps .hp-pipeline-step');
   const connectors = home.querySelectorAll('.hp-pipeline-steps .hp-pipeline-connector');
-  if (pipelineSteps.length > 0) {
+  if (pipelineSteps.length > 0 && !liteEffects) {
     let currentActiveIndex = 0;
     
     function cyclePipeline() {

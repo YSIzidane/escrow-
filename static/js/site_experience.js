@@ -100,6 +100,10 @@
   }
 
   function prefetchLink(link) {
+    // Prefetching every link on mouseover creates a burst of full HTML/CSS
+    // requests while the user is simply moving the pointer. Keep it opt-in
+    // for deployments that have an explicit prefetch budget.
+    if (window.SE_ENABLE_PREFETCH !== true) return;
     if (!canPrefetch() || !isPrefetchable(link) || prefetched.has(link.href)) return;
     prefetched.add(link.href);
 
@@ -180,47 +184,9 @@
     const isCompactScreen = window.matchMedia?.('(max-width: 768px)').matches;
     const isTouchDevice = window.matchMedia?.('(pointer: coarse)').matches;
     const mobileRevealOnce = isCompactScreen || isTouchDevice;
-    const page = body.dataset.page || '';
-    const skipAutoPages = new Set(['home', 'private_chat', 'room', 'escrow_room']);
-
-    if (!reduceMotion && !mobileRevealOnce && !skipAutoPages.has(page)) {
-      const autoTargets = document.querySelectorAll([
-        '.se-main > section',
-        '.se-main > div',
-        '.se-main article',
-        '.se-main .card',
-        '.se-main .pf-card',
-        '.se-main .adm-surface',
-        '.se-main .adm-card',
-        '.se-main .auth-card',
-        '.se-main .auth-status-card',
-        '.se-main .email-card',
-        '.se-main .account-card',
-        '.se-main .logout-card'
-      ].join(','));
-
-      let revealIndex = 0;
-      autoTargets.forEach((element) => {
-        if (
-          element.matches('[data-reveal], .safo-reveal, .si-reveal, script, style') ||
-          element.closest('#chatBox, .se-chat-body, .er-chat-body, .se-room-chat-box, .se-deal-chat-box, table, thead, tbody') ||
-          element.closest('.se-navbar, .se-footer, .se-bottom-nav, .se-mobile-menu') ||
-          element.offsetParent === null
-        ) {
-          return;
-        }
-
-        const tag = element.tagName.toLowerCase();
-        const isCard = element.matches('article, .card, .pf-card, .adm-card, .adm-surface, .auth-card, .email-card, .account-card, .logout-card');
-        element.dataset.reveal = isCard ? 'zoom' : 'lift';
-        element.style.setProperty('--se-reveal-delay', `${Math.min((revealIndex % 6) * 45, 225)}ms`);
-        if (!isCompactScreen && (tag === 'section' || element.classList.contains('adm-surface'))) {
-          element.dataset.reveal = revealIndex % 2 === 0 ? 'left' : 'right';
-        }
-        revealIndex += 1;
-      });
-    }
-
+    // Do not decorate every card/section on internal pages automatically.
+    // That forced a large DOM scan, layout reads, and an observer per page.
+    // Pages can still opt in by adding data-reveal explicitly.
     const elements = document.querySelectorAll('[data-reveal]');
     if (!elements.length) return;
 
@@ -279,10 +245,6 @@
     });
   }
 
-  document.addEventListener('mouseover', handleLinkIntent, { passive: true });
-  if (canPrefetch()) {
-    document.addEventListener('touchstart', handleLinkIntent, { passive: true });
-  }
   document.addEventListener('click', handleLinkIntent);
   document.addEventListener('pointerup', handleChatInputIntent);
   document.addEventListener('focusin', (event) => {

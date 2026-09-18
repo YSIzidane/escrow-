@@ -19,6 +19,33 @@ img {
   height: auto;
 }
 
+/* Keep low-power devices responsive by removing decorative GPU-heavy work.
+   Content and interaction styles remain unchanged. */
+.se-lite-effects .hp-glow-canvas,
+.se-lite-effects .se-visual-field {
+  display: none !important;
+}
+
+.se-lite-effects .se-navbar,
+.se-lite-effects .se-dropdown,
+.se-lite-effects .se-mobile-menu,
+.se-lite-effects .hp-glass-glow-card,
+.se-lite-effects .hp-glass-card,
+.se-lite-effects .hp-feature-card,
+.se-lite-effects .hp-proof-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.se-lite-effects .hp-glow-orb,
+.se-lite-effects .hp-marquee-track,
+.se-lite-effects .hp-shimmer,
+.se-lite-effects .se-network-orbit,
+.se-lite-effects .se-network-visual::before,
+.se-lite-effects .se-network-visual::after {
+  animation: none !important;
+}
+
 video {
   height: auto;
   object-fit: cover;
@@ -82,8 +109,20 @@ video {
 
   .se-main [style*="backdrop-filter"],
   .se-main [style*="-webkit-backdrop-filter"] {
-    transform: translateZ(0);
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
+}
+
+/* Internal pages often contain more cards and panels than the landing page.
+   Keep their content responsive on touch/slow devices without changing layout. */
+.se-lite-effects .se-main [class*="glass"],
+.se-lite-effects .se-main [class*="glow"],
+.se-lite-effects .se-main [class*="orb"],
+.se-lite-effects .se-main [class*="shimmer"] {
+  animation: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

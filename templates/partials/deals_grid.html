@@ -23,14 +23,17 @@
 <div class="dl-deals-grid" id="dealsGrid">
   {% for deal in deals %}
   <article class="dl-deal-card" style="--dl-delay: {{ forloop.counter0 }};">
+    {% with deal_images=deal.images.all deal_bids=deal.bids.all %}
     <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="dl-deal-media" aria-label="{{ deal.product_title }}">
-      {% if deal.images.exists %}
-        <img src="{{ deal.images.first.image|file_url:'images/brand/deal-placeholder.webp' }}" alt="{{ deal.product_title }}" loading="lazy" decoding="async" width="640" height="420" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw">
+      {% with cover_image=deal_images|first %}
+      {% if cover_image %}
+        <img src="{{ cover_image.image|file_url:'images/brand/deal-placeholder.webp' }}" alt="{{ deal.product_title }}" loading="lazy" decoding="async" width="640" height="420" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw">
       {% else %}
         <span class="dl-deal-fallback">
           <i class="fas fa-image" aria-hidden="true"></i>
         </span>
       {% endif %}
+      {% endwith %}
       <span class="dl-badge dl-badge-top">
         {% if deal.is_auction %}
           <i class="fas fa-gavel" aria-hidden="true"></i>{% t "deals.auction" %}
@@ -87,13 +90,15 @@
 
       {% if deal.is_auction %}
       <div class="dl-bid-line">
-        {% if deal.bids.exists %}
+        {% with highest_bid=deal_bids|first %}
+        {% if highest_bid %}
           <i class="fas fa-arrow-trend-up" aria-hidden="true"></i>
-          {% t "deals.highest_bid" %} ${{ deal.bids.first.amount }}
+          {% t "deals.highest_bid" %} ${{ highest_bid.amount }}
         {% else %}
           <i class="fas fa-circle-dot" aria-hidden="true"></i>
           {% t "deals.no_bids" %}
         {% endif %}
+        {% endwith %}
       </div>
       {% endif %}
 
@@ -103,8 +108,8 @@
           <span>
             <b>{{ deal.seller.username }}</b>
             <small>
-              {% if deal.seller.received_reviews.exists %}
-                {{ deal.seller.received_reviews.count }} {% t "deals.ratings_count" %}
+              {% if deal.seller_review_count %}
+                {{ deal.seller_review_count }} {% t "deals.ratings_count" %}
               {% else %}
                 {% t "deals.new_seller" %}
               {% endif %}
@@ -116,6 +121,7 @@
         </a>
       </div>
     </div>
+    {% endwith %}
   </article>
   {% endfor %}
 </div>

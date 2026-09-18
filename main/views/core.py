@@ -7,6 +7,7 @@ from pathlib import Path
 
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.db import connection
 from django.db.models import Case, Count, IntegerField, Q, Value, When
@@ -40,7 +41,9 @@ def _active_public_deals_queryset(now=None):
             | Q(auction_ends_at__gt=now)
         )
         .select_related("seller__profile")
-        .prefetch_related("images", "bids")
+        # Auction bids are only needed on the listings page. Keeping them out
+        # of this shared queryset avoids loading every bid on home and search.
+        .prefetch_related("images")
     )
 
 
@@ -54,17 +57,24 @@ def home(request):
         deal.cover_image = images[0] if images else None
         deal.display_price = deal.starting_price if deal.is_auction else deal.price
 
+    home_stats = cache.get("public_home_stats:v1")
+    if home_stats is None:
+        home_stats = {
+            "users_count": User.objects.count(),
+            "public_deals_count": public_deals_qs.count(),
+            "completed_deals_count": Deal.objects.filter(status="completed").count(),
+        }
+        # These are display counters, not authorization data. A short cache
+        # removes three database COUNT queries from every homepage visit.
+        cache.set("public_home_stats:v1", home_stats, 30)
+
     return render(
         request,
         "home.html",
         {
             "latest_deals": latest_deals,
             "fee_rate_percent": _fee_rate_percent(),
-            "home_stats": {
-                "users_count": User.objects.count(),
-                "public_deals_count": public_deals_qs.count(),
-                "completed_deals_count": Deal.objects.filter(status="completed").count(),
-            },
+            "home_stats": home_stats,
         },
     )
 
@@ -111,8 +121,13 @@ def listings_view(request):
     sort_by = request.GET.get("sort", "")
     query = request.GET.get("q", "").strip()
 
-    all_deals = _active_public_deals_queryset(now).annotate(
-        bid_count=Count("bids", distinct=True)
+    all_deals = (
+        _active_public_deals_queryset(now)
+        .prefetch_related("bids")
+        .annotate(
+            bid_count=Count("bids", distinct=True),
+            seller_review_count=Count("seller__received_reviews", distinct=True),
+        )
     )
 
     if query:
@@ -321,7 +336,10 @@ def health_check(request):
 @require_POST
 def performance_vitals(request):
     """Receive sampled Core Web Vitals beacons without writing user data."""
-    content_length = int(request.META.get("CONTENT_LENGTH") or 0)
+    try:
+        content_length = int(request.META.get("CONTENT_LENGTH") or 0)
+    except (TypeError, ValueError):
+        return JsonResponse({"ok": False}, status=400)
     if content_length > 4096:
         return HttpResponse(status=413)
 

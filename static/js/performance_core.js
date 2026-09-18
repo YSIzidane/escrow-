@@ -29,12 +29,21 @@
   }
 
   function tuneMedia() {
-    const fold = window.innerHeight * 1.25;
-    document.querySelectorAll("img").forEach((image) => {
+    const eagerSelectors = [
+      ".se-navbar",
+      ".se-logo",
+      ".hero",
+      ".hp-hero",
+      ".dl-hero",
+      ".ip-hero",
+      "[data-critical-media]",
+      "[fetchpriority='high']"
+    ].join(",");
+
+    document.querySelectorAll("img").forEach((image, index) => {
       if (!image.hasAttribute("decoding")) image.decoding = "async";
       if (!image.hasAttribute("loading") && image.getAttribute("fetchpriority") !== "high") {
-        const rect = image.getBoundingClientRect();
-        image.loading = rect.top > fold ? "lazy" : "eager";
+        image.loading = index < 2 || image.closest(eagerSelectors) ? "eager" : "lazy";
       }
       if (!image.hasAttribute("fetchpriority") && image.loading === "lazy") {
         image.setAttribute("fetchpriority", "low");

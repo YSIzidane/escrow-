@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.cache import cache
 from django.templatetags.static import static
 
 from .i18n import SUPPORTED_LANGUAGES, get_request_language, get_translation
@@ -58,10 +59,16 @@ def site_language(request):
     admin_role_keys = set()
 
     if getattr(request, "user", None) and request.user.is_authenticated:
-        unread_notif_count = Notification.objects.filter(
-            recipient=request.user,
-            is_read=False,
-        ).count()
+        # The navbar is rendered on every authenticated request. Cache this
+        # badge briefly instead of issuing another COUNT query on every load.
+        notification_cache_key = f"unread_notification_count:{request.user.pk}"
+        unread_notif_count = cache.get(notification_cache_key)
+        if unread_notif_count is None:
+            unread_notif_count = Notification.objects.filter(
+                recipient=request.user,
+                is_read=False,
+            ).count()
+            cache.set(notification_cache_key, unread_notif_count, 10)
         if request.user.is_superuser:
             admin_role_keys = set(ADMIN_ROLE_SPECS.keys())
         elif request.user.is_staff:

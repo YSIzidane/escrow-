@@ -294,4 +294,147 @@
   body[data-page="auth_error"] :is(p, small, .text-muted) {
     color: var(--seu-muted) !important;
   }
+
+  /* Final social-account polish: keep the provider flow on one coherent surface. */
+  body[data-page="socialaccount_confirm"],
+  body[data-page="socialaccount_login"] {
+    background: #07111f !important;
+    color: #f7f8fb !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .page-bg-overlay,
+  body[data-page="socialaccount_login"] .page-bg-overlay {
+    background:
+      radial-gradient(circle at 12% 4%, rgba(37, 99, 235, 0.18), transparent 28rem),
+      radial-gradient(circle at 88% 2%, rgba(201, 150, 59, 0.16), transparent 25rem),
+      linear-gradient(145deg, #07111f 0%, #0b1727 52%, #101c2e 100%) !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .se-main,
+  body[data-page="socialaccount_login"] .se-main {
+    max-width: 760px !important;
+    padding: 18px 16px 52px !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .se-main > .row,
+  body[data-page="socialaccount_login"] .se-main > .row {
+    min-height: calc(100dvh - 140px);
+    align-items: center;
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .col-lg-5,
+  body[data-page="socialaccount_login"] .col-lg-5 {
+    width: 100%;
+    max-width: 540px;
+  }
+
+  body[data-page="socialaccount_confirm"] .social-signup-card,
+  body[data-page="socialaccount_login"] .social-login-card {
+    background: #101c2c !important;
+    border: 1px solid rgba(255, 255, 255, 0.11) !important;
+    box-shadow: 0 26px 70px rgba(0, 0, 0, 0.34) !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .social-signup-header,
+  body[data-page="socialaccount_login"] .social-login-header {
+    padding: 32px 28px 26px !important;
+    background: linear-gradient(145deg, #10233a 0%, #173653 100%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .social-signup-wordmark,
+  body[data-page="socialaccount_login"] .social-login-wordmark {
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  .social-signup-provider,
+  .social-login-provider {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto 16px;
+    padding: 7px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  .social-signup-provider i,
+  .social-login-provider i {
+    color: #4285f4;
+    font-size: 0.95rem;
+  }
+
+  body[data-page="socialaccount_confirm"] .social-signup-header h3,
+  body[data-page="socialaccount_login"] .social-login-header h3 {
+    color: #ffffff !important;
+    margin-bottom: 8px !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .social-signup-header p,
+  body[data-page="socialaccount_login"] .social-login-header p {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .social-signup-body,
+  body[data-page="socialaccount_login"] .social-login-body {
+    background: #101c2c !important;
+    padding: 28px !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .social-signup-info,
+  body[data-page="socialaccount_login"] .social-login-profile-box {
+    background: rgba(255, 255, 255, 0.055) !important;
+    border: 1px solid rgba(255, 255, 255, 0.11) !important;
+    color: #e7edf7 !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .social-signup-email,
+  body[data-page="socialaccount_confirm"] .social-signup-prompt,
+  body[data-page="socialaccount_confirm"] .social-signup-note,
+  body[data-page="socialaccount_login"] .social-login-intro p,
+  body[data-page="socialaccount_login"] .social-login-help {
+    color: #aeb8c8 !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .social-signup-email strong,
+  body[data-page="socialaccount_login"] .social-login-profile-name,
+  body[data-page="socialaccount_login"] .social-login-profile-email {
+    color: #f7f8fb !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .social-signup-btn.success,
+  body[data-page="socialaccount_login"] .social-login-btn {
+    background: linear-gradient(135deg, #e8b96a, #c9963b) !important;
+    color: #081321 !important;
+    box-shadow: 0 12px 26px rgba(201, 150, 59, 0.23) !important;
+  }
+
+  body[data-page="socialaccount_confirm"] .social-signup-btn.secondary,
+  body[data-page="socialaccount_login"] .social-login-footer a {
+    color: #e8b96a !important;
+  }
+
+  @media (max-width: 576px) {
+    body[data-page="socialaccount_confirm"] .se-main,
+    body[data-page="socialaccount_login"] .se-main {
+      padding-inline: 10px !important;
+    }
+
+    body[data-page="socialaccount_confirm"] .social-signup-header,
+    body[data-page="socialaccount_login"] .social-login-header {
+      padding: 28px 20px 22px !important;
+    }
+
+    body[data-page="socialaccount_confirm"] .social-signup-body,
+    body[data-page="socialaccount_login"] .social-login-body {
+      padding: 24px 18px !important;
+    }
+  }
 </style>

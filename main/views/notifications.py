@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.core.cache import cache
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -15,6 +16,10 @@ from ..models import (
 from ..services.admin_roles import has_any_admin_role
 from ..services.verification import render_verification_badge
 from ..utils import safe_file_url
+
+
+def _notification_count_cache_key(user_id):
+    return f"unread_notification_count:{user_id}"
 
 
 def create_notification(
@@ -32,20 +37,22 @@ def create_notification(
     metadata=None,
 ):
     """دالة مساعدة لإنشاء إشعار"""
-    Notification.objects.create(
+    notification = Notification.objects.create(
         recipient=recipient, notif_type=notif_type,
         title=title, body=body, url=url,
         deal=deal, actor=actor, action=action,
         priority=priority, channel=channel,
         metadata=metadata or {},
     )
+    return notification
 
 
 @login_required(login_url='login')
 def notifications_page(request):
-    notifs = Notification.objects.filter(recipient=request.user)
+    notifs = Notification.objects.filter(recipient=request.user).order_by('-created_at')
     if request.method == 'POST' and request.POST.get('action') == 'mark_all_read':
         notifs.update(is_read=True)
+        cache.delete(_notification_count_cache_key(request.user.pk))
         return redirect('notifications')
     unread_count = notifs.filter(is_read=False).count()
     total_count = notifs.count()
@@ -62,6 +69,7 @@ def mark_notification_read(request, notif_id):
     notif = get_object_or_404(Notification, id=notif_id, recipient=request.user)
     notif.is_read = True
     notif.save()
+    cache.delete(_notification_count_cache_key(request.user.pk))
     return redirect(notif.url or 'notifications')
 
 
@@ -70,12 +78,17 @@ def mark_notification_read(request, notif_id):
 def delete_notification(request, notif_id):
     notif = get_object_or_404(Notification, id=notif_id, recipient=request.user)
     notif.delete()
+    cache.delete(_notification_count_cache_key(request.user.pk))
     return redirect('notifications')
 
 
 @login_required(login_url='login')
 def poll_notifications(request):
-    count = Notification.objects.filter(recipient=request.user, is_read=False).count()
+    cache_key = _notification_count_cache_key(request.user.pk)
+    count = cache.get(cache_key)
+    if count is None:
+        count = Notification.objects.filter(recipient=request.user, is_read=False).count()
+        cache.set(cache_key, count, 10)
     return JsonResponse({'count': count, 'unread_count': count})
 
 

@@ -388,31 +388,32 @@
 
   .ed-stat-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 20px 48px rgba(13, 27, 42, 0.1);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.15);
   }
 
   .ed-stat-card.active {
-    border-color: var(--navy);
-    background: white;
-    box-shadow: 0 16px 40px rgba(13, 27, 42, 0.08);
+    border-color: rgba(115, 210, 255, 0.3);
+    background: rgba(115, 210, 255, 0.06);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
   }
 
   .ed-stat-card.active-gold {
-    border-color: var(--gold);
-    background: white;
-    box-shadow: 0 16px 40px rgba(201, 150, 59, 0.15);
+    border-color: rgba(244, 201, 93, 0.3);
+    background: rgba(244, 201, 93, 0.06);
+    box-shadow: 0 16px 40px rgba(244, 201, 93, 0.12);
   }
 
   .ed-stat-card.active-success {
-    border-color: #16a34a;
-    background: white;
-    box-shadow: 0 16px 40px rgba(22, 163, 74, 0.15);
+    border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(34, 197, 94, 0.06);
+    box-shadow: 0 16px 40px rgba(34, 197, 94, 0.12);
   }
 
   .ed-stat-card.active-danger {
-    border-color: #dc2626;
-    background: white;
-    box-shadow: 0 16px 40px rgba(220, 38, 38, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.06);
+    box-shadow: 0 16px 40px rgba(239, 68, 68, 0.12);
   }
 
   .ed-stat-content {
@@ -483,12 +484,13 @@
 
   /* ── Rooms Card ── */
   .ed-rooms-card {
-    background: white;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
     border-radius: 24px;
-    box-shadow: 0 16px 48px rgba(13, 27, 42, 0.06);
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: var(--seu-shadow-soft);
+    border: 1px solid var(--seu-border);
     overflow: hidden;
     animation: fadeUp .5s .2s ease both;
+    backdrop-filter: blur(18px);
   }
 
   .ed-rooms-header {
@@ -812,23 +814,23 @@
     align-items: center;
     gap: 10px;
     padding: 12px 20px;
-    background: white;
-    color: var(--navy);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--seu-text, #f7f8fb);
     text-decoration: none;
     border-radius: 14px;
     font-weight: 800;
     font-size: .9rem;
-    box-shadow: 0 4px 12px rgba(13, 27, 42, 0.06);
-    border: 1px solid #E0E8F0;
+    box-shadow: none;
+    border: 1px solid var(--seu-border);
     transition: all .3s ease;
   }
 
   .ed-link-btn:hover {
-    background: #F8FAFB;
-    border-color: var(--gold);
-    color: var(--gold-dark);
+    background: rgba(244, 201, 93, 0.1);
+    border-color: rgba(244, 201, 93, 0.3);
+    color: var(--seu-primary, #f4c95d);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(13, 27, 42, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   }
 
   @media (max-width: 900px) {

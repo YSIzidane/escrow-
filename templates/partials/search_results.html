@@ -36,11 +36,13 @@
       {% for deal in deals %}
       <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="sr-result-card sr-deal-card">
         <div class="sr-card-media">
-          {% if deal.images.exists %}
-          <img src="{{ deal.images.first.image|file_url:'images/brand/og-card.webp' }}" alt="{{ deal.product_title }}" loading="lazy" decoding="async" width="640" height="420">
+          {% with cover_image=deal.images.all|first %}
+          {% if cover_image %}
+          <img src="{{ cover_image.image|file_url:'images/brand/og-card.webp' }}" alt="{{ deal.product_title }}" loading="lazy" decoding="async" width="640" height="420">
           {% else %}
           <div class="sr-card-fallback"><i class="fas fa-image" aria-hidden="true"></i></div>
           {% endif %}
+          {% endwith %}
           <span class="sr-type-pill">
             {% if deal.is_auction %}{% t "deals.auction" %}{% else %}{% t "deals.fixed_price" %}{% endif %}
           </span>

@@ -23,15 +23,15 @@
   <div class="se-admin-rooms-stats">
     <div class="card border-0 se-admin-stat-card">
       <div class="se-admin-stat-label">{% t "admin_rooms.stats.total" %}</div>
-      <div class="se-admin-stat-value" style="color:var(--navy);">{{ stats.total }}</div>
+      <div class="se-admin-stat-value">{{ stats.total }}</div>
     </div>
     <div class="card border-0 se-admin-stat-card">
       <div class="se-admin-stat-label">{% t "admin_rooms.stats.active" %}</div>
-      <div class="se-admin-stat-value" style="color:#0e7c5a;">{{ stats.active }}</div>
+      <div class="se-admin-stat-value" style="color:#86efac;">{{ stats.active }}</div>
     </div>
     <div class="card border-0 se-admin-stat-card">
       <div class="se-admin-stat-label">{% t "admin_rooms.stats.closed" %}</div>
-      <div class="se-admin-stat-value" style="color:#c0392b;">{{ stats.closed }}</div>
+      <div class="se-admin-stat-value" style="color:#fca5a5;">{{ stats.closed }}</div>
     </div>
     <div class="card border-0 se-admin-stat-card">
       <div class="se-admin-stat-label">{% t "admin_rooms.stats.last_24h" %}</div>
@@ -40,7 +40,7 @@
   </div>
 
   <div class="card border-0 se-admin-rooms-card">
-    <div style="padding:18px;border-bottom:1px solid var(--border-light);background:white;">
+    <div style="padding:18px;border-bottom:1px solid rgba(255,255,255,0.08);">
       <form method="get" class="se-admin-rooms-filter">
         <div>
           <label class="form-label se-publish-field-label">{% t "admin_rooms.search" %}</label>
@@ -69,7 +69,7 @@
 
     <div class="se-admin-rooms-table-wrap">
       <table class="table align-middle mb-0 se-admin-rooms-table">
-        <thead style="background:#f8fafc;">
+        <thead style="background:rgba(255,255,255,0.06);">
           <tr>
             <th>{% t "admin_rooms.table.room" %}</th>
             <th>{% t "admin_rooms.table.creator" %}</th>
@@ -170,19 +170,19 @@
     display: none;
   }
   .se-admin-rooms-table tr {
-    border: 1px solid rgba(13,27,42,.08);
+    border: 1px solid rgba(255,255,255,.08);
     border-radius: 18px;
     padding: 14px;
     margin-top: 12px;
-    background: #fff;
-    box-shadow: 0 10px 28px rgba(13,27,42,.05);
+    background: rgba(255,255,255,.04);
+    box-shadow: none;
   }
   .se-admin-rooms-table tr:first-child {
     margin-top: 0;
   }
   .se-admin-rooms-table td {
     padding: 8px 0;
-    border-bottom: 1px dashed rgba(13,27,42,.08);
+    border-bottom: 1px dashed rgba(255,255,255,.08);
     display: flex;
     justify-content: space-between;
     gap: 12px;

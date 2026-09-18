@@ -15,7 +15,7 @@ from .deals import (
     Review,
 )
 from .rooms import Room, RoomMessage, RoomParticipant, TradeExchange
-from .payments import Payment, PaymentAuditLog, TransactionInvoice
+from .payments import Payment, PaymentAuditLog, StripeEvent, TransactionInvoice
 from .escrow import EscrowRoom, EscrowMessage
 from .support import SupportTicket, TicketReply
 from .notifications import Notification
@@ -30,7 +30,7 @@ __all__ = [
     # Rooms
     "Room", "RoomMessage", "RoomParticipant", "TradeExchange",
     # Payments
-    "Payment", "PaymentAuditLog", "TransactionInvoice",
+    "Payment", "PaymentAuditLog", "StripeEvent", "TransactionInvoice",
     # Escrow
     "EscrowRoom", "EscrowMessage",
     # Support

@@ -116,3 +116,31 @@ class PaymentAuditLog(models.Model):
     def __str__(self):
         actor = self.admin.username if self.admin else "Unknown"
         return f"{self.get_action_display()} for payment {self.payment.id} by {actor}"
+
+
+class StripeEvent(models.Model):
+    """Durable record of processed Stripe webhook events.
+
+    Guarantees at-most-once processing of each Stripe event id. Stripe
+    retries webhook delivery on non-2xx responses; the unique constraint on
+    ``event_id`` ensures a retried event is never reprocessed, while the
+    ``processed`` flag allows a previously received-but-unprocessed event to
+    be retried safely.
+    """
+
+    event_id = models.CharField(max_length=120, unique=True, db_index=True)
+    event_type = models.CharField(max_length=120)
+    api_version = models.CharField(max_length=40, blank=True)
+    processed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    processed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ("-created_at", "-id")
+        indexes = [
+            models.Index(fields=["event_type", "-created_at"], name="main_stripe_event_t_ca64fe_idx"),
+            models.Index(fields=["processed", "-created_at"], name="main_stripe_process_abc0e7_idx"),
+        ]
+
+    def __str__(self):
+        return f"{self.event_type} ({self.event_id})"

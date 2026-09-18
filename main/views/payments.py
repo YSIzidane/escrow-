@@ -24,6 +24,7 @@ from ..models import (
     PaymentAuditLog,
     Profile,
     SiteSettings,
+    StripeEvent,
     TransactionInvoice,
 )
 from ..deal_engine import DealEngineError, execute as execute_deal_command
@@ -700,10 +701,70 @@ def payment_success(request):
     return redirect("my_deals")
 
 
+def _mark_stripe_event_processed(stripe_event):
+    """Mark a previously-recorded StripeEvent as successfully processed."""
+    if stripe_event is None:
+        return
+    from django.utils import timezone
+
+    stripe_event.processed = True
+    stripe_event.processed_at = timezone.now()
+    stripe_event.save(update_fields=["processed", "processed_at"])
+
+
+def _process_stripe_event(event):
+    """Dispatch a single verified Stripe event to the relevant handler.
+
+    Returns an HttpResponse status code. Only ``checkout.session.completed``
+    is handled today; other event types are intentionally acknowledged so
+    Stripe stops retrying them, but are still recorded for auditability.
+    """
+    event_type = event["type"]
+
+    if event_type != "checkout.session.completed":
+        logger.info("Stripe webhook: ignoring unhandled event type %s (evt=%s).", event_type, event.get("id"))
+        return 200
+
+    session = event["data"]["object"]
+    deal_id = session.get("metadata", {}).get("deal_id")
+    buyer_id = session.get("metadata", {}).get("buyer_id")
+
+    if not deal_id:
+        logger.error("Stripe webhook: checkout.session.completed without deal_id in metadata (evt=%s).", event.get("id"))
+        return 400
+
+    try:
+        deal = Deal.objects.get(id=int(deal_id))
+        buyer = User.objects.get(id=int(buyer_id)) if buyer_id else deal.buyer
+
+        txn_id = (
+            session.get("payment_intent")
+            or session.get("id")
+            or f"ESC-{uuid.uuid4().hex[:12].upper()}"
+        )
+        process_successful_payment(deal, buyer, transaction_id=txn_id, payment_method="stripe")
+    except Deal.DoesNotExist:
+        logger.error("Stripe webhook: deal %s not found (evt=%s).", deal_id, event.get("id"))
+        return 400
+    except Exception:
+        logger.exception("Stripe webhook: error processing deal %s (evt=%s).", deal_id, event.get("id"))
+        return 500
+
+    return 200
+
+
 @csrf_exempt
 @require_POST
 def stripe_webhook(request):
-    """معالجة أحداث Stripe بعد التحقق من التوقيع."""
+    """معالجة أحداث Stripe بعد التحقق من التوقيع.
+
+    Guarantees at-most-once processing by persisting each received Stripe
+    ``event.id`` in a dedicated table before any business logic runs. Stripe
+    retries webhook delivery on non-2xx responses; a retried event whose row
+    is already ``processed`` is acknowledged immediately, while a row left
+    ``processed=False`` (because processing failed) is retried on the next
+    delivery attempt.
+    """
     webhook_secret = getattr(settings, "STRIPE_WEBHOOK_SECRET", "").strip()
     signature = request.META.get("HTTP_STRIPE_SIGNATURE", "").strip()
 
@@ -727,32 +788,38 @@ def stripe_webhook(request):
         logger.error("Stripe webhook: signature verification failed.")
         return HttpResponse(status=400)
 
-    if event["type"] == "checkout.session.completed":
-        session = event["data"]["object"]
-        deal_id = session.get("metadata", {}).get("deal_id")
-        buyer_id = session.get("metadata", {}).get("buyer_id")
+    event_id = event.get("id")
+    event_type = event.get("type", "")
+    api_version = event.get("api_version", "") or ""
 
-        if not deal_id:
-            logger.error("Stripe webhook: checkout.session.completed without deal_id in metadata.")
-            return HttpResponse(status=400)
+    if not event_id:
+        logger.error("Stripe webhook: verified event is missing an id (type=%s).", event_type)
+        return HttpResponse(status=400)
 
-        try:
-            deal = Deal.objects.get(id=int(deal_id))
-            from django.contrib.auth.models import User
-            buyer = User.objects.get(id=int(buyer_id)) if buyer_id else deal.buyer
+    # Record (or retrieve) the event in its own short transaction. A duplicate
+    # delivery of an already-processed event is acknowledged immediately; a
+    # duplicate of a previously-failed event is reprocessed.
+    with transaction.atomic():
+        stripe_event, created = StripeEvent.objects.select_for_update().get_or_create(
+            event_id=event_id,
+            defaults={
+                "event_type": event_type,
+                "api_version": api_version,
+            },
+        )
+        if not created and stripe_event.processed:
+            logger.info("Stripe webhook: duplicate event %s already processed, skipping.", event_id)
+            return HttpResponse(status=200)
 
-            txn_id = (
-                session.get("payment_intent")
-                or session.get("id")
-                or f"ESC-{uuid.uuid4().hex[:12].upper()}"
-            )
-            process_successful_payment(deal, buyer, transaction_id=txn_id, payment_method="stripe")
+    # Process outside the bookkeeping transaction so its rollback does not
+    # wipe the event record. If processing fails the row stays ``processed``
+    # set to True at the end of this branch.
+    status_code = _process_stripe_event(event)
 
-        except Deal.DoesNotExist:
-            logger.error("Stripe webhook: deal %s not found.", deal_id)
-            return HttpResponse(status=400)
-        except Exception:
-            logger.exception("Stripe webhook: error processing deal %s.", deal_id)
-            return HttpResponse(status=500)
+    if status_code < 500:
+        _mark_stripe_event_processed(stripe_event)
+        return HttpResponse(status=status_code)
 
-    return HttpResponse(status=200)
+    # Processing failed (HTTP 5xx): leave the row unprocessed so Stripe
+    # retries, and we can reprocess the same event id safely.
+    return HttpResponse(status=status_code)
