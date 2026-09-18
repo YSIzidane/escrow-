@@ -1,0 +1,146 @@
+/* ═══════════════════════════════════════════════════════════════════
+   SAFOUANE ESCROW — Design Tokens v1.0
+   المصدر الوحيد للحقيقة: ألوان/أسطح/مسافات/ظلال/حركة
+   الوضع الفاتح (light) هو الافتراضي — الوضع الداكن عبر [data-theme="dark"]
+   يُحمَّل أولًا قبل كل ملفات CSS الأخرى (لا يعرّف أي أنماط عناصر)
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root,
+html[data-theme="light"] {
+  color-scheme: light;
+
+  /* ─── Brand ─── */
+  --se-gold: #c9963b;
+  --se-gold-soft: #e8b96a;
+  --se-gold-dark: #9a7228;
+  --se-gold-text: #8a6420; /* درجة أغمق للنص على الفاتح — تباين ≥ 4.5:1 */
+  --se-navy: #0d1b2a;
+  --se-navy-mid: #1a2e45;
+  --se-navy-light: #243b55;
+
+  /* ─── Surfaces ─── */
+  --se-bg: #f4f7fb;
+  --se-bg-alt: #eef2f7;
+  --se-bg-subtle: #f8fafd;
+  --se-surface: #ffffff;
+  --se-surface-hover: #fafbfc;
+  --se-surface-soft: rgba(248, 250, 252, 0.92);
+  --se-surface-strong: #ffffff;
+
+  /* ─── Text ─── */
+  --se-text: #0f1d2f;
+  --se-text-2: #475569;
+  --se-text-3: #64748b;
+
+  /* ─── Borders ─── */
+  --se-border: rgba(15, 23, 42, 0.08);
+  --se-border-strong: rgba(15, 23, 42, 0.14);
+
+  /* ─── Shadows — 3 مستويات ارتفاع ─── */
+  --se-shadow-1: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.03);
+  --se-shadow-2: 0 2px 6px rgba(15, 23, 42, 0.05), 0 12px 28px rgba(15, 23, 42, 0.06);
+  --se-shadow-3: 0 6px 16px rgba(15, 23, 42, 0.06), 0 24px 48px rgba(15, 23, 42, 0.09);
+
+  /* ─── Radius — 5 قيم فقط ─── */
+  --se-r-sm: 8px;
+  --se-r: 12px;
+  --se-r-md: 16px;
+  --se-r-lg: 20px;
+  --se-r-pill: 999px;
+
+  /* ─── Spacing — شبكة 4/8px ─── */
+  --se-space-1: 4px;
+  --se-space-2: 8px;
+  --se-space-3: 12px;
+  --se-space-4: 16px;
+  --se-space-5: 20px;
+  --se-space-6: 24px;
+  --se-space-8: 32px;
+  --se-space-10: 40px;
+  --se-space-12: 48px;
+  --se-space-16: 64px;
+
+  /* ─── Typography ─── */
+  --se-text-xs: 0.75rem;
+  --se-text-sm: 0.8125rem;
+  --se-text-base: 0.875rem;
+  --se-text-md: 0.9375rem;
+  --se-text-lg: 1.125rem;
+  --se-text-xl: 1.375rem;
+  --se-text-2xl: 1.75rem;
+
+  /* ─── Motion ─── */
+  --se-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --se-dur: 0.22s;
+
+  /* ─── Semantic ─── */
+  --se-success: #16a34a;
+  --se-success-bg: #e9f9f0;
+  --se-danger: #dc2626;
+  --se-danger-bg: #fdecec;
+  --se-warning: #b45309;
+  --se-warning-bg: #fef3e2;
+  --se-info: #2563eb;
+  --se-info-bg: #e8f1fe;
+
+  /* ─── Focus & Chrome ─── */
+  --se-focus-ring: 0 0 0 3px rgba(201, 150, 59, 0.35);
+  --se-chrome-bg: rgba(255, 255, 255, 0.9);
+  --se-chrome-text: #162235;
+  --se-chrome-border: rgba(15, 23, 42, 0.1);
+}
+
+/* ═══ Dark — كل الأسطح الداكنة تُشتق من هنا فقط ═══ */
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --se-gold: #f4c95d;
+  --se-gold-soft: #e8b96a;
+  --se-gold-dark: #9a7228;
+  --se-gold-text: #f4c95d; /* الذهبي الفاتح مقروء على الداكن */
+
+  --se-bg: #05070d;
+  --se-bg-alt: #080c14;
+  --se-bg-subtle: #0c111d;
+  --se-surface: rgba(13, 18, 29, 0.88);
+  --se-surface-hover: rgba(255, 255, 255, 0.055);
+  --se-surface-soft: rgba(255, 255, 255, 0.045);
+  --se-surface-strong: rgba(18, 24, 37, 0.96);
+
+  --se-text: #f7f8fb;
+  --se-text-2: #aeb8c8;
+  --se-text-3: #778297;
+
+  --se-border: rgba(255, 255, 255, 0.1);
+  --se-border-strong: rgba(255, 255, 255, 0.18);
+
+  --se-shadow-1: 0 12px 32px rgba(0, 0, 0, 0.26);
+  --se-shadow-2: 0 18px 48px rgba(0, 0, 0, 0.36);
+  --se-shadow-3: 0 24px 64px rgba(0, 0, 0, 0.46);
+
+  --se-success: #55d6a5;
+  --se-success-bg: rgba(85, 214, 165, 0.14);
+  --se-danger: #ff6b7c;
+  --se-danger-bg: rgba(255, 107, 124, 0.15);
+  --se-warning: #ffd166;
+  --se-warning-bg: rgba(255, 209, 102, 0.14);
+  --se-info: #75a7ff;
+  --se-info-bg: rgba(117, 167, 255, 0.14);
+
+  --se-focus-ring: 0 0 0 3px rgba(244, 201, 93, 0.18);
+  --se-chrome-bg: rgba(7, 17, 29, 0.84);
+  --se-chrome-text: #edf3fb;
+  --se-chrome-border: rgba(226, 232, 240, 0.12);
+}
+
+/* حالات الوصول الموحدة — تُستخدم في كل المكونات التفاعلية الجديدة */
+.se-theme-toggle:focus-visible,
+.se-theme-toggle-menu:focus-visible,
+button:focus-visible > .se-sr-only {
+  outline: none;
+}
+
+.se-theme-toggle:focus-visible,
+.se-theme-toggle-menu:focus-visible {
+  box-shadow: var(--se-focus-ring);
+}

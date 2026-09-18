@@ -332,11 +332,7 @@ hr,
     color: var(--seu-text) !important;
 }
 
-.se-theme-toggle,
-.se-theme-toggle-menu,
-[data-theme-toggle] {
-    display: none !important;
-}
+/* Theme toggle is visible in both light and dark modes (design unification step 5). */
 
 .se-lang-form {
     display: flex !important;
