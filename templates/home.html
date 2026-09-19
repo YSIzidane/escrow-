@@ -5,7 +5,7 @@
 {% block page_type %}home{% endblock %}
 
 {% block preload_assets %}
-  <link rel="preload" href="{% static 'images/brand/dashboard-premium.png' %}" as="image" type="image/png" fetchpriority="high">
+  <link rel="preload" href="{% static 'images/brand/dashboard-premium.webp' %}" as="image" type="image/webp" fetchpriority="high">
 {% endblock %}
 
 {% block late_css %}
@@ -98,7 +98,7 @@
             <strong class="hp-browser-title">{% if current_language == 'ar' %}مسار الصفقة الآمن{% else %}Secure deal flow{% endif %}</strong>
           </div>
           <div class="hp-preview-canvas">
-            <img src="{% static 'images/brand/dashboard-premium.png' %}" alt="{% if current_language == 'ar' %}معاينة لوحة تحكم SafouaneEscrow{% else %}SafouaneEscrow dashboard preview{% endif %}" width="1024" height="1024" decoding="async" fetchpriority="high">
+            <img src="{% static 'images/brand/dashboard-premium.webp' %}" alt="{% if current_language == 'ar' %}معاينة لوحة تحكم SafouaneEscrow{% else %}SafouaneEscrow dashboard preview{% endif %}" width="1024" height="1024" decoding="async" fetchpriority="high">
             
             <div class="hp-preview-panel hp-preview-panel-top hp-glass-panel">
               <span>{% if current_language == 'ar' %}الحالة{% else %}Status{% endif %}</span>

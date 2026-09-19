@@ -140,7 +140,7 @@ body[data-page="listings"] .se-chat-fab {
   background:
     linear-gradient(90deg, rgba(5, 7, 12, 0.98) 0%, rgba(5, 7, 12, 0.88) 44%, rgba(5, 7, 12, 0.76) 100%),
     linear-gradient(180deg, rgba(5, 7, 12, 0.58) 0%, rgba(5, 7, 12, 0.82) 52%, #05070c 100%),
-    url("../images/brand/hero-premium-bg.png") center top / max(1500px, 100vw) auto fixed no-repeat;
+    url("../images/brand/hero-premium-bg.webp") center top / max(1500px, 100vw) auto fixed no-repeat;
 }
 
 .dl-page-listings::before {
