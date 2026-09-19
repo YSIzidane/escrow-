@@ -118,6 +118,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script defer src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+<script defer src="{% static 'vendor/htmx/htmx.min.js' %}?v=1.9.10"></script>
 <script defer src="{% static 'js/deals_dark.js' %}?v=20260523a"></script>
 {% endblock %}
