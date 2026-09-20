@@ -370,9 +370,6 @@ def deal_detail(request, deal_id):
                             return _ajax_response(request, success_message)
                 else:
                     return _escrow_required_response(request, deal)
-                    messages.success(request, "تم تأكيد الاستلام.")
-                    if _is_ajax(request):
-                        return _ajax_response(request, "تم تأكيد الاستلام.")
 
             elif "open_dispute" in request.POST and request.user == deal.buyer:
                 if not (hasattr(deal, "payment") and deal.payment.status == "escrow_held"):
@@ -448,34 +445,8 @@ def deal_detail(request, deal_id):
 @login_required(login_url="login")
 @require_POST
 def confirm_deal(request, deal_id):
+    """تأكيد الصفقة من كلا الطرفين (delegates to the secured implementation)."""
     return _secure_confirm_deal(request, deal_id)
-    """تأكيد الصفقة من كلا الطرفين."""
-    deal = get_object_or_404(Deal, id=deal_id)
-    user = request.user
-
-    if user != deal.buyer and user != deal.seller:
-        messages.error(request, "غير مسموح لك بهذا الإجراء.")
-        if _is_ajax(request):
-            return _ajax_response(request, "غير مسموح لك بهذا الإجراء.", "error", 403)
-        return redirect("my_deals")
-
-    if user == deal.buyer:
-        deal.buyer_confirmed = True
-    if user == deal.seller:
-        deal.seller_confirmed = True
-
-    if deal.buyer_confirmed and deal.seller_confirmed:
-        deal.status = "completed"
-        messages.success(request, "تم اكتمال الصفقة بتأكيد الطرفين.")
-        success_message = "تم اكتمال الصفقة بتأكيد الطرفين."
-    else:
-        messages.success(request, "تم التأكيد وبانتظار الطرف الآخر.")
-        success_message = "تم التأكيد وبانتظار الطرف الآخر."
-
-    deal.save()
-    if _is_ajax(request):
-        return _ajax_response(request, success_message)
-    return redirect("my_deals")
 
 
 @login_required(login_url="login")
@@ -597,58 +568,79 @@ def submit_bid(request, deal_id):
 @require_POST
 def accept_bid(request, bid_id):
     bid = get_object_or_404(Bid, id=bid_id)
-    deal = bid.deal
 
-    if not deal.is_auction:
-        message = "لا يمكن قبول عرض لأن هذه الصفقة ليست مزادًا."
-        messages.error(request, message)
-        if _is_ajax(request):
-            return _ajax_response(request, message, "error", 400)
-        return redirect("deal_detail", deal_id=deal.id)
+    # All writes run inside one transaction with row locks, so a concurrent
+    # accept_bid request (or the finalize_expired_auctions task) can never
+    # double-sell the same auction. The legacy status write is kept because
+    # the engine has no seller-permitted command from the "expired" state.
+    with transaction.atomic():
+        locked_deal = Deal.objects.select_for_update().get(id=bid.deal_id)
+        locked_bid = Bid.objects.select_for_update().get(id=bid.id)
 
-    if request.user != deal.seller:
-        message = "فقط البائع يمكنه قبول العروض."
-        messages.error(request, message)
-        if _is_ajax(request):
-            return _ajax_response(request, message, "error", 403)
-        return redirect("deal_auction_detail", deal_id=deal.id)
+        if not locked_deal.is_auction:
+            message = "لا يمكن قبول عرض لأن هذه الصفقة ليست مزادًا."
+            messages.error(request, message)
+            if _is_ajax(request):
+                return _ajax_response(request, message, "error", 400)
+            return redirect("deal_detail", deal_id=locked_deal.id)
 
-    if deal.status not in {"new", "expired"} or bid.is_accepted:
-        message = "تم التعامل مع هذا العرض مسبقاً."
-        messages.warning(request, message)
-        if _is_ajax(request):
-            return _ajax_response(request, message, "warning", 400)
-        return redirect("deal_auction_detail", deal_id=deal.id)
+        if request.user != locked_deal.seller:
+            message = "فقط البائع يمكنه قبول العروض."
+            messages.error(request, message)
+            if _is_ajax(request):
+                return _ajax_response(request, message, "error", 403)
+            return redirect("deal_auction_detail", deal_id=locked_deal.id)
 
-    bid.is_accepted = True
-    bid.save()
+        if locked_deal.status not in {"new", "expired"} or locked_bid.is_accepted:
+            message = "تم التعامل مع هذا العرض مسبقاً."
+            messages.warning(request, message)
+            if _is_ajax(request):
+                return _ajax_response(request, message, "warning", 400)
+            return redirect("deal_auction_detail", deal_id=locked_deal.id)
 
-    deal.buyer = bid.bidder
-    deal.price = bid.amount
-    deal.status = "reserved"
-    deal.save()
+        if locked_bid.bidder_id == locked_deal.seller_id:
+            message = "لا يمكن قبول عرض البائع على مزاده الخاص."
+            messages.error(request, message)
+            if _is_ajax(request):
+                return _ajax_response(request, message, "error", 400)
+            return redirect("deal_auction_detail", deal_id=locked_deal.id)
+
+        if locked_deal.bids.filter(is_accepted=True).exclude(id=locked_bid.id).exists():
+            message = "تم قبول عرض آخر على هذا المزاد مسبقاً."
+            messages.warning(request, message)
+            if _is_ajax(request):
+                return _ajax_response(request, message, "warning", 409)
+            return redirect("deal_auction_detail", deal_id=locked_deal.id)
+
+        locked_deal.bids.exclude(id=locked_bid.id).update(is_rejected=True)
+        locked_bid.is_accepted = True
+        locked_bid.save()
+
+        locked_deal.buyer = locked_bid.bidder
+        locked_deal.price = locked_bid.amount
+        locked_deal.status = "reserved"
+        locked_deal.save()
 
     create_notification(
-        recipient=bid.bidder,
+        recipient=locked_bid.bidder,
         notif_type="bid_won",
-        title=f"🎉 فزت بالمزايدة — {deal.product_title}",
-        body=f"تم قبول عرضك بمبلغ ${bid.amount}.",
-        url=f"/deal/{deal.id}/",
+        title=f"🎉 فزت بالمزايدة — {locked_deal.product_title}",
+        body=f"تم قبول عرضك بمبلغ ${locked_bid.amount}.",
+        url=f"/deal/{locked_deal.id}/",
     )
 
-    deal.bids.exclude(id=bid_id).update(is_rejected=True)
-    success_message = f"تم قبول عرض {bid.bidder.username} بمبلغ ${bid.amount}"
+    success_message = f"تم قبول عرض {locked_bid.bidder.username} بمبلغ ${locked_bid.amount}"
     messages.success(request, success_message)
     if _is_ajax(request):
         return _ajax_response(request, success_message)
-    return redirect("deal_detail", deal_id=deal.id)
+    return redirect("deal_detail", deal_id=locked_deal.id)
 
 
 @login_required(login_url="login")
 @require_POST
 def delete_comment(request, comment_id):
     comment = get_object_or_404(DealComment, id=comment_id)
-    if request.user == comment.author:
+    if request.user == comment.author or request.user.is_staff:
         deal_id = comment.deal.id
         comment.delete()
         messages.success(request, "تم حذف التعليق.")

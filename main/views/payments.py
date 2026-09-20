@@ -317,7 +317,28 @@ def refund_payment_for_deal(deal, *, audit_admin=None, audit_reason=""):
         locked_payment.status = "refunded"
         locked_payment.save()
 
-        locked_deal.status = "new"
+        # Refresh the in-memory payment relation so the engine below derives
+        # the new "refunded" state instead of the stale cached status.
+        locked_deal = Deal.objects.select_for_update().select_related("payment").get(id=locked_deal.id)
+
+        # Route the post-refund reset through the deal engine (refunded -> open)
+        # instead of mutating deal.status by hand, so the audit trail stays
+        # consistent: a refund event plus a reopen event instead of one
+        # mismatched "refund" event that ends in an "open" status.
+        try:
+            execute_deal_command(
+                "reopen",
+                deal=locked_deal,
+                actor=audit_admin,
+                metadata={
+                    "source": "refund_payment_for_deal",
+                    "payment_id": locked_payment.id,
+                },
+                raise_on_error=True,
+            )
+        except DealEngineError as exc:
+            raise PaymentStateError(exc.reason) from exc
+
         locked_deal.buyer = None
         locked_deal.buyer_approved = False
         locked_deal.buyer_confirmed = False
@@ -774,6 +795,19 @@ def stripe_webhook(request):
     if not signature:
         logger.warning("Stripe webhook received without signature.")
         return HttpResponse(status=400)
+
+    # Reject oversized payloads before signature verification so a hostile
+    # request cannot force us to hash or parse megabytes of data.
+    try:
+        content_length = int(request.META.get("CONTENT_LENGTH") or 0)
+    except (TypeError, ValueError):
+        content_length = 0
+    if content_length > 65536 or len(request.body) > 65536:
+        logger.warning(
+            "Stripe webhook: payload too large (CONTENT_LENGTH=%s bytes).",
+            content_length,
+        )
+        return HttpResponse(status=413)
 
     try:
         event = stripe.Webhook.construct_event(
