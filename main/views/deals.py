@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -146,17 +146,21 @@ def deal_room(request):
         .order_by("-created_at")
     )
 
-    stats = {
-        "total": deals.count(),
-        "completed": deals.filter(status="completed").count(),
-        "new": deals.filter(status="new").count(),
-        "reserved": deals.filter(status="reserved").count(),
-        "shipped": deals.filter(status="shipped").count(),
-        "disputed": deals.filter(status="disputed").count(),
-        "selling": deals.filter(seller=user).count(),
-        "buying": deals.filter(buyer=user).count(),
-        "active": deals.filter(status__in=["new", "reserved", "shipped", "disputed"]).count(),
-    }
+    # One aggregate query instead of nine separate COUNT queries (N+1 fix).
+    stats = deals.aggregate(
+        total=Count("id"),
+        completed=Count("id", filter=Q(status="completed")),
+        new=Count("id", filter=Q(status="new")),
+        reserved=Count("id", filter=Q(status="reserved")),
+        shipped=Count("id", filter=Q(status="shipped")),
+        disputed=Count("id", filter=Q(status="disputed")),
+        selling=Count("id", filter=Q(seller=user)),
+        buying=Count("id", filter=Q(buyer=user)),
+        active=Count(
+            "id",
+            filter=Q(status__in=["new", "reserved", "shipped", "disputed"]),
+        ),
+    )
     return render(
         request,
         "deal_room.html",
