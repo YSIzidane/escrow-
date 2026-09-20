@@ -364,6 +364,25 @@ else:
         },
     }
 
+# -- Cache backend ---------------------------------------------------------
+# Redis when configured (shared across workers, so rate limiting and any
+# template/query caching actually work in production); local memory in dev.
+if REDIS_URL:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": REDIS_URL,
+            "KEY_PREFIX": "safouane",
+        },
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "safouane-dev",
+        },
+    }
+
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", REDIS_URL).strip()
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", CELERY_BROKER_URL).strip()
 CELERY_ACCEPT_CONTENT = ["json"]

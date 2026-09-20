@@ -78,6 +78,24 @@ class PerformanceHeadersMiddleware:
         return response
 
 
+# Tighter per-minute POST budgets for sensitive endpoints (auth + money flows).
+# The Stripe webhook gets a generous budget because Stripe retries deliveries
+# itself and authenticates via signature rather than this generic budget.
+SENSITIVE_POST_LIMITS = {
+    "login": 8,
+    "account_login": 8,
+    "password_reset": 5,
+    "account_reset_password": 5,
+    "register": 5,
+    "ccp_checkout_submit": 6,
+    "withdraw_request": 6,
+    "create_ticket": 10,
+    "send_friend_request": 12,
+    "stripe_webhook": 120,
+}
+DEFAULT_POST_LIMIT = 15
+
+
 class RateLimitMiddleware:
     """
     A lightweight rate limiter to prevent basic spam or abuse.
@@ -94,18 +112,26 @@ class RateLimitMiddleware:
             scope = getattr(getattr(request, "resolver_match", None), "url_name", "") or request.path
             cache_key = f"rate_limit_{actor}_{scope}"
             
-            # Allow 15 POST requests per minute per IP
-            requests = cache.get(cache_key, [])
+            limit = SENSITIVE_POST_LIMITS.get(scope, DEFAULT_POST_LIMIT)
             now = time.time()
+            try:
+                requests = cache.get(cache_key, [])
+            except Exception:
+                # Fail open: a broken cache must never lock the whole site.
+                logger.warning("Rate limiter cache read failed; allowing request for %s", cache_key)
+                return self.get_response(request)
             
             # Remove requests older than 60 seconds
             requests = [req for req in requests if now - req < 60]
             
-            if len(requests) >= 15:
+            if len(requests) >= limit:
                 return HttpResponseForbidden("Too many requests. Please wait a moment and try again.")
             
             requests.append(now)
-            cache.set(cache_key, requests, 60)
+            try:
+                cache.set(cache_key, requests, 60)
+            except Exception:
+                logger.warning("Rate limiter cache write failed for %s", cache_key)
 
         response = self.get_response(request)
         return response
