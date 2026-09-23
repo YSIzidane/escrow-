@@ -80,6 +80,7 @@ def check_dzhub_layer(client: Client) -> bool:
     checks = {
         "dzhub-theme.css": "css/dzhub-theme.css" in html,
         "dzhub-final.css": "css/dzhub-final.css" in html,
+        "dzhub-page-skins.css": "css/dzhub-page-skins.css" in html,
         "brand logo svg": "dzhub-symbol.svg" in html,
         "light theme locked": "data-theme=\"light\"" in html,
     }

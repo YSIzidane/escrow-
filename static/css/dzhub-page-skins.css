@@ -1,0 +1,124 @@
+/*
+ * DZHub — page skins (ambient backgrounds)
+ *
+ * Loaded last in base.html. Gives EVERY page a professional blue/white
+ * canvas so no page reads as a plain white document:
+ *   1. A fixed light "aurora mesh" under the whole page (brand palette).
+ *   2. A true-blue photographic hero band at the top of each page
+ *      (no hue-rotate hacks — the art is natively DZHub blue).
+ *   3. Textured navy page headers and footer.
+ *   4. A soft ambient layer for the standalone auth pages.
+ * Readability first: every image sits under a white/blue gradient overlay,
+ * so dark text keeps its contrast on all surfaces.
+ */
+
+/* ── 1. Ambient canvas under every page ─────────────────────── */
+body[data-page]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background:
+    radial-gradient(1100px 520px at 100% 0%, rgba(125, 211, 252, .14), transparent 62%),
+    url("../images/brand/skin-mesh-aurora-light.webp") center / cover no-repeat,
+    #F6FAFD;
+}
+
+/* ── 2. Hero band — natively blue art, filter hacks removed ── */
+body[data-page] .se-main {
+  --dzhub-page-art: url("../images/brand/skin-tech-globe.webp");
+}
+
+body[data-page] .se-main::before {
+  filter: saturate(.98);
+  opacity: .92;
+  background-image:
+    linear-gradient(120deg, rgba(246, 250, 253, .95) 0%, rgba(234, 246, 252, .64) 42%, rgba(18, 97, 160, .40) 100%),
+    var(--dzhub-page-art);
+}
+
+/* Marketplace & discovery — light flowing waves */
+body[data-page="listings"] .se-main,
+body[data-page="search"] .se-main {
+  --dzhub-page-art: url("../images/brand/skin-blue-waves.webp");
+}
+
+/* Escrow / deals / payments keep the default security-globe art. */
+
+/* Communication & community — circuit texture */
+body[data-page="chat_hub"] .se-main,
+body[data-page="private_chat"] .se-main,
+body[data-page="room"] .se-main,
+body[data-page="create_room"] .se-main,
+body[data-page="join_room"] .se-main,
+body[data-page="support"] .se-main {
+  --dzhub-page-art: url("../images/brand/skin-cyber-circuit.webp");
+}
+
+/* Friends — soft bokeh */
+body[data-page="friends"] .se-main {
+  --dzhub-page-art: url("../images/brand/skin-blue-bokeh.webp");
+}
+
+/* About / guide — modern 3D abstract */
+body[data-page="about"] .se-main,
+body[data-page="guide"] .se-main {
+  --dzhub-page-art: url("../images/brand/skin-abstract-3d.webp");
+}
+
+/* Legal — deep nebula */
+body[data-page="policies"] .se-main,
+body[data-page="policies"] .se-main:has(.legal-privacy-page) {
+  --dzhub-page-art: url("../images/brand/skin-blue-nebula.webp");
+}
+
+/* Workspaces — notifications / invoices / admin */
+body[data-page="notifications"] .se-main,
+body[data-page="invoice"] .se-main,
+body[data-page="admin"] .se-main {
+  --dzhub-page-art: url("../images/brand/skin-cyber-circuit.webp");
+}
+
+/* ── 3. Profile (standalone document) ───────────────────────── */
+body[data-page="profile"] .page-shell::before {
+  background-image:
+    linear-gradient(120deg, rgba(246, 250, 253, .95), rgba(18, 97, 160, .42)),
+    url("../images/brand/skin-blue-nebula.webp");
+  filter: saturate(.98);
+}
+
+/* ── 4. Navy page headers — textured aurora ─────────────────── */
+.se-page-header {
+  background:
+    linear-gradient(135deg, rgba(6, 47, 85, .95) 0%, rgba(18, 97, 160, .92) 100%),
+    url("../images/brand/skin-mesh-aurora-dark.webp") center / cover no-repeat !important;
+  border: 1px solid rgba(125, 211, 252, .16);
+  box-shadow: 0 18px 44px rgba(10, 37, 64, .22);
+}
+
+/* ── 5. Footer — same navy aurora so the page closes with weight ── */
+.se-footer {
+  background:
+    linear-gradient(180deg, rgba(6, 47, 85, .97) 0%, rgba(10, 37, 64, .99) 100%),
+    url("../images/brand/skin-mesh-aurora-dark.webp") center / cover no-repeat !important;
+}
+
+/* ── 6. Card polish — float above the mesh ───────────────────── */
+.card {
+  border-top-color: rgba(18, 97, 160, .10);
+}
+
+/* ── 7. Auth pages — gentle ambient behind the panel ─────────── */
+body[data-page="login"]::before,
+body[data-page="register"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 480px at 0% 100%, rgba(125, 211, 252, .18), transparent 60%),
+    url("../images/brand/skin-mesh-aurora-light.webp") center / cover no-repeat;
+  opacity: .55;
+}
