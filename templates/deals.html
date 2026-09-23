@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static site_i18n %}
 
-{% block title %}{% t "deals.title" %} - Safouane{% endblock %}
+{% block title %}{% t "deals.title" %} - DZHub{% endblock %}
 {% block page_type %}listings{% endblock %}
 {% block nav_listing %}active{% endblock %}
 
@@ -10,37 +10,128 @@
 {% endblock %}
 
 {% block late_css %}
-<link rel="stylesheet" href="{% static 'css/deals_dark.css' %}?v=20260525b" media="not all" data-theme-dark-style>
+<link rel="stylesheet" href="{% static 'css/deals_dark.css' %}?v=20260923vDealsLuxury">
 {% endblock %}
 
 {% block content %}
-<main class="dl-page dl-page-listings" dir="rtl">
+<main class="dl-page dl-page-listings" dir="{{ current_dir }}">
+
+  <!-- Background decorative canvas with luxury ambient mesh & orbs -->
+  <div class="dl-bg-canvas" aria-hidden="true">
+    <div class="dl-visual-mesh"></div>
+    <div class="orb dl-orb-1"></div>
+    <div class="orb dl-orb-2"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
   <section class="dl-shell" aria-labelledby="deals-title">
-    <header class="dl-hero dl-hero-market">
-      <div>
-        <span class="dl-kicker">
-          <i class="fas fa-layer-group" aria-hidden="true"></i>
-          {% t "deals.market_tag" %}
-        </span>
-        <h1 id="deals-title">{% t "deals.header_title" %}</h1>
-        <p>{% t "deals.hero_sub" %}</p>
+
+    <!-- Modern Luxury Fintech Hero Banner -->
+    <header class="dl-hero-profile-style">
+      <div class="dl-cover-mesh-wrap" aria-hidden="true">
+        <div class="dl-hero-ambient-glow"></div>
+        <div class="orb dl-hero-orb"></div>
+        <div class="grid-overlay dl-hero-grid"></div>
       </div>
 
-      <div class="dl-hero-actions">
-        <span class="dl-stat-pill">
-          <i class="fas fa-circle-check" aria-hidden="true"></i>
-          {% if deals %}<b>{{ deals.paginator.count }}</b>{% else %}<b>0</b>{% endif %}
-          {% t "deals.available_now" %}
-        </span>
-        {% if user.is_authenticated %}
-        <a href="{% url 'create_deal' %}" class="dl-btn dl-btn-primary">
-          <i class="fas fa-plus" aria-hidden="true"></i>
-          <span>{% t "deals.add_deal" %}</span>
-        </a>
-        {% endif %}
+      <div class="dl-hero-showcase-grid">
+        <div class="dl-hero-profile-body">
+          <div class="dl-hero-badge">
+            <i class="fas fa-shield-halved" aria-hidden="true"></i>
+            <span>{% t "deals.market_tag" %}</span>
+          </div>
+
+          <h1 id="deals-title" class="dl-hero-title">
+            {% t "deals.header_title" %}
+          </h1>
+
+          <p class="dl-hero-subtitle">
+            {% t "deals.hero_sub" %}
+          </p>
+
+          <!-- Profile-style stat grid cards -->
+          <div class="dl-hero-stats-row">
+            <div class="dl-profile-stat-card is-primary">
+              <div class="dl-pstat-icon"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
+              <div class="dl-pstat-text">
+                <strong class="dl-pstat-val">{% if deals %}{{ deals.paginator.count }}{% else %}0{% endif %}</strong>
+                <span class="dl-pstat-lbl">{% t "deals.available_now" %}</span>
+              </div>
+            </div>
+
+            <div class="dl-profile-stat-card is-gold">
+              <div class="dl-pstat-icon"><i class="fas fa-vault" aria-hidden="true"></i></div>
+              <div class="dl-pstat-text">
+                <strong class="dl-pstat-val">100%</strong>
+                <span class="dl-pstat-lbl">{% t "deals.secured_vault" %}</span>
+              </div>
+            </div>
+
+            <div class="dl-profile-stat-card is-green">
+              <div class="dl-pstat-icon"><i class="fas fa-scale-balanced" aria-hidden="true"></i></div>
+              <div class="dl-pstat-text">
+                <strong class="dl-pstat-val">{% t "deals.fair_dispute" %}</strong>
+                <span class="dl-pstat-lbl">{% t "deals.guaranteed_rights" %}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dl-hero-cta">
+            {% if user.is_authenticated %}
+            <a href="{% url 'create_deal' %}" class="dl-btn dl-btn-primary">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <span>{% t "deals.add_deal" %}</span>
+            </a>
+            {% else %}
+            <a href="{% url 'register' %}" class="dl-btn dl-btn-primary">
+              <i class="fas fa-user-plus" aria-hidden="true"></i>
+              <span>{% t "deals.start_free" %}</span>
+            </a>
+            {% endif %}
+            <a href="#deals-container" class="dl-btn dl-btn-ghost">
+              <i class="fas fa-compass" aria-hidden="true"></i>
+              <span>{% t "deals.all" %}</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 3D Luxury Visual Showcase Column -->
+        <div class="dl-hero-visual-card" aria-hidden="true">
+          <div class="dl-3d-card-inner">
+            <img
+              src="{% static 'images/brand/marketplace_deals_hero.jpg' %}"
+              alt="DZHub Escrow Marketplace"
+              class="dl-3d-asset-img"
+              loading="eager"
+            >
+            <div class="dl-3d-card-overlay"></div>
+            <div class="dl-3d-floating-pill">
+              <span class="dl-pulsing-dot"></span>
+              <i class="fas fa-shield-halved" aria-hidden="true"></i>
+              <span>{% t 'site.tagline' %}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
 
+    <!-- Quick Category Switcher for Digital Services & Digital Products -->
+    <div class="dl-category-nav" style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
+      <a href="{% url 'listings' %}" class="dzhub-btn {% if not request.GET.category %}dzhub-btn{% else %}dzhub-btn-secondary{% endif %}" style="padding: 8px 18px; font-size: 0.875rem;">
+        <i class="fas fa-layer-group" aria-hidden="true"></i>
+        <span>{% t 'deals.all' %}</span>
+      </a>
+      <a href="{% url 'listings' %}?category=services" class="dzhub-btn {% if request.GET.category == 'services' %}dzhub-btn{% else %}dzhub-btn-secondary{% endif %}" style="padding: 8px 18px; font-size: 0.875rem;">
+        <i class="fas fa-screwdriver-wrench" aria-hidden="true"></i>
+        <span>{% t 'category.services' %}</span>
+      </a>
+      <a href="{% url 'listings' %}?category=digital" class="dzhub-btn {% if request.GET.category == 'digital' %}dzhub-btn{% else %}dzhub-btn-secondary{% endif %}" style="padding: 8px 18px; font-size: 0.875rem;">
+        <i class="fas fa-cloud-arrow-down" aria-hidden="true"></i>
+        <span>{% t 'category.digital' %}</span>
+      </a>
+    </div>
+
+    <!-- Floating Glass Filter Bar -->
     <form
       id="filterForm"
       class="dl-panel dl-filter-bar"
@@ -51,49 +142,60 @@
       hx-indicator="#dealsLoading"
       hx-trigger="submit, change from:select, keyup changed delay:350ms from:#dealSearch"
     >
-      <label class="dl-search-field" for="dealSearch">
-        <i class="fas fa-search" aria-hidden="true"></i>
-        <input id="dealSearch" type="text" name="q" value="{{ search_query }}"
-               placeholder="{% t 'deals.quick_search_placeholder' %}" autocomplete="off">
-      </label>
+      <div class="dl-search-field-wrap">
+        <label class="dl-search-field" for="dealSearch">
+          <i class="fas fa-search" aria-hidden="true"></i>
+          <input id="dealSearch" type="text" name="q" value="{{ search_query }}"
+                 placeholder="{% t "deals.quick_search_placeholder" %}" autocomplete="off">
+        </label>
+      </div>
 
       <div class="dl-filter-controls">
-        <label>
-          <span>{% t "deals.category" %}</span>
-          <select name="category" aria-label="{% t 'deals.category' %}">
-            <option value="" {% if not request.GET.category %}selected{% endif %}>{% t "category.all" %}</option>
-            <option value="games" {% if request.GET.category == 'games' %}selected{% endif %}>{% t "category.games" %}</option>
-            <option value="accounts" {% if request.GET.category == 'accounts' %}selected{% endif %}>{% t "category.accounts" %}</option>
-            <option value="services" {% if request.GET.category == 'services' %}selected{% endif %}>{% t "category.services" %}</option>
-            <option value="electronics" {% if request.GET.category == 'electronics' %}selected{% endif %}>{% t "category.electronics" %}</option>
-            <option value="digital" {% if request.GET.category == 'digital' %}selected{% endif %}>{% t "category.digital" %}</option>
-            <option value="physical" {% if request.GET.category == 'physical' %}selected{% endif %}>{% t "category.physical" %}</option>
-          </select>
-        </label>
+        <div class="dl-control-group">
+          <span class="dl-label">{% t "deals.category" %}</span>
+          <div class="dl-select-wrapper">
+            <select name="category" aria-label="{% t "deals.category" %}">
+              <option value="" {% if not request.GET.category %}selected{% endif %}>{% t "category.all" %}</option>
+              <option value="games" {% if request.GET.category == 'games' %}selected{% endif %}>{% t "category.games" %}</option>
+              <option value="accounts" {% if request.GET.category == 'accounts' %}selected{% endif %}>{% t "category.accounts" %}</option>
+              <option value="services" {% if request.GET.category == 'services' %}selected{% endif %}>{% t "category.services" %}</option>
+              <option value="electronics" {% if request.GET.category == 'electronics' %}selected{% endif %}>{% t "category.electronics" %}</option>
+              <option value="digital" {% if request.GET.category == 'digital' %}selected{% endif %}>{% t "category.digital" %}</option>
+              <option value="physical" {% if request.GET.category == 'physical' %}selected{% endif %}>{% t "category.physical" %}</option>
+            </select>
+            <i class="fas fa-chevron-down dl-select-arrow" aria-hidden="true"></i>
+          </div>
+        </div>
 
-        <label>
-          <span>{% t "deals.deal_type" %}</span>
-          <select name="type" aria-label="{% t 'deals.deal_type' %}">
-            <option value="" {% if not request.GET.type %}selected{% endif %}>{% t "deals.all" %}</option>
-            <option value="fixed" {% if request.GET.type == 'fixed' %}selected{% endif %}>{% t "deals.fixed_price" %}</option>
-            <option value="auction" {% if request.GET.type == 'auction' %}selected{% endif %}>{% t "deals.auction" %}</option>
-          </select>
-        </label>
+        <div class="dl-control-group">
+          <span class="dl-label">{% t "deals.deal_type" %}</span>
+          <div class="dl-select-wrapper">
+            <select name="type" aria-label="{% t "deals.deal_type" %}">
+              <option value="" {% if not request.GET.type %}selected{% endif %}>{% t "deals.all" %}</option>
+              <option value="fixed" {% if request.GET.type == 'fixed' %}selected{% endif %}>{% t "deals.fixed_price" %}</option>
+              <option value="auction" {% if request.GET.type == 'auction' %}selected{% endif %}>{% t "deals.auction" %}</option>
+            </select>
+            <i class="fas fa-chevron-down dl-select-arrow" aria-hidden="true"></i>
+          </div>
+        </div>
 
-        <label>
-          <span>{% t "deals.sort_label" %}</span>
-          <select name="sort" aria-label="{% t "deals.sort_aria" %}">
-            <option value="" {% if not request.GET.sort %}selected{% endif %}>{% t "deals.newest_first" %}</option>
-            <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>{% t "deals.price_low" %}</option>
-            <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>{% t "deals.price_high" %}</option>
-            <option value="bids" {% if request.GET.sort == 'bids' %}selected{% endif %}>{% t "deals.most_bids" %}</option>
-          </select>
-        </label>
+        <div class="dl-control-group">
+          <span class="dl-label">{% t "deals.sort_label" %}</span>
+          <div class="dl-select-wrapper">
+            <select name="sort" aria-label="{% t "deals.sort_aria" %}">
+              <option value="" {% if not request.GET.sort %}selected{% endif %}>{% t "deals.newest_first" %}</option>
+              <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>{% t "deals.price_low" %}</option>
+              <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>{% t "deals.price_high" %}</option>
+              <option value="bids" {% if request.GET.sort == 'bids' %}selected{% endif %}>{% t "deals.most_bids" %}</option>
+            </select>
+            <i class="fas fa-chevron-down dl-select-arrow" aria-hidden="true"></i>
+          </div>
+        </div>
       </div>
 
       <div class="dl-filter-actions">
         {% if request.GET.q or request.GET.category or request.GET.type or request.GET.status or request.GET.price_min or request.GET.price_max or request.GET.sort %}
-        <a href="{% url 'listings' %}" class="dl-btn dl-btn-ghost dl-btn-compact">
+        <a href="{% url 'listings' %}" class="dl-btn dl-btn-ghost dl-btn-compact" title="{% t "deals.clear" %}">
           <i class="fas fa-xmark" aria-hidden="true"></i>
           <span>{% t "deals.clear" %}</span>
         </a>
@@ -106,7 +208,7 @@
     </form>
 
     <div class="dl-loading htmx-indicator" id="dealsLoading" aria-hidden="true">
-      <span></span>
+      <div class="dl-spinner"></div>
       <b>{% t "site.loading" %}</b>
     </div>
 

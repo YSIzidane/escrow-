@@ -10,7 +10,7 @@
     <a class="up-brand" href="{% url 'home' %}" aria-label="{% t 'site.name' %}">
       <picture class="up-brand-logo-picture">
         <source media="(max-width: 768px)" srcset="{% static 'images/brand/icon-192.png' %}">
-        <img class="up-brand-logo-img" src="{% static 'images/brand/logo-white-small.webp' %}" alt="{% t 'site.name' %}" width="520" height="150" decoding="async" fetchpriority="high">
+        <img class="up-brand-logo-img" src="{% static 'images/brand/dzhub-logo-horizontal.svg' %}" alt="{% t 'site.name' %}" width="540" height="140" decoding="async" fetchpriority="high">
       </picture>
     </a>
 
@@ -392,26 +392,26 @@
 
 <style>
 body[data-page="profile"] {
-  --up-bg: #0b0d12;
-  --up-bg-2: #08090d;
-  --up-card: #11141c;
-  --up-card-2: #161a23;
-  --up-card-3: #1c2030;
-  --up-primary: #6366f1;
-  --up-primary-2: #818cf8;
-  --up-green: #34d399;
-  --up-danger: #f87171;
-  --up-text: #f4f4f5;
-  --up-muted: #9099a8;
-  --up-border: rgba(255,255,255,0.06);
-  --up-border-2: rgba(255,255,255,0.12);
-  --up-gradient: linear-gradient(135deg, #5b62e8 0%, #6366f1 100%);
-  --up-gradient-soft: linear-gradient(135deg, rgba(99,102,241,0.10), rgba(99,102,241,0.04));
-  --up-shadow: 0 24px 70px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.20);
-  --up-glow: 0 0 0 1px rgba(99,102,241,0.14), 0 18px 50px rgba(0,0,0,0.35);
+  --up-bg: #070a13;
+  --up-bg-2: #0a0f1d;
+  --up-card: #0e1424;
+  --up-card-2: #131c31;
+  --up-card-3: #18243e;
+  --up-primary: #f59e0b;
+  --up-primary-2: #fbbf24;
+  --up-green: #10b981;
+  --up-danger: #f43f5e;
+  --up-text: #f8fafc;
+  --up-muted: #94a3b8;
+  --up-border: rgba(255,255,255,0.08);
+  --up-border-2: rgba(255,255,255,0.15);
+  --up-gradient: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --up-gradient-soft: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04));
+  --up-shadow: 0 24px 70px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.25);
+  --up-glow: 0 0 0 1px rgba(245,158,11,0.2), 0 18px 50px rgba(0,0,0,0.4);
   background:
-    radial-gradient(1200px 700px at 85% -10%, rgba(99,102,241,0.10), transparent 60%),
-    radial-gradient(900px 600px at 5% 10%, rgba(99,102,241,0.05), transparent 65%),
+    radial-gradient(1200px 700px at 85% -10%, rgba(245,158,11,0.08), transparent 60%),
+    radial-gradient(900px 600px at 5% 10%, rgba(59,130,246,0.05), transparent 65%),
     linear-gradient(180deg, var(--up-bg) 0%, var(--up-bg-2) 100%) !important;
   color: var(--up-text);
 }

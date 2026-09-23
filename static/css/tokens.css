@@ -1,45 +1,122 @@
 /* ═══════════════════════════════════════════════════════════════════
-   SAFOUANE ESCROW — Design Tokens v1.0
+   DZHUB — Design Tokens v1.0
    المصدر الوحيد للحقيقة: ألوان/أسطح/مسافات/ظلال/حركة
    الوضع الفاتح (light) هو الافتراضي — الوضع الداكن عبر [data-theme="dark"]
    يُحمَّل أولًا قبل كل ملفات CSS الأخرى (لا يعرّف أي أنماط عناصر)
    ═══════════════════════════════════════════════════════════════════ */
 
-:root,
-html[data-theme="light"] {
-  color-scheme: light;
+:root {
+  color-scheme: dark;
 
-  /* ─── Brand ─── */
-  --se-gold: #c9963b;
+  /* ════════════════════════════════════════════════════════════════
+     UNIFIED TOKEN LAYER v2 — Luxury Dark Fintech Command Center
+     المصدر الوحيد الموحد لكل صفحات المنصة (deals / escrow / profile /
+     auth / error) — الأسماء القانونية المعتمدة للواجهة الموحدة
+     ════════════════════════════════════════════════════════════════ */
+
+  /* ─── Backgrounds (Midnight Navy Canvas) ─── */
+  --bg-canvas: #070a13;
+  --bg-surface: #0b0f1d;
+  --bg-surface-alt: #0f172a;
+  --card-glass: rgba(15, 23, 42, 0.82);
+  --card-glass-hover: rgba(30, 41, 59, 0.88);
+
+  /* ─── Champagne Gold Accents ─── */
+  --gold-primary: #f59e0b;
+  --gold-bright: #fbbf24;
+  --gold-glow: rgba(245, 158, 11, 0.25);
+
+  /* ─── Geometric Mesh Header Palette ─── */
+  --mesh-indigo: #4f6ef7;
+  --mesh-gold: #f59e0b;
+  --mesh-emerald: #10b981;
+
+  /* ─── Status Colors ─── */
+  --emerald-success: #10b981;
+  --rose-danger: #f43f5e;
+  --indigo-accent: #6366f1;
+
+  /* ─── Canonical Profile System Tokens ─── */
+  --color-bg: #070a13;
+  --color-bg-2: #0a0f1d;
+  --color-card: #0e1424;
+  --color-card-2: #131c31;
+  --color-card-3: #18243e;
+  --color-cover-start: #0e1424;
+  --color-cover-end: #162038;
+  --color-primary: #f59e0b;
+  --color-primary-2: #fbbf24;
+  --color-gold: #fbbf24;
+  --color-green: #10b981;
+  --color-danger: #f43f5e;
+  --color-text: #f8fafc;
+  --color-muted: #94a3b8;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-2: rgba(255, 255, 255, 0.15);
+
+  --gradient-brand: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --gradient-brand-soft: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.04));
+  --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+  --shadow-card: 0 24px 70px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.25);
+  --shadow-glow: 0 0 0 1px rgba(245, 158, 11, 0.2), 0 18px 50px rgba(0, 0, 0, 0.4);
+  --shadow-brand: 0 12px 30px rgba(245, 158, 11, 0.25);
+
+  --radius-card: 24px;
+  --radius-panel: 18px;
+  --radius-pill: 999px;
+  --page-max: 1240px;
+
+  /* ─── Typography (High-contrast Arabic Cairo & Manrope) ─── */
+  --font-sans: 'Cairo', 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --se-font-sans: var(--font-sans);
+
+  /* ─── Glass Borders ─── */
+  --border-glass: rgba(245, 158, 11, 0.18);
+  --border-hover: rgba(245, 158, 11, 0.45);
+
+  /* ─── Glassmorphism ─── */
+  --glass-blur: blur(16px);
+  --glass-blur-nav: blur(20px);
+  --glass-saturate: saturate(1.6);
+
+  /* ─── Glow Shadows ─── */
+  --glow-gold: 0 10px 30px -5px rgba(245, 158, 11, 0.2);
+  --glow-gold-strong: 0 0 0 1px rgba(245, 158, 11, 0.35), 0 8px 32px -8px rgba(245, 158, 11, 0.4);
+
+  /* ─── Legacy bridge (keeps --se-* / --dl-* consumers in sync) ─── */
+  --se-font-family: var(--font-sans);
+
+  /* ─── Brand Identity (Dark Navy & Gold Fintech) ─── */
+  --se-gold: #f4c95d;
   --se-gold-soft: #e8b96a;
   --se-gold-dark: #9a7228;
-  --se-gold-text: #8a6420; /* درجة أغمق للنص على الفاتح — تباين ≥ 4.5:1 */
+  --se-gold-text: #f4c95d;
   --se-navy: #0d1b2a;
   --se-navy-mid: #1a2e45;
   --se-navy-light: #243b55;
 
   /* ─── Surfaces ─── */
-  --se-bg: #f4f7fb;
-  --se-bg-alt: #eef2f7;
-  --se-bg-subtle: #f8fafd;
-  --se-surface: #ffffff;
-  --se-surface-hover: #fafbfc;
-  --se-surface-soft: rgba(248, 250, 252, 0.92);
-  --se-surface-strong: #ffffff;
+  --se-bg: #070a13;
+  --se-bg-alt: #0c1122;
+  --se-bg-subtle: #0f162b;
+  --se-surface: rgba(13, 18, 29, 0.88);
+  --se-surface-hover: rgba(255, 255, 255, 0.065);
+  --se-surface-soft: rgba(255, 255, 255, 0.045);
+  --se-surface-strong: rgba(18, 24, 37, 0.96);
 
   /* ─── Text ─── */
-  --se-text: #0f1d2f;
-  --se-text-2: #475569;
-  --se-text-3: #64748b;
+  --se-text: #f7f8fb;
+  --se-text-2: #aeb8c8;
+  --se-text-3: #778297;
 
   /* ─── Borders ─── */
-  --se-border: rgba(15, 23, 42, 0.08);
-  --se-border-strong: rgba(15, 23, 42, 0.14);
+  --se-border: rgba(255, 255, 255, 0.1);
+  --se-border-strong: rgba(255, 255, 255, 0.18);
 
   /* ─── Shadows — 3 مستويات ارتفاع ─── */
-  --se-shadow-1: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.03);
-  --se-shadow-2: 0 2px 6px rgba(15, 23, 42, 0.05), 0 12px 28px rgba(15, 23, 42, 0.06);
-  --se-shadow-3: 0 6px 16px rgba(15, 23, 42, 0.06), 0 24px 48px rgba(15, 23, 42, 0.09);
+  --se-shadow-1: 0 12px 32px rgba(0, 0, 0, 0.26);
+  --se-shadow-2: 0 18px 48px rgba(0, 0, 0, 0.36);
+  --se-shadow-3: 0 24px 64px rgba(0, 0, 0, 0.46);
 
   /* ─── Radius — 5 قيم فقط ─── */
   --se-r-sm: 8px;
@@ -74,50 +151,6 @@ html[data-theme="light"] {
   --se-dur: 0.22s;
 
   /* ─── Semantic ─── */
-  --se-success: #16a34a;
-  --se-success-bg: #e9f9f0;
-  --se-danger: #dc2626;
-  --se-danger-bg: #fdecec;
-  --se-warning: #b45309;
-  --se-warning-bg: #fef3e2;
-  --se-info: #2563eb;
-  --se-info-bg: #e8f1fe;
-
-  /* ─── Focus & Chrome ─── */
-  --se-focus-ring: 0 0 0 3px rgba(201, 150, 59, 0.35);
-  --se-chrome-bg: rgba(255, 255, 255, 0.9);
-  --se-chrome-text: #162235;
-  --se-chrome-border: rgba(15, 23, 42, 0.1);
-}
-
-/* ═══ Dark — كل الأسطح الداكنة تُشتق من هنا فقط ═══ */
-html[data-theme="dark"] {
-  color-scheme: dark;
-
-  --se-gold: #f4c95d;
-  --se-gold-soft: #e8b96a;
-  --se-gold-dark: #9a7228;
-  --se-gold-text: #f4c95d; /* الذهبي الفاتح مقروء على الداكن */
-
-  --se-bg: #05070d;
-  --se-bg-alt: #080c14;
-  --se-bg-subtle: #0c111d;
-  --se-surface: rgba(13, 18, 29, 0.88);
-  --se-surface-hover: rgba(255, 255, 255, 0.055);
-  --se-surface-soft: rgba(255, 255, 255, 0.045);
-  --se-surface-strong: rgba(18, 24, 37, 0.96);
-
-  --se-text: #f7f8fb;
-  --se-text-2: #aeb8c8;
-  --se-text-3: #778297;
-
-  --se-border: rgba(255, 255, 255, 0.1);
-  --se-border-strong: rgba(255, 255, 255, 0.18);
-
-  --se-shadow-1: 0 12px 32px rgba(0, 0, 0, 0.26);
-  --se-shadow-2: 0 18px 48px rgba(0, 0, 0, 0.36);
-  --se-shadow-3: 0 24px 64px rgba(0, 0, 0, 0.46);
-
   --se-success: #55d6a5;
   --se-success-bg: rgba(85, 214, 165, 0.14);
   --se-danger: #ff6b7c;
@@ -127,20 +160,43 @@ html[data-theme="dark"] {
   --se-info: #75a7ff;
   --se-info-bg: rgba(117, 167, 255, 0.14);
 
-  --se-focus-ring: 0 0 0 3px rgba(244, 201, 93, 0.18);
+  /* ─── Focus & Chrome ─── */
+  --se-focus-ring: 0 0 0 3px rgba(244, 201, 93, 0.35);
+  --se-focus-outline: 2px solid #f4c95d;
+  --se-focus-offset: 2px;
   --se-chrome-bg: rgba(7, 17, 29, 0.84);
   --se-chrome-text: #edf3fb;
   --se-chrome-border: rgba(226, 232, 240, 0.12);
+
+  /* ─── Buttons & Controls ─── */
+  --se-btn-h: 44px;
+  --se-btn-h-sm: 36px;
+  --se-btn-h-lg: 52px;
+  --se-btn-min-w: 110px;
+  --se-btn-pad: 0.625rem 1.25rem;
+  --se-btn-pad-sm: 0.4rem 0.875rem;
+  --se-btn-pad-lg: 0.875rem 1.75rem;
+
+  /* ─── Skeleton ─── */
+  --se-skeleton-bg: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 75%);
 }
 
-/* حالات الوصول الموحدة — تُستخدم في كل المكونات التفاعلية الجديدة */
-.se-theme-toggle:focus-visible,
-.se-theme-toggle-menu:focus-visible,
-button:focus-visible > .se-sr-only {
-  outline: none;
+/* حالات الوصول الموحدة — WCAG 2.2 AA Focus Indicators */
+:focus-visible {
+  outline: var(--se-focus-outline, 2px solid #c9963b) !important;
+  outline-offset: var(--se-focus-offset, 2px) !important;
+  box-shadow: var(--se-focus-ring) !important;
 }
 
-.se-theme-toggle:focus-visible,
-.se-theme-toggle-menu:focus-visible {
-  box-shadow: var(--se-focus-ring);
+.se-sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
+

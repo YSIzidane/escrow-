@@ -1,1 +1,1 @@
-{% if current_language == 'ar' %}لا يوجد حساب مرتبط بهذا البريد في SafouaneEscrow{% else %}No SafouaneEscrow account was found for this email{% endif %}
+{% if current_language == 'ar' %}لا يوجد حساب مرتبط بهذا البريد في DZHub{% else %}No DZHub account was found for this email{% endif %}

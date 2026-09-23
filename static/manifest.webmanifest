@@ -1,7 +1,7 @@
 {
-  "name": "SafouaneEscrow",
-  "short_name": "SafEscrow",
-  "description": "Secure escrow platform",
+  "name": "DZHub — دزاير هب",
+  "short_name": "DZHub",
+  "description": "منصة جزائرية للخدمات والمنتجات الرقمية",
   "icons": [
     {
       "src": "/static/images/brand/icon-192.png",
@@ -20,7 +20,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#0d1b2a",
-  "background_color": "#0d1b2a",
+  "theme_color": "#1261A0",
+  "background_color": "#F6FAFD",
   "display": "standalone"
 }

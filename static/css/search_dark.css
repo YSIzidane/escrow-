@@ -1,17 +1,17 @@
-﻿body[data-page="search"] {
-  --sr-bg: #0b0d12;
-  --sr-card: #11141c;
-  --sr-card-2: #161a23;
-  --sr-field: rgba(28, 33, 40, 0.84);
-  --sr-border: rgba(255, 255, 255, 0.08);
-  --sr-border-2: rgba(255, 255, 255, 0.14);
+body[data-page="search"] {
+  --sr-bg: #070a13;
+  --sr-card: #0e1424;
+  --sr-card-2: #141c30;
+  --sr-field: rgba(7, 10, 19, 0.8);
+  --sr-border: rgba(244, 201, 93, 0.12);
+  --sr-border-2: rgba(244, 201, 93, 0.28);
   --sr-text: #f4f4f5;
-  --sr-soft: #c7ced8;
-  --sr-muted: #9099a8;
-  --sr-accent: #6366f1;
-  --sr-purple: #818cf8;
-  --sr-gold: #d4d4d8;
-  --sr-gradient: linear-gradient(135deg, #5b62e8 0%, #6366f1 100%);
+  --sr-soft: #cbd5e1;
+  --sr-muted: #94a3b8;
+  --sr-accent: #f4c95d;
+  --sr-purple: #f7d57f;
+  --sr-gold: #f4c95d;
+  --sr-gradient: linear-gradient(135deg, #f4c95d 0%, #e6b840 100%);
   background: var(--sr-bg) !important;
   color: var(--sr-text);
 }
@@ -637,4 +637,79 @@ body[data-page="search"] .se-chat-fab {
     animation: none !important;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   FINTECH DESIGN POLISH FOR SEARCH PAGE
+   ══════════════════════════════════════════════════════════════════ */
+.sr-hero {
+  border: 1px solid rgba(244, 201, 93, 0.15) !important;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  background: radial-gradient(circle at 90% 10%, rgba(244, 201, 93, 0.08), transparent 50%),
+              linear-gradient(145deg, rgba(14, 20, 36, 0.95), rgba(7, 10, 19, 0.98)) !important;
+  border-radius: 20px !important;
+}
+
+.sr-kicker {
+  border: 1px solid rgba(244, 201, 93, 0.3) !important;
+  background: rgba(244, 201, 93, 0.1) !important;
+  color: var(--sr-gold) !important;
+}
+
+.sr-search-form {
+  border: 1px solid rgba(244, 201, 93, 0.12) !important;
+  background: rgba(14, 20, 36, 0.85) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.sr-search-field input {
+  background: rgba(7, 10, 19, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f4f4f5 !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+}
+
+.sr-search-field input:focus {
+  border-color: rgba(244, 201, 93, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(244, 201, 93, 0.15) !important;
+  outline: none !important;
+}
+
+.sr-btn-primary {
+  background: linear-gradient(135deg, #f4c95d 0%, #e6b840 100%) !important;
+  color: #070a13 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 10px 25px -5px rgba(244, 201, 93, 0.35) !important;
+  border: none !important;
+  border-radius: 12px !important;
+}
+
+.sr-btn-primary:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 15px 30px -5px rgba(244, 201, 93, 0.5) !important;
+}
+
+.sr-tab.is-active {
+  border-color: rgba(244, 201, 93, 0.4) !important;
+  background: rgba(244, 201, 93, 0.12) !important;
+  color: var(--sr-gold) !important;
+  font-weight: 700 !important;
+}
+
+.sr-result-card,
+.sr-user-row {
+  border: 1px solid rgba(244, 201, 93, 0.1) !important;
+  background: rgba(14, 20, 36, 0.8) !important;
+  border-radius: 18px !important;
+  transition: all 0.4s ease !important;
+}
+
+.sr-result-card:hover,
+.sr-user-row:hover {
+  border-color: rgba(244, 201, 93, 0.35) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6) !important;
+}
+
 

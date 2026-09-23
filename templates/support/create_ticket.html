@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static site_i18n %}
 
-{% block title %}{% if is_report_mode %}{% t "support.report.title" %}{% else %}{% t "support.create.title" %}{% endif %} - Safouane{% endblock %}
+{% block title %}{% if is_report_mode %}{% t "support.report.title" %}{% else %}{% t "support.create.title" %}{% endif %} - DZHub{% endblock %}
 {% block page_type %}support{% endblock %}
 {% block nav_support %}active{% endblock %}
 
@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block late_css %}
-<link rel="stylesheet" href="{% static 'css/support_dark.css' %}?v=20260523b" media="not all" data-theme-dark-style>
+<link rel="stylesheet" href="{% static 'css/support_dark.css' %}?v=20260920v1">
 {% endblock %}
 
 {% block content %}

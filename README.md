@@ -1,12 +1,9 @@
 <div align="center">
-  <img src="./static/images/brand/logo-primary.svg" alt="SafouaneEscrow" width="144" />
+  <img src="./static/images/brand/dzhub-symbol.svg" alt="DZHub" width="144" />
 
-  <h1>SafouaneEscrow</h1>
-  <p><strong>Escrow-first marketplace infrastructure for protected digital transactions.</strong></p>
-
-  <p>
-    <img src="https://readme-typing-svg.demolab.com?font=Inter&weight=600&size=18&pause=1400&color=C9963B&center=true&vCenter=true&width=920&lines=Protected+checkout+for+buyers+and+sellers;Real-time+deal+rooms%2C+chat%2C+notifications%2C+and+admin+review;Built+with+Django%2C+Channels%2C+PostgreSQL%2C+Redis%2C+Celery%2C+and+Stripe" alt="Project intro animation" />
-  </p>
+  <h1>DZHub — دزاير هب</h1>
+  <p><strong>منصة جزائرية للخدمات والمنتجات الرقمية مع حماية الضمان (Escrow)</strong></p>
+  <p><strong>Trusted Algerian marketplace for digital services and products with escrow protection.</strong></p>
 
   <p>
     <img src="https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
@@ -17,10 +14,6 @@
     <img src="https://img.shields.io/badge/Stripe-Escrow%20Flow-635BFF?style=for-the-badge&logo=stripe&logoColor=white" alt="Stripe" />
   </p>
 </div>
-
-<p align="center">
-  <img src="./static/images/new_logo.jpg" alt="SafouaneEscrow cover" width="100%" />
-</p>
 
 <table>
   <tr>
@@ -45,7 +38,7 @@
 
 ## Product Vision
 
-SafouaneEscrow is a Django-based marketplace built around one core principle: a transaction should remain structured, traceable, and protected from the moment a buyer commits payment until the deal is successfully completed or safely refunded.
+DZHub (دزاير هب) is an escrow-first platform designed specifically for digital services and digital products. A transaction remains structured, traceable, and protected from the moment a buyer commits payment until the deal is successfully completed or safely refunded.
 
 Instead of treating escrow as an add-on, the platform places it at the center of the product experience. Listings, rooms, support, notifications, moderation, invoices, and payment state changes are all connected to the transaction lifecycle.
 

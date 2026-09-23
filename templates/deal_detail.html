@@ -20,104 +20,88 @@
 {% endif %}
 {% endblock %}
 {% block late_css %}
-<link rel="stylesheet" href="{% static 'css/deal_escrow_premium.css' %}?v=20260525g">
+<link rel="stylesheet" href="{% static 'css/deal_escrow_premium.css' %}?v=20260920v999">
 {% endblock %}
 
 {% block content %}
-<div class="pv-page-decor-topleft">
-  <picture>
-    <source media="(max-width: 768px), (pointer: coarse)" srcset="{% static 'images/brand/hero-fluid-mobile.webp' %}" type="image/webp">
-    <img src="{% static 'images/brand/hero-fluid.webp' %}" alt="" loading="lazy" decoding="async" fetchpriority="low" width="1024" height="1024">
-  </picture>
-</div>
-<div class="dx-page">
+<div class="dx-page" dir="{{ current_dir }}">
 
-  
-  <nav class="se-detail-breadcrumb" style="margin-bottom:18px;display:flex;align-items:center;gap:6px;font-size:.82rem;" aria-label="{% t 'ui.breadcrumb' %}">
-    <a href="{% url 'home' %}" style="color:var(--text-secondary);text-decoration:none;font-weight:600;transition:color .2s;" class="se-bc-link">
-      <i class="fas fa-home" style="font-size:11px;margin-left:4px;"></i>{% t "deal.detail.breadcrumb_home" %}
+  <nav class="se-detail-breadcrumb" aria-label="{% t 'ui.breadcrumb' %}">
+    <a href="{% url 'home' %}" class="se-bc-link">
+      <i class="fas fa-house-chimney"></i> {% t "deal.detail.breadcrumb_home" %}
     </a>
-    <i class="fas fa-chevron-{% if request.LANGUAGE_CODE == 'en' %}right{% else %}left{% endif %}" style="font-size:9px;color:#C8D3DF;"></i>
-    <a href="{% url 'listings' %}" style="color:var(--text-secondary);text-decoration:none;font-weight:600;transition:color .2s;" class="se-bc-link">{% t "deal.detail.breadcrumb_deals" %}</a>
-    <i class="fas fa-chevron-{% if request.LANGUAGE_CODE == 'en' %}right{% else %}left{% endif %}" style="font-size:9px;color:#C8D3DF;"></i>
-    <span style="color:var(--navy);font-weight:700;">{{ deal.product_title|truncatechars:35 }}</span>
+    <i class="fas fa-chevron-{% if current_dir == 'rtl' %}left{% else %}right{% endif %} se-bc-sep"></i>
+    <a href="{% url 'listings' %}" class="se-bc-link">{% t "deal.detail.breadcrumb_deals" %}</a>
+    <i class="fas fa-chevron-{% if current_dir == 'rtl' %}left{% else %}right{% endif %} se-bc-sep"></i>
+    <span class="se-bc-current">{{ deal.product_title|truncatechars:35 }}</span>
   </nav>
 
-  <section class="dx-hero dx-status-{{ deal.status }} dx-reveal" aria-labelledby="dxDealTitle">
-    <div class="dx-hero-main">
-      <div class="dx-hero-topline">
-        <span class="dx-pill dx-pill-secure">
-          <i class="fas fa-shield-halved" aria-hidden="true"></i>
-          {% if current_language == 'ar' %}صفقة محمية بالضمان{% else %}Escrow protected deal{% endif %}
-        </span>
-        <span class="dx-pill dx-pill-status">
-          <i class="fas {% if deal.status == 'completed' %}fa-circle-check{% elif deal.status == 'disputed' %}fa-triangle-exclamation{% elif deal.status == 'cancelled' %}fa-circle-xmark{% else %}fa-circle-dot{% endif %}" aria-hidden="true"></i>
-          {{ deal.get_status_display }}
-        </span>
-      </div>
-
-      <h1 id="dxDealTitle">{{ deal.product_title }}</h1>
-      <p class="dx-hero-sub">
-        {% if current_language == 'ar' %}
-        مساحة صفقة آمنة تجمع الاتفاق، الدفع، التسليم، المحادثات، والنزاعات في واجهة واحدة واضحة.
-        {% else %}
-        A secure deal workspace for agreement, payment, delivery, conversation, and dispute handling in one clear interface.
-        {% endif %}
-      </p>
-
-      <div class="dx-meta-grid" aria-label="{% if current_language == 'ar' %}معلومات الصفقة{% else %}Deal metadata{% endif %}">
-        <span><i class="fas fa-hashtag" aria-hidden="true"></i>{% if current_language == 'ar' %}رقم الصفقة{% else %}Deal ID{% endif %} <strong>#{{ deal.id }}</strong></span>
-        <span><i class="fas fa-calendar" aria-hidden="true"></i>{% if current_language == 'ar' %}تاريخ الإنشاء{% else %}Created{% endif %} <strong>{{ deal.created_at|date:"d/m/Y" }}</strong></span>
-        <span><i class="fas {% if deal.is_auction %}fa-gavel{% else %}fa-tag{% endif %}" aria-hidden="true"></i>{% if current_language == 'ar' %}النوع{% else %}Type{% endif %} <strong>{% if deal.is_auction %}{% t 'deal.detail.type_auction' %}{% else %}{% t 'deal.detail.type_fixed' %}{% endif %}</strong></span>
-      </div>
-
-      <div class="dx-trust-row">
-        <span><i class="fas fa-lock" aria-hidden="true"></i>{% if current_language == 'ar' %}محادثة موثقة{% else %}Documented chat{% endif %}</span>
-        <span><i class="fas fa-vault" aria-hidden="true"></i>{% if current_language == 'ar' %}دفع محمي{% else %}Protected payment{% endif %}</span>
-        <span><i class="fas fa-scale-balanced" aria-hidden="true"></i>{% if current_language == 'ar' %}مسار نزاع واضح{% else %}Clear dispute path{% endif %}</span>
-      </div>
+  <!-- Modern Luxury Fintech Deal Hero -->
+  <section class="dx-hero-profile-style dx-reveal" aria-labelledby="dxDealTitle">
+    <div class="dl-cover-mesh-wrap" aria-hidden="true">
+      <div class="dl-hero-ambient-glow"></div>
     </div>
 
-    <div class="dx-hero-side">
-      {% if deal.images.exists %}
-      <button type="button" class="dx-hero-media" onclick="openImageModal(document.getElementById('mainImage')?.src || this.querySelector('img').src)" aria-label="{% if current_language == 'ar' %}عرض صورة الصفقة{% else %}View deal image{% endif %}">
-        <img src="{{ deal.images.first.image|file_url:'images/brand/deal-placeholder.webp' }}"
-             alt="{{ deal.product_title }}"
-             decoding="async"
-             fetchpriority="high"
-             width="720"
-             height="520">
-        <span><i class="fas fa-up-right-and-down-left-from-center" aria-hidden="true"></i></span>
-      </button>
-      {% else %}
-      <div class="dx-hero-media dx-hero-media-empty" aria-hidden="true">
-        <i class="fas fa-shield-halved"></i>
-      </div>
-      {% endif %}
+    <div class="dx-hero-profile-body">
+      <div class="dx-hero-main">
+        <div class="dx-hero-topline">
+          <span class="dx-pill dx-pill-secure">
+            <i class="fas fa-shield-halved" aria-hidden="true"></i>
+            {% if current_language == 'ar' %}صفقة محمية بالضمان{% else %}Escrow protected deal{% endif %}
+          </span>
+          <span class="dx-pill dx-pill-status">
+            <i class="fas {% if deal.status == 'completed' %}fa-circle-check{% elif deal.status == 'disputed' %}fa-triangle-exclamation{% elif deal.status == 'cancelled' %}fa-circle-xmark{% else %}fa-circle-dot{% endif %}" aria-hidden="true"></i>
+            {{ deal.get_status_display }}
+          </span>
+        </div>
 
-      <aside class="dx-amount-card" aria-label="{% if current_language == 'ar' %}مبلغ الصفقة{% else %}Deal amount{% endif %}">
-        <span>{% if deal.is_auction %}{% t 'deal.detail.start_price' %}{% else %}{% t 'deal.detail.final_price_escrow' %}{% endif %}</span>
-        <strong>${% if deal.is_auction %}{{ deal.starting_price }}{% else %}{{ deal.price }}{% endif %}</strong>
-        <div class="dx-money-state">
-          {% if deal.payment %}
-          <i class="fas fa-building-columns" aria-hidden="true"></i>
-          <span>{{ deal.payment.get_status_display }}</span>
+        <h1 id="dxDealTitle">{{ deal.product_title }}</h1>
+        <p class="dx-hero-sub">
+          {% if current_language == 'ar' %}
+          مساحة صفقة آمنة تجمع الاتفاق، الدفع، التسليم، المحادثات، والنزاعات في واجهة واحدة واضحة.
           {% else %}
-          <i class="fas fa-hourglass-half" aria-hidden="true"></i>
-          <span>{% if current_language == 'ar' %}بانتظار بدء الدفع{% else %}Awaiting payment start{% endif %}</span>
+          A secure deal workspace for agreement, payment, delivery, conversation, and dispute handling in one clear interface.
           {% endif %}
+        </p>
+
+        <div class="dx-meta-grid" aria-label="{% if current_language == 'ar' %}معلومات الصفقة{% else %}Deal metadata{% endif %}">
+          <span><i class="fas fa-hashtag" aria-hidden="true"></i>{% if current_language == 'ar' %}رقم الصفقة{% else %}Deal ID{% endif %} <strong>#{{ deal.id }}</strong></span>
+          <span><i class="fas fa-calendar" aria-hidden="true"></i>{% if current_language == 'ar' %}تاريخ الإنشاء{% else %}Created{% endif %} <strong>{{ deal.created_at|date:"d/m/Y" }}</strong></span>
+          <span><i class="fas {% if deal.is_auction %}fa-gavel{% else %}fa-tag{% endif %}" aria-hidden="true"></i>{% if current_language == 'ar' %}النوع{% else %}Type{% endif %} <strong>{% if deal.is_auction %}{% t 'deal.detail.type_auction' %}{% else %}{% t 'deal.detail.type_fixed' %}{% endif %}</strong></span>
         </div>
-        <div class="dx-money-breakdown">
-          <div>
-            <span>{% if current_language == 'ar' %}رسوم المنصة{% else %}Platform fee{% endif %}</span>
-            <strong>{% if deal.payment %}${{ deal.payment.fee_amount }}{% else %}{% if current_language == 'ar' %}تُحسب عند الدفع{% else %}Calculated at checkout{% endif %}{% endif %}</strong>
-          </div>
-          <div>
-            <span>{% if current_language == 'ar' %}صافي البائع{% else %}Seller net{% endif %}</span>
-            <strong>{% if deal.payment %}${{ deal.payment.net_amount }}{% else %}-{% endif %}</strong>
-          </div>
+      </div>
+
+      <div class="dx-hero-side">
+        {% if deal.images.exists %}
+        <button type="button" class="dx-hero-media" onclick="openImageModal(document.getElementById('mainImage')?.src || this.querySelector('img').src)" aria-label="{% if current_language == 'ar' %}عرض صورة الصفقة{% else %}View deal image{% endif %}">
+          <img src="{{ deal.images.first.image|file_url:'images/brand/deal-placeholder.webp' }}"
+               alt="{{ deal.product_title }}"
+               decoding="async"
+               fetchpriority="high"
+               width="720"
+               height="520">
+          <span><i class="fas fa-up-right-and-down-left-from-center" aria-hidden="true"></i></span>
+        </button>
+        {% else %}
+        <div class="dx-hero-media dx-hero-media-empty" aria-hidden="true">
+          <i class="fas fa-shield-halved"></i>
         </div>
-      </aside>
+        {% endif %}
+
+        <aside class="dx-amount-card" aria-label="{% if current_language == 'ar' %}مبلغ الصفقة{% else %}Deal amount{% endif %}">
+          <span>{% if deal.is_auction %}{% t 'deal.detail.start_price' %}{% else %}{% t 'deal.detail.final_price_escrow' %}{% endif %}</span>
+          <strong>{% if deal.is_auction %}{{ deal.starting_price }}{% else %}{{ deal.price }}{% endif %} {% t 'currency.dzd' %}</strong>
+          <div class="dx-money-state">
+            {% if deal.payment %}
+            <i class="fas fa-building-columns" aria-hidden="true"></i>
+            <span>{{ deal.payment.get_status_display }}</span>
+            {% else %}
+            <i class="fas fa-hourglass-half" aria-hidden="true"></i>
+            <span>{% if current_language == 'ar' %}بانتظار بدء الدفع{% else %}Awaiting payment start{% endif %}</span>
+            {% endif %}
+          </div>
+        </aside>
+      </div>
     </div>
   </section>
 
@@ -600,7 +584,7 @@
         <div class="se-buy-guarantees">
           <div class="se-buy-guarantee">
             <div class="se-buy-guarantee-icon" style="background:var(--success-light); height: 28px; width: auto; padding: 0 8px; border-radius: 8px; display: flex; align-items: center;">
-              <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" class="se-brand-logo-badge" width="520" height="150" loading="lazy" decoding="async">
+              <img src="{% static 'images/brand/dzhub-symbol.svg' %}" alt="{% t 'site.name' %}" class="se-brand-logo-badge" width="48" height="48" loading="lazy" decoding="async">
             </div>
             <span>{% t 'deal.detail.guarantee1' %}</span>
           </div>
@@ -649,7 +633,7 @@
             <i class="fas fa-lock"></i> {% t 'deal.detail.buy_escrow' %}
           </a>
           <div class="se-buy-inline-hint">
-            <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" class="se-brand-logo-badge" width="520" height="150" loading="lazy" decoding="async">
+            <img src="{% static 'images/brand/dzhub-symbol.svg' %}" alt="{% t 'site.name' %}" class="se-brand-logo-badge" width="48" height="48" loading="lazy" decoding="async">
             <span>{% t 'deal.detail.buy_hint' %}</span>
           </div>
 

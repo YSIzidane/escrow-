@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#f4f7fb">
+  <meta name="theme-color" content="#F6FAFD">
   <meta name="description" content="{% block meta_description %}{{ default_share_description }}{% endblock %}">
   <link rel="canonical" href="{% block canonical_url %}{{ default_share_url }}{% endblock %}">
   <meta property="og:type" content="{% block og_type %}website{% endblock %}">
@@ -27,7 +27,7 @@
   <link rel="shortcut icon" href="{% static 'images/brand/favicon.ico' %}">
   <link rel="apple-touch-icon" href="{% static 'images/brand/apple-touch-icon.png' %}">
   <link rel="manifest" href="{% static 'manifest.webmanifest' %}">
-  <link rel="preload" href="{% static 'images/brand/logo-black-small.webp' %}" as="image" type="image/webp" fetchpriority="high">
+  <link rel="preload" href="{% static 'images/brand/dzhub-logo-horizontal.svg' %}" as="image" type="image/svg+xml" fetchpriority="high">
   {% block preload_assets %}{% endblock %}
   <title>{% block title %}{{ default_share_title }}{% endblock %}</title>
   {% block meta %}{% endblock %}
@@ -35,13 +35,8 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  {% if current_language == 'ar' %}
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" as="style" crossorigin onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
-  {% else %}
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" as="style" crossorigin onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
-  {% endif %}
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" as="style" crossorigin onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
 
   
   <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/all.min.css' %}?v=6.5.0">
@@ -52,142 +47,28 @@
   <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}?v=5.3.2">
   {% endif %}
   
-  <link rel="stylesheet" href="{% static 'css/tokens.css' %}?v=20260918a">
-  <link rel="stylesheet" href="{% static 'css/main.css' %}">
-  <link rel="stylesheet" href="{% static 'css/backgrounds.css' %}">
-  <link rel="stylesheet" href="{% static 'css/improvements.css' %}" media="not all" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/prelaunch_polish.css' %}" media="not all" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/publish_ui.css' %}?v=20260428b" media="not all" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/page-visuals.css' %}?v=20260514" media="not all" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=20260514b" media="not all" data-se-deferred-style>
-  <noscript>
-    <link rel="stylesheet" href="{% static 'css/improvements.css' %}">
-    <link rel="stylesheet" href="{% static 'css/prelaunch_polish.css' %}">
-    <link rel="stylesheet" href="{% static 'css/publish_ui.css' %}?v=20260428b">
-    <link rel="stylesheet" href="{% static 'css/page-visuals.css' %}?v=20260514">
-    <link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=20260514b">
-  </noscript>
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}?v=20260920c">
+  <link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=20260920b">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}?v=20260920b">
+  <link rel="stylesheet" href="{% static 'css/base-chrome.css' %}?v=20260923vPill">
+  <link rel="stylesheet" href="{% static 'css/responsive_fixes.css' %}?v=20260920b">
+  <link rel="stylesheet" href="{% static 'css/enterprise_unify.css' %}?v=20260920b" media="print" onload="this.media='all'">
+  <!-- Legacy dark layer disabled for pure DZHub white & blue theme -->
+
+
   <script>
     (function () {
-      function resolveTheme() {
-        try {
-          var saved = localStorage.getItem('theme');
-          if (saved !== 'dark' && saved !== 'light') {
-            /* legacy key - respect existing users' choice */
-            saved = localStorage.getItem('se-theme');
-          }
-          if (saved === 'dark' || saved === 'light') return saved;
-        } catch (error) {}
-        try {
-          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
-        } catch (error) {}
-        return 'light';
-      }
-      var theme = resolveTheme();
-      window.__SE_THEME__ = theme;
-      /* Dark-theme gate: enables/disables every [data-theme-dark-style] element */
-      window.__SE_SET_THEME_MEDIA__ = function (darkActive) {
-        var nodes = document.querySelectorAll('[data-theme-dark-style]');
-        for (var i = 0; i < nodes.length; i++) {
-          nodes[i].media = darkActive ? 'all' : 'not all';
-        }
-      };
-      try {
-        document.documentElement.dataset.theme = theme;
-        document.documentElement.style.colorScheme = theme;
-        var themeMeta = document.querySelector('meta[name="theme-color"]');
-        if (themeMeta) themeMeta.setAttribute('content', theme === 'dark' ? '#07111d' : '#f4f7fb');
-
-        var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        var slowNetwork = !!(connection && connection.effectiveType && /slow-2g|2g|3g/i.test(connection.effectiveType));
-        var limitedDevice = (navigator.deviceMemory && navigator.deviceMemory <= 4)
-          || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
-        if ((connection && connection.saveData) || slowNetwork || limitedDevice) {
-          document.documentElement.classList.add('se-lite-effects');
-        }
-      } catch (error) {
-        document.documentElement.dataset.theme = 'light';
-        document.documentElement.style.colorScheme = 'light';
-      }
+      const savedTheme = 'light';
+      localStorage.setItem('theme', 'light');
+      document.documentElement.dataset.theme = savedTheme;
+      document.documentElement.style.colorScheme = savedTheme;
+      window.__SE_THEME__ = savedTheme;
     })();
   </script>
-  <script>
-    (function () {
-      function schedule(callback, timeout) {
-        if ('requestIdleCallback' in window) {
-          window.requestIdleCallback(callback, { timeout: timeout || 2200 });
-        } else {
-          window.setTimeout(callback, timeout || 900);
-        }
-      }
-
-      function activateDeferredStyles() {
-        const links = Array.from(document.querySelectorAll('link[data-se-deferred-style]'));
-        let index = 0;
-        const gap = document.documentElement.classList.contains('se-lite-effects') ? 180 : 120;
-
-        function applyNext() {
-          const link = links[index++];
-          if (!link) return;
-          if (link.hasAttribute('data-theme-dark-style')) {
-            /* dark-only stylesheet: activate in dark theme only */
-            link.media = window.__SE_THEME__ === 'dark' ? (link.dataset.seMedia || 'all') : 'not all';
-          } else {
-            link.media = link.dataset.seMedia || 'all';
-          }
-          window.setTimeout(() => schedule(applyNext, 900), gap);
-        }
-
-        applyNext();
-      }
-
-      const start = () => schedule(activateDeferredStyles, document.documentElement.classList.contains('se-lite-effects') ? 2800 : 1200);
-      if (document.readyState === 'complete') {
-        start();
-      } else {
-        window.addEventListener('load', start, { once: true });
-      }
-    })();
-  </script>
-
-  <link rel="stylesheet" href="{% static 'css/base-chrome.css' %}?v=20260919a">
-  <link rel="stylesheet" href="{% static 'css/responsive_fixes.css' %}?v=20260422a">
-  <link rel="stylesheet" href="{% static 'css/app_foundation.css' %}?v=20260502b">
-  <link rel="stylesheet" href="{% static 'css/performance.css' %}?v=20260817b">
-  <link rel="stylesheet" href="{% static 'css/site_experience.css' %}?v=20260507c" media="not all" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/design_refinement.css' %}?v=20260429a" media="not all" data-se-deferred-style>
-  <noscript>
-    <link rel="stylesheet" href="{% static 'css/responsive_fixes.css' %}?v=20260422a">
-    <link rel="stylesheet" href="{% static 'css/app_foundation.css' %}?v=20260502b">
-    <link rel="stylesheet" href="{% static 'css/performance.css' %}?v=20260817b">
-    <link rel="stylesheet" href="{% static 'css/site_experience.css' %}?v=20260507c">
-    <link rel="stylesheet" href="{% static 'css/design_refinement.css' %}?v=20260429a">
-  </noscript>
   {% block extra_css %}{% endblock %}
-  <link rel="stylesheet" href="{% static 'css/header_blue.css' %}?v=20260506a" media="not all" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/visual_experience.css' %}?v=20260507c" media="not all" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/premium.css' %}?v=20260523a" media="not all" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/visual_assets.css' %}?v=20260508b" media="not all" data-se-media="(min-width: 769px) and (hover: hover)" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/design-unify.css' %}?v=20260514a" media="not all" data-se-deferred-style>
-  <noscript>
-    <link rel="stylesheet" href="{% static 'css/header_blue.css' %}?v=20260506a">
-    <link rel="stylesheet" href="{% static 'css/visual_experience.css' %}?v=20260507c">
-    <link rel="stylesheet" href="{% static 'css/premium.css' %}?v=20260523a">
-    <link rel="stylesheet" href="{% static 'css/visual_assets.css' %}?v=20260508b" media="(min-width: 769px) and (hover: hover)">
-    <link rel="stylesheet" href="{% static 'css/design-unify.css' %}?v=20260514a">
-  </noscript>
   {% block late_css %}{% endblock %}
-  <link rel="stylesheet" href="{% static 'css/enterprise_unify.css' %}?v=20260523a" media="not all" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/mobile_lite.css' %}?v=20260523a" media="not all" data-se-media="(max-width: 768px), (pointer: coarse)" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/mobile_app.css' %}?v=20260523a" media="not all" data-se-media="(max-width: 768px), (pointer: coarse)" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/chrome_theme.css' %}?v=20260525a" media="not all" data-se-deferred-style>
-  <link rel="stylesheet" href="{% static 'css/platform_dark_unify.css' %}?v=20260525a" media="not all" data-se-deferred-style data-theme-dark-style>
-  <noscript>
-    <link rel="stylesheet" href="{% static 'css/enterprise_unify.css' %}?v=20260523a">
-    <link rel="stylesheet" href="{% static 'css/mobile_lite.css' %}?v=20260523a" media="(max-width: 768px), (pointer: coarse)">
-    <link rel="stylesheet" href="{% static 'css/mobile_app.css' %}?v=20260523a" media="(max-width: 768px), (pointer: coarse)">
-    <link rel="stylesheet" href="{% static 'css/chrome_theme.css' %}?v=20260525a">
-  </noscript>
+  <!-- Load the DZHub layer last so legacy page styles cannot pull the site back to dark/gold. -->
+  <link rel="stylesheet" href="{% static 'css/dzhub-theme.css' %}?v=20260923v2">
   <script>
     window.SE_UI = {
       shareUnsupported: '{% t "share.unsupported"|escapejs %}',
@@ -220,12 +101,6 @@
       vitalsUrl: '{% if performance_vitals_url %}{{ performance_vitals_url }}{% endif %}',
       sampleRate: {% if debug %}1{% else %}0.35{% endif %}
     };
-  </script>
-  <script>
-    /* Theme gate: runs after all <head> stylesheets are parsed, before first paint */
-    if (window.__SE_SET_THEME_MEDIA__) {
-      window.__SE_SET_THEME_MEDIA__(window.__SE_THEME__ === 'dark');
-    }
   </script>
 </head>
 
@@ -261,14 +136,8 @@
     <div class="se-navbar-inner">
 
     
-    <a href="{% url 'home' %}" class="se-logo {% if not user.is_authenticated %}is-guest{% else %}is-auth{% endif %}">
-      <picture class="se-logo-picture">
-        {% if not user.is_authenticated %}
-        <source media="(max-width: 560px)" srcset="{% static 'images/brand/icon-192.png' %}">
-        {% endif %}
-        <source media="(max-width: 768px), (pointer: coarse)" srcset="{% static 'images/brand/logo-primary-small.webp' %}" type="image/webp" data-light-srcset="{% static 'images/brand/logo-primary-small.webp' %}" data-dark-srcset="{% static 'images/brand/logo-white-small.webp' %}">
-        <img src="{% static 'images/brand/logo-black-small.webp' %}" data-light-src="{% static 'images/brand/logo-black-small.webp' %}" data-dark-src="{% static 'images/brand/logo-white-small.webp' %}" alt="{% t 'site.name' %}" class="se-logo-img" fetchpriority="high" decoding="async" width="520" height="150">
-      </picture>
+    <a href="{% url 'home' %}" class="se-logo {% if not user.is_authenticated %}is-guest{% else %}is-auth{% endif %}" aria-label="DZHub - {% t 'site.tagline' %}">
+      <img src="{% static 'images/brand/dzhub-logo-horizontal.svg' %}" alt="DZHub - {% t 'site.tagline' %}" class="se-logo-img" fetchpriority="high" decoding="async" width="180" height="46" style="height:42px; width:auto; display:block;">
     </a>
 
     
@@ -276,24 +145,27 @@
       <li><a href="{% url 'home' %}" class="{% block nav_home %}{% endblock %}">
         <i class="fas fa-house-chimney"></i> {% t "nav.home" %}
       </a></li>
-      <li><a href="{% url 'search' %}" class="{% block nav_search %}{% endblock %}">
-        <i class="fas fa-magnifying-glass"></i> {% t "nav.search" %}
+      <li><a href="{% url 'listings' %}?category=services" class="{% block nav_services %}{% endblock %}">
+        <i class="fas fa-screwdriver-wrench"></i> {% t "nav.services" %}
       </a></li>
-      <li><a href="{% url 'listings' %}" class="{% block nav_listing %}{% endblock %}">
-        <i class="fas fa-store"></i> {% t "nav.listings" %}
+      <li><a href="{% url 'listings' %}?category=digital" class="{% block nav_products %}{% endblock %}">
+        <i class="fas fa-cloud-arrow-down"></i> {% t "nav.products" %}
+      </a></li>
+      <li><a href="{% url 'how_it_works' %}" class="{% block nav_how %}{% endblock %}">
+        <i class="fas fa-shield-halved"></i> {% t "nav.how_it_works" %}
+      </a></li>
+      <li><a href="{% url 'home' %}#fees">
+        <i class="fas fa-percent"></i> {% t "nav.fees" %}
+      </a></li>
+      <li><a href="{% url 'create_ticket' %}">
+        <i class="fas fa-headset"></i> {% t "nav.support" %}
       </a></li>
       {% if user.is_authenticated %}
-      <li><a href="{% url 'create_deal' %}" class="{% block nav_deal %}{% endblock %}">
-        <i class="fas fa-shield-halved"></i> {% t "nav.new_deal" %}
+      <li><a href="{% url 'my_deals' %}" class="{% block nav_deal %}{% endblock %}">
+        <i class="fas fa-briefcase"></i> {% t "nav.my_deals" %}
       </a></li>
       <li><a href="{% url 'chat_hub' %}" class="{% block nav_chat %}{% endblock %}">
         <i class="fas fa-message"></i> {% t "nav.messages" %}
-      </a></li>
-      {% endif %}
-
-      {% if user.is_authenticated %}
-      <li><a href="{% url 'create_room' %}" class="{% block nav_room %}{% endblock %}">
-        <i class="fas fa-door-open"></i> {% t "chat_hub.create_room" %}
       </a></li>
       {% endif %}
     </ul>
@@ -319,9 +191,6 @@
     </form>
 
     <div class="se-mobile-actions">
-      <button type="button" class="se-theme-toggle" onclick="toggleSiteTheme()" aria-pressed="false" title="{% if current_language == 'ar' %}تبديل المظهر{% else %}Toggle theme{% endif %}" aria-label="{% if current_language == 'ar' %}تبديل المظهر{% else %}Toggle theme{% endif %}">
-        <i class="fas fa-moon"></i>
-      </button>
       {% if user.is_authenticated %}
       <a href="{% url 'search' %}" class="se-mobile-search-btn" title="{% t 'nav.search' %}">
         <i class="fas fa-magnifying-glass"></i>
@@ -491,12 +360,14 @@
 
   
   {% if messages %}
-  <div style="position:relative;z-index:100;max-width:1200px;margin:16px auto 0;padding:0 20px;">
+  <div class="se-messages-container" style="position:relative;z-index:100;max-width:1240px;margin:16px auto 0;padding:0 20px;">
     {% for message in messages %}
-    <div class="se-alert se-alert-{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% elif message.tags == 'warning' %}warn{% else %}info{% endif %}">
-      <i class="fas {% if message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'success' %}fa-check-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}" style="flex-shrink:0;font-size:1rem;"></i>
+    <div class="se-alert se-alert-{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% elif message.tags == 'warning' %}warn{% else %}info{% endif %}" role="alert">
+      <i class="fas {% if message.tags == 'error' %}fa-circle-exclamation{% elif message.tags == 'success' %}fa-circle-check{% elif message.tags == 'warning' %}fa-triangle-exclamation{% else %}fa-circle-info{% endif %}" style="flex-shrink:0;font-size:1rem;"></i>
       <span class="se-alert-text" dir="auto">{{ message }}</span>
-      <button type="button" aria-label="{% if current_language == 'ar' %}إغلاق التنبيه{% else %}Close alert{% endif %}" onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;margin-right:auto;opacity:0.5;font-size:0.85rem;">x</button>
+      <button type="button" aria-label="{% if current_language == 'ar' %}إغلاق التنبيه{% else %}Close alert{% endif %}" onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;margin-inline-start:auto;opacity:0.6;font-size:0.95rem;color:inherit;padding:4px 8px;border-radius:6px;transition:opacity .2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+        <i class="fas fa-xmark" aria-hidden="true"></i>
+      </button>
     </div>
     {% endfor %}
   </div>
@@ -517,18 +388,17 @@
   
   <footer class="se-footer">
     <div class="se-footer-brand">
-      <picture class="se-footer-logo-picture">
-        <source media="(max-width: 768px), (pointer: coarse)" srcset="{% static 'images/brand/logo-black-small.webp' %}" type="image/webp" data-light-srcset="{% static 'images/brand/logo-black-small.webp' %}" data-dark-srcset="{% static 'images/brand/logo-white-small.webp' %}">
-        <img src="{% static 'images/brand/logo-black-small.webp' %}" data-light-src="{% static 'images/brand/logo-black-small.webp' %}" data-dark-src="{% static 'images/brand/logo-white-small.webp' %}" alt="{% t 'site.name' %}" class="se-brand-logo-footer" style="margin-left:12px;" loading="lazy" decoding="async" width="520" height="150">
-      </picture>
-      <span class="se-footer-copyline"><strong>{% t 'site.name' %}</strong> - {% t 'footer.tagline' %} &copy; 2026</span>
+      <img src="{% static 'images/brand/dzhub-logo-horizontal.svg' %}" alt="{% t 'site.name' %} - {% t 'site.tagline' %}" class="se-brand-logo-footer" style="height:44px; width:auto; margin-bottom:8px;" loading="lazy" decoding="async">
+      <span class="se-footer-copyline"><strong>{% t 'site.name' %}</strong> - {% t 'site.tagline' %} &copy; 2026</span>
     </div>
     <div class="se-footer-links">
-      <a href="{% url 'about' %}"><i class="fas fa-circle-info"></i>{% t 'footer.about' %}</a>
-      <a href="{% url 'how_it_works' %}"><i class="fas fa-route"></i>{% t 'footer.guide' %}</a>
+      <a href="{% url 'listings' %}?category=services"><i class="fas fa-screwdriver-wrench"></i>{% t 'nav.services' %}</a>
+      <a href="{% url 'listings' %}?category=digital"><i class="fas fa-cloud-arrow-down"></i>{% t 'nav.products' %}</a>
+      <a href="{% url 'how_it_works' %}"><i class="fas fa-route"></i>{% if current_language == 'ar' %}دليل الاستخدام{% else %}Guide{% endif %}</a>
+      <a href="{% url 'home' %}#fees"><i class="fas fa-percent"></i>{% t 'nav.fees' %}</a>
+      <a href="{% url 'create_ticket' %}"><i class="fas fa-life-ring"></i>{% t 'nav.support' %}</a>
       <a href="{% url 'privacy' %}"><i class="fas fa-shield-halved"></i>{% t 'footer.privacy' %}</a>
       <a href="{% url 'terms' %}"><i class="fas fa-file-contract"></i>{% t 'footer.terms' %}</a>
-      <a href="{% url 'create_ticket' %}"><i class="fas fa-life-ring"></i>{% t 'footer.support' %}</a>
     </div>
   </footer>
 
@@ -584,13 +454,8 @@
       const isHome = !!(document.body && document.body.dataset.page === 'home');
 
       function savedTheme() {
-        try {
-          const saved = localStorage.getItem(storageKey);
-          if (saved === 'dark' || saved === 'light') return saved;
-          const legacy = localStorage.getItem(legacyStorageKey);
-          if (legacy === 'dark' || legacy === 'light') return legacy;
-        } catch (error) {}
-        return null;
+        /* DZHub launches with one consistent light identity. */
+        return 'light';
       }
 
       function currentTheme() {
@@ -645,7 +510,7 @@
       }
 
       window.toggleSiteTheme = function () {
-        applyTheme(currentTheme() === 'dark' ? 'light' : 'dark', true);
+        applyTheme('light', true);
       };
 
       /* Theme was resolved early in <head>; here we sync assets + toggle UI */
@@ -925,5 +790,7 @@
   <script defer src="{% static 'js/site_experience.js' %}?v=20260817b"></script>
   <script defer src="{% static 'js/visual_experience.js' %}?v=20260817a"></script>
   {% block extra_js %}{% endblock %}
+  <!-- Final DZHub visual layer: loaded after page-level styles so every surface keeps one identity. -->
+  <link rel="stylesheet" href="{% static 'css/dzhub-final.css' %}?v=20260923v2">
 </body>
 </html>

@@ -18,14 +18,14 @@
           {% if brand_hero_email_src or brand_hero_image_url %}
           <tr>
             <td style="padding:0;background-color:#0f172a;">
-              <img src="{% firstof brand_hero_email_src brand_hero_image_url %}" alt="{{ site_brand_name|default:'SafouaneEscrow' }}" width="680" style="display:block;width:100%;max-width:680px;height:auto;border:0;">
+              <img src="{% firstof brand_hero_email_src brand_hero_image_url %}" alt="{{ site_brand_name|default:'DZHub' }}" width="680" style="display:block;width:100%;max-width:680px;height:auto;border:0;">
             </td>
           </tr>
           {% endif %}
           <tr>
             <td style="padding:36px 34px 16px;text-align:{% if current_language == 'ar' %}right{% else %}left{% endif %};">
               {% if brand_logo_email_src or brand_logo_url %}
-              <img src="{% firstof brand_logo_email_src brand_logo_url %}" alt="{{ site_brand_name|default:'SafouaneEscrow' }}" width="190" style="display:block;max-width:190px;width:100%;height:auto;border:0;">
+              <img src="{% firstof brand_logo_email_src brand_logo_url %}" alt="{{ site_brand_name|default:'DZHub' }}" width="190" style="display:block;max-width:190px;width:100%;height:auto;border:0;">
               {% endif %}
               <div style="margin-top:20px;display:inline-block;background-color:#fff7e7;color:#9a6b15;border:1px solid #f3ddb0;border-radius:999px;padding:8px 14px;font-size:12px;font-weight:700;letter-spacing:0.3px;">
                 {{ email_badge }}
@@ -139,13 +139,13 @@
             <td style="padding:28px 34px 34px;text-align:{% if current_language == 'ar' %}right{% else %}left{% endif %};">
               <p style="margin:0 0 10px;font-size:12px;line-height:1.8;color:#64748b;">
                 {% if current_language == 'ar' %}
-                هذه رسالة نظامية من {{ site_brand_name|default:'SafouaneEscrow' }}. إذا احتجت مساعدة يمكنك الرد على هذا البريد أو التواصل عبر المنصة.
+                هذه رسالة نظامية من {{ site_brand_name|default:'DZHub' }}. إذا احتجت مساعدة يمكنك الرد على هذا البريد أو التواصل عبر المنصة.
                 {% else %}
-                This is an automated message from {{ site_brand_name|default:'SafouaneEscrow' }}. If you need help, reply to this email or contact us through the platform.
+                This is an automated message from {{ site_brand_name|default:'DZHub' }}. If you need help, reply to this email or contact us through the platform.
                 {% endif %}
               </p>
               <p style="margin:0;font-size:12px;line-height:1.8;color:#94a3b8;">
-                {{ site_brand_name|default:'SafouaneEscrow' }}{% if site_url %} · <a href="{{ site_url }}" style="color:#64748b;text-decoration:none;">{{ site_url }}</a>{% endif %}{% if support_email %} · <a href="mailto:{{ support_email }}" style="color:#64748b;text-decoration:none;">{{ support_email }}</a>{% endif %} · {{ current_year }}
+                {{ site_brand_name|default:'DZHub' }}{% if site_url %} · <a href="{{ site_url }}" style="color:#64748b;text-decoration:none;">{{ site_url }}</a>{% endif %}{% if support_email %} · <a href="mailto:{{ support_email }}" style="color:#64748b;text-decoration:none;">{{ support_email }}</a>{% endif %} · {{ current_year }}
               </p>
             </td>
           </tr>

@@ -1,5 +1,5 @@
 /**
- * SafouaneEscrow — Premium Redesigned Homepage JS
+ * DZHub — Homepage JS
  * Features: Desktop Cursor Glow, Card Tilt Parallax, IntersectionObserver, Eased Stats Counter, Smooth FAQ Accordion.
  */
 (function () {
@@ -294,6 +294,52 @@
     
     // Cycle pipeline simulation every 3 seconds
     setInterval(cyclePipeline, 3000);
+  }
+
+  /* ═══════════════════════════════════════
+     9. Live Transaction Ticker Cycle
+     ═══════════════════════════════════════ */
+  const ticker = home.querySelector('.hp-live-ticker');
+  if (ticker) {
+    const tickerAmounts = ['$1,250', '$3,800', '$520', '$15,000', '$890', '$4,200', '$2,750'];
+    const tickerMessages = {
+      ar: [
+        'صفقة تمت الآن',
+        'إيداع جديد في الضمان',
+        'تم تحرير الأموال',
+        'صفقة قيد المراجعة',
+        'إتمام صفقة ناجح'
+      ],
+      en: [
+        'Deal completed just now',
+        'New escrow deposit',
+        'Funds released',
+        'Deal under review',
+        'Successful completion'
+      ]
+    };
+    const isAr = document.documentElement.lang === 'ar';
+    const messages = isAr ? tickerMessages.ar : tickerMessages.en;
+    let tickerIdx = 0;
+    
+    const tickerSpans = ticker.querySelectorAll('span:not(.hp-ticker-dot)');
+    const tickerStrong = ticker.querySelector('strong');
+    
+    setInterval(() => {
+      tickerIdx = (tickerIdx + 1) % tickerAmounts.length;
+      const msgIdx = tickerIdx % messages.length;
+      
+      ticker.style.opacity = '0';
+      ticker.style.transform = 'translateX(-50%) translateY(5px)';
+      
+      setTimeout(() => {
+        if (tickerSpans[0]) tickerSpans[0].textContent = messages[msgIdx];
+        if (tickerStrong) tickerStrong.textContent = tickerAmounts[tickerIdx];
+        ticker.style.transition = 'opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+        ticker.style.opacity = '1';
+        ticker.style.transform = 'translateX(-50%) translateY(0)';
+      }, 400);
+    }, 4000);
   }
 
 })();

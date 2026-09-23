@@ -64,7 +64,7 @@ body {
 .se-mob-toggle,
 .se-btn-login,
 .se-btn-register {
-  border-radius: 12px;
+  border-radius: 999px !important;
 }
 
 .se-btn-register {

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static site_i18n %}
 
-{% block title %}{% t "private_chat.title" %} {{ friend.username }} - Safouane{% endblock %}
+{% block title %}{% t "private_chat.title" %} {{ friend.username }} - DZHub{% endblock %}
 {% block page_type %}private_chat{% endblock %}
 {% block nav_chat %}active{% endblock %}
 
@@ -10,13 +10,13 @@
 {% endblock %}
 
 {% block late_css %}
-<link rel="stylesheet" href="{% static 'css/communication_dark.css' %}?v=20260523a" media="not all" data-theme-dark-style>
+<link rel="stylesheet" href="{% static 'css/communication_dark.css' %}?v=20260523a">
 {% endblock %}
 
 {% block content %}
 <main
   class="cm-page cm-bg-private"
-  dir="rtl"
+  dir="{{ current_dir }}"
   data-private-chat
   data-friend-id="{{ friend.id }}"
   data-poll-url="{% url 'poll_private_chat' friend.id %}"
@@ -61,7 +61,7 @@
             <strong>{{ person.username }}{% verification_badge person.profile %}</strong>
             <small>{% if person.id == friend.id %}{% t "private_chat.current_chat" %}{% else %}{% t "chat_hub.click_to_chat" %}{% endif %}</small>
           </span>
-          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          <i class="fas fa-chevron-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}" aria-hidden="true"></i>
         </a>
         {% empty %}
         <section class="cm-empty">
@@ -76,7 +76,7 @@
       <header class="se-chat-header">
         <div class="se-chat-header-right">
           <a href="{% url 'chat_hub' %}" class="se-back-btn" aria-label="{% t 'private_chat.back_to_messages' %}">
-            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            <i class="fas fa-arrow-{% if current_dir == 'rtl' %}right{% else %}left{% endif %}" aria-hidden="true"></i>
           </a>
           <img src="{{ friend.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ friend.username }}" class="se-chat-avatar" loading="lazy">
           <div class="se-chat-info">

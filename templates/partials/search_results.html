@@ -52,7 +52,7 @@
           <p>{{ deal.product_description|truncatechars:100 }}</p>
           <div class="sr-card-foot">
             <span>
-              <strong>${% if deal.is_auction %}{{ deal.starting_price }}{% else %}{{ deal.price }}{% endif %}</strong>
+              <strong>{% if deal.is_auction %}{{ deal.starting_price }}{% else %}{{ deal.price }}{% endif %} {% if current_language == 'ar' %}دج{% else %}DZD{% endif %}</strong>
               <small>{{ deal.seller.username }}</small>
             </span>
             <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>

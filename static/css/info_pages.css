@@ -96,20 +96,22 @@ body[data-page="about"] .ab-hero,
 .ab-hero {
   grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.75fr);
   background:
-    linear-gradient(90deg, rgba(8, 13, 24, 0.92), rgba(8, 13, 24, 0.6) 52%, rgba(8, 13, 24, 0.28)),
-    url("../images/visuals/page-backgrounds/01-solar-terrace.webp") center / cover no-repeat !important;
-  background-position: center;
-  background-size: cover;
+    radial-gradient(circle at 82% 20%, rgba(245, 158, 11, 0.15) 0%, transparent 48%),
+    radial-gradient(circle at 18% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 42%),
+    linear-gradient(135deg, #0b1120 0%, #0e172a 50%, #131d35 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  box-shadow: 0 20px 48px rgba(3, 7, 18, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
 }
 
 body[data-page="guide"] .hw-hero,
 .hw-hero {
   grid-template-columns: minmax(0, 1fr) minmax(280px, 0.82fr);
   background:
-    linear-gradient(90deg, rgba(8, 13, 24, 0.92), rgba(8, 13, 24, 0.58) 55%, rgba(8, 13, 24, 0.22)),
-    url("../images/visuals/page-backgrounds/04-gallery-sculptures.webp") center / cover no-repeat !important;
-  background-position: center;
-  background-size: cover;
+    radial-gradient(circle at 80% 22%, rgba(245, 158, 11, 0.15) 0%, transparent 48%),
+    radial-gradient(circle at 15% 82%, rgba(16, 185, 129, 0.08) 0%, transparent 42%),
+    linear-gradient(135deg, #0b1120 0%, #0e172a 50%, #131d35 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  box-shadow: 0 20px 48px rgba(3, 7, 18, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
 }
 
 .se-policy-hero {
@@ -117,30 +119,22 @@ body[data-page="guide"] .hw-hero,
   min-height: 430px;
   margin-top: 0 !important;
   margin-bottom: 28px !important;
+  background:
+    radial-gradient(circle at 82% 20%, rgba(245, 158, 11, 0.15) 0%, transparent 48%),
+    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 42%),
+    linear-gradient(135deg, #0b1120 0%, #0e172a 50%, #131d35 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  box-shadow: 0 20px 48px rgba(3, 7, 18, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
 }
 
-.se-policy-privacy .se-policy-hero {
-  background-image:
-    linear-gradient(90deg, rgba(8, 13, 24, 0.92), rgba(8, 13, 24, 0.56) 55%, rgba(8, 13, 24, 0.2)),
-    url("../images/visuals/page-backgrounds/02-blue-logo-wall.webp");
-  background-position: center;
-  background-size: cover;
-}
-
-.se-policy-terms .se-policy-hero {
-  background-image:
-    linear-gradient(90deg, rgba(8, 13, 24, 0.94), rgba(8, 13, 24, 0.56) 56%, rgba(8, 13, 24, 0.22)),
-    url("../images/visuals/page-backgrounds/03-architect-desk.webp");
-  background-position: center;
-  background-size: cover;
-}
-
+.se-policy-privacy .se-policy-hero,
+.se-policy-terms .se-policy-hero,
 .se-policy-returns .se-policy-hero {
-  background-image:
-    linear-gradient(90deg, rgba(8, 13, 24, 0.94), rgba(8, 13, 24, 0.58) 56%, rgba(8, 13, 24, 0.2)),
-    url("../images/visuals/page-backgrounds/06-minimal-books.webp");
-  background-position: center;
-  background-size: cover;
+  background:
+    radial-gradient(circle at 82% 20%, rgba(245, 158, 11, 0.15) 0%, transparent 48%),
+    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 42%),
+    linear-gradient(135deg, #0b1120 0%, #0e172a 50%, #131d35 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
 }
 
 .ab-hero::after,
@@ -933,44 +927,28 @@ body[data-page="policies"] .se-policy-hero:hover {
 
 body[data-page="about"] .ab-hero {
   background:
-    linear-gradient(90deg, rgba(8, 9, 13, 0.72) 0%, rgba(8, 9, 13, 0.46) 48%, rgba(8, 9, 13, 0.78) 100%),
-    linear-gradient(180deg, rgba(8, 9, 13, 0.02) 0%, rgba(8, 9, 13, 0.36) 100%),
-    url("../images/visuals/page-backgrounds/01-solar-terrace.webp") center / cover no-repeat,
-    radial-gradient(circle at 82% 20%, rgba(99, 102, 241, 0.22), transparent 42%),
-    linear-gradient(135deg, #141821, #1a1f2c) !important;
+    radial-gradient(circle at 82% 20%, rgba(245, 158, 11, 0.16) 0%, transparent 48%),
+    radial-gradient(circle at 18% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 42%),
+    linear-gradient(135deg, #0b1120 0%, #0e172a 50%, #131d35 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
 }
 
 body[data-page="guide"] .hw-hero {
   background:
-    linear-gradient(90deg, rgba(8, 9, 13, 0.76) 0%, rgba(8, 9, 13, 0.42) 48%, rgba(8, 9, 13, 0.8) 100%),
-    linear-gradient(180deg, rgba(8, 9, 13, 0.02) 0%, rgba(8, 9, 13, 0.34) 100%),
-    url("../images/visuals/page-backgrounds/04-gallery-sculptures.webp") center / cover no-repeat,
-    radial-gradient(circle at 78% 22%, rgba(99, 102, 241, 0.2), transparent 42%),
-    linear-gradient(135deg, #141821, #1a1f2c) !important;
+    radial-gradient(circle at 80% 22%, rgba(245, 158, 11, 0.16) 0%, transparent 48%),
+    radial-gradient(circle at 15% 82%, rgba(16, 185, 129, 0.08) 0%, transparent 42%),
+    linear-gradient(135deg, #0b1120 0%, #0e172a 50%, #131d35 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
 }
 
-body[data-page="policies"] .se-policy-privacy .se-policy-hero {
-  background:
-    linear-gradient(90deg, rgba(8, 9, 13, 0.78) 0%, rgba(8, 9, 13, 0.42) 48%, rgba(8, 9, 13, 0.8) 100%),
-    linear-gradient(180deg, rgba(8, 9, 13, 0.02), rgba(8, 9, 13, 0.36)),
-    url("../images/visuals/page-backgrounds/02-blue-logo-wall.webp") center / cover no-repeat,
-    linear-gradient(135deg, #141821, #1a1f2c) !important;
-}
-
-body[data-page="policies"] .se-policy-terms .se-policy-hero {
-  background:
-    linear-gradient(90deg, rgba(8, 9, 13, 0.78) 0%, rgba(8, 9, 13, 0.42) 48%, rgba(8, 9, 13, 0.8) 100%),
-    linear-gradient(180deg, rgba(8, 9, 13, 0.02), rgba(8, 9, 13, 0.36)),
-    url("../images/visuals/page-backgrounds/03-architect-desk.webp") center / cover no-repeat,
-    linear-gradient(135deg, #141821, #1a1f2c) !important;
-}
-
+body[data-page="policies"] .se-policy-privacy .se-policy-hero,
+body[data-page="policies"] .se-policy-terms .se-policy-hero,
 body[data-page="policies"] .se-policy-returns .se-policy-hero {
   background:
-    linear-gradient(90deg, rgba(8, 9, 13, 0.78) 0%, rgba(8, 9, 13, 0.42) 48%, rgba(8, 9, 13, 0.82) 100%),
-    linear-gradient(180deg, rgba(8, 9, 13, 0.02), rgba(8, 9, 13, 0.36)),
-    url("../images/visuals/page-backgrounds/06-minimal-books.webp") center / cover no-repeat,
-    linear-gradient(135deg, #141821, #1a1f2c) !important;
+    radial-gradient(circle at 82% 20%, rgba(245, 158, 11, 0.16) 0%, transparent 48%),
+    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 42%),
+    linear-gradient(135deg, #0b1120 0%, #0e172a 50%, #131d35 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
 }
 
 body[data-page="about"] .ab-hero::before,

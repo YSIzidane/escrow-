@@ -10,11 +10,11 @@
 {% endblock %}
 
 {% block late_css %}
-<link rel="stylesheet" href="{% static 'css/support_dark.css' %}?v=20260523a" media="not all" data-theme-dark-style>
+<link rel="stylesheet" href="{% static 'css/support_dark.css' %}?v=20260523a">
 {% endblock %}
 
 {% block content %}
-<main class="sd-page sd-bg-detail" dir="rtl">
+<main class="sd-page sd-bg-detail" dir="{{ current_dir }}">
   <section class="sd-shell" aria-labelledby="ticket-title">
     <header class="sd-hero sd-hero-compact">
       <div class="sd-hero-copy">

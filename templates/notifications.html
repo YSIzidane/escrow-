@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static site_i18n %}
 
-{% block title %}{% t "notifications.header" %} - Safouane{% endblock %}
+{% block title %}{% t "notifications.header" %} - DZHub{% endblock %}
 {% block page_type %}notifications{% endblock %}
 
 {% block meta %}
@@ -9,11 +9,11 @@
 {% endblock %}
 
 {% block late_css %}
-<link rel="stylesheet" href="{% static 'css/notifications_dark.css' %}?v=20260523a" media="not all" data-theme-dark-style>
+<link rel="stylesheet" href="{% static 'css/notifications_dark.css' %}?v=20260523a">
 {% endblock %}
 
 {% block content %}
-<main class="sn-simple-page" dir="rtl">
+<main class="sn-simple-page" dir="{{ current_dir }}">
   <section class="sn-card-shell" aria-labelledby="notifications-title">
     <header class="sn-header">
       <div>

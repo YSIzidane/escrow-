@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static site_i18n %}
 
-{% block title %}{% t "friends.header" %} - Safouane{% endblock %}
+{% block title %}{% t "friends.header" %} - {% t "site.name" %}{% endblock %}
 {% block page_type %}friends{% endblock %}
 
 {% block meta %}
@@ -9,30 +9,49 @@
 {% endblock %}
 
 {% block late_css %}
-<link rel="stylesheet" href="{% static 'css/communication_dark.css' %}?v=20260523a" media="not all" data-theme-dark-style>
+<link rel="stylesheet" href="{% static 'css/communication_dark.css' %}?v=20260923vCommLuxury">
 {% endblock %}
 
 {% block content %}
-<main class="cm-page cm-bg-friends" dir="rtl">
+<main class="cm-page cm-bg-friends" dir="{{ current_dir }}">
   <section class="cm-shell" aria-labelledby="friends-title">
-    <header class="cm-hero">
+    <header class="cm-hero cm-friends-hero">
       <div>
         <span class="cm-kicker">
-          <i class="fas fa-user-shield" aria-hidden="true"></i>
+          <i class="fas fa-users-gear" aria-hidden="true"></i>
           {% t "friends.kicker" %}
         </span>
-        <h1 id="friends-title">{% t "friends.header" %}</h1>
-        <p>{% t "friends.hero_sub" %}</p>
+        <h1 id="friends-title" style="font-size:clamp(1.75rem, 3vw, 2.3rem); font-weight:900; color:#fff; margin-bottom:8px;">{% t "friends.header" %}</h1>
+        <p style="color:#94a3b8; font-size:1rem; line-height:1.6; margin-bottom:20px; max-width:540px;">{% t "friends.hero_sub" %}</p>
+        
+        <div class="cm-actions" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <a href="{% url 'search' %}" class="cm-btn cm-btn-primary">
+            <i class="fas fa-user-plus" aria-hidden="true"></i>
+            <span>{% t "friends.add" %}</span>
+          </a>
+          <a href="{% url 'chat_hub' %}" class="cm-btn cm-btn-ghost">
+            <i class="fas fa-comments" aria-hidden="true"></i>
+            <span>{% t "chat_hub.header" %}</span>
+          </a>
+        </div>
       </div>
-      <div class="cm-actions">
-        <a href="{% url 'search' %}" class="cm-btn cm-btn-primary">
-          <i class="fas fa-user-plus" aria-hidden="true"></i>
-          <span>{% t "friends.add" %}</span>
-        </a>
-        <a href="{% url 'chat_hub' %}" class="cm-btn cm-btn-ghost">
-          <i class="fas fa-comments" aria-hidden="true"></i>
-          <span>{% t "chat_hub.header" %}</span>
-        </a>
+
+      <!-- 3D Luxury Visual Showcase for Friends Network -->
+      <div class="cm-hero-visual-card" aria-hidden="true">
+        <div class="cm-hero-3d-inner">
+          <img
+            src="{% static 'images/brand/friends_network_hero.jpg' %}"
+            alt="{% t 'friends.trusted_network_badge' %}"
+            class="cm-hero-3d-img"
+            loading="eager"
+          >
+          <div class="cm-welcome-visual-overlay"></div>
+          <div class="cm-welcome-floating-badge">
+            <span class="cm-pulsing-dot"></span>
+            <i class="fas fa-handshake" aria-hidden="true"></i>
+            <span>{% t "friends.trusted_network_badge" %}</span>
+          </div>
+        </div>
       </div>
     </header>
 

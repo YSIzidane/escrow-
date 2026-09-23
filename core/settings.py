@@ -372,14 +372,14 @@ if REDIS_URL:
         "default": {
             "BACKEND": "django.core.cache.backends.redis.RedisCache",
             "LOCATION": REDIS_URL,
-            "KEY_PREFIX": "safouane",
+            "KEY_PREFIX": "dzhub",
         },
     }
 else:
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-            "LOCATION": "safouane-dev",
+            "LOCATION": "dzhub-dev",
         },
     }
 
@@ -569,7 +569,7 @@ SOCIALACCOUNT_AUTO_SIGNUP = False
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_QUERY_EMAIL = True
-ACCOUNT_EMAIL_SUBJECT_PREFIX = "[SafouaneEscrow] "
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[DZHub] "
 
 # ==========================================
 # ESCROW PLATFORM SETTINGS
@@ -599,6 +599,11 @@ validate_production_runtime(
 # Socialaccount providers
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID', 'placeholder-google-client-id'),
+            'secret': os.getenv('GOOGLE_CLIENT_SECRET', 'placeholder-google-client-secret'),
+            'key': ''
+        },
         'SCOPE': [
             'profile',
             'email',
@@ -610,17 +615,18 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # ==================== Email Configuration ====================
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
-EMAIL_USE_TLS = env_bool('EMAIL_USE_TLS', True)
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 465))
+EMAIL_USE_SSL = env_bool('EMAIL_USE_SSL', EMAIL_PORT == 465)
+EMAIL_USE_TLS = False if EMAIL_USE_SSL else env_bool('EMAIL_USE_TLS', True)
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
-EMAIL_TIMEOUT = env_int('EMAIL_TIMEOUT', 30)
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '').replace(' ', '').strip()
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'noreply@localhost')
+EMAIL_TIMEOUT = env_int('EMAIL_TIMEOUT', 15)
 
-# للطباعة في التيرمنال في حال لم يتم إدخال بيانات الـ SMTP
-if DEBUG and not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):
+if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Ensure HTTPS redirect URIs are generated when behind a proxy like Ngrok

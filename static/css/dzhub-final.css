@@ -1,0 +1,1290 @@
+/*
+ * DZHub — final visual consistency layer
+ *
+ * The project contains several old page-specific style blocks. This file is
+ * deliberately loaded at the end of base.html so those blocks cannot make
+ * one page look like a different product. It only changes presentation;
+ * status colours (success/danger) remain semantic.
+ */
+
+:root {
+  --seu-bg: var(--dzhub-page-bg) !important;
+  --seu-bg-2: var(--dzhub-surface-subtle) !important;
+  --seu-surface: var(--dzhub-surface) !important;
+  --seu-primary: var(--dzhub-primary) !important;
+  --seu-primary-2: var(--dzhub-blue) !important;
+  --seu-text: var(--dzhub-text) !important;
+  --seu-muted: var(--dzhub-muted) !important;
+  --seu-border: var(--dzhub-border) !important;
+  --seu-faint: var(--dzhub-border-subtle) !important;
+  --seu-success: var(--dzhub-success) !important;
+  --up-bg: var(--dzhub-page-bg) !important;
+  --up-bg-2: var(--dzhub-surface-subtle) !important;
+  --up-card: #FFFFFF !important;
+  --up-card-2: #F8FAFC !important;
+  --up-card-3: #F1F7FB !important;
+  --up-primary: var(--dzhub-primary) !important;
+  --up-primary-2: var(--dzhub-blue) !important;
+  --up-text: var(--dzhub-text) !important;
+  --up-muted: var(--dzhub-muted) !important;
+  --up-border: var(--dzhub-border) !important;
+  --up-border-2: #BDD7E7 !important;
+  --up-gradient: linear-gradient(135deg, var(--dzhub-primary), var(--dzhub-blue)) !important;
+  --up-gradient-soft: linear-gradient(135deg, #EAF6FC, #F8FAFC) !important;
+  --up-shadow: var(--shadow-md) !important;
+  --up-glow: var(--shadow-lg) !important;
+  --lux-gold: var(--dzhub-primary) !important;
+  --gold: var(--dzhub-primary) !important;
+  --gold-light: var(--dzhub-blue) !important;
+  --gold-dark: var(--dzhub-primary-dark) !important;
+}
+
+html,
+body,
+body[data-page] {
+  background: var(--dzhub-page-bg) !important;
+  color: var(--dzhub-text) !important;
+}
+
+/* Brand lockups: preserve the SVG ratio and give every context a deliberate size. */
+.se-logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-width: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+.se-logo-img {
+  display: block !important;
+  width: clamp(148px, 16vw, 188px) !important;
+  height: auto !important;
+  max-width: min(188px, 42vw) !important;
+  aspect-ratio: 540 / 140 !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  background: transparent !important;
+  filter: none !important;
+}
+
+.se-brand-logo-footer {
+  display: block !important;
+  width: clamp(148px, 17vw, 188px) !important;
+  height: auto !important;
+  max-width: 100% !important;
+  aspect-ratio: 540 / 140 !important;
+  object-fit: contain !important;
+  filter: none !important;
+}
+
+.up-brand-logo-picture,
+.brand-logo-picture {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: clamp(148px, 17vw, 188px) !important;
+  height: auto !important;
+  max-width: 48vw !important;
+}
+
+.up-brand-logo-img,
+.brand-logo-img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+  aspect-ratio: 540 / 140 !important;
+  object-fit: contain !important;
+  filter: none !important;
+}
+
+.saas-brand-mobile img,
+.se-brand-logo-panel,
+.showcase-logo-img,
+.social-login-wordmark,
+.social-signup-wordmark {
+  display: block !important;
+  width: min(210px, 72vw) !important;
+  height: auto !important;
+  max-width: 100% !important;
+  aspect-ratio: 540 / 140 !important;
+  object-fit: contain !important;
+  margin-inline: auto !important;
+  filter: none !important;
+}
+
+.se-brand-logo-badge {
+  display: inline-block !important;
+  width: 30px !important;
+  height: 30px !important;
+  max-width: 30px !important;
+  object-fit: contain !important;
+  filter: none !important;
+}
+
+.se-brand-logo-admin-note {
+  display: inline-block !important;
+  width: 26px !important;
+  height: 26px !important;
+  max-width: 26px !important;
+  object-fit: contain !important;
+  vertical-align: middle !important;
+  filter: none !important;
+}
+
+/* The social auth header is blue, so it intentionally uses the white lockup. */
+.social-login-wordmark,
+.social-signup-wordmark {
+  width: min(190px, 70vw) !important;
+}
+
+body[data-page] .se-main {
+  min-height: 0;
+  background: var(--dzhub-page-bg) !important;
+}
+
+/*
+ * Page art system
+ * Each product area gets one relevant visual. The image is softened, shifted
+ * toward DZHub blue and faded behind a white gradient so content remains
+ * readable and the old gold/black palette never becomes the page identity.
+ */
+body[data-page] .se-main {
+  --dzhub-page-art: url("../images/brand/hero-escrow-flow.jpg");
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+body[data-page] .se-main::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: clamp(220px, 30vw, 390px);
+  z-index: -2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(120deg, rgba(246, 250, 253, .98) 0%, rgba(234, 246, 252, .84) 30%, rgba(18, 97, 160, .54) 100%),
+    var(--dzhub-page-art);
+  background-position: center, center;
+  background-size: cover, cover;
+  background-repeat: no-repeat;
+  filter: saturate(.72) hue-rotate(145deg) brightness(1.10);
+  opacity: .82;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 100%);
+}
+
+body[data-page] .se-main::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(246, 250, 253, .08) 0%, rgba(246, 250, 253, .90) 320px, var(--dzhub-page-bg) 560px);
+}
+
+body[data-page] .se-main > * {
+  position: relative;
+  z-index: 0;
+}
+
+/* Marketplace and discovery */
+body[data-page="listings"] .se-main,
+body[data-page="search"] .se-main {
+  --dzhub-page-art: url("../images/brand/marketplace_deals_hero.jpg");
+}
+
+/* Escrow, deals, checkout and operational workspaces */
+body[data-page="create_deal"] .se-main,
+body[data-page="deal_detail"] .se-main,
+body[data-page="deal_auction"] .se-main,
+body[data-page="deal_room"] .se-main,
+body[data-page="escrow_room"] .se-main,
+body[data-page="payment"] .se-main,
+body[data-page="payment_success"] .se-main {
+  --dzhub-page-art: url("../images/brand/hero-escrow-flow.jpg");
+}
+
+/* Communication and community */
+body[data-page="chat_hub"] .se-main,
+body[data-page="private_chat"] .se-main,
+body[data-page="room"] .se-main,
+body[data-page="create_room"] .se-main,
+body[data-page="join_room"] .se-main,
+body[data-page="support"] .se-main {
+  --dzhub-page-art: url("../images/brand/chat_secure_hero.jpg");
+}
+
+body[data-page="friends"] .se-main {
+  --dzhub-page-art: url("../images/brand/friends_network_hero.jpg");
+}
+
+/* Trust, policies and informational pages */
+body[data-page="about"] .se-main,
+body[data-page="guide"] .se-main {
+  --dzhub-page-art: url("../images/brand/hero-escrow-flow.jpg");
+}
+
+body[data-page="policies"] .se-main {
+  --dzhub-page-art: url("../images/brand/legal_justice_seal.jpg");
+}
+
+body[data-page="policies"] .se-main:has(.legal-privacy-page) {
+  --dzhub-page-art: url("../images/brand/privacy_data_vault.jpg");
+}
+
+body[data-page="notifications"] .se-main,
+body[data-page="invoice"] .se-main,
+body[data-page="admin"] .se-main {
+  --dzhub-page-art: url("../images/brand/privacy_data_vault.jpg");
+}
+
+/* Home already has its own art-directed hero and should not get a second layer. */
+body[data-page="home"] .se-main::before,
+body[data-page="home"] .se-main::after {
+  display: none !important;
+}
+
+/* The signed-in profile is a standalone document, so give it the same art
+   treatment as the pages that extend base.html. */
+body[data-page="profile"] .page-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--dzhub-page-bg) !important;
+}
+
+body[data-page="profile"] .page-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 320px;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(120deg, rgba(246, 250, 253, .95), rgba(18, 97, 160, .46)),
+    url("../images/brand/privacy_data_vault.jpg");
+  background-position: center;
+  background-size: cover;
+  filter: saturate(.72) hue-rotate(145deg) brightness(1.08);
+  opacity: .72;
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 96%);
+  mask-image: linear-gradient(to bottom, #000, transparent 96%);
+}
+
+body[data-page="profile"] .topbar {
+  background: rgba(255, 255, 255, .94) !important;
+  border-bottom: 1px solid var(--dzhub-border) !important;
+  box-shadow: var(--shadow-sm) !important;
+  color: var(--dzhub-text) !important;
+}
+
+body[data-page="profile"] .nav-link,
+body[data-page="profile"] .account-button,
+body[data-page="profile"] .nav-icon-button,
+body[data-page="profile"] .avatar-button {
+  color: var(--dzhub-muted) !important;
+  background: #FFFFFF !important;
+  border-color: var(--dzhub-border) !important;
+}
+
+body[data-page="profile"] .nav-link:hover,
+body[data-page="profile"] .nav-link.is-active,
+body[data-page="profile"] .account-button:hover,
+body[data-page="profile"] .nav-icon-button:hover,
+body[data-page="profile"] .avatar-button:hover {
+  color: var(--dzhub-primary) !important;
+  background: var(--dzhub-light-blue) !important;
+  border-color: #BDD7E7 !important;
+}
+
+body[data-page="profile"] .profile-card,
+body[data-page="profile"] .profile-data-card,
+body[data-page="profile"] .profile-section,
+body[data-page="profile"] .stat-card {
+  background: #FFFFFF !important;
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+body[data-page="profile"] .cover-banner {
+  background: linear-gradient(135deg, var(--dzhub-primary-dark), var(--dzhub-primary), var(--dzhub-blue)) !important;
+}
+
+body[data-page="profile"] .cover-mesh {
+  opacity: .16 !important;
+}
+
+body[data-page="profile"] .profile-name,
+body[data-page="profile"] .profile-card h2,
+body[data-page="profile"] .profile-card h3,
+body[data-page="profile"] .profile-card h4 {
+  color: var(--dzhub-text) !important;
+}
+
+body[data-page="profile"] .profile-card p,
+body[data-page="profile"] .profile-card .meta-label,
+body[data-page="profile"] .profile-card .mini-meta {
+  color: var(--dzhub-muted) !important;
+}
+
+/* Homepage: make the first screen feel like a real platform entrance, not a
+   plain document. The rest of the page stays light so the hero remains the
+   visual anchor instead of competing with every section. */
+body[data-page="home"] .dzhub-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(72px, 8vw, 112px) 0 clamp(68px, 7vw, 96px) !important;
+  background: linear-gradient(135deg, #062F55 0%, #0B477A 48%, #1261A0 100%) !important;
+  border-bottom: 0 !important;
+  color: #FFFFFF !important;
+}
+
+body[data-page="home"] .dzhub-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: url("../images/brand/hero-escrow-flow.jpg") center / cover no-repeat;
+  filter: saturate(.62) hue-rotate(148deg) brightness(1.08);
+  opacity: .28;
+  transform: scale(1.04);
+}
+
+body[data-page="home"] .dzhub-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 82% 22%, rgba(56, 189, 248, .26), transparent 30%),
+    linear-gradient(90deg, rgba(6, 47, 85, .96) 0%, rgba(11, 71, 122, .76) 48%, rgba(18, 97, 160, .55) 100%);
+}
+
+body[data-page="home"] .dzhub-hero > .dzhub-shell {
+  position: relative;
+  z-index: 1;
+}
+
+body[data-page="home"] .dzhub-hero-title,
+body[data-page="home"] .dzhub-hero-title span {
+  color: #FFFFFF !important;
+}
+
+body[data-page="home"] .dzhub-hero-title span {
+  color: #7DD3FC !important;
+}
+
+body[data-page="home"] .dzhub-hero-lead {
+  color: #EAF6FC !important;
+}
+
+body[data-page="home"] .dzhub-hero .dzhub-badge-chip {
+  background: rgba(234, 246, 252, .14) !important;
+  border-color: rgba(186, 230, 253, .42) !important;
+  color: #EAF6FC !important;
+}
+
+body[data-page="home"] .dzhub-btn-hero-secondary {
+  background: rgba(255, 255, 255, .08) !important;
+  border-color: rgba(255, 255, 255, .42) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 22px rgba(4, 30, 56, .16) !important;
+}
+
+body[data-page="home"] .dzhub-btn-hero-secondary:hover {
+  background: rgba(255, 255, 255, .16) !important;
+  border-color: #BAE6FD !important;
+}
+
+body[data-page="home"] .dzhub-hero-trust-bar {
+  border-top-color: rgba(255, 255, 255, .24) !important;
+}
+
+body[data-page="home"] .dzhub-trust-item {
+  color: #FFFFFF !important;
+}
+
+body[data-page="home"] .dzhub-trust-item i {
+  color: #7DD3FC !important;
+}
+
+body[data-page="home"] .dzhub-hero-card {
+  background: rgba(255, 255, 255, .96) !important;
+  border: 1px solid rgba(255, 255, 255, .76) !important;
+  box-shadow: 0 24px 60px rgba(4, 30, 56, .28) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+body[data-page="home"] .dzhub-hero-symbol-wrap {
+  padding: 18px;
+  width: 176px;
+  height: 176px;
+  margin: 0 auto 24px;
+  border-radius: 34px;
+  background: linear-gradient(145deg, #EAF6FC, #FFFFFF) !important;
+  border: 1px solid #DCEAF3;
+  box-shadow: 0 12px 26px rgba(18, 97, 160, .13);
+}
+
+body[data-page="home"] .dzhub-hero-symbol-wrap img {
+  width: 140px;
+  height: 140px;
+}
+
+body[data-page="home"] .dzhub-hero-status-pill {
+  background: #F1F7FB !important;
+  border-color: #DCEAF3 !important;
+}
+
+body[data-page="home"] .dzhub-section {
+  background: #F6FAFD !important;
+}
+
+body[data-page="home"] #services,
+body[data-page="home"] #latest-deals,
+body[data-page="home"] #fees {
+  background: #EAF6FC !important;
+  border-color: #DCEAF3 !important;
+}
+
+body[data-page="home"] #how-it-works,
+body[data-page="home"] #products,
+body[data-page="home"] #trust,
+body[data-page="home"] #faq {
+  background: #F6FAFD !important;
+}
+
+body[data-page="home"] .dzhub-step-card,
+body[data-page="home"] .dzhub-cat-card,
+body[data-page="home"] .dzhub-deal-card,
+body[data-page="home"] .dzhub-trust-card,
+body[data-page="home"] .dzhub-fees-box,
+body[data-page="home"] .dzhub-faq-item {
+  background: rgba(255, 255, 255, .92) !important;
+  box-shadow: 0 10px 28px rgba(18, 50, 74, .07) !important;
+}
+
+@media (max-width: 991px) {
+  body[data-page="home"] .dzhub-hero {
+    padding-top: 54px !important;
+  }
+
+  body[data-page="home"] .dzhub-hero-card {
+    max-width: 520px;
+  }
+}
+
+@media (max-width: 575px) {
+  body[data-page="home"] .dzhub-hero {
+    padding-top: 42px !important;
+    padding-bottom: 54px !important;
+  }
+
+  body[data-page="home"] .dzhub-hero-title {
+    font-size: 2.15rem !important;
+  }
+
+  body[data-page="home"] .dzhub-hero-card {
+    padding: 22px 18px !important;
+    border-radius: 20px !important;
+  }
+
+  body[data-page="home"] .dzhub-hero-symbol-wrap {
+    width: 148px;
+    height: 148px;
+    padding: 14px;
+    border-radius: 26px;
+  }
+
+  body[data-page="home"] .dzhub-hero-symbol-wrap img {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Give the main visual cards a subtle glass edge over the page art. */
+body[data-page] .info-hero-lux,
+body[data-page] .dl-hero-profile-style,
+body[data-page] .dx-hero-profile-style,
+body[data-page] .se-auction-hero,
+body[data-page] .cm-hero,
+body[data-page] .sd-hero,
+body[data-page] .sn-card-shell,
+body[data-page] .er-header-profile-style {
+  position: relative;
+  overflow: hidden;
+}
+
+body[data-page] .info-hero-lux::after,
+body[data-page] .dl-hero-profile-style::after,
+body[data-page] .dx-hero-profile-style::after,
+body[data-page] .se-auction-hero::after,
+body[data-page] .cm-hero::after,
+body[data-page] .sd-hero::after,
+body[data-page] .sn-card-shell::after,
+body[data-page] .er-header-profile-style::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, .72);
+  border-radius: inherit;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .82);
+}
+
+body[data-page] .page-bg-overlay,
+body[data-page] .se-visual-field,
+body[data-page] .dl-bg-canvas,
+body[data-page] .dl-visual-mesh,
+body[data-page] .dl-bg-overlay,
+body[data-page] .room-bg,
+body[data-page] .room-glow {
+  background: transparent !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* The old theme switch is not part of the DZHub launch identity. */
+.se-theme-toggle,
+.se-theme-toggle-menu {
+  display: none !important;
+}
+
+/* Typography and controls shared by every page. */
+body[data-page] h1,
+body[data-page] h2,
+body[data-page] h3,
+body[data-page] h4,
+body[data-page] h5,
+body[data-page] h6,
+body[data-page] .card-title,
+body[data-page] .panel-title {
+  color: var(--dzhub-text) !important;
+}
+
+body[data-page] p,
+body[data-page] .text-muted,
+body[data-page] .muted,
+body[data-page] .subtitle,
+body[data-page] .card-text {
+  color: var(--dzhub-muted) !important;
+}
+
+body[data-page] a {
+  color: var(--dzhub-primary);
+}
+
+body[data-page] .form-control,
+body[data-page] .form-select,
+body[data-page] input:not([type="checkbox"]):not([type="radio"]),
+body[data-page] select,
+body[data-page] textarea {
+  background: #FFFFFF !important;
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+  box-shadow: none;
+}
+
+body[data-page] .form-control::placeholder,
+body[data-page] input::placeholder,
+body[data-page] textarea::placeholder {
+  color: #8AA0B2 !important;
+}
+
+body[data-page] .form-control:focus,
+body[data-page] .form-select:focus,
+body[data-page] input:focus,
+body[data-page] select:focus,
+body[data-page] textarea:focus {
+  border-color: var(--dzhub-primary) !important;
+  box-shadow: var(--shadow-focus) !important;
+}
+
+body[data-page] .btn-primary,
+body[data-page] .se-btn-gold,
+body[data-page] .se-btn-primary,
+body[data-page] .pf-primary-btn,
+body[data-page] .pf-btn-primary,
+body[data-page] .room-primary-btn,
+body[data-page] .chat-submit,
+body[data-page] .chat-send,
+body[data-page] .admin-filter-submit,
+body[data-page] .admin-action-btn-success,
+body[data-page] .se-publish-primary-btn {
+  background: var(--dzhub-primary) !important;
+  border-color: var(--dzhub-primary) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(18, 97, 160, .16) !important;
+}
+
+body[data-page] .btn-primary:hover,
+body[data-page] .se-btn-gold:hover,
+body[data-page] .se-btn-primary:hover,
+body[data-page] .pf-primary-btn:hover,
+body[data-page] .pf-btn-primary:hover,
+body[data-page] .room-primary-btn:hover,
+body[data-page] .chat-submit:hover,
+body[data-page] .chat-send:hover,
+body[data-page] .admin-filter-submit:hover,
+body[data-page] .admin-action-btn-success:hover,
+body[data-page] .se-publish-primary-btn:hover {
+  background: var(--dzhub-primary-dark) !important;
+  border-color: var(--dzhub-primary-dark) !important;
+  color: #FFFFFF !important;
+}
+
+body[data-page] .btn-outline-primary,
+body[data-page] .btn-outline-secondary,
+body[data-page] .se-btn-ghost,
+body[data-page] .pf-btn,
+body[data-page] .room-action-btn,
+body[data-page] .room-back-button,
+body[data-page] .chat-action-btn,
+body[data-page] .admin-room-action,
+body[data-page] .se-publish-secondary-link {
+  background: #FFFFFF !important;
+  border-color: var(--dzhub-border) !important;
+  color: var(--dzhub-primary) !important;
+}
+
+body[data-page] .btn-outline-primary:hover,
+body[data-page] .btn-outline-secondary:hover,
+body[data-page] .se-btn-ghost:hover,
+body[data-page] .pf-btn:hover,
+body[data-page] .room-action-btn:hover,
+body[data-page] .room-back-button:hover,
+body[data-page] .chat-action-btn:hover,
+body[data-page] .admin-room-action:hover,
+body[data-page] .se-publish-secondary-link:hover {
+  background: var(--dzhub-light-blue) !important;
+  border-color: #BDD7E7 !important;
+  color: var(--dzhub-primary-dark) !important;
+}
+
+body[data-page] .btn-warning,
+body[data-page] .btn-outline-warning,
+body[data-page] .admin-action-btn-danger,
+body[data-page] .room-danger-btn {
+  border-color: var(--dzhub-danger) !important;
+}
+
+/* Cards and panels on pages that were previously using dark glass surfaces. */
+body[data-page] .card,
+body[data-page] .pf-card,
+body[data-page] .pf-panel,
+body[data-page] .pf-info-card,
+body[data-page] .admin-card,
+body[data-page] .admin-panel,
+body[data-page] .admin-stat-card,
+body[data-page] .admin-metric-card,
+body[data-page] .admin-withdrawal-card,
+body[data-page] .chat-card,
+body[data-page] .chat-sidebar,
+body[data-page] .friends-card,
+body[data-page] .friends-panel,
+body[data-page] .notification-card,
+body[data-page] .invoice-card,
+body[data-page] .invoice-panel,
+body[data-page] .payment-card,
+body[data-page] .payment-summary,
+body[data-page] .payment-method,
+body[data-page] .escrow-panel,
+body[data-page] .escrow-room-card,
+body[data-page] .se-room-chat-card,
+body[data-page] .se-room-sidebar-card,
+body[data-page] .room-card,
+body[data-page] .room-participants-card,
+body[data-page] .room-share-card,
+body[data-page] .se-dr-stat,
+body[data-page] .se-dr-toolbar,
+body[data-page] .se-dr-filters,
+body[data-page] .se-dr-table-card,
+body[data-page] .se-auction-card,
+body[data-page] .se-auction-sidebar-card,
+body[data-page] .se-gallery-card,
+body[data-page] .se-product-card,
+body[data-page] .se-comments-card,
+body[data-page] .se-deal-chat-card,
+body[data-page] .se-seller-card,
+body[data-page] .se-deal-info-card {
+  background: #FFFFFF !important;
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+body[data-page] .pf-card-header,
+body[data-page] .chat-head,
+body[data-page] .chat-header,
+body[data-page] .chat-footer,
+body[data-page] .invoice-card-header,
+body[data-page] .payment-footer,
+body[data-page] .room-chat-head,
+body[data-page] .se-auction-sidebar-head,
+body[data-page] .se-deal-chat-head {
+  background: #F8FAFC !important;
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+}
+
+body[data-page] .pf-card-icon,
+body[data-page] .chat-icon,
+body[data-page] .invoice-dollar,
+body[data-page] .payment-hero-icon,
+body[data-page] .escrow-icon,
+body[data-page] .room-icon,
+body[data-page] .room-type-mark,
+body[data-page] .room-chat-icon,
+body[data-page] .admin-orb {
+  background: var(--dzhub-light-blue) !important;
+  color: var(--dzhub-primary) !important;
+  border-color: var(--dzhub-border) !important;
+}
+
+/* Profile: replace the old black/gold showcase with a calm DZHub blue hero. */
+body[data-page="profile"] .up-shell,
+body[data-page="profile"] .up-body,
+body[data-page="profile"] .up-profile-body {
+  background: var(--dzhub-page-bg) !important;
+  color: var(--dzhub-text) !important;
+}
+
+body[data-page="profile"] .up-topbar,
+body[data-page="profile"] .up-header,
+body[data-page="profile"] .up-card,
+body[data-page="profile"] .up-panel,
+body[data-page="profile"] .up-stat-card,
+body[data-page="profile"] .up-deal-card,
+body[data-page="profile"] .up-actions-card,
+body[data-page="profile"] .up-info-card,
+body[data-page="profile"] .up-review-row,
+body[data-page="profile"] .up-empty-state {
+  background: #FFFFFF !important;
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+body[data-page="profile"] .up-cover,
+body[data-page="profile"] .up-header-bg,
+body[data-page="profile"] .up-profile-card {
+  background: linear-gradient(135deg, var(--dzhub-primary-dark), var(--dzhub-primary), var(--dzhub-blue)) !important;
+  color: #FFFFFF !important;
+  border-color: transparent !important;
+}
+
+body[data-page="profile"] .up-cover::before,
+body[data-page="profile"] .up-cover::after,
+body[data-page="profile"] .up-cover-mesh,
+body[data-page="profile"] .up-user-card-orb,
+body[data-page="profile"] .up-glow {
+  opacity: .16 !important;
+}
+
+body[data-page="profile"] .up-name-line,
+body[data-page="profile"] .up-profile-name,
+body[data-page="profile"] .up-header-title,
+body[data-page="profile"] .up-brand,
+body[data-page="profile"] .up-wordmark {
+  color: #FFFFFF !important;
+}
+
+body[data-page="profile"] .up-text,
+body[data-page="profile"] .up-info,
+body[data-page="profile"] .up-deal-title,
+body[data-page="profile"] .up-stat-label,
+body[data-page="profile"] .up-meta-label,
+body[data-page="profile"] .up-email,
+body[data-page="profile"] .up-muted {
+  color: var(--dzhub-muted) !important;
+}
+
+body[data-page="profile"] .up-stat-value,
+body[data-page="profile"] .up-meta-value,
+body[data-page="profile"] .up-deal-price,
+body[data-page="profile"] .up-wallet-amount {
+  color: var(--dzhub-primary) !important;
+}
+
+/* Rooms, chats and escrow: same light workspace, with blue message ownership. */
+body[data-page="room"] .room-page,
+body[data-page="create_room"] .se-publish-form-page,
+body[data-page="join_room"] .se-publish-form-page,
+body[data-page="chat_hub"] .chat-shell,
+body[data-page="private_chat"] .chat-shell,
+body[data-page="escrow_room"] .escrow-premium,
+body[data-page="deal_room"] .se-dr-shell {
+  background: var(--dzhub-page-bg) !important;
+  color: var(--dzhub-text) !important;
+}
+
+body[data-page="room"] .room-modern-header,
+body[data-page="create_room"] .se-publish-form-hero,
+body[data-page="join_room"] .se-publish-form-hero,
+body[data-page="payment"] .payment-hero,
+body[data-page="payment_success"] .payment-hero {
+  background: linear-gradient(135deg, var(--dzhub-primary-dark), var(--dzhub-primary), var(--dzhub-blue)) !important;
+  color: #FFFFFF !important;
+}
+
+body[data-page="room"] .room-title,
+body[data-page="room"] .room-subtitle,
+body[data-page="room"] .room-meta,
+body[data-page="room"] .room-modern-header h1,
+body[data-page="create_room"] .se-publish-form-hero h1,
+body[data-page="create_room"] .se-publish-form-hero h4,
+body[data-page="join_room"] .se-publish-form-hero h1,
+body[data-page="join_room"] .se-publish-form-hero h4 {
+  color: #FFFFFF !important;
+}
+
+body[data-page="room"] .room-role-owner,
+body[data-page="room"] .room-role-staff,
+body[data-page="room"] .room-status-chip.is-active,
+body[data-page="room"] .room-meta-chip {
+  background: var(--dzhub-light-blue) !important;
+  color: var(--dzhub-primary) !important;
+  border-color: var(--dzhub-border) !important;
+}
+
+body[data-page="room"] .room-role-member,
+body[data-page="room"] .room-status-chip.is-closed {
+  background: #F1F7FB !important;
+  color: var(--dzhub-muted) !important;
+  border-color: var(--dzhub-border) !important;
+}
+
+body[data-page] .chat-message-bubble,
+body[data-page] .room-message-bubble,
+body[data-page] .se-deal-msg-bubble {
+  background: #F1F7FB !important;
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+}
+
+body[data-page] .chat-message-bubble.mine,
+body[data-page] .room-message-row.mine .room-message-bubble,
+body[data-page] .se-dm-bubble-mine {
+  background: var(--dzhub-primary) !important;
+  color: #FFFFFF !important;
+  border-color: var(--dzhub-primary) !important;
+}
+
+/* Admin and support areas should feel like a control centre, not a dark theme. */
+body[data-page="admin"] .admin-shell,
+body[data-page="admin"] .admin-body,
+body[data-page="admin"] .admin-withdrawals-main,
+body[data-page="support"] .support-page,
+body[data-page="support"] .support-shell {
+  background: var(--dzhub-page-bg) !important;
+  color: var(--dzhub-text) !important;
+}
+
+body[data-page="admin"] .admin-sidebar,
+body[data-page="admin"] .admin-withdrawals-sidebar,
+body[data-page="admin"] .admin-head,
+body[data-page="admin"] .admin-dashboard-header,
+body[data-page="support"] .support-hero {
+  background: #FFFFFF !important;
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+}
+
+body[data-page="admin"] .admin-sidebar-links a,
+body[data-page="admin"] .admin-nav-link,
+body[data-page="admin"] .admin-room-title,
+body[data-page="admin"] .admin-section-label,
+body[data-page="support"] .support-title,
+body[data-page="support"] .support-faq-title {
+  color: var(--dzhub-text) !important;
+}
+
+body[data-page="admin"] .admin-sidebar-links a:hover,
+body[data-page="admin"] .admin-sidebar-links li.is-active,
+body[data-page="admin"] .admin-nav-link.is-active {
+  background: var(--dzhub-light-blue) !important;
+  color: var(--dzhub-primary) !important;
+}
+
+/* Auth and status pages: remove dark shells even where a template has inline styles. */
+body[data-page="login"] .se-main,
+body[data-page="register"] .se-main,
+body[data-page^="account_"] .se-main,
+body[data-page^="password_"] .se-main,
+body[data-page^="socialaccount_"] .se-main,
+body[data-page="auth_error"] .se-main {
+  background: var(--dzhub-page-bg) !important;
+}
+
+body[data-page="login"] .auth-page-shell,
+body[data-page="register"] .auth-page-shell,
+body[data-page^="account_"] .auth-page-shell,
+body[data-page^="password_"] .auth-page-shell,
+body[data-page^="socialaccount_"] .auth-page-shell,
+body[data-page="auth_error"] .auth-page-shell,
+body[data-page] .auth-card,
+body[data-page] .auth-form-card,
+body[data-page] .auth-status-card,
+body[data-page] .email-card,
+body[data-page] .confirm-card,
+body[data-page] .reauth-card {
+  background: #FFFFFF !important;
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+body[data-page="login"] .auth-side,
+body[data-page="register"] .auth-side,
+body[data-page^="account_"] .auth-side,
+body[data-page^="password_"] .auth-side,
+body[data-page^="socialaccount_"] .auth-side {
+  background: linear-gradient(135deg, var(--dzhub-primary-dark), var(--dzhub-primary)) !important;
+  color: #FFFFFF !important;
+}
+
+body[data-page="login"] input,
+body[data-page="register"] input,
+body[data-page^="account_"] input,
+body[data-page^="password_"] input,
+body[data-page^="socialaccount_"] input {
+  background: #FFFFFF !important;
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+}
+
+body[data-page="login"] label,
+body[data-page="register"] label,
+body[data-page^="account_"] label,
+body[data-page^="password_"] label,
+body[data-page^="socialaccount_"] label {
+  color: var(--dzhub-text) !important;
+}
+
+/* Errors and alerts remain readable on the white canvas. */
+body[data-page] .se-error-shell,
+body[data-page] .se-error-wrap,
+body[data-page] .se-error-card {
+  background: var(--dzhub-page-bg) !important;
+  color: var(--dzhub-text) !important;
+}
+
+body[data-page] .se-error-card {
+  background: #FFFFFF !important;
+  border-color: var(--dzhub-border) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+body[data-page] .se-error-code,
+body[data-page] .se-error-title {
+  color: var(--dzhub-primary) !important;
+}
+
+body[data-page] .se-alert-info,
+body[data-page] .se-alert-warn,
+body[data-page] .se-alert-success,
+body[data-page] .se-alert-error {
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+}
+
+/* Last-resort guard for legacy inline styles in old account/admin templates. */
+body[data-page] [style*="#f59e0b"],
+body[data-page] [style*="#F59E0B"],
+body[data-page] [style*="#fbbf24"],
+body[data-page] [style*="#FBBF24"],
+body[data-page] [style*="#d97706"],
+body[data-page] [style*="#D97706"],
+body[data-page] [style*="#c9963b"],
+body[data-page] [style*="#C9963B"],
+body[data-page] [style*="rgba(245,158,11"],
+body[data-page] [style*="rgba(201,150,59"],
+body[data-page] [style*="rgba(244,201,93"] {
+  color: var(--dzhub-primary) !important;
+  border-color: var(--dzhub-border) !important;
+}
+
+body[data-page] [style*="#070a13"],
+body[data-page] [style*="#070A13"],
+body[data-page] [style*="#0a0f1d"],
+body[data-page] [style*="#0A0F1D"],
+body[data-page] [style*="#0d1b2a"],
+body[data-page] [style*="#0D1B2A"],
+body[data-page] [style*="rgba(13,15,26"],
+body[data-page] [style*="rgba(13,27,42"] {
+  background: #FFFFFF !important;
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+}
+
+body[data-page="profile"] .up-cover-mesh,
+body[data-page="profile"] .up-cover-fade {
+  display: none !important;
+}
+
+/* Keep the mobile navigation and floating action aligned with the same system. */
+.se-bottom-nav,
+.se-mobile-menu,
+.se-dropdown,
+.se-chat-fab {
+  background: #FFFFFF !important;
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.se-bottom-nav .se-bnav-item,
+.se-mobile-menu a,
+.se-mobile-menu button,
+.se-dropdown a,
+.se-dropdown button {
+  color: var(--dzhub-muted) !important;
+}
+
+.se-bottom-nav .se-bnav-item.active,
+.se-bottom-nav .se-bnav-primary,
+.se-mobile-menu a:hover,
+.se-dropdown a:hover {
+  color: var(--dzhub-primary) !important;
+  background: var(--dzhub-light-blue) !important;
+}
+
+@media (max-width: 991.98px) {
+  body[data-page] .se-main {
+    padding-bottom: 76px;
+  }
+
+  body[data-page] .card,
+  body[data-page] .pf-card,
+  body[data-page] .admin-card,
+  body[data-page] .chat-card,
+  body[data-page] .room-card {
+    border-radius: 14px !important;
+  }
+
+  body[data-page="profile"] .up-shell,
+  body[data-page="admin"] .admin-shell,
+  body[data-page="room"] .room-shell {
+    padding-inline: 12px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page] *,
+  body[data-page] *::before,
+  body[data-page] *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* =======================================================================
+   FINAL LEGACY CLEANUP
+   Some older templates define their own gold/navy tokens inside a local
+   <style> block. These aliases keep those pages on the DZHub system too.
+   ======================================================================= */
+body[data-page] {
+  --gold: var(--dzhub-primary) !important;
+  --gold-light: var(--dzhub-blue) !important;
+  --gold-dark: var(--dzhub-primary-dark) !important;
+  --gold-glow: rgba(21, 155, 215, .22) !important;
+  --lux-gold: var(--dzhub-primary) !important;
+  --lux-gold-rgb: 18, 97, 160 !important;
+  --color-primary: var(--dzhub-primary) !important;
+  --color-primary-2: var(--dzhub-blue) !important;
+  --color-gold: var(--dzhub-primary) !important;
+  --color-bg: var(--dzhub-page-bg) !important;
+  --color-bg-2: var(--dzhub-surface-subtle) !important;
+  --color-card: #FFFFFF !important;
+  --color-card-2: #F8FAFC !important;
+  --color-card-3: #F1F7FB !important;
+  --color-text: var(--dzhub-text) !important;
+  --color-muted: var(--dzhub-muted) !important;
+  --color-border: var(--dzhub-border) !important;
+  --color-border-2: #BDD7E7 !important;
+  --navy: var(--dzhub-primary-dark) !important;
+  --navy-mid: var(--dzhub-primary) !important;
+  --navy-light: var(--dzhub-blue) !important;
+  --border-light: var(--dzhub-border) !important;
+  --bg-light: var(--dzhub-page-bg) !important;
+}
+
+/* Page-level dark wrappers become transparent and reveal the relevant art. */
+body[data-page] .dl-page,
+body[data-page] .dx-page,
+body[data-page] .se-auction-shell,
+body[data-page] .cm-page,
+body[data-page] .sd-page,
+body[data-page] .sn-simple-page,
+body[data-page] .info-premium-page,
+body[data-page] .legal-page,
+body[data-page] .se-dr-shell,
+body[data-page] .escrow-premium,
+body[data-page] .payment-page,
+body[data-page] .invoice-page,
+body[data-page] .friends-layout,
+body[data-page] .admin-shell,
+body[data-page] .admin-body,
+body[data-page] .se-admin-rooms-shell,
+body[data-page] .admin-withdrawals-main,
+body[data-page] .support-shell {
+  background: transparent !important;
+  color: var(--dzhub-text) !important;
+}
+
+/* A common surface for legacy cards that still carry navy/glass styling. */
+body[data-page] .se-dr-stat,
+body[data-page] .se-dr-toolbar,
+body[data-page] .se-dr-filters,
+body[data-page] .se-dr-table-card,
+body[data-page] .er-deadline-card,
+body[data-page] .er-evidence-panel,
+body[data-page] .er-guide-card,
+body[data-page] .er-command-card,
+body[data-page] .er-activity-card,
+body[data-page] .er-chat-card,
+body[data-page] .er-admin-card,
+body[data-page] .se-auction-stat,
+body[data-page] .se-auction-bid-card,
+body[data-page] .se-auction-empty,
+body[data-page] .se-auction-state-card,
+body[data-page] .cm-panel,
+body[data-page] .cm-action-card,
+body[data-page] .sd-panel,
+body[data-page] .sn-card-shell,
+body[data-page] .se-publish-form-card {
+  background: #FFFFFF !important;
+  color: var(--dzhub-text) !important;
+  border-color: var(--dzhub-border) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+body[data-page] .er-btn-warning,
+body[data-page] .se-dr-add-btn,
+body[data-page] .auth-status-btn,
+body[data-page] .account-submit-btn,
+body[data-page] .reset-submit-btn,
+body[data-page] .se-auction-submit-btn,
+body[data-page] .se-comment-submit-btn,
+body[data-page] .se-reply-submit-btn,
+body[data-page] .se-deal-send-btn,
+body[data-page] .er-chat-submit,
+body[data-page] .er-command-btn,
+body[data-page] .sd-btn-primary,
+body[data-page] .sn-action-btn,
+body[data-page] .se-buy-main-btn,
+body[data-page] .se-submit-btn {
+  background: var(--dzhub-primary) !important;
+  background-image: linear-gradient(135deg, var(--dzhub-primary), var(--dzhub-blue)) !important;
+  border-color: var(--dzhub-primary) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 5px 16px rgba(18, 97, 160, .18) !important;
+}
+
+body[data-page] .er-btn-warning:hover,
+body[data-page] .se-dr-add-btn:hover,
+body[data-page] .auth-status-btn:hover,
+body[data-page] .account-submit-btn:hover,
+body[data-page] .reset-submit-btn:hover,
+body[data-page] .se-auction-submit-btn:hover,
+body[data-page] .se-comment-submit-btn:hover,
+body[data-page] .se-reply-submit-btn:hover,
+body[data-page] .se-deal-send-btn:hover,
+body[data-page] .er-chat-submit:hover,
+body[data-page] .er-command-btn:hover,
+body[data-page] .sd-btn-primary:hover,
+body[data-page] .sn-action-btn:hover,
+body[data-page] .se-buy-main-btn:hover,
+body[data-page] .se-submit-btn:hover {
+  background: var(--dzhub-primary-dark) !important;
+  background-image: none !important;
+  border-color: var(--dzhub-primary-dark) !important;
+  color: #FFFFFF !important;
+}
+
+body[data-page] .btn-warning,
+body[data-page] .btn-outline-warning,
+body[data-page] .btn-gold,
+body[data-page] .se-btn-gold,
+body[data-page] [class*="gold-btn"] {
+  background: var(--dzhub-primary) !important;
+  background-image: linear-gradient(135deg, var(--dzhub-primary), var(--dzhub-blue)) !important;
+  border-color: var(--dzhub-primary) !important;
+  color: #FFFFFF !important;
+}
+
+/* Replace literal gold inline backgrounds/shadows without touching semantic
+   success/danger states. */
+body[data-page] [style*="background"][style*="#f59e0b"],
+body[data-page] [style*="background"][style*="#F59E0B"],
+body[data-page] [style*="background"][style*="#fbbf24"],
+body[data-page] [style*="background"][style*="#FBBF24"],
+body[data-page] [style*="background"][style*="#d97706"],
+body[data-page] [style*="background"][style*="#D97706"],
+body[data-page] [style*="background"][style*="rgba(245,158,11"],
+body[data-page] [style*="background"][style*="rgba(201,150,59"],
+body[data-page] [style*="background"][style*="rgba(244,201,93"] {
+  background: var(--dzhub-light-blue) !important;
+  background-image: none !important;
+  border-color: var(--dzhub-border) !important;
+}
+
+body[data-page] [style*="box-shadow"][style*="245,158,11"],
+body[data-page] [style*="box-shadow"][style*="201,150,59"] {
+  box-shadow: 0 5px 16px rgba(18, 97, 160, .16) !important;
+}
+
+/* Legacy gold text/icon utility classes become the primary blue accent. */
+body[data-page] .text-gold,
+body[data-page] .text-gold-gradient,
+body[data-page] .se-info-gold,
+body[data-page] .se-stars-input label:hover ~ label,
+body[data-page] .account-card-icon i,
+body[data-page] .reset-key-icon i,
+body[data-page] .connections-icon i,
+body[data-page] .er-meta i,
+body[data-page] .er-actions-title i,
+body[data-page] .se-section-mini-title i,
+body[data-page] .se-section-head-title i,
+body[data-page] .se-owner-actions-header i,
+body[data-page] .se-owner-actions-note i {
+  color: var(--dzhub-primary) !important;
+  -webkit-text-fill-color: var(--dzhub-primary) !important;
+}
+
+body[data-page] .text-gold-gradient {
+  background: linear-gradient(135deg, var(--dzhub-primary), var(--dzhub-blue)) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+}
+
+/* Keep decorative glows blue, including old inline radial gradients. */
+body[data-page] .auth-status-glow,
+body[data-page] .auth-status-glow-bottom,
+body[data-page] .reset-glow,
+body[data-page] .reset-key-glow,
+body[data-page] .social-login-glow,
+body[data-page] .social-signup-glow,
+body[data-page] .account-card-glow {
+  background: radial-gradient(circle, rgba(21, 155, 215, .18), transparent 70%) !important;
+}
+
+/* On narrow screens, keep the art as a restrained header instead of a noisy
+   full-page wallpaper. */
+@media (max-width: 767.98px) {
+  body[data-page] .se-main::before {
+    height: 270px;
+    opacity: .62;
+  }
+
+  body[data-page] .se-main::after {
+    background: linear-gradient(180deg, rgba(246, 250, 253, .14), var(--dzhub-page-bg) 320px);
+  }
+}

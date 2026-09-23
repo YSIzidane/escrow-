@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 140" width="100%" height="100%">
+  <defs>
+    <linearGradient id="hzNavyGrad" x1="10%" y1="100%" x2="70%" y2="10%">
+      <stop offset="0%" stop-color="#082A4A" />
+      <stop offset="50%" stop-color="#0B477A" />
+      <stop offset="100%" stop-color="#1261A0" />
+    </linearGradient>
+    <linearGradient id="hzSkyGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0E7CB9" />
+      <stop offset="50%" stop-color="#159BD7" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+    <linearGradient id="hzArrowGrad" x1="5%" y1="95%" x2="95%" y2="5%">
+      <stop offset="0%" stop-color="#0A3F6D" />
+      <stop offset="35%" stop-color="#0F5E9E" />
+      <stop offset="70%" stop-color="#159BD7" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Symbol scaled to fit left box (x: 10, y: 10, size: 120) -->
+  <g transform="translate(10, 10) scale(0.234375)">
+    <!-- 1. Left Navy Arch -->
+    <path d="M 142 412 L 146 360 C 152 265, 178 185, 238 185 C 278 185, 298 220, 276 266 L 242 245 C 255 224, 246 212, 235 212 C 198 212, 184 265, 178 340 L 136 354 L 130 412 Z"
+          fill="url(#hzNavyGrad)" />
+    <!-- 2. Diamond -->
+    <polygon points="222,238 240,268 222,298 204,268" fill="url(#hzSkyGrad)" />
+    <!-- 3. Right Hook -->
+    <path d="M 368 196 L 368 318 C 368 376, 326 400, 274 378 C 252 368, 242 352, 254 340 C 266 328, 278 344, 294 350 C 322 360, 340 342, 340 308 L 340 216 Z"
+          fill="url(#hzSkyGrad)" />
+    <!-- 4. Arrow -->
+    <path d="M 112 372 C 168 362, 242 328, 308 246 C 338 206, 358 160, 372 115 L 336 124 L 408 72 L 404 158 L 380 144 C 366 188, 342 232, 310 272 C 246 352, 172 384, 112 396 Z"
+          fill="url(#hzArrowGrad)" />
+  </g>
+
+  <!-- Typography: DZHub -->
+  <g transform="translate(138, 76)">
+    <text font-family="'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="58" letter-spacing="-1.5">
+      <tspan fill="#0B477A">DZ</tspan>
+      <tspan fill="#159BD7">Hub</tspan>
+    </text>
+  </g>
+
+  <!-- Arabic Subtitle: دزاير هب -->
+  <g transform="translate(142, 114)">
+    <text font-family="'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-weight="700" font-size="24" fill="#0B477A" letter-spacing="0">
+      دزاير هب
+    </text>
+    <text font-family="'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-weight="500" font-size="14" fill="#688197" x="110" y="-3">
+      | منصة الخدمات والمنتجات الرقمية
+    </text>
+  </g>
+</svg>

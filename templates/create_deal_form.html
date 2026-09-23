@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static site_i18n %}
 
-{% block title %}{% t 'deal.create.page_title' %} - Safouane{% endblock %}
+{% block title %}{% t 'deal.create.page_title' %} - DZHub{% endblock %}
 {% block page_type %}create_deal{% endblock %}
 {% block nav_deal %}active{% endblock %}
 
@@ -10,30 +10,58 @@
 {% endblock %}
 
 {% block late_css %}
-<link rel="stylesheet" href="{% static 'css/deals_dark.css' %}?v=20260523a" media="not all" data-theme-dark-style>
+<link rel="stylesheet" href="{% static 'css/deals_dark.css' %}?v=20260920b">
 {% endblock %}
 
 {% block content %}
-<main class="dl-page dl-page-create" dir="rtl">
+<main class="dl-page dl-page-create" dir="{{ current_dir }}">
   <section class="dl-shell dl-create-shell" aria-labelledby="create-deal-title">
-    <header class="dl-hero dl-hero-create">
-      <div>
-        <span class="dl-kicker">
-          <i class="fas fa-shield-halved" aria-hidden="true"></i>
-          {% t 'deal.create.kicker' %}
-        </span>
-        <h1 id="create-deal-title">{% t 'deal.create.page_title' %}</h1>
-        <p>{% t 'deal.create.subtitle' %}. {% t 'deal.create.subtitle_extra' %}</p>
+
+    <!-- Modern Luxury Fintech Create Hero Banner -->
+    <header class="dl-hero-profile-style" style="margin-bottom: 24px;">
+      <div class="dl-cover-mesh-wrap" aria-hidden="true">
+        <div class="dl-hero-ambient-glow"></div>
       </div>
-      <a href="{% url 'listings' %}" class="dl-btn dl-btn-ghost">
-        <i class="fas fa-layer-group" aria-hidden="true"></i>
-        <span>{% t "chat_hub.browse_deals" %}</span>
-      </a>
+
+      <div class="dl-hero-profile-body" style="grid-template-columns: 1fr auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+        <div style="text-align: start;">
+          <div class="dl-hero-badge">
+            <i class="fas fa-shield-halved" aria-hidden="true"></i>
+            <span>{% t 'deal.create.kicker' %}</span>
+          </div>
+          <h1 id="create-deal-title" class="dl-hero-title" style="font-size: 2.2rem; font-weight: 900; margin-bottom: 8px;">
+            {% t 'deal.create.page_title' %}
+          </h1>
+          <p class="dl-hero-subtitle" style="margin: 0; font-size: 1rem;">
+            {% t 'deal.create.subtitle' %}. {% t 'deal.create.subtitle_extra' %}
+          </p>
+        </div>
+
+        <a href="{% url 'listings' %}" class="dl-btn dl-btn-ghost">
+          <i class="fas fa-layer-group" aria-hidden="true"></i>
+          <span>{% t "chat_hub.browse_deals" %}</span>
+        </a>
+      </div>
     </header>
 
     <div class="dl-create-grid">
       <form method="post" enctype="multipart/form-data" id="createDealForm" class="dl-panel dl-form-panel" data-dl-create-form>
         {% csrf_token %}
+
+        <div id="seDraftBanner" class="se-draft-banner" style="display:none;" role="alert">
+          <div class="se-draft-info">
+            <i class="fas fa-floppy-disk" aria-hidden="true"></i>
+          <span>{% t 'deal.create.draft_found' %}</span>
+          </div>
+          <div class="se-draft-actions">
+            <button type="button" id="seRestoreDraftBtn" class="se-btn se-btn-gold se-btn-sm">
+              <i class="fas fa-rotate-left"></i> {% t 'deal.create.restore_draft' %}
+            </button>
+            <button type="button" id="seDiscardDraftBtn" class="se-btn se-btn-ghost se-btn-sm">
+              {% t 'deal.create.discard_draft' %}
+            </button>
+          </div>
+        </div>
 
         <section class="dl-form-section">
           <div class="dl-section-head">
@@ -151,7 +179,7 @@
             <div class="dl-field">
               <label for="price">{% t 'deal.create.price' %} <span>*</span></label>
               <div class="dl-money-field">
-                <b>$</b>
+                <b>{% t 'currency.dzd' %}</b>
                 <input id="price" type="number" name="price" min="1" step="0.01"
                        value="{{ form_data.price|default:'' }}" placeholder="0.00">
               </div>
@@ -162,7 +190,7 @@
             <div class="dl-field">
               <label for="startingPrice">{% t 'deal.create.price_start' %} <span>*</span></label>
               <div class="dl-money-field">
-                <b>$</b>
+                <b>{% t 'currency.dzd' %}</b>
                 <input id="startingPrice" type="number" name="starting_price" min="1" step="0.01"
                        value="{{ form_data.starting_price|default:'' }}" placeholder="0.00">
               </div>
@@ -170,7 +198,7 @@
             <div class="dl-field">
               <label for="minBidIncrement">{% t 'deal.create.bid_inc' %}</label>
               <div class="dl-money-field">
-                <b>$</b>
+                <b>{% t 'currency.dzd' %}</b>
                 <input id="minBidIncrement" type="number" name="min_bid_increment" min="1" step="0.01"
                        value="{{ form_data.min_bid_increment|default:'5.00' }}" placeholder="5.00">
               </div>
@@ -179,6 +207,30 @@
               <label for="auctionEndsAt">{% t 'deal.create.auction_end' %} <span>*</span></label>
               <input id="auctionEndsAt" type="datetime-local" name="auction_ends_at"
                      value="{{ form_data.auction_ends_at|default:'' }}">
+            </div>
+          </div>
+
+          <!-- ═══════════════════════════════════════
+               DYNAMIC ESCROW FEE CALCULATOR WIDGET
+               ═══════════════════════════════════════ -->
+          <div class="se-fee-calculator" id="seFeeCalculator" data-fee-rate="{{ fee_rate_percent|default:0 }}">
+            <div class="se-fee-head">
+              <i class="fas fa-calculator" aria-hidden="true"></i>
+              <span>{% t 'deal.create.fee_calculator_before' %}{{ fee_rate_percent|default:0 }}{% t 'deal.create.fee_calculator_after' %}</span>
+            </div>
+            <div class="se-fee-breakdown">
+              <div class="se-fee-row">
+                <span>{% t 'deal.create.deal_amount' %}</span>
+                <strong id="seFeeOriginalAmount">0.00 {% t 'currency.dzd' %}</strong>
+              </div>
+              <div class="se-fee-row">
+                <span>{% t 'deal.create.escrow_fee_before' %}{{ fee_rate_percent|default:0 }}{% t 'deal.create.escrow_fee_after' %}</span>
+                <strong id="seFeeCalculated">0.00 {% t 'currency.dzd' %}</strong>
+              </div>
+              <div class="se-fee-row se-fee-total">
+                <span>{% t 'deal.create.total_payable' %}</span>
+                <strong id="seFeeTotalPayable">0.00 {% t 'currency.dzd' %}</strong>
+              </div>
             </div>
           </div>
         </section>

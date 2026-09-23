@@ -185,10 +185,7 @@ def listings_view(request):
         "fee_rate_percent": _fee_rate_percent(),
     }
 
-    if (
-        request.headers.get("HX-Request") == "true"
-        and request.headers.get("HX-Target") == "deals-container"
-    ):
+    if request.headers.get("HX-Request") == "true":
         return render(request, "partials/deals_grid.html", context)
 
     return render(request, "deals.html", context)
@@ -269,10 +266,7 @@ def search_user(request):
         "fee_rate_percent": _fee_rate_percent(),
     }
 
-    if (
-        request.headers.get("HX-Request") == "true"
-        and request.headers.get("HX-Target") == "search-results"
-    ):
+    if request.headers.get("HX-Request") == "true":
         return render(request, "partials/search_results.html", context)
 
     return render(request, "search.html", context)

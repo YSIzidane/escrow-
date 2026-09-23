@@ -4,10 +4,10 @@
 {% if current_language == 'ar' %}
 تم تأكيد بريدك الإلكتروني بنجاح.
 
-يمكنك الآن متابعة استخدام {{ site_brand_name|default:"SafouaneEscrow" }} بشكل طبيعي.
+يمكنك الآن متابعة استخدام {{ site_brand_name|default:"DZHub" }} بشكل طبيعي.
 {% else %}
 Your email address has been confirmed successfully.
 
-You can now continue using {{ site_brand_name|default:"SafouaneEscrow" }} normally.
+You can now continue using {{ site_brand_name|default:"DZHub" }} normally.
 {% endif %}
 {% endblock %}

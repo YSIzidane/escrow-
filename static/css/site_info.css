@@ -1,5 +1,5 @@
 /* ============================================================
-   SafouaneEscrow — About & Guide Pages
+   DZHub — About & Guide Pages
    Aesthetic: Swiss Editorial — Magazine-grade precision
    ============================================================ */
 
@@ -494,10 +494,9 @@ body[data-page="guide"] .hw-kicker {
 
 /* ── SCROLL REVEAL ── */
 .si-reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity .7s var(--si-ease-out), transform .7s var(--si-ease);
-  will-change: transform, opacity;
+  opacity: 1;
+  transform: none;
+  transition: opacity .4s ease, transform .4s ease;
 }
 .si-reveal.si-visible {
   opacity: 1;

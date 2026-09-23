@@ -1,1 +1,1 @@
-{% if current_language == 'ar' %}تم تأكيد بريدك الإلكتروني في SafouaneEscrow{% else %}Your email address was confirmed on SafouaneEscrow{% endif %}
+{% if current_language == 'ar' %}تم تأكيد بريدك الإلكتروني في DZHub{% else %}Your email address was confirmed on DZHub{% endif %}

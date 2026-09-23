@@ -1,4 +1,4 @@
-﻿body[data-page="chat_hub"],
+body[data-page="chat_hub"],
 body[data-page="private_chat"],
 body[data-page="friends"] {
   --cm-bg: #0b0d12;
@@ -93,7 +93,7 @@ body[data-page="friends"] .se-chat-fab {
 }
 
 .cm-page {
-  --cm-page-image: url("../images/visuals/page-backgrounds/09-future-wall.webp");
+  --cm-page-image: url("../images/brand/luxury_hero_mesh.jpg");
   min-height: calc(100dvh - var(--navbar-h, 68px));
   padding: 34px 20px 72px;
   direction: rtl;
@@ -101,23 +101,23 @@ body[data-page="friends"] .se-chat-fab {
   font-family: "Cairo", "Manrope", system-ui, sans-serif;
   color: var(--cm-text);
   background:
-    radial-gradient(1200px 700px at 85% -10%, rgba(99, 102, 241, 0.10), transparent 60%),
-    radial-gradient(900px 600px at 5% 10%, rgba(99, 102, 241, 0.05), transparent 65%),
-    linear-gradient(90deg, rgba(11, 13, 18, 0.88) 0%, rgba(11, 13, 18, 0.64) 48%, rgba(11, 13, 18, 0.32) 100%),
-    linear-gradient(180deg, rgba(11, 13, 18, 0.04), rgba(11, 13, 18, 0.56)),
+    radial-gradient(circle at 12% 15%, rgba(59, 130, 246, 0.14) 0%, transparent 45%),
+    radial-gradient(circle at 88% 75%, rgba(245, 158, 11, 0.12) 0%, transparent 45%),
+    linear-gradient(90deg, rgba(7, 10, 19, 0.94) 0%, rgba(7, 10, 19, 0.82) 48%, rgba(7, 10, 19, 0.65) 100%),
+    linear-gradient(180deg, rgba(7, 10, 19, 0.3), rgba(7, 10, 19, 0.9)),
     var(--cm-page-image) center / cover fixed no-repeat;
 }
 
 .cm-bg-messages {
-  --cm-page-image: url("../images/visuals/page-backgrounds/09-future-wall.webp");
+  --cm-page-image: url("../images/brand/luxury_hero_mesh.jpg");
 }
 
 .cm-bg-private {
-  --cm-page-image: url("../images/visuals/page-backgrounds/01-solar-terrace.webp");
+  --cm-page-image: url("../images/brand/luxury_hero_mesh.jpg");
 }
 
 .cm-bg-friends {
-  --cm-page-image: url("../images/visuals/page-backgrounds/04-gallery-sculptures.webp");
+  --cm-page-image: url("../images/brand/luxury_hero_mesh.jpg");
 }
 
 .cm-page::before {
@@ -126,11 +126,12 @@ body[data-page="friends"] .se-chat-fab {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 72%);
-  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 72%);
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at 50% 20%, #000 35%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 20%, #000 35%, transparent 85%);
+  opacity: 0.4;
 }
 
 .cm-shell,
@@ -438,12 +439,134 @@ body[data-page="friends"] .se-chat-fab {
   font-weight: 700;
 }
 
+/* ══ 3D Visual Showcase for Chat Hub & Friends ══ */
+.cm-welcome-visual-card {
+  position: relative;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.cm-welcome-visual-inner {
+  position: relative;
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  box-shadow: 0 14px 34px -8px rgba(0, 0, 0, 0.65), 0 0 25px -4px rgba(245, 158, 11, 0.18);
+  background: rgba(10, 14, 27, 0.8);
+}
+
+.cm-welcome-visual-img {
+  width: 100%;
+  aspect-ratio: 16 / 8.5;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.01);
+  transition: transform 0.5s ease;
+}
+
+.cm-welcome-visual-inner:hover .cm-welcome-visual-img {
+  transform: scale(1.04);
+}
+
+.cm-welcome-visual-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 10, 19, 0) 30%, rgba(7, 10, 19, 0.85) 100%);
+  pointer-events: none;
+}
+
+.cm-welcome-floating-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(13, 19, 36, 0.88);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fbbf24;
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+.cm-pulsing-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: cmPulse 2s infinite ease-in-out;
+}
+
+@keyframes cmPulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 10px #10b981; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+/* Friends Hero 2-Column Layout */
+.cm-friends-hero {
+  display: grid !important;
+  grid-template-columns: 1.2fr 0.95fr;
+  align-items: center;
+  gap: 28px;
+  padding: clamp(24px, 3.5vw, 36px) !important;
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(13, 19, 36, 0.92) 0%, rgba(8, 12, 23, 0.96) 100%),
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.14) 0%, transparent 50%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.65), 0 0 30px -10px rgba(245, 158, 11, 0.15) !important;
+}
+
+@media (max-width: 900px) {
+  .cm-friends-hero {
+    grid-template-columns: 1fr !important;
+    gap: 22px;
+  }
+}
+
+.cm-hero-3d-inner {
+  position: relative;
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  box-shadow: 0 14px 34px -8px rgba(0, 0, 0, 0.65), 0 0 25px -4px rgba(245, 158, 11, 0.18);
+  background: rgba(10, 14, 27, 0.8);
+}
+
+.cm-hero-3d-img {
+  width: 100%;
+  aspect-ratio: 16 / 9.5;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.01);
+  transition: transform 0.5s ease;
+}
+
+.cm-hero-3d-inner:hover .cm-hero-3d-img {
+  transform: scale(1.04);
+}
+
 .cm-welcome-panel {
   display: grid;
-  align-content: center;
-  justify-items: start;
-  gap: 14px;
-  padding: clamp(22px, 3vw, 30px);
+  align-content: start;
+  justify-items: stretch;
+  gap: 16px;
+  padding: clamp(22px, 2.5vw, 28px);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(99, 102, 241, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(14, 20, 36, 0.94), rgba(10, 14, 25, 0.96)) !important;
+  border: 1px solid rgba(245, 158, 11, 0.18) !important;
 }
 
 .cm-welcome-mark,
@@ -452,10 +575,10 @@ body[data-page="friends"] .se-chat-fab {
 .cm-stat-icon {
   display: grid;
   place-items: center;
-  border: 1px solid rgba(99, 102, 241, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.2);
   border-radius: 999px;
-  background: rgba(99, 102, 241, 0.11);
-  color: var(--cm-accent);
+  background: rgba(245, 158, 11, 0.08);
+  color: #fbbf24;
 }
 
 .cm-welcome-mark {
@@ -468,7 +591,7 @@ body[data-page="friends"] .se-chat-fab {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
   margin-top: 4px;
 }
 
@@ -477,13 +600,20 @@ body[data-page="friends"] .se-chat-fab {
   display: grid;
   align-content: start;
   gap: 9px;
-  padding: 14px;
-  border: 1px solid var(--cm-border);
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.045);
+  background: rgba(18, 25, 45, 0.65);
   color: inherit;
   text-decoration: none;
-  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.cm-action-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(245, 158, 11, 0.35);
+  background: rgba(22, 32, 58, 0.8);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba(245, 158, 11, 0.12);
 }
 
 .cm-action-card:hover {

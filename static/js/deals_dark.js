@@ -192,6 +192,17 @@
   function initDealsPage() {
     refreshCountdowns();
 
+    // Catch image load failures and remove them to reveal the fallback shield cleanly
+    window.addEventListener(
+      "error",
+      (event) => {
+        if (event.target && event.target.tagName === "IMG" && event.target.closest(".dl-deal-media")) {
+          event.target.remove();
+        }
+      },
+      true
+    );
+
     document.body.addEventListener("htmx:afterSwap", (event) => {
       if (event.detail?.target?.id === "deals-container") {
         refreshCountdowns();

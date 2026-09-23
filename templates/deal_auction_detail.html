@@ -23,19 +23,19 @@
 {% endif %}
 {% endblock %}
 {% block late_css %}
-<link rel="stylesheet" href="{% static 'css/deal_escrow_premium.css' %}?v=20260525f">
+<link rel="stylesheet" href="{% static 'css/deal_escrow_premium.css' %}?v=20260920v999">
 {% endblock %}
 
 {% block content %}
-<div class="se-auction-shell" id="auction-page-dynamic">
+<div class="se-auction-shell" id="auction-page-dynamic" dir="{{ current_dir }}">
 
   <nav class="se-auction-breadcrumb" aria-label="{% t 'ui.breadcrumb' %}">
     <a href="{% url 'home' %}" class="se-auction-breadcrumb-link">
-      <i class="fas fa-home"></i>{% t "deal.detail.breadcrumb_home" %}
+      <i class="fas fa-house-chimney"></i> {% t "deal.detail.breadcrumb_home" %}
     </a>
-    <i class="fas fa-chevron-{% if request.LANGUAGE_CODE == 'en' %}right{% else %}left{% endif %}"></i>
+    <i class="fas fa-chevron-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}"></i>
     <a href="{% url 'listings' %}" class="se-auction-breadcrumb-link">{% t "deal.detail.breadcrumb_deals" %}</a>
-    <i class="fas fa-chevron-{% if request.LANGUAGE_CODE == 'en' %}right{% else %}left{% endif %}"></i>
+    <i class="fas fa-chevron-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}"></i>
     <span>{{ deal.product_title|truncatechars:40 }}</span>
   </nav>
 

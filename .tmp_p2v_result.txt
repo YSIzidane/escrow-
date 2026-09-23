@@ -1,0 +1,10 @@
+﻿R1 accept-bid lock applied: True
+R1 self-bid guard applied: True
+R2 confirm_deal dead code removed: False
+R2 delegation intact: True
+R3 confirm_delivery dead lines removed: False
+R4 delete_comment staff: False
+R5 refund reopen applied: False
+R5 manual status new removed: False
+R6 webhook size guard applied: False
+

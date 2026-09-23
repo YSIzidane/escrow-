@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static site_i18n i18n account socialaccount allauth %}
 
-{% block title %}{% t "account.signup.title" %} - SafouaneEscrow{% endblock %}
+{% block title %}{% t "account.signup.title" %} - DZHub{% endblock %}
 {% block page_type %}register{% endblock %}
 
 {% block meta %}
@@ -14,7 +14,7 @@
   <section class="saas-login-form-section">
     <div class="saas-form-wrapper">
       <div class="saas-brand-mobile">
-        <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" width="520" height="150" decoding="async" fetchpriority="high">
+        <img src="{% static 'images/brand/dzhub-logo-horizontal.svg' %}" alt="{% t 'site.name' %}" width="540" height="140" decoding="async" fetchpriority="high">
       </div>
 
       <header class="saas-form-header">
@@ -70,11 +70,11 @@
                 value="{{ field.value|default:'' }}"
                 {% if field.field.required %}required{% endif %}
                 autocomplete="email"
-                style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; color: white; font-size: 14px; outline: none;"
-                onfocus="this.style.border = '1px solid #4f8ef7'; this.style.boxShadow = '0 0 0 3px rgba(79,142,247,0.15)';"
-                onblur="this.style.border = '1px solid rgba(255,255,255,0.14)'; this.style.boxShadow = 'none';"
+                style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: #FFFFFF; border: 1.5px solid #DCEAF3; border-radius: 10px; color: #0A2540; font-size: 14px; outline: none;"
+                onfocus="this.style.border = '1.5px solid #1261A0'; this.style.boxShadow = '0 0 0 3px rgba(18,97,160,0.15)';"
+                onblur="this.style.border = '1.5px solid #DCEAF3'; this.style.boxShadow = 'none';"
               >
-              <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); cursor: default; display: flex; align-items: center;">
+              <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #8C9EA9; cursor: default; display: flex; align-items: center;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
               </span>
               {% elif field.name == "username" %}
@@ -86,11 +86,11 @@
                 value="{{ field.value|default:'' }}"
                 {% if field.field.required %}required{% endif %}
                 autocomplete="username"
-                style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; color: white; font-size: 14px; outline: none;"
-                onfocus="this.style.border = '1px solid #4f8ef7'; this.style.boxShadow = '0 0 0 3px rgba(79,142,247,0.15)';"
-                onblur="this.style.border = '1px solid rgba(255,255,255,0.14)'; this.style.boxShadow = 'none';"
+                style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: #FFFFFF; border: 1.5px solid #DCEAF3; border-radius: 10px; color: #0A2540; font-size: 14px; outline: none;"
+                onfocus="this.style.border = '1.5px solid #1261A0'; this.style.boxShadow = '0 0 0 3px rgba(18,97,160,0.15)';"
+                onblur="this.style.border = '1.5px solid #DCEAF3'; this.style.boxShadow = 'none';"
               >
-              <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); cursor: default; display: flex; align-items: center;">
+              <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #8C9EA9; cursor: default; display: flex; align-items: center;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               </span>
               {% elif field.name == "password1" %}
@@ -101,11 +101,11 @@
                 placeholder="{% t 'register.password_placeholder' %}"
                 {% if field.field.required %}required{% endif %}
                 autocomplete="new-password"
-                style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; color: white; font-size: 14px; outline: none;"
-                onfocus="this.style.border = '1px solid #4f8ef7'; this.style.boxShadow = '0 0 0 3px rgba(79,142,247,0.15)';"
-                onblur="this.style.border = '1px solid rgba(255,255,255,0.14)'; this.style.boxShadow = 'none';"
+                style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: #FFFFFF; border: 1.5px solid #DCEAF3; border-radius: 10px; color: #0A2540; font-size: 14px; outline: none;"
+                onfocus="this.style.border = '1.5px solid #1261A0'; this.style.boxShadow = '0 0 0 3px rgba(18,97,160,0.15)';"
+                onblur="this.style.border = '1.5px solid #DCEAF3'; this.style.boxShadow = 'none';"
               >
-              <span data-password-toggle="{{ field.id_for_label }}" role="button" tabindex="0" aria-label="{% t 'login.toggle_password' %}" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center;">
+              <span data-password-toggle="{{ field.id_for_label }}" role="button" tabindex="0" aria-label="{% t 'login.toggle_password' %}" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #8C9EA9; cursor: pointer; display: flex; align-items: center;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
               </span>
               {% elif field.name == "password2" %}
@@ -116,11 +116,11 @@
                 placeholder="{% t 'register.password_confirm_placeholder' %}"
                 {% if field.field.required %}required{% endif %}
                 autocomplete="new-password"
-                style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; color: white; font-size: 14px; outline: none;"
-                onfocus="this.style.border = '1px solid #4f8ef7'; this.style.boxShadow = '0 0 0 3px rgba(79,142,247,0.15)';"
-                onblur="this.style.border = '1px solid rgba(255,255,255,0.14)'; this.style.boxShadow = 'none';"
+                style="width: 100%; box-sizing: border-box; padding: 13px 16px 13px 44px; {% if current_language == 'ar' %}direction: rtl; text-align: right;{% else %}direction: ltr; text-align: left;{% endif %} background: #FFFFFF; border: 1.5px solid #DCEAF3; border-radius: 10px; color: #0A2540; font-size: 14px; outline: none;"
+                onfocus="this.style.border = '1.5px solid #1261A0'; this.style.boxShadow = '0 0 0 3px rgba(18,97,160,0.15)';"
+                onblur="this.style.border = '1.5px solid #DCEAF3'; this.style.boxShadow = 'none';"
               >
-              <span data-password-toggle="{{ field.id_for_label }}" role="button" tabindex="0" aria-label="{% t 'login.toggle_password' %}" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center;">
+              <span data-password-toggle="{{ field.id_for_label }}" role="button" tabindex="0" aria-label="{% t 'login.toggle_password' %}" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #8C9EA9; cursor: pointer; display: flex; align-items: center;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
               </span>
               {% else %}
@@ -172,16 +172,12 @@
         </button>
       </form>
 
-      {% get_providers as socialaccount_providers %}
-      {% if socialaccount_providers %}
       <div class="saas-divider">
         <span>{% t "login.or_continue_with" %}</span>
       </div>
 
       <div class="saas-social-login">
-        {% for provider in socialaccount_providers %}
-        {% if provider.id == "google" %}
-        <a href="{% if redirect_field_value %}{% provider_login_url provider.id process='login' next=redirect_field_value %}{% else %}{% provider_login_url provider.id process='login' %}{% endif %}" class="saas-social-btn">
+        <a href="{% if redirect_field_value %}{% provider_login_url 'google' process='login' next=redirect_field_value %}{% else %}{% provider_login_url 'google' process='login' %}{% endif %}" class="saas-social-btn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
@@ -190,10 +186,7 @@
           </svg>
           <span>{% t "login.continue_with_google" %}</span>
         </a>
-        {% endif %}
-        {% endfor %}
       </div>
-      {% endif %}
 
       <footer class="saas-form-footer">
         <p>{% t "account.signup.have_account" %} <a href="{% url 'account_login' %}{% if redirect_field_value %}?{{ redirect_field_name }}={{ redirect_field_value|urlencode }}{% endif %}" data-auth-switch>{% t "account.signup.login" %}</a></p>
@@ -237,27 +230,15 @@
   body[data-page="register"] .se-nav-auth .se-btn-register { display: none !important; }
 
   body[data-page="register"] .se-btn-login {
-    background: transparent !important;
-    border: 1px solid rgba(255,255,255,0.16) !important;
-    color: rgba(255,255,255,0.86) !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06) !important;
+    background: #FFFFFF !important;
+    border: 1.5px solid #1261A0 !important;
+    color: #1261A0 !important;
+    box-shadow: 0 1px 3px rgba(18,97,160,0.1) !important;
   }
   body[data-page="register"] .se-btn-login:hover {
-    border-color: rgba(79,142,247,0.46) !important;
-    background: rgba(255,255,255,0.05) !important;
-    color: #fff !important;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    body[data-page="register"] .se-btn-login {
-      background: rgba(255,255,255,0.08) !important;
-      border-color: rgba(255,255,255,0.16) !important;
-      color: #F8FAFC !important;
-    }
-    body[data-page="register"] .se-btn-login:hover {
-      background: rgba(255,255,255,0.12) !important;
-      color: #FFFFFF !important;
-    }
+    border-color: #0B477A !important;
+    background: #F0F7FC !important;
+    color: #0B477A !important;
   }
 
   /* Wider form wrapper for 4 fields */

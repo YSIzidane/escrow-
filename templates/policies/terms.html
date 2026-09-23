@@ -3,148 +3,287 @@
 {% block title %}{% t "policy.terms.title" %}{% endblock %}
 {% block page_type %}policies{% endblock %}
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/policies.css' %}?v=20260507a">
+  <link rel="stylesheet" href="{% static 'css/policies.css' %}?v=20260923lux">
 {% endblock %}
 {% block late_css %}
-  <link rel="stylesheet" href="{% static 'css/info_pages.css' %}?v=20260523s">
-  <link rel="stylesheet" href="{% static 'css/info_pages_premium.css' %}?v=20260523a">
+  <link rel="stylesheet" href="{% static 'css/info_pages.css' %}?v=20260923art">
+  <link rel="stylesheet" href="{% static 'css/info_pages_premium.css' %}?v=20260923art">
 {% endblock %}
 
 {% block content %}
 <div class="info-premium-page legal-page legal-terms-page" dir="{{ current_dir }}">
   <div class="info-shell">
-    <section class="info-hero legal-hero legal-hero-terms" aria-labelledby="terms-title">
-      <div class="info-hero-copy">
-        <span class="info-pill">
+
+    <!-- 1. Refined Luxury Hero Section -->
+    <section class="info-hero-lux si-reveal" aria-labelledby="terms-title">
+      <div class="hero-lux-content">
+        <span class="lux-pill-badge">
+          <span class="lux-pill-dot"></span>
           <i class="fas fa-file-contract" aria-hidden="true"></i>
           {% t "policy.nav.terms" %}
         </span>
-        <h1 id="terms-title">{% t "policy.terms.title" %}</h1>
-        <p>{% t "policy.terms.sub" %}</p>
-        <div class="info-hero-actions">
-          <a href="{% url 'privacy' %}" class="info-btn info-btn-secondary">
+        <h1 id="terms-title" class="hero-lux-title">
+          {% t "policy.terms.title" %}
+        </h1>
+        <p class="hero-lux-desc">{% t "policy.terms.sub" %}</p>
+        <div class="hero-lux-actions">
+          <a href="{% url 'privacy' %}" class="lux-btn-secondary">
             <i class="fas fa-user-shield" aria-hidden="true"></i>
             <span>{% t "policy.nav.privacy" %}</span>
           </a>
-          <a href="{% url 'returns' %}" class="info-btn info-btn-secondary">
+          <a href="{% url 'returns' %}" class="lux-btn-secondary">
             <i class="fas fa-rotate-left" aria-hidden="true"></i>
             <span>{% t "policy.nav.returns" %}</span>
           </a>
         </div>
       </div>
 
-      <aside class="legal-hero-card" aria-label="{% if current_language == 'ar' %}ملخص الشروط{% else %}Terms summary{% endif %}">
-        <span class="legal-card-icon"><i class="fas fa-shield-halved" aria-hidden="true"></i></span>
-        <strong>{% t "policy.terms.sec5_title" %}</strong>
-        <p>{% t "policy.terms.sec5_text" %}</p>
-        <div class="legal-hero-badges">
-          <span><i class="fas fa-handshake" aria-hidden="true"></i>{% if current_language == 'ar' %}اتفاق موثق{% else %}Documented agreement{% endif %}</span>
-          <span><i class="fas fa-scale-balanced" aria-hidden="true"></i>{% if current_language == 'ar' %}تحكيم واضح{% else %}Clear arbitration{% endif %}</span>
-        </div>
-      </aside>
+      <div class="hero-lux-visual">
+        <aside class="lux-showcase-card" aria-label="{% if current_language == 'ar' %}ملخص الشروط{% else %}Terms summary{% endif %}">
+          <div class="showcase-badge-top">
+            <div class="showcase-brand">
+              <span class="lux-pill-badge" style="padding: 4px 12px; font-size: 12px;">
+                <i class="fas fa-shield-halved" aria-hidden="true"></i>
+                {% if current_language == 'ar' %}عقد ملزم{% else %}Binding Terms{% endif %}
+              </span>
+            </div>
+            <span class="showcase-status">
+              <i class="fas fa-check-shield"></i>
+              {% if current_language == 'ar' %}سارية وموثقة{% else %}Active & Verified{% endif %}
+            </span>
+          </div>
+          <div class="showcase-visual-art">
+            <img src="{% static 'images/brand/legal_justice_seal.jpg' %}" alt="Legal Justice Scale and Contract Seal" width="340" height="140" loading="lazy">
+          </div>
+          <strong style="color: #ffffff; font-size: 14.5px;">{% t "policy.terms.sec5_title" %}</strong>
+          <p style="font-size: 13px; line-height: 1.7; color: var(--lux-muted); margin: 0;">{% t "policy.terms.sec5_text" %}</p>
+          <div class="showcase-features-list">
+            <div class="showcase-feature-item">
+              <i class="fas fa-handshake" aria-hidden="true"></i>
+              <span>{% if current_language == 'ar' %}اتفاق موثق بحساب escrow{% else %}Secured escrow contract agreement{% endif %}</span>
+            </div>
+            <div class="showcase-feature-item">
+              <i class="fas fa-scale-balanced" aria-hidden="true"></i>
+              <span>{% if current_language == 'ar' %}تحكيم محايد وفق الأدلة المرفقة{% else %}Neutral arbitration per evidence{% endif %}</span>
+            </div>
+          </div>
+        </aside>
+      </div>
     </section>
 
-    <div class="legal-layout">
-      <aside class="legal-sidebar" aria-label="{% t 'policy.nav.title' %}">
-        <nav class="legal-doc-nav">
-          <p>{% t "policy.nav.title" %}</p>
-          <a href="{% url 'privacy' %}"><i class="fas fa-user-shield" aria-hidden="true"></i>{% t "policy.nav.privacy" %}</a>
-          <a href="{% url 'terms' %}" class="is-active"><i class="fas fa-file-contract" aria-hidden="true"></i>{% t "policy.nav.terms" %}</a>
-          <a href="{% url 'returns' %}"><i class="fas fa-rotate-left" aria-hidden="true"></i>{% t "policy.nav.returns" %}</a>
-        </nav>
+    <!-- 2. Executive Legal Reader Layout -->
+    <div class="legal-reader-layout">
 
-        <nav class="legal-toc" aria-label="{% if current_language == 'ar' %}أقسام الصفحة{% else %}Page sections{% endif %}">
-          <p>{% if current_language == 'ar' %}في هذه الصفحة{% else %}On this page{% endif %}</p>
-          <a href="#terms-sec1">{% t "policy.terms.sec1_title" %}</a>
-          <a href="#terms-sec2">{% t "policy.terms.sec2_title" %}</a>
-          <a href="#terms-sec3">{% t "policy.terms.sec3_title" %}</a>
-          <a href="#terms-sec4">{% t "policy.terms.sec4_title" %}</a>
-          <a href="#terms-sec5">{% t "policy.terms.sec5_title" %}</a>
-          <a href="#terms-sec6">{% t "policy.terms.sec6_title" %}</a>
-          <a href="#terms-sec7">{% t "policy.terms.sec7_title" %}</a>
-          <a href="#terms-sec8">{% t "policy.terms.sec8_title" %}</a>
-          <a href="#terms-sec9">{% t "policy.terms.sec9_title" %}</a>
-        </nav>
+      <!-- Sticky Document Navigation & Outline Sidebar -->
+      <aside class="legal-reader-sidebar" aria-label="{% t 'policy.nav.title' %}">
+        <!-- Policies Navigator Card -->
+        <div class="legal-sidebar-card si-reveal">
+          <h3 class="legal-sidebar-heading">
+            <i class="fas fa-layer-group" aria-hidden="true"></i>
+            {% t "policy.nav.title" %}
+          </h3>
+          <nav class="legal-nav-tabs">
+            <a href="{% url 'privacy' %}" class="legal-nav-tab">
+              <i class="fas fa-user-shield" aria-hidden="true"></i>
+              <span>{% t "policy.nav.privacy" %}</span>
+            </a>
+            <a href="{% url 'terms' %}" class="legal-nav-tab is-active">
+              <i class="fas fa-file-contract" aria-hidden="true"></i>
+              <span>{% t "policy.nav.terms" %}</span>
+            </a>
+            <a href="{% url 'returns' %}" class="legal-nav-tab">
+              <i class="fas fa-rotate-left" aria-hidden="true"></i>
+              <span>{% t "policy.nav.returns" %}</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Table of Contents Card -->
+        <div class="legal-sidebar-card si-reveal si-d1">
+          <h3 class="legal-sidebar-heading">
+            <i class="fas fa-list-ul" aria-hidden="true"></i>
+            {% if current_language == 'ar' %}فهرس البنود{% else %}Clauses index{% endif %}
+          </h3>
+          <nav class="legal-toc-list legal-toc" aria-label="{% if current_language == 'ar' %}أقسام الصفحة{% else %}Page sections{% endif %}">
+            <a href="#terms-sec1" class="legal-toc-item">1. {% t "policy.terms.sec1_title" %}</a>
+            <a href="#terms-sec2" class="legal-toc-item">2. {% t "policy.terms.sec2_title" %}</a>
+            <a href="#terms-sec3" class="legal-toc-item">3. {% t "policy.terms.sec3_title" %}</a>
+            <a href="#terms-sec4" class="legal-toc-item">4. {% t "policy.terms.sec4_title" %}</a>
+            <a href="#terms-sec5" class="legal-toc-item">5. {% t "policy.terms.sec5_title" %}</a>
+            <a href="#terms-sec6" class="legal-toc-item">6. {% t "policy.terms.sec6_title" %}</a>
+            <a href="#terms-sec7" class="legal-toc-item">7. {% t "policy.terms.sec7_title" %}</a>
+            <a href="#terms-sec8" class="legal-toc-item">8. {% t "policy.terms.sec8_title" %}</a>
+            <a href="#terms-sec9" class="legal-toc-item">9. {% t "policy.terms.sec9_title" %}</a>
+          </nav>
+        </div>
       </aside>
 
-      <article class="legal-document legal-readable" aria-labelledby="terms-document-title">
-        <header class="legal-document-header">
-          <span class="info-pill info-pill-muted"><i class="fas fa-scale-balanced" aria-hidden="true"></i>{% if current_language == 'ar' %}اتفاقية استخدام{% else %}Usage agreement{% endif %}</span>
-          <h2 id="terms-document-title">{% t "policy.terms.title" %}</h2>
-          <p>{% t "policy.terms.sub" %}</p>
+      <!-- Main Legal Document Reading Canvas -->
+      <article class="legal-reader-document si-reveal" aria-labelledby="terms-document-title">
+
+        <!-- Document Meta Ribbon -->
+        <header class="doc-meta-ribbon">
+          <div class="doc-meta-tags">
+            <span class="lux-pill-badge" style="padding: 5px 14px; font-size: 12.5px;">
+              <i class="fas fa-scale-balanced" aria-hidden="true"></i>
+              {% if current_language == 'ar' %}اتفاقية استخدام رسمية{% else %}Official Terms of Use{% endif %}
+            </span>
+            <div class="doc-meta-item">
+              <i class="fas fa-clock" aria-hidden="true"></i>
+              <span>{% t "policy.last_updated" %}</span>
+            </div>
+            <div class="doc-meta-item">
+              <i class="fas fa-book-open" aria-hidden="true"></i>
+              <span>{% if current_language == 'ar' %}وقت القراءة: 5 دقائق{% else %}Read time: 5 mins{% endif %}</span>
+            </div>
+          </div>
         </header>
 
-        <section class="legal-section" id="terms-sec1">
-          <h2>{% t "policy.terms.sec1_title" %}</h2>
+        <!-- Section 1 -->
+        <section class="legal-section-block" id="terms-sec1">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">01</span>
+            <h2>{% t "policy.terms.sec1_title" %}</h2>
+          </div>
           <p>{% t "policy.terms.sec1_text" %}</p>
         </section>
 
-        <section class="legal-section" id="terms-sec2">
-          <h2>{% t "policy.terms.sec2_title" %}</h2>
+        <!-- Section 2 -->
+        <section class="legal-section-block" id="terms-sec2">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">02</span>
+            <h2>{% t "policy.terms.sec2_title" %}</h2>
+          </div>
           <p>{% t "policy.terms.sec2_text" %}</p>
-          <ul class="legal-list legal-list-positive">
-            <li><i class="fas fa-check" aria-hidden="true"></i><span>{% t "policy.terms.sec2_li1" %}</span></li>
-            <li><i class="fas fa-check" aria-hidden="true"></i><span>{% t "policy.terms.sec2_li2" %}</span></li>
-            <li><i class="fas fa-check" aria-hidden="true"></i><span>{% t "policy.terms.sec2_li3" %}</span></li>
-            <li><i class="fas fa-check" aria-hidden="true"></i><span>{% t "policy.terms.sec2_li4" %}</span></li>
-            <li><i class="fas fa-check" aria-hidden="true"></i><span>{% t "policy.terms.sec2_li5" %}</span></li>
-          </ul>
+          <div class="legal-clause-rows">
+            <div class="legal-clause-row">
+              <i class="fas fa-circle-check" aria-hidden="true"></i>
+              <span>{% t "policy.terms.sec2_li1" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-circle-check" aria-hidden="true"></i>
+              <span>{% t "policy.terms.sec2_li2" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-circle-check" aria-hidden="true"></i>
+              <span>{% t "policy.terms.sec2_li3" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-circle-check" aria-hidden="true"></i>
+              <span>{% t "policy.terms.sec2_li4" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-circle-check" aria-hidden="true"></i>
+              <span>{% t "policy.terms.sec2_li5" %}</span>
+            </div>
+          </div>
         </section>
 
-        <section class="legal-section legal-highlight" id="terms-sec3">
-          <h2>{% t "policy.terms.sec3_title" %}</h2>
+        <!-- Section 3: Prohibited Activities (Negative Callout & List) -->
+        <section class="legal-section-block" id="terms-sec3">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">03</span>
+            <h2>{% t "policy.terms.sec3_title" %}</h2>
+          </div>
           <p>{% t "policy.terms.sec3_text" %}</p>
-          <ul class="legal-list legal-list-negative">
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.terms.sec3_li1" %}</span></li>
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.terms.sec3_li2" %}</span></li>
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.terms.sec3_li3" %}</span></li>
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.terms.sec3_li4" %}</span></li>
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.terms.sec3_li5" %}</span></li>
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.terms.sec3_li6" %}</span></li>
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.terms.sec3_li7" %}</span></li>
-          </ul>
+          <div class="legal-clause-rows">
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.terms.sec3_li1" %}</span>
+            </div>
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.terms.sec3_li2" %}</span>
+            </div>
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.terms.sec3_li3" %}</span>
+            </div>
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.terms.sec3_li4" %}</span>
+            </div>
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.terms.sec3_li5" %}</span>
+            </div>
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.terms.sec3_li6" %}</span>
+            </div>
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.terms.sec3_li7" %}</span>
+            </div>
+          </div>
         </section>
 
-        <section class="legal-section" id="terms-sec4">
-          <h2>{% t "policy.terms.sec4_title" %}</h2>
+        <!-- Section 4 -->
+        <section class="legal-section-block" id="terms-sec4">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">04</span>
+            <h2>{% t "policy.terms.sec4_title" %}</h2>
+          </div>
           <p>{% t "policy.terms.sec4_text" %}</p>
         </section>
 
-        <section class="legal-section" id="terms-sec5">
-          <h2>{% t "policy.terms.sec5_title" %}</h2>
-          <p>{% t "policy.terms.sec5_text" %}</p>
+        <!-- Section 5: Inspection & Release (Crucial Callout Highlight) -->
+        <section class="legal-section-block" id="terms-sec5">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">05</span>
+            <h2>{% t "policy.terms.sec5_title" %}</h2>
+          </div>
+          <div class="legal-callout-card">
+            <i class="fas fa-shield-halved" aria-hidden="true"></i>
+            <div>
+              <p>{% t "policy.terms.sec5_text" %}</p>
+            </div>
+          </div>
         </section>
 
-        <section class="legal-section" id="terms-sec6">
-          <h2>{% t "policy.terms.sec6_title" %}</h2>
+        <!-- Section 6 -->
+        <section class="legal-section-block" id="terms-sec6">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">06</span>
+            <h2>{% t "policy.terms.sec6_title" %}</h2>
+          </div>
           <p>{% t "policy.terms.sec6_text" %}</p>
         </section>
 
-        <section class="legal-section" id="terms-sec7">
-          <h2>{% t "policy.terms.sec7_title" %}</h2>
+        <!-- Section 7 -->
+        <section class="legal-section-block" id="terms-sec7">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">07</span>
+            <h2>{% t "policy.terms.sec7_title" %}</h2>
+          </div>
           <p>{% t "policy.terms.sec7_text" %}</p>
         </section>
 
-        <section class="legal-section" id="terms-sec8">
-          <h2>{% t "policy.terms.sec8_title" %}</h2>
+        <!-- Section 8 -->
+        <section class="legal-section-block" id="terms-sec8">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">08</span>
+            <h2>{% t "policy.terms.sec8_title" %}</h2>
+          </div>
           <p>{% t "policy.terms.sec8_text" %}</p>
         </section>
 
-        <section class="legal-section" id="terms-sec9">
-          <h2>{% t "policy.terms.sec9_title" %}</h2>
+        <!-- Section 9 -->
+        <section class="legal-section-block" id="terms-sec9">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">09</span>
+            <h2>{% t "policy.terms.sec9_title" %}</h2>
+          </div>
           <p>{% t "policy.terms.sec9_text" %}</p>
         </section>
 
-        <footer class="legal-updated">
-          <i class="fas fa-clock" aria-hidden="true"></i>
-          {% t "policy.last_updated" %}
-        </footer>
       </article>
     </div>
+
   </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/info_pages_premium.js' %}?v=20260523a"></script>
+<script defer src="{% static 'js/info_pages_premium.js' %}?v=20260923lux"></script>
 {% endblock %}

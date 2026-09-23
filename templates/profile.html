@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>{% if current_language == 'ar' %}الملف الشخصي{% else %}Profile{% endif %} - {{ user.get_full_name|default:user.username }} | Safouane Secure Deals</title>
+<title>{% if current_language == 'ar' %}الملف الشخصي{% else %}Profile{% endif %} - {{ user.get_full_name|default:user.username }} | DZHub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 {% if current_language == 'ar' %}
@@ -17,32 +17,32 @@
      DESIGN TOKENS
   ============================================================ */
   :root {
-    /* Refined monochrome palette — single accent */
-    --color-bg:           #0b0d12;
-    --color-bg-2:         #08090d;
-    --color-card:         #11141c;
-    --color-card-2:       #161a23;
-    --color-card-3:       #1c2030;
-    --color-cover-start:  #141821;
-    --color-cover-end:    #1a1f2c;
-    --color-primary:      #6366f1;
-    --color-primary-2:    #818cf8;
-    --color-purple:       #6366f1;
-    --color-gold:         #d4d4d8;
-    --color-green:        #34d399;
-    --color-danger:       #f87171;
-    --color-text:         #f4f4f5;
-    --color-muted:        #9099a8;
-    --color-border:       rgba(255,255,255,0.06);
-    --color-border-2:     rgba(255,255,255,0.12);
+    /* Refined monochrome palette — luxury fintech gold accent */
+    --color-bg:           #070a13;
+    --color-bg-2:         #0a0f1d;
+    --color-card:         #0e1424;
+    --color-card-2:       #131c31;
+    --color-card-3:       #18243e;
+    --color-cover-start:  #0e1424;
+    --color-cover-end:    #162038;
+    --color-primary:      #f59e0b;
+    --color-primary-2:    #fbbf24;
+    --color-purple:       #f59e0b;
+    --color-gold:         #fbbf24;
+    --color-green:        #10b981;
+    --color-danger:       #f43f5e;
+    --color-text:         #f8fafc;
+    --color-muted:        #94a3b8;
+    --color-border:       rgba(255,255,255,0.08);
+    --color-border-2:     rgba(255,255,255,0.15);
 
-    /* Effects — restrained, single hue */
-    --gradient-brand:     linear-gradient(135deg, #5b62e8 0%, #6366f1 100%);
-    --gradient-brand-soft:linear-gradient(135deg, rgba(99,102,241,0.10), rgba(99,102,241,0.04));
-    --gradient-gold:      linear-gradient(135deg, #e4e4e7 0%, #a1a1aa 100%);
-    --shadow-card:        0 24px 70px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.20);
-    --shadow-glow:        0 0 0 1px rgba(99,102,241,0.14), 0 18px 50px rgba(0,0,0,0.35);
-    --shadow-brand:       0 12px 30px rgba(99,102,241,0.32);
+    /* Effects — restrained, single gold hue */
+    --gradient-brand:     linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+    --gradient-brand-soft:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04));
+    --gradient-gold:      linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+    --shadow-card:        0 24px 70px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.25);
+    --shadow-glow:        0 0 0 1px rgba(245,158,11,0.2), 0 18px 50px rgba(0,0,0,0.4);
+    --shadow-brand:       0 12px 30px rgba(245,158,11,0.25);
 
     /* Shape */
     --radius-card:  24px;
@@ -1012,6 +1012,7 @@
 </style>
 <link rel="stylesheet" href="{% static 'css/enterprise_unify.css' %}?v=20260523a" />
 <link rel="stylesheet" href="{% static 'css/mobile_app.css' %}?v=20260523a" media="(max-width: 768px), (pointer: coarse)" />
+<link rel="stylesheet" href="{% static 'css/dzhub-final.css' %}?v=20260923v2" />
 </head>
 <body data-page="profile">
 
@@ -1020,10 +1021,10 @@
 ============================================================= -->
 <header class="topbar">
   <div class="topbar-inner">
-    <a class="brand" href="{% url 'home' %}" aria-label="Safouane Secure Deals">
+    <a class="brand" href="{% url 'home' %}" aria-label="DZHub">
       <picture class="brand-logo-picture">
         <source media="(max-width: 768px)" srcset="{% static 'images/brand/icon-192.png' %}">
-        <img class="brand-logo-img" src="{% static 'images/brand/logo-white-small.webp' %}" alt="Safouane Secure Deals" width="520" height="150" decoding="async" fetchpriority="high">
+        <img class="brand-logo-img" src="{% static 'images/brand/dzhub-logo-horizontal.svg' %}" alt="DZHub" width="540" height="140" decoding="async" fetchpriority="high">
       </picture>
     </a>
 
@@ -1232,11 +1233,11 @@
         {{ profile.bio|linebreaksbr }}
         {% else %}
         {% if current_language == 'ar' %}
-        مرحباً، أنا <strong>{{ user.get_full_name|default:user.username }}</strong> — بائع موثّق على منصة Safouane Secure Deals.
+        مرحباً، أنا <strong>{{ user.get_full_name|default:user.username }}</strong> — بائع موثّق على منصة DZHub.
         أؤمن بالشفافية في كل صفقة، وأعتمد على نظام الضمان لحماية كلٍّ من البائع والمشتري.
         تواصل معي لأي معاملة B2B تتطلب وسيطاً موثوقاً وعملية دفع آمنة من البداية إلى النهاية.
         {% else %}
-        Hi, I am <strong>{{ user.get_full_name|default:user.username }}</strong>, a verified seller on Safouane Secure Deals.
+        Hi, I am <strong>{{ user.get_full_name|default:user.username }}</strong>, a verified seller on DZHub.
         I value transparency in every deal and use escrow to protect both buyers and sellers.
         Contact me for any B2B transaction that needs a trusted mediator and a secure payment flow from start to finish.
         {% endif %}

@@ -1,699 +1,427 @@
 {% extends "base.html" %}
 {% load static site_i18n %}
 
-{% block title %}{% t "home.title" %}{% endblock %}
+{% block title %}{% t "site.name" %} - {% t "site.tagline" %}{% endblock %}
 {% block page_type %}home{% endblock %}
+{% block nav_home %}active{% endblock %}
 
 {% block preload_assets %}
-  <link rel="preload" href="{% static 'images/brand/dashboard-premium.webp' %}" as="image" type="image/webp" fetchpriority="high">
+  <link rel="preload" href="{% static 'images/brand/dzhub-symbol.svg' %}" as="image" type="image/svg+xml" fetchpriority="high">
 {% endblock %}
 
 {% block late_css %}
-  <link rel="stylesheet" href="{% static 'css/home.css' %}?v=20260524v6">
+  <link rel="stylesheet" href="{% static 'css/dzhub-home.css' %}?v=20260923v1">
 {% endblock %}
 
 {% block content %}
-<div class="hp-home" dir="{{ current_dir }}">
+<div class="dzhub-home-page" dir="{{ current_dir }}">
 
   <!-- ═══════════════════════════════════════
-       RADIAL BACKGROUND MESH GLOWS
+       1. HERO SECTION
        ═══════════════════════════════════════ -->
-  <div class="hp-glow-canvas" aria-hidden="true">
-    <div class="hp-glow-orb hp-glow-1"></div>
-    <div class="hp-glow-orb hp-glow-2"></div>
-    <div class="hp-glow-orb hp-glow-3"></div>
-  </div>
-
-  <!-- ═══════════════════════════════════════
-       HERO SECTION
-       ═══════════════════════════════════════ -->
-  <section class="hp-hero" id="hero" aria-labelledby="hp-hero-title">
-    <!-- Subtle Grid Overlay -->
-    <div class="hp-grid-overlay" aria-hidden="true"></div>
-
-    <div class="hp-shell hp-hero-inner">
-      <!-- Left: Dynamic Headlines & CTAs -->
-      <div class="hp-hero-copy hp-reveal">
-        <span class="hp-eyebrow">
-          <i class="fas fa-shield-halved" aria-hidden="true"></i>
-          {% if current_language == 'ar' %}موثوق · بسيط · آمن{% else %}Trusted · Simple · Secure{% endif %}
-        </span>
-
-        <h1 id="hp-hero-title" class="hp-hero-title">
-          <span class="hp-title-brand">{% t "site.name" %}</span>
-          <span class="hp-title-accent">
-            {% if current_language == 'ar' %}
-              ضمان رقمي يليق <span class="hp-gradient-text-gold">بالصفقات الجادة</span>
-            {% else %}
-              Modern escrow for <span class="hp-gradient-text-gold">serious deals</span>
-            {% endif %}
-          </span>
-        </h1>
-
-        <p class="hp-hero-statement">{% t "home.hero_statement" %}</p>
-        <p class="hp-hero-lead">{% t "home.hero_desc_1" %} {% t "home.hero_desc_2" %}</p>
-
-        <div class="hp-actions hp-hero-actions" aria-label="{% if current_language == 'ar' %}إجراءات البداية{% else %}Primary actions{% endif %}">
-          {% if user.is_authenticated %}
-          <a class="hp-btn hp-btn-primary" href="{% url 'create_deal' %}" id="hero-create-deal">
-            <span>{% t "home.cta_create" %}</span>
-            <i class="fas fa-plus" aria-hidden="true"></i>
-          </a>
-          <a class="hp-btn hp-btn-secondary" href="{% url 'my_deals' %}" id="hero-my-deals">
-            <i class="fas fa-layer-group" aria-hidden="true"></i>
-            <span>{% t "home.cta_my_deals" %}</span>
-          </a>
-          {% else %}
-          <a class="hp-btn hp-btn-primary" href="{% url 'register' %}" id="hero-get-started">
-            <span>{% t "home.cta_start" %}</span>
-            <i class="fas fa-arrow-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}" aria-hidden="true"></i>
-          </a>
-          <a class="hp-btn hp-btn-secondary" href="{% url 'listings' %}" id="hero-browse-deals">
-            <i class="fas fa-layer-group" aria-hidden="true"></i>
-            <span>{% t "home.cta_browse" %}</span>
-          </a>
-          {% endif %}
-          <a class="hp-btn hp-btn-ghost" href="#how-it-works">
-            <i class="fas fa-circle-play" aria-hidden="true"></i>
-            <span>{% t "home.cta_how" %}</span>
-          </a>
-        </div>
-
-        <div class="hp-hero-trust" aria-label="{% if current_language == 'ar' %}إشارات الثقة{% else %}Trust signals{% endif %}">
-          <span><i class="fas fa-lock" aria-hidden="true"></i>{% if current_language == 'ar' %}أموال محفوظة داخل الضمان{% else %}Funds held in escrow{% endif %}</span>
-          <span><i class="fas fa-file-shield" aria-hidden="true"></i>{% if current_language == 'ar' %}اتفاقات موثقة{% else %}Documented agreements{% endif %}</span>
-          <span><i class="fas fa-headset" aria-hidden="true"></i>{% if current_language == 'ar' %}دعم عند النزاع{% else %}Resolution support{% endif %}</span>
-        </div>
-      </div>
-
-      <!-- Right: Premium Mockup Dashboard with dynamic float panels -->
-      <div class="hp-hero-preview hp-reveal hp-reveal-zoom" aria-label="{% if current_language == 'ar' %}معاينة لوحة تحكم الضمان{% else %}Escrow dashboard preview{% endif %}">
-        <div class="hp-glass-glow-card">
-          <div class="hp-browser-bar" aria-hidden="true">
-            <div class="hp-browser-dots">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <strong class="hp-browser-title">{% if current_language == 'ar' %}مسار الصفقة الآمن{% else %}Secure deal flow{% endif %}</strong>
-          </div>
-          <div class="hp-preview-canvas">
-            <img src="{% static 'images/brand/dashboard-premium.webp' %}" alt="{% if current_language == 'ar' %}معاينة لوحة تحكم SafouaneEscrow{% else %}SafouaneEscrow dashboard preview{% endif %}" width="1024" height="1024" decoding="async" fetchpriority="high">
-            
-            <div class="hp-preview-panel hp-preview-panel-top hp-glass-panel">
-              <span>{% if current_language == 'ar' %}الحالة{% else %}Status{% endif %}</span>
-              <strong>{% if current_language == 'ar' %}الأموال مؤمنة{% else %}Funds secured{% endif %}</strong>
-              <div class="hp-loading-line" aria-hidden="true"></div>
-            </div>
-            
-            <div class="hp-preview-panel hp-preview-panel-bottom hp-glass-panel">
-              <i class="fas fa-circle-check" aria-hidden="true"></i>
-              <div>
-                <span>{% if current_language == 'ar' %}المراجعة{% else %}Review{% endif %}</span>
-                <strong>{% if current_language == 'ar' %}جاهز للإفراج{% else %}Ready to release{% endif %}</strong>
-              </div>
-            </div>
-            
-            <div class="hp-preview-flow hp-glass-panel" aria-hidden="true">
-              <span><i class="fas fa-credit-card"></i>{% t "home.preview_step_pay" %}</span>
-              <span><i class="fas fa-vault"></i>{% t "home.preview_step_hold" %}</span>
-              <span><i class="fas fa-circle-check"></i>{% t "home.preview_step_release" %}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════
-       STATISTICS BAND
-       ═══════════════════════════════════════ -->
-  <section class="hp-stat-band" aria-label="{% if current_language == 'ar' %}إحصائيات المنصة{% else %}Platform statistics{% endif %}">
-    <div class="hp-shell hp-stat-grid hp-reveal">
-      <article class="hp-stat">
-        <strong>{{ home_stats.users_count }}</strong>
-        <span>{% t "home.stats_users" %}</span>
-      </article>
-      <article class="hp-stat">
-        <strong>{{ home_stats.completed_deals_count }}</strong>
-        <span>{% t "home.stats_deals" %}</span>
-      </article>
-      <article class="hp-stat">
-        <strong>{{ home_stats.public_deals_count }}</strong>
-        <span>{% if current_language == 'ar' %}عروض نشطة الآن{% else %}Active public deals{% endif %}</span>
-      </article>
-      <article class="hp-stat">
-        <strong>{{ fee_rate_percent }}%</strong>
-        <span>{% if current_language == 'ar' %}رسوم ضمان واضحة{% else %}Transparent escrow fee{% endif %}</span>
-      </article>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════
-       TRUSTED PARTNERS
-       ═══════════════════════════════════════ -->
-  <section class="hp-partners hp-reveal" aria-label="{% if current_language == 'ar' %}شركاء الثقة{% else %}Trusted Partners{% endif %}">
-    <div class="hp-shell">
-      <p class="hp-partners-title">{% if current_language == 'ar' %}موثوق من قبل المئات من الشركات والمستقلين في العالم العربي{% else %}Trusted by hundreds of companies and freelancers worldwide{% endif %}</p>
-      <div class="hp-partners-marquee">
-        <div class="hp-partners-track">
-          <!-- Duplicated for infinite scrolling marquee -->
-          <span><i class="fab fa-aws"></i> AWS Startup</span>
-          <span><i class="fab fa-stripe"></i> Stripe Verified</span>
-          <span><i class="fas fa-building-columns"></i> Banking Partners</span>
-          <span><i class="fas fa-shield-halved"></i> Escrow Tech</span>
-          <span><i class="fas fa-globe"></i> Global Reach</span>
-          <span><i class="fab fa-aws"></i> AWS Startup</span>
-          <span><i class="fab fa-stripe"></i> Stripe Verified</span>
-          <span><i class="fas fa-building-columns"></i> Banking Partners</span>
-          <span><i class="fas fa-shield-halved"></i> Escrow Tech</span>
-          <span><i class="fas fa-globe"></i> Global Reach</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════
-       ABOUT THE PLATFORM SECTION (Dual Column Layout)
-       ═══════════════════════════════════════ -->
-  <section class="hp-section hp-about-section" id="about">
-    <div class="hp-shell hp-about-grid">
-      <!-- Left text panel -->
-      <div class="hp-about-copy hp-reveal">
-        <span class="hp-section-kicker">{% if current_language == 'ar' %}من نحن{% else %}About Us{% endif %}</span>
-        <h2>
-          {% if current_language == 'ar' %}
-            منصة وساطة مالية ذكية <span class="hp-gradient-text-blue">لردم فجوة الثقة</span>
-          {% else %}
-            Smart escrow platform <span class="hp-gradient-text-blue">closing the trust gap</span>
-          {% endif %}
-        </h2>
-        <p class="hp-about-lead">
-          {% if current_language == 'ar' %}
-            نحن نوفر البيئة الرقمية الأكثر أماناً لإتمام صفقات البيع والشراء والخدمات في العالم العربي. نظامنا يضمن حقوق الجميع بكل حيادية.
-          {% else %}
-            We provide the most secure digital environment for buying, selling, and executing contracts. Our platform fairly protects all parties.
-          {% endif %}
-        </p>
-        <p>
-          {% if current_language == 'ar' %}
-            سواء كنت مستقلاً يخشى ضياع أتعابه، أو مشترياً يريد ضمان جودة المستلم، فإن منصتنا توفر صندوق ضمان مستقل يحفظ المبالغ وشروط الاتفاق في مكان واحد موثق وتحت إشراف مباشر من الإدارة في حال نشوب خلاف.
-          {% else %}
-            Whether you are a freelancer securing your milestone payments, or a buyer expecting verified deliverables, our platform holds funds in a secure neutral escrow vault, with structured dispute reviews.
-          {% endif %}
-        </p>
-        <a href="{% url 'about' %}" class="hp-inline-link">
-          <span>{% if current_language == 'ar' %}تعرف على رؤيتنا وفريقنا{% else %}Learn more about our vision{% endif %}</span>
-          <i class="fas fa-arrow-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}" aria-hidden="true"></i>
-        </a>
-      </div>
-
-      <!-- Right Side: Real-time Interactive Escrow Lifecycle Simulation Card -->
-      <div class="hp-about-visual hp-reveal hp-reveal-zoom">
-        <div class="hp-visual-pipeline-card hp-glass-card">
-          <div class="hp-pipeline-header">
-            <i class="fas fa-network-wired"></i>
-            <span>{% if current_language == 'ar' %}دورة حياة الصفقة المؤمّنة{% else %}Escrow Transaction Cycle{% endif %}</span>
-          </div>
-          <div class="hp-pipeline-steps">
-            <div class="hp-pipeline-step active">
-              <div class="hp-step-icon">
-                <i class="fas fa-wallet"></i>
-              </div>
-              <div class="hp-step-desc">
-                <strong>{% if current_language == 'ar' %}إيداع المشتري{% else %}Buyer Deposits{% endif %}</strong>
-                <small>{% if current_language == 'ar' %}حجز الأموال في صندوق مستقل{% else %}Funds secured in neutral vault{% endif %}</small>
-              </div>
-            </div>
-            
-            <div class="hp-pipeline-connector active"></div>
-            
-            <div class="hp-pipeline-step">
-              <div class="hp-step-icon">
-                <i class="fas fa-rotate-right"></i>
-              </div>
-              <div class="hp-step-desc">
-                <strong>{% if current_language == 'ar' %}تنفيذ ومطابقة الشروط{% else %}Seller Delivers{% endif %}</strong>
-                <small>{% if current_language == 'ar' %}مراجعة المستندات داخل الغرفة{% else %}Verification within deal room{% endif %}</small>
-              </div>
-            </div>
-            
-            <div class="hp-pipeline-connector"></div>
-            
-            <div class="hp-pipeline-step">
-              <div class="hp-step-icon">
-                <i class="fas fa-circle-check"></i>
-              </div>
-              <div class="hp-step-desc">
-                <strong>{% if current_language == 'ar' %}تحرير الأرباح للمستفيد{% else %}Funds Released{% endif %}</strong>
-                <small>{% if current_language == 'ar' %}تحويل مباشر للمحفظة بعد الموافقة{% else %}Direct payout after confirmation{% endif %}</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════
-       USE CASES / PROOF SECTION
-       ═══════════════════════════════════════ -->
-  <section class="hp-section hp-proof-section" id="trusted">
-    <div class="hp-shell">
-      <div class="hp-section-head-center hp-reveal">
-        <span class="hp-section-kicker">{% if current_language == 'ar' %}مصمم لاقتصاد الثقة{% else %}Built for trust-first trade{% endif %}</span>
-        <h2>{% if current_language == 'ar' %}منصة واحدة للاتفاق، الدفع، المتابعة، وتسوية الخلافات.{% else %}One platform for agreement, payment, tracking, and resolution.{% endif %}</h2>
-        <p>{% if current_language == 'ar' %}واجهة واضحة تمنح كل طرف رؤية كاملة لما يحدث، بدون فوضى الرسائل الخارجية أو ضبابية حالة الصفقة.{% else %}A clear workspace gives every party full visibility without scattered messages or unclear deal status.{% endif %}</p>
-      </div>
-
-      <div class="hp-proof-grid">
-        <article class="hp-proof-card hp-reveal hp-glass-card" data-glow-card>
-          <i class="fas fa-store" aria-hidden="true"></i>
-          <h3>{% if current_language == 'ar' %}للبائعين الرقميين{% else %}Digital sellers{% endif %}</h3>
-          <p>{% if current_language == 'ar' %}اعرض منتجاتك وخدماتك مع شروط واضحة ونظام دفع يحمي جهدك.{% else %}Publish products and services with clear terms and a payment flow that protects your work.{% endif %}</p>
-        </article>
-        
-        <article class="hp-proof-card hp-reveal hp-glass-card" data-glow-card>
-          <i class="fas fa-briefcase" aria-hidden="true"></i>
-          <h3>{% if current_language == 'ar' %}للمستقلين والعملاء{% else %}Freelancers and clients{% endif %}</h3>
-          <p>{% if current_language == 'ar' %}حوّل الاتفاقات إلى مراحل قابلة للمتابعة مع سجل رسائل قابل للرجوع إليه.{% else %}Turn agreements into trackable milestones with a message trail everyone can rely on.{% endif %}</p>
-        </article>
-        
-        <article class="hp-proof-card hp-reveal hp-glass-card" data-glow-card>
-          <i class="fas fa-people-arrows" aria-hidden="true"></i>
-          <h3>{% if current_language == 'ar' %}لصفقات المجتمع{% else %}Community deals{% endif %}</h3>
-          <p>{% if current_language == 'ar' %}طريقة أكثر هدوءًا لإتمام البيع والشراء بين أفراد لا يعرفون بعضهم مسبقًا.{% else %}A calmer way to buy and sell between people who do not already know each other.{% endif %}</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════
-       FEATURES SECTION (Premium Glass Grid)
-       ═══════════════════════════════════════ -->
-  <section class="hp-section hp-features" id="features">
-    <div class="hp-shell">
-      <div class="hp-section-head-center hp-reveal">
-        <span class="hp-section-kicker">{% t "home.features_tag" %}</span>
-        <h2>{% t "home.features_title" %}</h2>
-        <p>{% t "home.features_subtitle" %}</p>
-      </div>
-
-      <div class="hp-feature-grid">
-        <article class="hp-feature-card hp-reveal hp-glass-card" data-glow-card>
-          <span><i class="fas fa-vault" aria-hidden="true"></i></span>
-          <h3>{% t "home.feature_security_title" %}</h3>
-          <p>{% t "home.feature_security_text" %}</p>
-        </article>
-        
-        <article class="hp-feature-card hp-reveal hp-glass-card" data-glow-card>
-          <span><i class="fas fa-bolt" aria-hidden="true"></i></span>
-          <h3>{% t "home.feature_speed_title" %}</h3>
-          <p>{% t "home.feature_speed_text" %}</p>
-        </article>
-        
-        <article class="hp-feature-card hp-reveal hp-glass-card" data-glow-card>
-          <span><i class="fas fa-scale-balanced" aria-hidden="true"></i></span>
-          <h3>{% t "home.feature_disputes_title" %}</h3>
-          <p>{% t "home.feature_disputes_text" %}</p>
-        </article>
-        
-        <article class="hp-feature-card hp-reveal hp-glass-card" data-glow-card>
-          <span><i class="fas fa-gavel" aria-hidden="true"></i></span>
-          <h3>{% t "home.feature_auction_title" %}</h3>
-          <p>{% t "home.feature_auction_text" %}</p>
-        </article>
-        
-        <article class="hp-feature-card hp-reveal hp-glass-card" data-glow-card>
-          <span><i class="fas fa-comments" aria-hidden="true"></i></span>
-          <h3>{% t "home.feature_chat_title" %}</h3>
-          <p>{% t "home.feature_chat_text" %}</p>
-        </article>
-        
-        <article class="hp-feature-card hp-reveal hp-glass-card" data-glow-card>
-          <span><i class="fas fa-star" aria-hidden="true"></i></span>
-          <h3>{% t "home.feature_reviews_title" %}</h3>
-          <p>{% t "home.feature_reviews_text" %}</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════
-       WHY CHOOSE US SECTION
-       ═══════════════════════════════════════ -->
-  <section class="hp-section hp-why" id="why">
-    <div class="hp-shell hp-why-grid">
-      <div class="hp-why-copy hp-reveal">
-        <span class="hp-section-kicker">{% if current_language == 'ar' %}لماذا الاختيار مهم؟{% else %}Why choose us{% endif %}</span>
-        <h2>{% if current_language == 'ar' %}تجربة ضمان لا تترك المستخدم يخمّن الخطوة التالية.{% else %}An escrow experience where nobody has to guess the next step.{% endif %}</h2>
-        <p>{% if current_language == 'ar' %}الصفقات الجادة تحتاج نظامًا يوضح المسؤوليات، يحفظ الأدلة، ويجعل الإفراج عن الأموال قرارًا مفهومًا للطرفين.{% else %}Serious deals need a system that clarifies responsibilities, preserves evidence, and makes fund release understandable for both sides.{% endif %}</p>
-        <a href="{% url 'how_it_works' %}" class="hp-inline-link">
-          <span>{% t "home.cta_how" %}</span>
-          <i class="fas fa-arrow-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}" aria-hidden="true"></i>
-        </a>
-      </div>
-
-      <div class="hp-why-stack">
-        <article class="hp-lane-card hp-reveal hp-glass-card" data-glow-card>
-          <div class="hp-lane-header">
-            <i class="fas fa-file-signature" aria-hidden="true"></i>
-            <span class="hp-lane-num">01</span>
-          </div>
-          <h3>{% t "home.trust_agreement_title" %}</h3>
-          <p>{% t "home.trust_agreement_text" %}</p>
-        </article>
-        
-        <article class="hp-lane-card hp-reveal hp-glass-card" data-glow-card>
-          <div class="hp-lane-header">
+  <section class="dzhub-hero" id="hero" aria-labelledby="dzhub-hero-heading">
+    <div class="dzhub-shell">
+      <div class="dzhub-hero-grid">
+        <!-- Left: Content & CTAs -->
+        <div class="dzhub-hero-content">
+          <div class="dzhub-badge-chip">
             <i class="fas fa-shield-halved" aria-hidden="true"></i>
-            <span class="hp-lane-num">02</span>
+            <span>{% t "home.badge_algeria" %}</span>
           </div>
-          <h3>{% t "home.trust_payment_title" %}</h3>
-          <p>{% t "home.trust_payment_text" %}</p>
-        </article>
-        
-        <article class="hp-lane-card hp-reveal hp-glass-card" data-glow-card>
-          <div class="hp-lane-header">
-            <i class="fas fa-circle-check" aria-hidden="true"></i>
-            <span class="hp-lane-num">03</span>
+
+          <h1 id="dzhub-hero-heading" class="dzhub-hero-title">
+            {% if current_language == 'ar' %}
+              خدمات رقمية موثوقة، <span>ودفع أكثر أماناً</span>
+            {% else %}
+              Trusted digital services with <span>safer payments</span>
+            {% endif %}
+          </h1>
+
+          <p class="dzhub-hero-lead">
+            {% if current_language == 'ar' %}
+              أنشئ صفقة، احمِ أموالك، واستلم خدمتك أو منتجك الرقمي بثقة.
+            {% else %}
+              Create a deal, protect your funds, and receive your digital service or product with confidence.
+            {% endif %}
+          </p>
+
+          <div class="dzhub-hero-ctas">
+            <a class="dzhub-btn-hero-primary" href="{% url 'listings' %}?category=services" id="hero-browse-services">
+              <i class="fas fa-store" aria-hidden="true"></i>
+              <span>{% t "home.btn_browse_services" %}</span>
+            </a>
+            <a class="dzhub-btn-hero-secondary" href="{% if user.is_authenticated %}{% url 'create_deal' %}{% else %}{% url 'login' %}?next={% url 'create_deal' %}{% endif %}" id="hero-create-deal">
+              <i class="fas fa-handshake" aria-hidden="true"></i>
+              <span>{% t "home.btn_create_deal" %}</span>
+            </a>
           </div>
-          <h3>{% t "home.trust_release_title" %}</h3>
-          <p>{% t "home.trust_release_text" %}</p>
-        </article>
-      </div>
-    </div>
-  </section>
 
-  <!-- ═══════════════════════════════════════
-       HOW IT WORKS (Vertical Timeline / Stepper)
-       ═══════════════════════════════════════ -->
-  <section class="hp-section hp-how" id="how-it-works">
-    <div class="hp-shell">
-      <div class="hp-section-head-center hp-reveal">
-        <span class="hp-section-kicker">{% t "home.steps_tag" %}</span>
-        <h2>{% t "home.steps_title" %}</h2>
-        <p>{% t "home.steps_subtitle" %}</p>
-      </div>
-
-      <div class="hp-timeline" aria-label="{% if current_language == 'ar' %}خطوات العمل{% else %}How it works steps{% endif %}">
-        <article class="hp-step hp-reveal hp-glass-card">
-          <div class="hp-step-badge">01</div>
-          <h3>{% t "home.step1_title" %}</h3>
-          <p>{% t "home.step1_text" %}</p>
-        </article>
-        
-        <article class="hp-step hp-step-active hp-reveal hp-glass-card">
-          <div class="hp-step-badge">02</div>
-          <h3>{% t "home.step2_title" %}</h3>
-          <p>{% t "home.step2_text" %}</p>
-        </article>
-        
-        <article class="hp-step hp-reveal hp-glass-card">
-          <div class="hp-step-badge">03</div>
-          <h3>{% t "home.step3_title" %}</h3>
-          <p>{% t "home.step3_text" %}</p>
-        </article>
-        
-        <article class="hp-step hp-reveal hp-glass-card">
-          <div class="hp-step-badge">04</div>
-          <h3>{% t "home.step4_title" %}</h3>
-          <p>{% t "home.step4_text" %}</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════
-       SHOWCASE SECTION
-       ═══════════════════════════════════════ -->
-  <section class="hp-section hp-showcase" id="showcase">
-    <div class="hp-shell hp-showcase-grid">
-      <div class="hp-showcase-visual hp-reveal hp-reveal-zoom">
-        <div class="hp-glass-glow-card">
-          <picture>
-            <source srcset="{% static 'images/brand/features-ai.webp' %}" type="image/webp">
-            <img src="{% static 'images/brand/features-ai.webp' %}" alt="{% if current_language == 'ar' %}معاينة تجربة إدارة الصفقة{% else %}Deal management experience preview{% endif %}" width="1024" height="1024" loading="lazy" decoding="async">
-          </picture>
-          
-          <div class="hp-showcase-shell hp-glass-panel">
-            <div class="hp-showcase-row">
-              <span>{% if current_language == 'ar' %}اتفاق{% else %}Agreement{% endif %}</span>
-              <strong>100%</strong>
+          <!-- Honest Trust Points (No exaggerated claims) -->
+          <div class="dzhub-hero-trust-bar">
+            <div class="dzhub-trust-item">
+              <i class="fas fa-lock" aria-hidden="true"></i>
+              <span>{% t "home.sec_trust_1_title" %}: {% t "home.sec_trust_1_desc" %}</span>
             </div>
-            <div class="hp-showcase-row">
-              <span>{% if current_language == 'ar' %}الدفع{% else %}Payment{% endif %}</span>
-              <strong>{% if current_language == 'ar' %}مؤمن{% else %}Secured{% endif %}</strong>
+            <div class="dzhub-trust-item">
+              <i class="fas fa-scale-balanced" aria-hidden="true"></i>
+              <span>{% t "home.sec_trust_2_title" %}: {% t "home.sec_trust_2_desc" %}</span>
             </div>
-            <div class="hp-showcase-row">
-              <span>{% if current_language == 'ar' %}الإفراج{% else %}Release{% endif %}</span>
-              <strong>{% if current_language == 'ar' %}مشروط{% else %}Conditional{% endif %}</strong>
+            <div class="dzhub-trust-item">
+              <i class="fas fa-file-circle-check" aria-hidden="true"></i>
+              <span>{% t "home.sec_trust_3_title" %}: {% t "home.sec_trust_3_desc" %}</span>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="hp-showcase-copy hp-reveal">
-        <span class="hp-section-kicker">Showcase</span>
-        <h2>{% if current_language == 'ar' %}لوحة عمليات تبدو هادئة حتى عندما تكون الصفقة معقدة.{% else %}An operations view that stays calm even when the deal is complex.{% endif %}</h2>
-        <p>{% if current_language == 'ar' %}كل صفقة تتحول إلى مساحة عمل منظمة: رسائل، شروط، مدفوعات، حالة، وأدلة يمكن الرجوع إليها عند الحاجة.{% else %}Every deal becomes a structured workspace: messages, terms, payments, status, and evidence when it matters.{% endif %}</p>
-        <div class="hp-showcase-list">
-          <span><i class="fas fa-circle-check" aria-hidden="true"></i>{% if current_language == 'ar' %}حالة الصفقة واضحة في كل لحظة{% else %}Deal status is visible at every moment{% endif %}</span>
-          <span><i class="fas fa-circle-check" aria-hidden="true"></i>{% if current_language == 'ar' %}محادثات مرتبطة بالسياق لا تضيع خارج المنصة{% else %}Contextual chat stays attached to the transaction{% endif %}</span>
-          <span><i class="fas fa-circle-check" aria-hidden="true"></i>{% if current_language == 'ar' %}مسار نزاع منظم إذا احتاج الطرفان للتدخل{% else %}Structured dispute path if either side needs review{% endif %}</span>
+        <!-- Right: Modern Light Visual Card -->
+        <div class="dzhub-hero-visual">
+          <div class="dzhub-hero-card">
+            <div class="dzhub-hero-symbol-wrap">
+              <img src="{% static 'images/brand/dzhub-symbol.svg' %}" alt="{% t 'site.name' %}" width="140" height="140" loading="eager">
+            </div>
+
+            <div class="dzhub-hero-status-pill">
+              <span>{% if current_language == 'ar' %}حالة الضمان{% else %}Escrow Status{% endif %}</span>
+              <strong><i class="fas fa-circle-check" style="color:var(--dzhub-success);"></i> {% if current_language == 'ar' %}المبلغ محجوز بأمان{% else %}Funds Securely Held{% endif %}</strong>
+            </div>
+
+            <div class="dzhub-hero-status-pill">
+              <span>{% if current_language == 'ar' %}العملة الرسمية{% else %}Currency{% endif %}</span>
+              <strong>{% if current_language == 'ar' %}الدينار الجزائري (دج){% else %}Algerian Dinar (DZD){% endif %}</strong>
+            </div>
+
+            <div class="dzhub-hero-status-pill" style="margin-bottom:0;">
+              <span>{% if current_language == 'ar' %}رسوم الخدمة{% else %}Fee Rate{% endif %}</span>
+              <strong>{{ fee_rate_percent }}% {% if current_language == 'ar' %}فقط وبشفافية{% else %}transparent{% endif %}</strong>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════
-       TESTIMONIALS SECTION
+       2. HOW IT WORKS (3 STEPS)
        ═══════════════════════════════════════ -->
-  <section class="hp-section hp-testimonials" id="testimonials">
-    <div class="hp-shell">
-      <div class="hp-section-head-center hp-reveal">
-        <span class="hp-section-kicker">{% if current_language == 'ar' %}آراء المستخدمين{% else %}Testimonials{% endif %}</span>
-        <h2>{% if current_language == 'ar' %}ثقة أكبر بدون تعقيد أكبر.{% else %}More confidence without more complexity.{% endif %}</h2>
-        <p>{% if current_language == 'ar' %}تجربة موجهة للأشخاص الذين يريدون إنجاز الصفقة، لا مطاردة التفاصيل.{% else %}Designed for people who want to complete the deal, not chase the details.{% endif %}</p>
+  <section class="dzhub-section" id="how-it-works">
+    <div class="dzhub-shell">
+      <div class="dzhub-section-head">
+        <span class="dzhub-badge-chip">{% t "nav.how_it_works" %}</span>
+        <h2>{% t "home.sec_how_title" %}</h2>
+        <p>{% t "home.sec_how_sub" %}</p>
       </div>
 
-      <div class="hp-testimonial-grid">
-        <article class="hp-testimonial hp-reveal hp-glass-card" data-glow-card>
-          <div class="hp-stars" aria-label="5 stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          </div>
-          <p>{% if current_language == 'ar' %}أكثر شيء مريح أن كل شيء واضح: أين المال، ما المطلوب، ومتى يتم الإفراج عنه.{% else %}The best part is clarity: where the funds are, what is required, and when release happens.{% endif %}</p>
-          <div class="hp-person">
-            <span class="hp-avatar-initials">SB</span>
-            <div>
-              <strong>{% if current_language == 'ar' %}مشتري موثق{% else %}Verified buyer{% endif %}</strong>
-              <small>{% if current_language == 'ar' %}صفقات منتجات رقمية{% else %}Digital goods deals{% endif %}</small>
-            </div>
-          </div>
-        </article>
-        
-        <article class="hp-testimonial hp-reveal hp-glass-card" data-glow-card>
-          <div class="hp-stars" aria-label="5 stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          </div>
-          <p>{% if current_language == 'ar' %}أستطيع عرض الخدمة بثقة لأن العميل يرى خطوات واضحة بدل وعود عائمة.{% else %}I can sell with confidence because the client sees clear steps instead of vague promises.{% endif %}</p>
-          <div class="hp-person">
-            <span class="hp-avatar-initials">FS</span>
-            <div>
-              <strong>{% if current_language == 'ar' %}بائع خدمات{% else %}Service seller{% endif %}</strong>
-              <small>{% if current_language == 'ar' %}مشاريع مستقلة{% else %}Freelance projects{% endif %}</small>
-            </div>
-          </div>
-        </article>
-        
-        <article class="hp-testimonial hp-reveal hp-glass-card" data-glow-card>
-          <div class="hp-stars" aria-label="5 stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          </div>
-          <p>{% if current_language == 'ar' %}وجود سجل موحد للرسائل والشروط يجعل حل أي خلاف أسرع وأكثر عدلًا.{% else %}A unified record of messages and terms makes any disagreement faster and fairer to review.{% endif %}</p>
-          <div class="hp-person">
-            <span class="hp-avatar-initials">OM</span>
-            <div>
-              <strong>{% if current_language == 'ar' %}مدير عمليات{% else %}Operations lead{% endif %}</strong>
-              <small>{% if current_language == 'ar' %}متابعة صفقات متعددة{% else %}Multi-deal workflows{% endif %}</small>
-            </div>
-          </div>
-        </article>
+      <div class="dzhub-steps-grid">
+        <div class="dzhub-step-card">
+          <div class="dzhub-step-number">1</div>
+          <h3>{% if current_language == 'ar' %}الاتفاق وإنشاء الصفقة{% else %}Agree & Create Deal{% endif %}</h3>
+          <p>{% if current_language == 'ar' %}يتفق المشتري والبائع على تفاصيل الخدمة أو المنتج الرقمي، السعر بالدينار الجزائري، ومدة وشروط التسليم.{% else %}Buyer and seller agree on the digital service or product specs, price in DZD, timeline, and delivery terms.{% endif %}</p>
+        </div>
+
+        <div class="dzhub-step-card">
+          <div class="dzhub-step-number">2</div>
+          <h3>{% if current_language == 'ar' %}دفع آمن وحجز المبلغ{% else %}Secure Payment & Escrow Hold{% endif %}</h3>
+          <p>{% if current_language == 'ar' %}يدفع المشتري المبلغ ويبقى محجوزاً في خزانة DZHub المحمية ولا يُحوَّل للبائع حتى إتمام العمل وفق الشروط.{% else %}The buyer deposits the amount into DZHub protected escrow vault, where it remains held safely until delivery.{% endif %}</p>
+        </div>
+
+        <div class="dzhub-step-card">
+          <div class="dzhub-step-number">3</div>
+          <h3>{% if current_language == 'ar' %}التسليم وتأكيد الإفراج{% else %}Delivery & Release{% endif %}</h3>
+          <p>{% if current_language == 'ar' %}يستلم المشتري الخدمة أو المنتج ويفحصه. بعد التأكيد يُحرَّر المبلغ للبائع، مع إمكانية فتح نزاع عند أي إشكال.{% else %}The buyer reviews the delivery. Once approved, funds are released to the seller, with direct dispute support if needed.{% endif %}</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════
-       PRICING SECTION
+       3. DIGITAL SERVICES CATEGORIES
        ═══════════════════════════════════════ -->
-  <section class="hp-section hp-pricing" id="pricing">
-    <div class="hp-shell hp-pricing-grid">
-      <div class="hp-pricing-copy hp-reveal">
-        <span class="hp-section-kicker">{% if current_language == 'ar' %}تسعير واضح{% else %}Pricing preview{% endif %}</span>
-        <h2>{% if current_language == 'ar' %}ابدأ بدون ضبابية في الرسوم.{% else %}Start without fee ambiguity.{% endif %}</h2>
-        <p>{% if current_language == 'ar' %}الصفحة تضع أهم ما يهم المستخدم قبل بدء الصفقة: إنشاء الحساب، رسوم الضمان، وما يحصل عليه داخل المساحة الآمنة.{% else %}The page surfaces what matters before a user starts: account access, escrow fee, and what is included in the protected workspace.{% endif %}</p>
+  <section class="dzhub-section" id="services" style="background:#FFFFFF; border-top:1px solid var(--dzhub-border); border-bottom:1px solid var(--dzhub-border);">
+    <div class="dzhub-shell">
+      <div class="dzhub-section-head">
+        <span class="dzhub-badge-chip">{% t "nav.services" %}</span>
+        <h2>{% t "home.sec_services_title" %}</h2>
+        <p>{% t "home.sec_services_sub" %}</p>
       </div>
-      
-      <div class="hp-price-cards">
-        <article class="hp-price-card hp-reveal hp-glass-card">
-          <div class="hp-price-header">
-            <span>{% if current_language == 'ar' %}الدخول{% else %}Access{% endif %}</span>
-            <strong>$0</strong>
-            <p>{% if current_language == 'ar' %}إنشاء حساب وتصفح العروض.{% else %}Create an account and browse deals.{% endif %}</p>
-          </div>
-          <ul class="hp-price-features">
-            <li><i class="fas fa-check" aria-hidden="true"></i> {% if current_language == 'ar' %}إنشاء حساب مجاني بالكامل{% else %}Free account registration{% endif %}</li>
-            <li><i class="fas fa-check" aria-hidden="true"></i> {% if current_language == 'ar' %}تصفح العروض والطلبات العامة{% else %}Browse all public deals{% endif %}</li>
-            <li><i class="fas fa-check" aria-hidden="true"></i> {% if current_language == 'ar' %}لوحة تحكم أساسية للمستخدم{% else %}Basic user dashboard{% endif %}</li>
-          </ul>
-        </article>
 
-        <article class="hp-price-card hp-price-card-featured hp-reveal hp-glass-card">
-          <div class="hp-price-badge">{% if current_language == 'ar' %}الأكثر وضوحًا{% else %}Most Transparent{% endif %}</div>
-          <div class="hp-price-header">
-            <span>{% if current_language == 'ar' %}الضمان{% else %}Escrow{% endif %}</span>
-            <strong>{{ fee_rate_percent }}%</strong>
-            <p>{% if current_language == 'ar' %}رسوم واضحة على عمليات الضمان المؤهلة.{% else %}Transparent fee on eligible escrow transactions.{% endif %}</p>
-          </div>
-          <ul class="hp-price-features">
-            <li><i class="fas fa-check" aria-hidden="true"></i> {% if current_language == 'ar' %}تأمين وحماية كاملة للأموال{% else %}100% secured escrow funds{% endif %}</li>
-            <li><i class="fas fa-check" aria-hidden="true"></i> {% if current_language == 'ar' %}دعم وحل النزاعات بواسطة وسطاء{% else %}Dispute resolution support{% endif %}</li>
-            <li><i class="fas fa-check" aria-hidden="true"></i> {% if current_language == 'ar' %}إشعارات فورية عبر البريد{% else %}Instant email notifications{% endif %}</li>
-          </ul>
-        </article>
+      <div class="dzhub-cat-grid">
+        <a href="{% url 'listings' %}?category=services" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-code"></i></div>
+          <h4>{% if current_language == 'ar' %}تطوير وبرمجة المواقع{% else %}Web & App Development{% endif %}</h4>
+          <p>{% if current_language == 'ar' %}مواقع كاملة، برمجة خاصة، وتطبيقات هاتف ذكية.{% else %}Full web applications, backend APIs, and mobile apps.{% endif %}</p>
+        </a>
 
-        <article class="hp-price-card hp-reveal hp-glass-card">
-          <div class="hp-price-header">
-            <span>{% if current_language == 'ar' %}المتابعة{% else %}Workspace{% endif %}</span>
-            <strong>{% if current_language == 'ar' %}مضمن{% else %}Included{% endif %}</strong>
-            <p>{% if current_language == 'ar' %}مراسلة، حالة، وأدلة الصفقة في مكان واحد.{% else %}Messaging, status, and evidence in one place.{% endif %}</p>
-          </div>
-          <ul class="hp-price-features">
-            <li><i class="fas fa-check" aria-hidden="true"></i> {% if current_language == 'ar' %}مساحة عمل متكاملة للمشروع{% else %}Integrated workspace tools{% endif %}</li>
-            <li><i class="fas fa-check" aria-hidden="true"></i> {% if current_language == 'ar' %}نظام محادثة مرتبط بالسياق{% else %}Contextual transaction chat{% endif %}</li>
-            <li><i class="fas fa-check" aria-hidden="true"></i> {% if current_language == 'ar' %}توثيق الأدلة وحفظ الملفات{% else %}Evidence & file upload system{% endif %}</li>
-          </ul>
-        </article>
+        <a href="{% url 'listings' %}?category=services" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-palette"></i></div>
+          <h4>{% if current_language == 'ar' %}تصميم جرافيك وUI/UX{% else %}Graphic & UI/UX Design{% endif %}</h4>
+          <p>{% if current_language == 'ar' %}شعارات، هويات بصرية، واجهات مستخدم احترافية.{% else %}Logos, branding identities, and clean interfaces.{% endif %}</p>
+        </a>
+
+        <a href="{% url 'listings' %}?category=services" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-pen-nib"></i></div>
+          <h4>{% if current_language == 'ar' %}كتابة وترجمة رقمية{% else %}Content Writing & Translation{% endif %}</h4>
+          <p>{% if current_language == 'ar' %}مقالات متوافقة مع SEO، ترجمة معتمدة، وتدقيق لغوي.{% else %}SEO articles, professional translations, and copywriting.{% endif %}</p>
+        </a>
+
+        <a href="{% url 'listings' %}?category=services" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-bullhorn"></i></div>
+          <h4>{% if current_language == 'ar' %}تسويق وإعلانات رقمية{% else %}Digital Marketing & Ads{% endif %}</h4>
+          <p>{% if current_language == 'ar' %}إدارة حملات ممولة، تحسين محركات البحث، وصناعة المحتوى.{% else %}Paid ad campaigns, social media growth, and SEO.{% endif %}</p>
+        </a>
+
+        <a href="{% url 'listings' %}?category=services" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-video"></i></div>
+          <h4>{% if current_language == 'ar' %}مونتاج ورسوم متحركة{% else %}Video Editing & Motion{% endif %}</h4>
+          <p>{% if current_language == 'ar' %}تعديل فيديوهات احترافي، موشن جرافيك، وريلز تسويقية.{% else %}Short-form reels, explainer motion graphics, and edits.{% endif %}</p>
+        </a>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════
-       LATEST DEALS SECTION
+       4. DIGITAL PRODUCTS CATEGORIES
        ═══════════════════════════════════════ -->
-  <section class="hp-latest-section" id="latest-deals">
-    <div class="hp-shell">
-      <div class="hp-toolbar hp-reveal">
+  <section class="dzhub-section" id="products">
+    <div class="dzhub-shell">
+      <div class="dzhub-section-head">
+        <span class="dzhub-badge-chip">{% t "nav.products" %}</span>
+        <h2>{% t "home.sec_digital_title" %}</h2>
+        <p>{% t "home.sec_digital_sub" %}</p>
+      </div>
+
+      <div class="dzhub-cat-grid">
+        <a href="{% url 'listings' %}?category=digital" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-laptop-code"></i></div>
+          <h4>{% if current_language == 'ar' %}سكربتات وبرمجيات جاهزة{% else %}Scripts & Software{% endif %}</h4>
+          <p>{% if current_language == 'ar' %}أنظمة إدارة، إضافات ووردبريس، بوتات وأكواد جاهزة.{% else %}Management scripts, WordPress plugins, and bots.{% endif %}</p>
+        </a>
+
+        <a href="{% url 'listings' %}?category=digital" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-layer-group"></i></div>
+          <h4>{% if current_language == 'ar' %}قوالب وتصاميم جاهزة{% else %}Templates & Themes{% endif %}</h4>
+          <p>{% if current_language == 'ar' %}قوالب صفحات هبوط، عروض تقديمية، ومخططات واجهات.{% else %}Landing page templates, UI kits, and presentations.{% endif %}</p>
+        </a>
+
+        <a href="{% url 'listings' %}?category=digital" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-shield-halved"></i></div>
+          <h4>{% if current_language == 'ar' %}حسابات واشتراكات رسمية{% else %}Official Accounts & Access{% endif %}</h4>
+          <p>{% if current_language == 'ar' %}اشتراكات أدوات سحابية، استضافات، وخدمات للمطورين.{% else %}Cloud development tools, hosting, and SaaS credits.{% endif %}</p>
+        </a>
+
+        <a href="{% url 'listings' %}?category=digital" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-book-bookmark"></i></div>
+          <h4>{% if current_language == 'ar' %}كتب وأدلة رقمية{% else %}E-Books & Guides{% endif %}</h4>
+          <p>{% if current_language == 'ar' %}دورات وملفات تدريبية حصرية في مختلف مجالات العمل الحر.{% else %}Guides and resources for Algerian digital creators.{% endif %}</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       5. LATEST DEALS & OFFERS
+       ═══════════════════════════════════════ -->
+  <section class="dzhub-section" id="latest-deals" style="background:#FFFFFF; border-top:1px solid var(--dzhub-border); border-bottom:1px solid var(--dzhub-border);">
+    <div class="dzhub-shell">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:36px; flex-wrap:wrap; gap:16px;">
         <div>
-          <span class="hp-section-kicker">{% t "home.latest_tag" %}</span>
-          <h2>{% t "home.latest_title" %}</h2>
-          <p>{% t "home.latest_subtitle" %}</p>
+          <span class="dzhub-badge-chip">{% t "home.sec_latest_title" %}</span>
+          <h2 style="font-size:1.85rem; font-weight:800; color:var(--dzhub-text); margin:0;">
+            {% if current_language == 'ar' %}عروض وخدمات نشطة الآن{% else %}Active Listings Available Now{% endif %}
+          </h2>
         </div>
-        <a href="{% url 'listings' %}" class="hp-inline-link" id="view-all-deals">
+        <a href="{% url 'listings' %}" class="dzhub-btn-secondary" style="font-size:0.9375rem;">
           <span>{% t "home.view_all" %}</span>
-          <i class="fas fa-arrow-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}" aria-hidden="true"></i>
+          <i class="fas fa-arrow-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}"></i>
         </a>
       </div>
 
       {% if latest_deals %}
-      <div class="hp-deal-grid">
+      <div class="dzhub-deals-grid">
         {% for deal in latest_deals %}
-        <article class="hp-deal-card hp-reveal hp-glass-card" data-glow-card>
-          <a class="hp-deal-media" href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" aria-label="{% t 'home.view_details' %}">
+        <article class="dzhub-deal-card">
+          <div class="dzhub-deal-media">
             {% if deal.cover_image %}
-            <img src="{{ deal.cover_image.image|file_url:'images/brand/og-card.webp' }}" alt="{{ deal.product_title }}" loading="lazy" decoding="async" width="640" height="420">
+              <img src="{{ deal.cover_image.image|file_url:'images/brand/og-card.png' }}" alt="{{ deal.product_title }}" loading="lazy" decoding="async">
             {% else %}
-            <span class="hp-deal-placeholder"><i class="fas fa-image" aria-hidden="true"></i></span>
+              <div class="dzhub-deal-media-placeholder"><i class="fas fa-image"></i></div>
             {% endif %}
-          </a>
-          <div class="hp-deal-body">
-            <div class="hp-deal-meta">
-              <span class="hp-deal-badge">{% if deal.is_auction %}{% t "home.deal_type_auction" %}{% else %}{% t "home.deal_type_fixed" %}{% endif %}</span>
-              <strong class="hp-deal-price">${{ deal.display_price }}</strong>
-            </div>
-            <h3 class="hp-deal-title">{{ deal.product_title|truncatechars:52 }}</h3>
-            <div class="hp-deal-footer">
-              <div class="hp-seller">
-                <img src="{{ deal.seller.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ deal.seller.username }}" loading="lazy" decoding="async">
+            <span class="dzhub-deal-badge-type">
+              {% if deal.category == 'services' %}
+                <i class="fas fa-screwdriver-wrench"></i> {% t "nav.services" %}
+              {% elif deal.category == 'digital' %}
+                <i class="fas fa-cloud-arrow-down"></i> {% t "nav.products" %}
+              {% else %}
+                <i class="fas fa-shield-halved"></i> {% if deal.is_auction %}{% t "home.deal_type_auction" %}{% else %}{% t "home.deal_type_fixed" %}{% endif %}
+              {% endif %}
+            </span>
+          </div>
+
+          <div class="dzhub-deal-body">
+            <a href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" class="dzhub-deal-title">
+              {{ deal.product_title|truncatechars:50 }}
+            </a>
+
+            <div class="dzhub-deal-price-row">
+              <span class="dzhub-deal-price">
+                {{ deal.display_price }} <span style="font-size:0.8em; font-weight:700;">{% if current_language == 'ar' %}دج{% else %}DZD{% endif %}</span>
+              </span>
+              <div class="dzhub-deal-seller">
+                <img src="{{ deal.seller.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ deal.seller.username }}" loading="lazy">
                 <span>{{ deal.seller.username }}</span>
               </div>
-              <a class="hp-icon-link" href="{% if deal.is_auction %}{% url 'deal_auction_detail' deal.id %}{% else %}{% url 'deal_detail' deal.id %}{% endif %}" aria-label="{% t 'home.view_details' %}">
-                <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
-              </a>
             </div>
           </div>
         </article>
         {% endfor %}
       </div>
       {% else %}
-      <div class="hp-empty hp-reveal hp-glass-card">
-        <i class="fas fa-box-open" aria-hidden="true"></i>
-        <h3>{% if current_language == 'ar' %}لا توجد عروض منشورة بعد{% else %}No public deals yet{% endif %}</h3>
-        <p>{% t "home.empty_deals" %}</p>
-        <a href="{% url 'create_deal' %}" class="hp-btn hp-btn-primary">{% t "home.cta_create" %}</a>
+      <div class="dzhub-card" style="text-align:center; padding:48px 24px;">
+        <i class="fas fa-box-open" style="font-size:2.5rem; color:var(--dzhub-muted); margin-bottom:16px;"></i>
+        <h3 style="color:var(--dzhub-text); font-weight:700;">{% if current_language == 'ar' %}لا توجد صفقات منشورة بعد{% else %}No listings published yet{% endif %}</h3>
+        <p style="color:var(--dzhub-muted); margin-bottom:24px;">{% t "home.empty_deals" %}</p>
+        <a href="{% url 'create_deal' %}" class="dzhub-btn">{% t "home.btn_create_deal" %}</a>
       </div>
       {% endif %}
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════
-       FAQ SECTION (Accordion Custom Animation)
+       6. WHY TRUST DZHub
        ═══════════════════════════════════════ -->
-  <section class="hp-section hp-faq" id="faq">
-    <div class="hp-shell hp-faq-grid">
-      <div class="hp-faq-copy hp-reveal">
-        <span class="hp-section-kicker">FAQ</span>
-        <h2>{% if current_language == 'ar' %}إجابات سريعة قبل أول صفقة.{% else %}Quick answers before the first deal.{% endif %}</h2>
-        <p>{% if current_language == 'ar' %}أسئلة مختصرة تساعد المستخدم على فهم الفكرة واتخاذ قرار البدء بثقة.{% else %}Short answers that help users understand the flow and start with confidence.{% endif %}</p>
+  <section class="dzhub-section" id="trust">
+    <div class="dzhub-shell">
+      <div class="dzhub-section-head">
+        <span class="dzhub-badge-chip">{% t "home.sec_trust_title" %}</span>
+        <h2>{% if current_language == 'ar' %}أمان مالي ونظام وساطة واضح يحمي الطرفين{% else %}Financial security and transparent deal protection{% endif %}</h2>
+        <p>{% if current_language == 'ar' %}صُممت منصة DZHub لتمنح المشتري والبائع بيئة واضحة، بدون ضياع للأموال وبدون رسائل خارجية مشتتة.{% else %}DZHub gives buyers and sellers a structured space where funds and agreements stay protected.{% endif %}</p>
       </div>
-      
-      <div class="hp-accordion hp-glass-card" data-home-accordion>
-        <details class="hp-faq-item hp-reveal" open>
-          <summary>{% if current_language == 'ar' %}متى يحصل البائع على الأموال؟{% else %}When does the seller receive funds?{% endif %}</summary>
-          <p>{% if current_language == 'ar' %}بعد إتمام الشروط وتأكيد الاستلام أو إغلاق مسار المراجعة وفق حالة الصفقة.{% else %}After the agreed conditions are completed and confirmation or review is closed according to the deal status.{% endif %}</p>
+
+      <div class="dzhub-trust-grid">
+        <div class="dzhub-trust-card">
+          <i class="fas fa-vault"></i>
+          <h3>{% t "home.sec_trust_1_title" %}</h3>
+          <p>{% t "home.sec_trust_1_desc" %}</p>
+        </div>
+
+        <div class="dzhub-trust-card">
+          <i class="fas fa-shield-check"></i>
+          <h3>{% t "home.sec_trust_2_title" %}</h3>
+          <p>{% t "home.sec_trust_2_desc" %}</p>
+        </div>
+
+        <div class="dzhub-trust-card">
+          <i class="fas fa-scale-balanced"></i>
+          <h3>{% t "home.sec_trust_3_title" %}</h3>
+          <p>{% t "home.sec_trust_3_desc" %}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       7. TRANSPARENT FEES SECTION
+       ═══════════════════════════════════════ -->
+  <section class="dzhub-section" id="fees" style="background:#FFFFFF; border-top:1px solid var(--dzhub-border); border-bottom:1px solid var(--dzhub-border);">
+    <div class="dzhub-shell">
+      <div class="dzhub-section-head">
+        <span class="dzhub-badge-chip">{% t "nav.fees" %}</span>
+        <h2>{% t "home.sec_fees_title" %}</h2>
+        <p>{% t "home.sec_fees_sub" %}</p>
+      </div>
+
+      <div class="dzhub-fees-box">
+        <div class="dzhub-fee-rate-display">
+          <span class="dzhub-fee-rate-number">{{ fee_rate_percent }}</span>
+          <span class="dzhub-fee-rate-symbol">%</span>
+        </div>
+        <p class="dzhub-fee-explanation">
+          {% if current_language == 'ar' %}
+            رسوم الضمان ثابتة ومحسوبة تلقائياً عند إنشاء الصفقة، بدون أي تكاليف خفية أو رسوم سحب غير معلنة.
+          {% else %}
+            Escrow fee is clearly calculated upon deal creation with zero hidden costs or surprise deductions.
+          {% endif %}
+        </p>
+
+        <div class="dzhub-fee-features">
+          <div class="dzhub-fee-feature-item">
+            <i class="fas fa-check-circle"></i>
+            <span>{% if current_language == 'ar' %}حساب مجاني 100%{% else %}Free account registration{% endif %}</span>
+          </div>
+          <div class="dzhub-fee-feature-item">
+            <i class="fas fa-check-circle"></i>
+            <span>{% if current_language == 'ar' %}حاسبة رسوم شفافة{% else %}Instant fee calculation{% endif %}</span>
+          </div>
+          <div class="dzhub-fee-feature-item">
+            <i class="fas fa-check-circle"></i>
+            <span>{% if current_language == 'ar' %}حماية النزاعات مشمولة{% else %}Dispute protection included{% endif %}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       8. FAQ SECTION
+       ═══════════════════════════════════════ -->
+  <section class="dzhub-section" id="faq">
+    <div class="dzhub-shell">
+      <div class="dzhub-section-head">
+        <span class="dzhub-badge-chip">{% t "home.sec_faq_title" %}</span>
+        <h2>{% if current_language == 'ar' %}إجابات واضحة ومباشرة{% else %}Frequently Asked Questions{% endif %}</h2>
+        <p>{% if current_language == 'ar' %}كل ما تحتاج معرفته عن التعامل داخل منصة دزاير هب.{% else %}Everything you need to know about trading through DZHub.{% endif %}</p>
+      </div>
+
+      <div class="dzhub-faq-stack">
+        <details class="dzhub-faq-item" open>
+          <summary>{% if current_language == 'ar' %}كيف يضمن DZHub أموالي عند الشراء؟{% else %}How does DZHub protect my money when buying?{% endif %}</summary>
+          <p>{% if current_language == 'ar' %}عند قيامك بالدفع، لا يذهب المبلغ للبائع مباشرة، بل يُحجز في حساب الضمان التابع للمنصة. البائع يبدأ العمل وهو مطمئن لوجود المبلغ، وأنت تطمئن لأن المبلغ لا يُسلَّم له إلا بعد فحصك للخدمة وموافقتك التامة.{% else %}When paying, funds are safely held in escrow and are only released to the seller after you inspect the delivery and confirm your satisfaction.{% endif %}</p>
         </details>
-        
-        <details class="hp-faq-item hp-reveal">
-          <summary>{% if current_language == 'ar' %}هل أحتاج إلى التواصل خارج المنصة؟{% else %}Do I need to communicate outside the platform?{% endif %}</summary>
-          <p>{% if current_language == 'ar' %}الأفضل إبقاء الرسائل والشروط داخل المنصة حتى تبقى الأدلة واضحة عند الحاجة.{% else %}It is better to keep messages and terms inside the platform so evidence stays clear if needed.{% endif %}</p>
+
+        <details class="dzhub-faq-item">
+          <summary>{% if current_language == 'ar' %}ماذا أفعل إذا تأخر البائع أو لم يسلّم ما اتفقنا عليه؟{% else %}What happens if the seller delays or fails to deliver?{% endif %}</summary>
+          <p>{% if current_language == 'ar' %}يمكنك فتح نزاع بضغطة زر داخل غرفة الصفقة. يتدخل فريق الدعم لمراجعة شروط الاتفاق والمحادثات والملفات المرفقة لإنصاف الطرفين وحماية حقوقك.{% else %}You can open a dispute directly in the deal room. Our support team reviews all contract agreements, chat history, and files to make a fair determination.{% endif %}</p>
         </details>
-        
-        <details class="hp-faq-item hp-reveal">
-          <summary>{% if current_language == 'ar' %}ماذا يحدث عند وجود نزاع؟{% else %}What happens if there is a dispute?{% endif %}</summary>
-          <p>{% if current_language == 'ar' %}يتم الرجوع إلى سجل الصفقة والرسائل والشروط لمراجعة الحالة بطريقة منظمة.{% else %}The deal record, messages, and terms are reviewed through a structured resolution flow.{% endif %}</p>
+
+        <details class="dzhub-faq-item">
+          <summary>{% if current_language == 'ar' %}ما هي العملة المعتمدة في الصفقات؟{% else %}What currency is used for deals?{% endif %}</summary>
+          <p>{% if current_language == 'ar' %}المنصة مخصصة للسوق الجزائري وتعتمد الدينار الجزائري (دج / DZD) لعرض وإتمام كافة الصفقات والخدمات والمنتجات الرقمية.{% else %}The platform is tailored for Algeria, using the Algerian Dinar (DZD) for all digital transactions.{% endif %}</p>
         </details>
-        
-        <details class="hp-faq-item hp-reveal">
-          <summary>{% if current_language == 'ar' %}هل يمكنني تصفح العروض قبل التسجيل؟{% else %}Can I browse before registering?{% endif %}</summary>
-          <p>{% if current_language == 'ar' %}نعم، يمكنك استكشاف العروض العامة ثم إنشاء حساب عند بدء صفقة أو نشر عرض جديد.{% else %}Yes, you can explore public deals, then create an account when starting or publishing a deal.{% endif %}</p>
+
+        <details class="dzhub-faq-item">
+          <summary>{% if current_language == 'ar' %}هل يمكن للبائع تغيير الشروط أو السعر بعد الدفع؟{% else %}Can the seller change terms or price after payment?{% endif %}</summary>
+          <p>{% if current_language == 'ar' %}كلا، بمجرد حجز المبلغ تصبح شروط الصفقة والسعر ملزمين لكلا الطرفين ولا يمكن تعديلهما إلا بموافقة صريحة من الطرفين أو عبر إدارة النزاعات.{% else %}No, once funds are held, deal terms and pricing are locked and can only be altered with mutual consent or through dispute mediation.{% endif %}</p>
         </details>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════
-       FINAL CTA SECTION
+       9. FINAL CTA SECTION
        ═══════════════════════════════════════ -->
-  <section class="hp-final-cta" id="cta-final">
-    <div class="hp-shell">
-      <div class="hp-final-box hp-reveal hp-reveal-zoom hp-glass-card">
-        <div class="hp-final-glow" aria-hidden="true"></div>
-        <div class="hp-final-content">
-          <span class="hp-section-kicker">{% if current_language == 'ar' %}ابدأ الآن{% else %}Start now{% endif %}</span>
-          <h2>{% t "home.cta_section_title" %}</h2>
-          <p>{% t "home.cta_section_subtitle" %}</p>
-        </div>
-        
-        <div class="hp-actions hp-cta-single-action">
+  <section class="dzhub-section" id="cta" style="padding-bottom:90px;">
+    <div class="dzhub-shell">
+      <div class="dzhub-cta-box">
+        <h2>{% t "home.sec_cta_title" %}</h2>
+        <p>{% t "home.sec_cta_sub" %}</p>
+
+        <div class="dzhub-cta-actions">
           {% if user.is_authenticated %}
-          <a href="{% url 'create_deal' %}" class="hp-btn hp-btn-primary hp-btn-cta-large">
-            <span>{% t "home.cta_create" %}</span>
-            <i class="fas fa-plus" aria-hidden="true"></i>
+          <a href="{% url 'create_deal' %}" class="dzhub-btn-cta-white">
+            <i class="fas fa-plus"></i>
+            <span>{% t "home.btn_create_deal" %}</span>
+          </a>
+          <a href="{% url 'my_deals' %}" class="dzhub-btn-hero-secondary" style="border-color:rgba(255,255,255,0.4); color:#fff !important; background:transparent;">
+            <i class="fas fa-briefcase"></i>
+            <span>{% t "nav.my_deals" %}</span>
           </a>
           {% else %}
-          <a href="{% url 'register' %}" class="hp-btn hp-btn-primary hp-btn-cta-large" id="cta-register">
-            <span>{% t "home.cta_section_register" %}</span>
-            <i class="fas fa-arrow-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}" aria-hidden="true"></i>
+          <a href="{% url 'register' %}" class="dzhub-btn-cta-white">
+            <i class="fas fa-bolt"></i>
+            <span>{% t "nav.start_now" %}</span>
+          </a>
+          <a href="{% url 'listings' %}" class="dzhub-btn-hero-secondary" style="border-color:rgba(255,255,255,0.4); color:#fff !important; background:transparent;">
+            <i class="fas fa-store"></i>
+            <span>{% t "home.btn_browse_services" %}</span>
           </a>
           {% endif %}
         </div>
@@ -701,41 +429,5 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       FOOTER MAP SECTION
-       ═══════════════════════════════════════ -->
-  <section class="hp-footer-map" aria-label="{% if current_language == 'ar' %}روابط رئيسية{% else %}Key site links{% endif %}">
-    <div class="hp-shell hp-footer-grid">
-      <div class="hp-footer-brand">
-        <img src="{% static 'images/brand/logo-white-small.webp' %}" alt="{% t 'site.name' %}" width="520" height="150" loading="lazy" decoding="async">
-        <p>{% if current_language == 'ar' %}منصة ضمان حديثة للصفقات التي تحتاج وضوحًا وثقة من أول خطوة حتى الإغلاق.{% else %}A modern escrow platform for deals that need clarity and confidence from first step to close.{% endif %}</p>
-      </div>
-      
-      <div class="hp-footer-col">
-        <h3>{% if current_language == 'ar' %}المنتج{% else %}Product{% endif %}</h3>
-        <a href="{% url 'listings' %}">{% t "home.cta_browse" %}</a>
-        <a href="{% url 'how_it_works' %}">{% t "home.cta_how" %}</a>
-        <a href="{% url 'create_deal' %}">{% t "home.cta_create" %}</a>
-      </div>
-      
-      <div class="hp-footer-col">
-        <h3>{% if current_language == 'ar' %}الشركة{% else %}Company{% endif %}</h3>
-        <a href="{% url 'about' %}">{% t "footer.about" %}</a>
-        <a href="{% url 'privacy' %}">{% t "footer.privacy" %}</a>
-        <a href="{% url 'terms' %}">{% t "footer.terms" %}</a>
-      </div>
-      
-      <div class="hp-footer-col">
-        <h3>{% if current_language == 'ar' %}المساعدة{% else %}Help{% endif %}</h3>
-        <a href="{% url 'create_ticket' %}">{% t "footer.support" %}</a>
-        <a href="#faq">FAQ</a>
-        <a href="#latest-deals">{% t "home.latest_title" %}</a>
-      </div>
-    </div>
-  </section>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-  <script defer src="{% static 'js/home_premium.js' %}?v=20260817a"></script>
 {% endblock %}

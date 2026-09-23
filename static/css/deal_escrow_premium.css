@@ -1,39 +1,36 @@
-/* Deal and Escrow premium fintech interface */
+/* Deal and Escrow DZHub White & Blue Light Interface */
 :root {
-  --dx-bg: #08090d;
-  --dx-bg-2: #0d0f16;
-  --dx-surface: rgba(17, 20, 28, 0.82);
-  --dx-surface-2: rgba(23, 27, 38, 0.92);
-  --dx-card: rgba(255, 255, 255, 0.075);
-  --dx-card-2: rgba(255, 255, 255, 0.105);
-  --dx-border: rgba(255, 255, 255, 0.1);
-  --dx-border-2: rgba(255, 255, 255, 0.18);
-  --dx-text: #f7f8fb;
-  --dx-text-2: #cbd3df;
-  --dx-muted: #8f9aac;
-  --dx-gold: #c9963b;
-  --dx-gold-2: #e8b96a;
-  --dx-indigo: #6366f1;
-  --dx-indigo-2: #8b8df8;
-  --dx-success: #22c55e;
-  --dx-danger: #ef4444;
-  --dx-warning: #f59e0b;
-  --dx-info: #38bdf8;
-  --dx-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
-  --dx-shadow-soft: 0 18px 46px rgba(0, 0, 0, 0.25);
-  --dx-radius: 22px;
-  --dx-radius-sm: 14px;
+  --dx-bg: #F6FAFD;
+  --dx-bg-2: #FFFFFF;
+  --dx-surface: #FFFFFF;
+  --dx-surface-2: #F0F7FC;
+  --dx-card: #FFFFFF;
+  --dx-card-2: #FFFFFF;
+  --dx-border: #DCEAF3;
+  --dx-border-2: #BEE3F8;
+  --dx-text: #0A2540;
+  --dx-text-2: #40566D;
+  --dx-muted: #5A7184;
+  --dx-gold: #1261A0;
+  --dx-gold-2: #159BD7;
+  --dx-indigo: #1261A0;
+  --dx-indigo-2: #0B477A;
+  --dx-success: #10B981;
+  --dx-danger: #EF4444;
+  --dx-warning: #F59E0B;
+  --dx-info: #159BD7;
+  --dx-shadow: 0 14px 40px rgba(11, 71, 122, 0.08);
+  --dx-shadow-soft: 0 8px 24px rgba(11, 71, 122, 0.05);
+  --dx-radius: 20px;
+  --dx-radius-sm: 12px;
   --dx-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 body[data-page="deal_detail"],
 body[data-page="escrow_room"] {
-  background:
-    linear-gradient(135deg, rgba(99, 102, 241, 0.12), transparent 34%),
-    linear-gradient(225deg, rgba(201, 150, 59, 0.1), transparent 30%),
-    linear-gradient(180deg, var(--dx-bg) 0%, var(--dx-bg-2) 48%, #08090d 100%) !important;
+  background: var(--dx-bg) !important;
   color: var(--dx-text) !important;
-  color-scheme: dark;
+  color-scheme: light !important;
 }
 
 body[data-page="deal_detail"] .page-bg-overlay,
@@ -50,13 +47,14 @@ body[data-page="escrow_room"] .se-main {
   max-width: none !important;
   padding: 24px 0 72px !important;
   color: var(--dx-text) !important;
+  background: var(--dx-bg) !important;
 }
 
 body[data-page="deal_detail"] .se-navbar,
 body[data-page="escrow_room"] .se-navbar {
-  background: rgba(8, 9, 13, 0.84) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.25) !important;
+  background: #FFFFFF !important;
+  border-bottom: 1px solid #DCEAF3 !important;
+  box-shadow: 0 2px 10px rgba(11, 71, 122, 0.05) !important;
 }
 
 .dx-page,
@@ -3117,3 +3115,474 @@ body[data-page="deal_detail"] .se-deal-info-row .se-info-val {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   INTERACTIVE ESCROW STEPPER COMPONENT
+   ═══════════════════════════════════════════════════════════════ */
+.er-stepper-container {
+  margin-bottom: 24px;
+  padding: 20px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--dx-radius, 22px);
+  background: rgba(13, 15, 22, 0.85);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+}
+
+.er-stepper-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  gap: 8px;
+}
+
+.er-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  min-width: 90px;
+}
+
+.er-step-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  color: var(--dx-muted, #8f9aac);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.er-step-label {
+  margin-top: 10px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: rgba(247, 248, 251, 0.6);
+  white-space: nowrap;
+}
+
+.er-step-sub {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(247, 248, 251, 0.4);
+  margin-top: 2px;
+}
+
+/* Stepper Status States */
+.er-step.is-done .er-step-icon {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  border-color: #22c55e;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+}
+
+.er-step.is-done .er-step-label {
+  color: #ffffff;
+}
+
+.er-step.is-current .er-step-icon {
+  background: linear-gradient(135deg, #c9963b, #e8b96a);
+  border-color: #f4c95d;
+  color: #0d1b2a;
+  box-shadow: 0 0 0 4px rgba(201, 150, 59, 0.25), 0 4px 16px rgba(201, 150, 59, 0.4);
+  animation: erPulse 2s infinite ease-in-out;
+}
+
+.er-step.is-current .er-step-label {
+  color: #f4c95d;
+  font-weight: 900;
+}
+
+.er-step.is-refunded .er-step-icon {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+@keyframes erPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 4px rgba(201, 150, 59, 0.25); }
+  50% { transform: scale(1.06); box-shadow: 0 0 0 8px rgba(201, 150, 59, 0.15); }
+}
+
+.er-step-line {
+  flex: 1;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+  border-radius: 999px;
+  transition: background 0.3s ease;
+}
+
+.er-step-line.is-active {
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+}
+
+@media (max-width: 768px) {
+  .er-stepper-container {
+    padding: 16px 12px;
+    overflow-x: auto;
+  }
+  .er-stepper-track {
+    min-width: 520px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FINTECH DESIGN POLISH FOR DEAL DETAIL & ESCROW ROOM PAGES
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Clean Pill Breadcrumb */
+.se-detail-breadcrumb {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 0.85rem !important;
+  padding: 10px 18px !important;
+  border-radius: 999px !important;
+  background: rgba(14, 20, 36, 0.8) !important;
+  border: 1px solid rgba(244, 201, 93, 0.15) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.se-bc-link {
+  color: var(--dx-muted) !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  transition: color 0.2s ease !important;
+}
+
+.se-bc-link:hover {
+  color: #f4c95d !important;
+}
+
+.se-bc-current {
+  color: #f4f4f5 !important;
+  font-weight: 700 !important;
+}
+
+/* Hero Section Streamlined */
+.dx-hero {
+  border: 1px solid rgba(244, 201, 93, 0.15) !important;
+  box-shadow: 0 25px 65px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  background: radial-gradient(circle at 90% 10%, rgba(244, 201, 93, 0.08), transparent 50%),
+              linear-gradient(145deg, rgba(14, 20, 36, 0.95), rgba(7, 10, 19, 0.98)) !important;
+  border-radius: 24px !important;
+  padding: 32px !important;
+}
+
+.dx-pill-secure {
+  border: 1px solid rgba(244, 201, 93, 0.3) !important;
+  background: rgba(244, 201, 93, 0.1) !important;
+  color: #f4c95d !important;
+}
+
+.dx-pill-status {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dx-hero h1 {
+  font-size: clamp(1.8rem, 4vw, 3rem) !important;
+  font-weight: 800 !important;
+  margin-top: 14px !important;
+  color: #ffffff !important;
+  line-height: 1.25 !important;
+}
+
+.dx-hero-sub {
+  color: #cbd5e1 !important;
+  font-size: 0.98rem !important;
+  line-height: 1.7 !important;
+  margin-top: 10px !important;
+}
+
+.dx-meta-grid {
+  margin-top: 20px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+}
+
+.dx-meta-grid span {
+  background: rgba(7, 10, 19, 0.7) !important;
+  border: 1px solid rgba(244, 201, 93, 0.12) !important;
+  padding: 8px 14px !important;
+  border-radius: 12px !important;
+  color: #94a3b8 !important;
+  font-size: 0.85rem !important;
+}
+
+.dx-meta-grid span strong {
+  color: #f4c95d !important;
+}
+
+/* Amount & Action Card */
+.dx-amount-card {
+  border: 1px solid rgba(244, 201, 93, 0.2) !important;
+  background: linear-gradient(160deg, rgba(20, 28, 48, 0.95), rgba(14, 20, 36, 0.9)) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6) !important;
+}
+
+.dx-amount-card strong {
+  color: #f4c95d !important;
+  text-shadow: 0 2px 10px rgba(244, 201, 93, 0.2) !important;
+}
+
+/* Stepper Progress Bar */
+.dx-progress-panel {
+  border: 1px solid rgba(244, 201, 93, 0.12) !important;
+  background: rgba(14, 20, 36, 0.85) !important;
+  border-radius: 20px !important;
+  padding: 24px !important;
+  margin-block: 20px !important;
+  box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dx-progress-step.is-complete {
+  border-color: rgba(16, 185, 129, 0.3) !important;
+  background: rgba(16, 185, 129, 0.08) !important;
+}
+
+.dx-progress-step.is-complete span {
+  background: #10b981 !important;
+  color: #ffffff !important;
+}
+
+.dx-progress-step.is-active {
+  border-color: rgba(244, 201, 93, 0.4) !important;
+  background: rgba(244, 201, 93, 0.1) !important;
+}
+
+.dx-progress-step.is-active span {
+  background: #f4c95d !important;
+  color: #070a13 !important;
+}
+
+/* Intelligence Grid Cards */
+.dx-intel-card {
+  border: 1px solid rgba(244, 201, 93, 0.12) !important;
+  background: rgba(14, 20, 36, 0.85) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.5) !important;
+  transition: all 0.3s ease !important;
+}
+
+.dx-intel-card:hover {
+  border-color: rgba(244, 201, 93, 0.3) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Profile-Style Hero for Deal Detail */
+.dx-hero-profile-style {
+  position: relative;
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  background: linear-gradient(145deg, #0b0f1d 0%, #0e1424 100%) !important;
+  border: 1px solid rgba(244, 201, 93, 0.22) !important;
+  padding: 32px 28px !important;
+  margin-bottom: 24px !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dx-hero-profile-body {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  gap: 24px;
+  align-items: center;
+}
+
+@media (max-width: 992px) {
+  .dx-hero-profile-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.er-header-profile-style {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  background: linear-gradient(145deg, #0b0f1d 0%, #0e1424 100%) !important;
+  border: 1px solid rgba(244, 201, 93, 0.22) !important;
+  padding: 28px 32px !important;
+  margin-bottom: 24px !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* --- COMPLETE VISUAL OVERHAUL FOR DEAL DETAIL CARDS --- */
+body[data-page="deal_detail"] .card,
+body[data-page="deal_detail"] .se-product-card,
+body[data-page="deal_detail"] .se-gallery-card,
+body[data-page="deal_detail"] .se-comments-card,
+body[data-page="deal_detail"] .se-deal-chat-card,
+body[data-page="deal_detail"] .se-buy-box,
+body[data-page="deal_detail"] .se-seller-card,
+body[data-page="deal_detail"] .se-deal-info-card,
+body[data-page="deal_detail"] .se-share-card {
+  background: rgba(14, 20, 36, 0.85) !important;
+  border: 1px solid rgba(244, 201, 93, 0.18) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  color: #f8fafc !important;
+}
+
+/* Gallery Card */
+body[data-page="deal_detail"] .se-gallery-main {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: #05070d !important;
+}
+
+body[data-page="deal_detail"] .se-gallery-thumb {
+  border-radius: 12px !important;
+  border: 2px solid transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+body[data-page="deal_detail"] .se-gallery-thumb.active,
+body[data-page="deal_detail"] .se-gallery-thumb:hover {
+  border-color: #f4c95d !important;
+  transform: scale(1.05) !important;
+}
+
+/* Product Description Section */
+body[data-page="deal_detail"] .se-section-mini-title {
+  color: #f4c95d !important;
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+  margin-bottom: 14px !important;
+}
+
+body[data-page="deal_detail"] .se-product-desc {
+  color: #cbd5e1 !important;
+  font-size: 1rem !important;
+  line-height: 1.8 !important;
+  white-space: pre-line !important;
+}
+
+/* Action Box Sidebar */
+body[data-page="deal_detail"] .se-buy-box {
+  background: linear-gradient(160deg, rgba(20, 28, 48, 0.95), rgba(14, 20, 36, 0.9)) !important;
+  border: 1px solid rgba(244, 201, 93, 0.3) !important;
+}
+
+body[data-page="deal_detail"] .se-buy-price {
+  color: #f4c95d !important;
+  font-size: 2.2rem !important;
+  font-weight: 900 !important;
+  font-family: 'Manrope', sans-serif !important;
+  text-shadow: none !important;
+}
+
+body[data-page="deal_detail"] .se-buy-main-btn,
+body[data-page="deal_detail"] .btn-primary {
+  background: #f59e0b !important;
+  color: #070a13 !important;
+  border: none !important;
+  font-weight: 800 !important;
+  border-radius: 14px !important;
+  padding: 14px 24px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.2s ease !important;
+}
+
+body[data-page="deal_detail"] .se-buy-main-btn:hover,
+body[data-page="deal_detail"] .btn-primary:hover {
+  background: #d97706 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Seller Card */
+body[data-page="deal_detail"] .se-seller-name {
+  color: #ffffff !important;
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+}
+
+body[data-page="deal_detail"] .se-seller-avatar {
+  border: 2px solid #f4c95d !important;
+}
+
+/* Comments Card */
+body[data-page="deal_detail"] .se-comment-textarea {
+  background: rgba(7, 10, 19, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border-radius: 14px !important;
+}
+
+body[data-page="deal_detail"] .se-comment-textarea:focus {
+  border-color: #f4c95d !important;
+  box-shadow: 0 0 15px rgba(244, 201, 93, 0.2) !important;
+}
+
+body[data-page="deal_detail"] .comment-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding-block: 16px !important;
+}
+
+body[data-page="deal_detail"] .se-comment-author-name {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+body[data-page="deal_detail"] .se-comment-text {
+  color: #cbd5e1 !important;
+}
+
+/* Deal Chat Card */
+body[data-page="deal_detail"] .se-deal-chat-card {
+  overflow: hidden !important;
+}
+
+body[data-page="deal_detail"] .se-deal-chat-box {
+  background: rgba(7, 10, 19, 0.6) !important;
+  border-radius: 14px !important;
+  padding: 18px !important;
+  min-height: 280px !important;
+}
+
+body[data-page="deal_detail"] .se-dm-bubble-mine {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: #070a13 !important;
+  font-weight: 700 !important;
+  border-radius: 16px 16px 2px 16px !important;
+}
+
+body[data-page="deal_detail"] .se-dm-bubble-other {
+  background: rgba(30, 41, 59, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  border-radius: 16px 16px 16px 2px !important;
+}
+
+body[data-page="deal_detail"] .se-deal-msg-input {
+  background: rgba(7, 10, 19, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+}
+
+
+

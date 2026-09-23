@@ -3,171 +3,318 @@
 {% block title %}{% t "policy.returns.title" %}{% endblock %}
 {% block page_type %}policies{% endblock %}
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/policies.css' %}?v=20260507a">
+  <link rel="stylesheet" href="{% static 'css/policies.css' %}?v=20260923lux">
 {% endblock %}
 {% block late_css %}
-  <link rel="stylesheet" href="{% static 'css/info_pages.css' %}?v=20260523s">
-  <link rel="stylesheet" href="{% static 'css/info_pages_premium.css' %}?v=20260523b">
+  <link rel="stylesheet" href="{% static 'css/info_pages.css' %}?v=20260923art">
+  <link rel="stylesheet" href="{% static 'css/info_pages_premium.css' %}?v=20260923art">
 {% endblock %}
 
 {% block content %}
 <div class="info-premium-page legal-page legal-returns-page" dir="{{ current_dir }}">
   <div class="info-shell">
-    <section class="info-hero legal-hero legal-hero-returns" aria-labelledby="returns-title">
-      <div class="info-hero-copy">
-        <span class="info-pill">
+
+    <!-- 1. Refined Luxury Hero Section -->
+    <section class="info-hero-lux si-reveal" aria-labelledby="returns-title">
+      <div class="hero-lux-content">
+        <span class="lux-pill-badge">
+          <span class="lux-pill-dot"></span>
           <i class="fas fa-scale-balanced" aria-hidden="true"></i>
           {% t "policy.nav.returns" %}
         </span>
-        <h1 id="returns-title">{% t "policy.returns.title" %}</h1>
-        <p>{% t "policy.returns.sub" %}</p>
-        <div class="info-hero-actions">
-          <a href="{% url 'privacy' %}" class="info-btn info-btn-secondary">
+        <h1 id="returns-title" class="hero-lux-title">
+          {% t "policy.returns.title" %}
+        </h1>
+        <p class="hero-lux-desc">{% t "policy.returns.sub" %}</p>
+        <div class="hero-lux-actions">
+          <a href="{% url 'privacy' %}" class="lux-btn-secondary">
             <i class="fas fa-user-shield" aria-hidden="true"></i>
             <span>{% t "policy.nav.privacy" %}</span>
           </a>
-          <a href="{% url 'terms' %}" class="info-btn info-btn-secondary">
+          <a href="{% url 'terms' %}" class="lux-btn-secondary">
             <i class="fas fa-file-contract" aria-hidden="true"></i>
             <span>{% t "policy.nav.terms" %}</span>
           </a>
-          <a href="{% url 'create_ticket' %}" class="info-btn info-btn-primary">
+          <a href="{% url 'create_ticket' %}" class="lux-btn-primary">
             <i class="fas fa-headset" aria-hidden="true"></i>
             <span>{% t "support.my_tickets.open_ticket" %}</span>
           </a>
         </div>
       </div>
 
-      <aside class="legal-hero-card" aria-label="{% if current_language == 'ar' %}ملخص تسوية النزاعات{% else %}Dispute summary{% endif %}">
-        <span class="legal-card-icon"><i class="fas fa-gavel" aria-hidden="true"></i></span>
-        <strong>{% t "policy.returns.sec4_title" %}</strong>
-        <p>{% t "policy.returns.sec4_text" %}</p>
-        <div class="legal-hero-badges">
-          <span><i class="fas fa-pause" aria-hidden="true"></i>{% if current_language == 'ar' %}تجميد مؤقت{% else %}Temporary hold{% endif %}</span>
-          <span><i class="fas fa-folder-open" aria-hidden="true"></i>{% if current_language == 'ar' %}مراجعة أدلة{% else %}Evidence review{% endif %}</span>
-        </div>
-      </aside>
+      <div class="hero-lux-visual">
+        <aside class="lux-showcase-card" aria-label="{% if current_language == 'ar' %}ملخص تسوية النزاعات{% else %}Dispute summary{% endif %}">
+          <div class="showcase-badge-top">
+            <div class="showcase-brand">
+              <span class="lux-pill-badge" style="padding: 4px 12px; font-size: 12px;">
+                <i class="fas fa-gavel" aria-hidden="true"></i>
+                {% if current_language == 'ar' %}تحكيم محايد{% else %}Fair Arbitration{% endif %}
+              </span>
+            </div>
+            <span class="showcase-status">
+              <i class="fas fa-shield-halved"></i>
+              {% if current_language == 'ar' %}حماية الأموال{% else %}Protected Funds{% endif %}
+            </span>
+          </div>
+          <div class="showcase-visual-art">
+            <img src="{% static 'images/brand/legal_justice_seal.jpg' %}" alt="Fair Dispute Arbitration" width="340" height="140" loading="lazy">
+          </div>
+          <strong style="color: #ffffff; font-size: 14.5px;">{% t "policy.returns.sec4_title" %}</strong>
+          <p style="font-size: 13px; line-height: 1.7; color: var(--lux-muted); margin: 0;">{% t "policy.returns.sec4_text" %}</p>
+          <div class="showcase-features-list">
+            <div class="showcase-feature-item">
+              <i class="fas fa-pause-circle" aria-hidden="true"></i>
+              <span>{% if current_language == 'ar' %}تجميد المبلغ فور فتح النزاع{% else %}Immediate freeze upon dispute open{% endif %}</span>
+            </div>
+            <div class="showcase-feature-item">
+              <i class="fas fa-folder-open" aria-hidden="true"></i>
+              <span>{% if current_language == 'ar' %}فحص شامل للأدلة والإيصالات{% else %}Detailed review of proof and receipts{% endif %}</span>
+            </div>
+          </div>
+        </aside>
+      </div>
     </section>
 
-    <div class="legal-layout">
-      <aside class="legal-sidebar" aria-label="{% t 'policy.nav.title' %}">
-        <nav class="legal-doc-nav">
-          <p>{% t "policy.nav.title" %}</p>
-          <a href="{% url 'privacy' %}"><i class="fas fa-user-shield" aria-hidden="true"></i>{% t "policy.nav.privacy" %}</a>
-          <a href="{% url 'terms' %}"><i class="fas fa-file-contract" aria-hidden="true"></i>{% t "policy.nav.terms" %}</a>
-          <a href="{% url 'returns' %}" class="is-active"><i class="fas fa-scale-balanced" aria-hidden="true"></i>{% t "policy.nav.returns" %}</a>
-        </nav>
+    <!-- 2. Executive Legal Reader Layout -->
+    <div class="legal-reader-layout">
 
-        <nav class="legal-toc" aria-label="{% if current_language == 'ar' %}أقسام الصفحة{% else %}Page sections{% endif %}">
-          <p>{% if current_language == 'ar' %}في هذه الصفحة{% else %}On this page{% endif %}</p>
-          <a href="#returns-sec1">{% t "policy.returns.sec1_title" %}</a>
-          <a href="#returns-sec2">{% t "policy.returns.sec2_title" %}</a>
-          <a href="#returns-sec3">{% t "policy.returns.sec3_title" %}</a>
-          <a href="#returns-sec4">{% t "policy.returns.sec4_title" %}</a>
-          <a href="#returns-sec5">{% t "policy.returns.sec5_title" %}</a>
-          <a href="#returns-sec6">{% t "policy.returns.sec6_title" %}</a>
-          <a href="#returns-sec7">{% t "policy.returns.sec7_title" %}</a>
-          <a href="#returns-sec8">{% t "policy.returns.sec8_title" %}</a>
-        </nav>
+      <!-- Sticky Document Navigation & Outline Sidebar -->
+      <aside class="legal-reader-sidebar" aria-label="{% t 'policy.nav.title' %}">
+        <!-- Policies Navigator Card -->
+        <div class="legal-sidebar-card si-reveal">
+          <h3 class="legal-sidebar-heading">
+            <i class="fas fa-layer-group" aria-hidden="true"></i>
+            {% t "policy.nav.title" %}
+          </h3>
+          <nav class="legal-nav-tabs">
+            <a href="{% url 'privacy' %}" class="legal-nav-tab">
+              <i class="fas fa-user-shield" aria-hidden="true"></i>
+              <span>{% t "policy.nav.privacy" %}</span>
+            </a>
+            <a href="{% url 'terms' %}" class="legal-nav-tab">
+              <i class="fas fa-file-contract" aria-hidden="true"></i>
+              <span>{% t "policy.nav.terms" %}</span>
+            </a>
+            <a href="{% url 'returns' %}" class="legal-nav-tab is-active">
+              <i class="fas fa-scale-balanced" aria-hidden="true"></i>
+              <span>{% t "policy.nav.returns" %}</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Table of Contents Card -->
+        <div class="legal-sidebar-card si-reveal si-d1">
+          <h3 class="legal-sidebar-heading">
+            <i class="fas fa-list-ul" aria-hidden="true"></i>
+            {% if current_language == 'ar' %}فهرس البنود{% else %}Clauses index{% endif %}
+          </h3>
+          <nav class="legal-toc-list legal-toc" aria-label="{% if current_language == 'ar' %}أقسام الصفحة{% else %}Page sections{% endif %}">
+            <a href="#returns-sec1" class="legal-toc-item">1. {% t "policy.returns.sec1_title" %}</a>
+            <a href="#returns-sec2" class="legal-toc-item">2. {% t "policy.returns.sec2_title" %}</a>
+            <a href="#returns-sec3" class="legal-toc-item">3. {% t "policy.returns.sec3_title" %}</a>
+            <a href="#returns-sec4" class="legal-toc-item">4. {% t "policy.returns.sec4_title" %}</a>
+            <a href="#returns-sec5" class="legal-toc-item">5. {% t "policy.returns.sec5_title" %}</a>
+            <a href="#returns-sec6" class="legal-toc-item">6. {% t "policy.returns.sec6_title" %}</a>
+            <a href="#returns-sec7" class="legal-toc-item">7. {% t "policy.returns.sec7_title" %}</a>
+            <a href="#returns-sec8" class="legal-toc-item">8. {% t "policy.returns.sec8_title" %}</a>
+          </nav>
+        </div>
       </aside>
 
-      <article class="legal-document legal-readable" aria-labelledby="returns-document-title">
-        <header class="legal-document-header">
-          <span class="info-pill info-pill-muted"><i class="fas fa-shield-halved" aria-hidden="true"></i>{% if current_language == 'ar' %}فض منازعات{% else %}Dispute resolution{% endif %}</span>
-          <h2 id="returns-document-title">{% t "policy.returns.title" %}</h2>
-          <p>{% t "policy.returns.sub" %}</p>
+      <!-- Main Legal Document Reading Canvas -->
+      <article class="legal-reader-document si-reveal" aria-labelledby="returns-document-title">
+
+        <!-- Document Meta Ribbon -->
+        <header class="doc-meta-ribbon">
+          <div class="doc-meta-tags">
+            <span class="lux-pill-badge" style="padding: 5px 14px; font-size: 12.5px;">
+              <i class="fas fa-gavel" aria-hidden="true"></i>
+              {% if current_language == 'ar' %}سياسة فض النزاعات الرسمية{% else %}Official Dispute Resolution Policy{% endif %}
+            </span>
+            <div class="doc-meta-item">
+              <i class="fas fa-clock" aria-hidden="true"></i>
+              <span>{% t "policy.last_updated" %}</span>
+            </div>
+            <div class="doc-meta-item">
+              <i class="fas fa-book-open" aria-hidden="true"></i>
+              <span>{% if current_language == 'ar' %}وقت القراءة: 4 دقائق{% else %}Read time: 4 mins{% endif %}</span>
+            </div>
+          </div>
         </header>
 
-        <section class="legal-section" id="returns-sec1">
-          <h2>{% t "policy.returns.sec1_title" %}</h2>
+        <!-- Section 1 -->
+        <section class="legal-section-block" id="returns-sec1">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">01</span>
+            <h2>{% t "policy.returns.sec1_title" %}</h2>
+          </div>
           <p>{% t "policy.returns.sec1_text" %}</p>
         </section>
 
-        <section class="legal-section" id="returns-sec2">
-          <h2>{% t "policy.returns.sec2_title" %}</h2>
+        <!-- Section 2 -->
+        <section class="legal-section-block" id="returns-sec2">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">02</span>
+            <h2>{% t "policy.returns.sec2_title" %}</h2>
+          </div>
           <p>{% t "policy.returns.sec2_text" %}</p>
-          <ul class="legal-list legal-list-positive">
-            <li><i class="fas fa-check" aria-hidden="true"></i><span>{% t "policy.returns.sec2_li1" %}</span></li>
-            <li><i class="fas fa-check" aria-hidden="true"></i><span>{% t "policy.returns.sec2_li2" %}</span></li>
-            <li><i class="fas fa-check" aria-hidden="true"></i><span>{% t "policy.returns.sec2_li3" %}</span></li>
-            <li><i class="fas fa-check" aria-hidden="true"></i><span>{% t "policy.returns.sec2_li4" %}</span></li>
-            <li><i class="fas fa-check" aria-hidden="true"></i><span>{% t "policy.returns.sec2_li5" %}</span></li>
-            <li><i class="fas fa-check" aria-hidden="true"></i><span>{% t "policy.returns.sec2_li6" %}</span></li>
-          </ul>
+          <div class="legal-clause-rows">
+            <div class="legal-clause-row">
+              <i class="fas fa-circle-check" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec2_li1" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-circle-check" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec2_li2" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-circle-check" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec2_li3" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-circle-check" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec2_li4" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-circle-check" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec2_li5" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-circle-check" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec2_li6" %}</span>
+            </div>
+          </div>
         </section>
 
-        <section class="legal-section legal-highlight" id="returns-sec3">
-          <h2>{% t "policy.returns.sec3_title" %}</h2>
+        <!-- Section 3: Ineligible Cases -->
+        <section class="legal-section-block" id="returns-sec3">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">03</span>
+            <h2>{% t "policy.returns.sec3_title" %}</h2>
+          </div>
           <p>{% t "policy.returns.sec3_text" %}</p>
-          <ul class="legal-list legal-list-negative">
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.returns.sec3_li1" %}</span></li>
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.returns.sec3_li2" %}</span></li>
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.returns.sec3_li3" %}</span></li>
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.returns.sec3_li4" %}</span></li>
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.returns.sec3_li5" %}</span></li>
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.returns.sec3_li6" %}</span></li>
-            <li><i class="fas fa-times" aria-hidden="true"></i><span>{% t "policy.returns.sec3_li7" %}</span></li>
-          </ul>
+          <div class="legal-clause-rows">
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec3_li1" %}</span>
+            </div>
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec3_li2" %}</span>
+            </div>
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec3_li3" %}</span>
+            </div>
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec3_li4" %}</span>
+            </div>
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec3_li5" %}</span>
+            </div>
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec3_li6" %}</span>
+            </div>
+            <div class="legal-clause-row prohibited">
+              <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec3_li7" %}</span>
+            </div>
+          </div>
         </section>
 
-        <section class="legal-section" id="returns-sec4">
-          <h2>{% t "policy.returns.sec4_title" %}</h2>
+        <!-- Section 4: Resolution Process -->
+        <section class="legal-section-block" id="returns-sec4">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">04</span>
+            <h2>{% t "policy.returns.sec4_title" %}</h2>
+          </div>
           <p>{% t "policy.returns.sec4_text" %}</p>
-          <ol class="legal-list legal-list-info">
-            <li><i class="fas fa-pause" aria-hidden="true"></i><span>{% t "policy.returns.sec4_li1" %}</span></li>
-            <li><i class="fas fa-file-arrow-up" aria-hidden="true"></i><span>{% t "policy.returns.sec4_li2" %}</span></li>
-            <li><i class="fas fa-reply" aria-hidden="true"></i><span>{% t "policy.returns.sec4_li3" %}</span></li>
-            <li><i class="fas fa-magnifying-glass" aria-hidden="true"></i><span>{% t "policy.returns.sec4_li4" %}</span></li>
-            <li><i class="fas fa-gavel" aria-hidden="true"></i><span>{% t "policy.returns.sec4_li5" %}</span></li>
-          </ol>
+          <div class="legal-clause-rows">
+            <div class="legal-clause-row">
+              <i class="fas fa-pause-circle" style="color: var(--lux-gold);" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec4_li1" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-file-arrow-up" style="color: var(--lux-blue);" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec4_li2" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-reply" style="color: var(--lux-soft);" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec4_li3" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-magnifying-glass" style="color: var(--lux-gold);" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec4_li4" %}</span>
+            </div>
+            <div class="legal-clause-row">
+              <i class="fas fa-gavel" style="color: var(--lux-emerald);" aria-hidden="true"></i>
+              <span>{% t "policy.returns.sec4_li5" %}</span>
+            </div>
+          </div>
         </section>
 
-        <section class="legal-section" id="returns-sec5">
-          <h2>{% t "policy.returns.sec5_title" %}</h2>
+        <!-- Section 5 -->
+        <section class="legal-section-block" id="returns-sec5">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">05</span>
+            <h2>{% t "policy.returns.sec5_title" %}</h2>
+          </div>
           <p>{% t "policy.returns.sec5_text" %}</p>
         </section>
 
-        <section class="legal-section" id="returns-sec6">
-          <h2>{% t "policy.returns.sec6_title" %}</h2>
+        <!-- Section 6 -->
+        <section class="legal-section-block" id="returns-sec6">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">06</span>
+            <h2>{% t "policy.returns.sec6_title" %}</h2>
+          </div>
           <p>{% t "policy.returns.sec6_text" %}</p>
         </section>
 
-        <section class="legal-section" id="returns-sec7">
-          <h2>{% t "policy.returns.sec7_title" %}</h2>
+        <!-- Section 7 -->
+        <section class="legal-section-block" id="returns-sec7">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">07</span>
+            <h2>{% t "policy.returns.sec7_title" %}</h2>
+          </div>
           <p>{% t "policy.returns.sec7_text" %}</p>
         </section>
 
-        <section class="legal-section" id="returns-sec8">
-          <h2>{% t "policy.returns.sec8_title" %}</h2>
+        <!-- Section 8: Support Contacts -->
+        <section class="legal-section-block" id="returns-sec8">
+          <div class="legal-section-title-wrap">
+            <span class="legal-sec-num">08</span>
+            <h2>{% t "policy.returns.sec8_title" %}</h2>
+          </div>
           <p>{% t "policy.returns.sec8_text" %}</p>
-          <div class="legal-contact-grid">
-            <a href="mailto:support@safouaneescrow.com" class="legal-contact-card">
-              <i class="fas fa-envelope" aria-hidden="true"></i>
-              <span>{% t "policy.privacy.email" %}</span>
-              <strong>support@safouaneescrow.com</strong>
+          <div class="lux-action-cards-grid" style="margin-top: 10px;">
+            <a href="mailto:support@dzhub.dz" class="lux-action-card" style="text-decoration: none; padding: 22px 24px;">
+              <span class="lux-pill-badge" style="padding: 4px 12px; font-size: 12px;">
+                <i class="fas fa-envelope" aria-hidden="true"></i>
+                {% t "policy.privacy.email" %}
+              </span>
+              <strong style="color: #ffffff; font-size: 15px; margin-top: 4px;">support@dzhub.dz</strong>
             </a>
-            <a href="https://wa.me/213663580460" class="legal-contact-card">
-              <i class="fab fa-whatsapp" aria-hidden="true"></i>
-              <span>{% t "policy.privacy.whatsapp" %}</span>
-              <strong dir="ltr">+213663580460</strong>
-            </a>
-            <a href="{% url 'create_ticket' %}" class="legal-contact-card">
-              <i class="fas fa-life-ring" aria-hidden="true"></i>
-              <span>{% t "support.my_tickets.open_ticket" %}</span>
-              <strong>{% t "guide.report" %}</strong>
+            <a href="https://wa.me/213663580460" target="_blank" rel="noopener noreferrer" class="lux-action-card" style="text-decoration: none; padding: 22px 24px;">
+              <span class="lux-pill-badge" style="padding: 4px 12px; font-size: 12px; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.35); color: #34d399;">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                {% t "policy.privacy.whatsapp" %}
+              </span>
+              <strong style="color: #ffffff; font-size: 15px; margin-top: 4px;" dir="ltr">+213663580460</strong>
             </a>
           </div>
         </section>
 
-        <footer class="legal-updated">
-          <i class="fas fa-clock" aria-hidden="true"></i>
-          {% t "policy.last_updated" %}
-        </footer>
       </article>
     </div>
+
   </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/info_pages_premium.js' %}?v=20260523b"></script>
+<script defer src="{% static 'js/info_pages_premium.js' %}?v=20260923lux"></script>
 {% endblock %}

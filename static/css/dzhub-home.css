@@ -1,0 +1,698 @@
+/* ═══════════════════════════════════════════════════════════════════
+   DZHub — دزاير هب — Homepage Light Theme (Pure White & Blue)
+   منصة جزائرية للخدمات والمنتجات الرقمية
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Container & Global Scoping ── */
+.dzhub-home-page {
+  background-color: var(--dzhub-page-bg);
+  color: var(--dzhub-text);
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+}
+
+.dzhub-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.dzhub-section {
+  padding: 70px 0;
+  position: relative;
+}
+
+.dzhub-section-head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 48px;
+}
+
+.dzhub-badge-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background-color: var(--dzhub-light-blue);
+  color: var(--dzhub-primary);
+  border: 1px solid var(--dzhub-border);
+  border-radius: var(--radius-pill);
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.dzhub-section-head h2 {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: var(--dzhub-text);
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+
+.dzhub-section-head p {
+  font-size: 1.05rem;
+  color: var(--dzhub-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   1. HERO SECTION
+   ═══════════════════════════════════════════════════════════════════ */
+.dzhub-hero {
+  padding: 60px 0 70px;
+  background: linear-gradient(180deg, #FFFFFF 0%, var(--dzhub-page-bg) 100%);
+  border-bottom: 1px solid var(--dzhub-border);
+}
+
+.dzhub-hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 48px;
+}
+
+.dzhub-hero-content {
+  text-align: start;
+}
+
+.dzhub-hero-title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: var(--dzhub-text);
+  line-height: 1.25;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+
+.dzhub-hero-title span {
+  color: var(--dzhub-primary);
+}
+
+.dzhub-hero-lead {
+  font-size: 1.2rem;
+  color: var(--dzhub-muted);
+  line-height: 1.65;
+  margin-bottom: 32px;
+  max-width: 580px;
+}
+
+.dzhub-hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.dzhub-btn-hero-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--dzhub-primary);
+  color: #FFFFFF !important;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 13px 26px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(18, 97, 160, 0.28);
+  transition: all 0.2s ease;
+}
+
+.dzhub-btn-hero-primary:hover {
+  background-color: var(--dzhub-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(18, 97, 160, 0.35);
+}
+
+.dzhub-btn-hero-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #FFFFFF;
+  color: var(--dzhub-primary) !important;
+  border: 1.5px solid var(--dzhub-border);
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 13px 26px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  box-shadow: var(--shadow-xs);
+  transition: all 0.2s ease;
+}
+
+.dzhub-btn-hero-secondary:hover {
+  border-color: var(--dzhub-blue);
+  background-color: var(--dzhub-light-blue);
+  transform: translateY(-2px);
+}
+
+.dzhub-hero-trust-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--dzhub-border);
+  padding-top: 24px;
+}
+
+.dzhub-trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--dzhub-text);
+}
+
+.dzhub-trust-item i {
+  color: var(--dzhub-primary);
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
+/* Hero Visual / Symbol Card */
+.dzhub-hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dzhub-hero-card {
+  width: 100%;
+  max-width: 440px;
+  background-color: #FFFFFF;
+  border: 1px solid var(--dzhub-border);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.dzhub-hero-symbol-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.dzhub-hero-symbol-wrap img {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+}
+
+.dzhub-hero-status-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background-color: var(--dzhub-light-blue);
+  border: 1px solid var(--dzhub-border);
+  border-radius: var(--radius-base);
+  margin-bottom: 12px;
+}
+
+.dzhub-hero-status-pill strong {
+  color: var(--dzhub-primary);
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.dzhub-hero-status-pill span {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--dzhub-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   2. HOW IT WORKS IN 3 STEPS
+   ═══════════════════════════════════════════════════════════════════ */
+.dzhub-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.dzhub-step-card {
+  background-color: #FFFFFF;
+  border: 1px solid var(--dzhub-border);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dzhub-step-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: #BDD7E7;
+}
+
+.dzhub-step-number {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--dzhub-light-blue);
+  color: var(--dzhub-primary);
+  border: 2px solid var(--dzhub-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.dzhub-step-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--dzhub-text);
+  margin-bottom: 12px;
+}
+
+.dzhub-step-card p {
+  font-size: 0.9375rem;
+  color: var(--dzhub-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   3 & 4. CATEGORIES (Services & Digital Products)
+   ═══════════════════════════════════════════════════════════════════ */
+.dzhub-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.dzhub-cat-card {
+  background-color: #FFFFFF;
+  border: 1px solid var(--dzhub-border);
+  border-radius: var(--radius-base);
+  padding: 24px 20px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: all 0.2s ease;
+}
+
+.dzhub-cat-card:hover {
+  background-color: var(--dzhub-light-blue);
+  border-color: var(--dzhub-blue);
+  transform: translateY(-2px);
+}
+
+.dzhub-cat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-base);
+  background-color: var(--dzhub-light-blue);
+  color: var(--dzhub-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.dzhub-cat-card:hover .dzhub-cat-icon {
+  background-color: var(--dzhub-primary);
+  color: #FFFFFF;
+}
+
+.dzhub-cat-card h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--dzhub-text);
+  margin: 0 0 6px 0;
+}
+
+.dzhub-cat-card p {
+  font-size: 0.8125rem;
+  color: var(--dzhub-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   5. LATEST DEALS GRID
+   ═══════════════════════════════════════════════════════════════════ */
+.dzhub-deals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.dzhub-deal-card {
+  background-color: #FFFFFF;
+  border: 1px solid var(--dzhub-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+}
+
+.dzhub-deal-card:hover {
+  border-color: #BDD7E7;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.dzhub-deal-media {
+  height: 180px;
+  background-color: var(--dzhub-surface-subtle);
+  position: relative;
+  overflow: hidden;
+}
+
+.dzhub-deal-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dzhub-deal-media-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: var(--dzhub-border);
+}
+
+.dzhub-deal-badge-type {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--dzhub-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-xs);
+}
+
+[dir="rtl"] .dzhub-deal-badge-type {
+  right: auto;
+  left: 12px;
+}
+
+.dzhub-deal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.dzhub-deal-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dzhub-text);
+  text-decoration: none;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.dzhub-deal-title:hover {
+  color: var(--dzhub-primary);
+}
+
+.dzhub-deal-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--dzhub-border-subtle);
+}
+
+.dzhub-deal-price {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--dzhub-primary);
+}
+
+.dzhub-deal-seller {
+  font-size: 0.8125rem;
+  color: var(--dzhub-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dzhub-deal-seller img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   6. WHY TRUST DZHub
+   ═══════════════════════════════════════════════════════════════════ */
+.dzhub-trust-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.dzhub-trust-card {
+  background-color: #FFFFFF;
+  border: 1px solid var(--dzhub-border);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.dzhub-trust-card i {
+  font-size: 2.2rem;
+  color: var(--dzhub-primary);
+  margin-bottom: 20px;
+}
+
+.dzhub-trust-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--dzhub-text);
+  margin-bottom: 12px;
+}
+
+.dzhub-trust-card p {
+  font-size: 0.9375rem;
+  color: var(--dzhub-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   7. TRANSPARENT FEES SECTION
+   ═══════════════════════════════════════════════════════════════════ */
+.dzhub-fees-box {
+  background: #FFFFFF;
+  border: 1px solid var(--dzhub-border);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.dzhub-fee-rate-display {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.dzhub-fee-rate-number {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--dzhub-primary);
+  line-height: 1;
+}
+
+.dzhub-fee-rate-symbol {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--dzhub-blue);
+}
+
+.dzhub-fee-explanation {
+  font-size: 1.05rem;
+  color: var(--dzhub-muted);
+  max-width: 580px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+
+.dzhub-fee-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  border-top: 1px solid var(--dzhub-border);
+  padding-top: 24px;
+  text-align: center;
+}
+
+.dzhub-fee-feature-item {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--dzhub-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dzhub-fee-feature-item i {
+  color: var(--dzhub-success);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   8. FAQ ACCORDION
+   ═══════════════════════════════════════════════════════════════════ */
+.dzhub-faq-stack {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dzhub-faq-item {
+  background-color: #FFFFFF;
+  border: 1px solid var(--dzhub-border);
+  border-radius: var(--radius-md);
+  padding: 0;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.dzhub-faq-item[open] {
+  border-color: var(--dzhub-blue);
+}
+
+.dzhub-faq-item summary {
+  padding: 18px 22px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--dzhub-text);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dzhub-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.dzhub-faq-item summary::after {
+  content: "+";
+  font-size: 1.3rem;
+  color: var(--dzhub-primary);
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+
+.dzhub-faq-item[open] summary::after {
+  content: "−";
+}
+
+.dzhub-faq-item p {
+  padding: 0 22px 20px;
+  font-size: 0.9375rem;
+  color: var(--dzhub-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   9. FINAL CTA SECTION
+   ═══════════════════════════════════════════════════════════════════ */
+.dzhub-cta-box {
+  background: linear-gradient(135deg, var(--dzhub-primary) 0%, var(--dzhub-primary-dark) 100%);
+  border-radius: var(--radius-lg);
+  padding: 60px 32px;
+  color: #FFFFFF;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.dzhub-cta-box h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.dzhub-cta-box p {
+  font-size: 1.1rem;
+  color: #E2E8F0;
+  max-width: 600px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+
+.dzhub-cta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.dzhub-btn-cta-white {
+  background-color: #FFFFFF;
+  color: var(--dzhub-primary-dark) !important;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 13px 28px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.dzhub-btn-cta-white:hover {
+  background-color: var(--dzhub-light-blue);
+  transform: translateY(-2px);
+}
+
+/* ── Responsive Fixes ── */
+@media (max-width: 991px) {
+  .dzhub-hero-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .dzhub-hero-content {
+    text-align: center;
+  }
+  .dzhub-hero-lead {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .dzhub-hero-ctas {
+    justify-content: center;
+  }
+  .dzhub-hero-trust-bar {
+    align-items: center;
+  }
+  .dzhub-steps-grid,
+  .dzhub-trust-grid {
+    grid-template-columns: 1fr;
+  }
+}

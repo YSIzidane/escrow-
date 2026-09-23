@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   SAFOUANE ESCROW — Design System v3.0
+   DZHUB — Design System v3.0
    Unified design tokens, utilities, and component polish
    Inspired by: Stripe, Linear, Wise, Notion
    ═══════════════════════════════════════════════════════════════ */
@@ -7,16 +7,16 @@
 /* ─── 1. DESIGN TOKENS ─── */
 :root {
   /* Page Backgrounds */
-  --ds-bg-page: #f8f9fb;
-  --ds-bg-page-alt: #f3f5f8;
-  --ds-bg-elevated: #ffffff;
+  --ds-bg-page: #080c15;
+  --ds-bg-page-alt: #0e1424;
+  --ds-bg-elevated: #141d33;
 
   /* Card System */
-  --ds-card-bg: #ffffff;
-  --ds-card-border: rgba(15, 23, 42, 0.08);
-  --ds-card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
-  --ds-card-shadow-hover: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.06);
-  --ds-card-shadow-elevated: 0 4px 12px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.08);
+  --ds-card-bg: #0d1424;
+  --ds-card-border: rgba(255, 255, 255, 0.08);
+  --ds-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --ds-card-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --ds-card-shadow-elevated: 0 12px 48px rgba(0, 0, 0, 0.55);
   --ds-card-radius: 16px;
 
   /* Spacing (8px grid) */
@@ -45,13 +45,21 @@
   --ds-duration: 0.2s;
 }
 
+/* Light theme overrides when explicitly selected */
+html[data-theme="light"] {
+  --ds-bg-page: #f8f9fb;
+  --ds-bg-page-alt: #f1f4f9;
+  --ds-bg-elevated: #ffffff;
+  --ds-card-bg: #ffffff;
+  --ds-card-border: rgba(15, 23, 42, 0.08);
+  --ds-card-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+  --ds-card-shadow-hover: 0 6px 20px rgba(15, 23, 42, 0.08);
+}
 
 /* ─── 2. REFINED PAGE BACKGROUNDS ───
-   Subtle CSS-only texture instead of heavy images
-   Uses micro dot grid + soft color spots for depth
+   Sleek dark gradient mesh depth
    ─────────────────────────────────────────────── */
 
-/* Base: All inner pages get warm neutral background */
 body[data-page="profile"] .page-bg-overlay,
 body[data-page="deal_detail"] .page-bg-overlay,
 body[data-page="deal_room"] .page-bg-overlay,
@@ -64,15 +72,9 @@ body[data-page="staff_dashboard"] .page-bg-overlay,
 body[data-page="create_deal"] .page-bg-overlay,
 body[data-page="create_room"] .page-bg-overlay {
   background:
-    /* Micro dot grid — adds subtle texture like fine paper */
-    radial-gradient(circle, rgba(15,23,42,0.03) 1px, transparent 1px),
-    /* Soft warm spot top-right */
-    radial-gradient(ellipse at 85% 10%, rgba(201,150,59,0.04) 0%, transparent 50%),
-    /* Soft cool spot bottom-left */
-    radial-gradient(ellipse at 15% 90%, rgba(59,130,246,0.03) 0%, transparent 50%),
-    /* Base */
-    linear-gradient(180deg, #f6f8fb 0%, var(--ds-bg-page) 100%) !important;
-  background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100% !important;
+    radial-gradient(ellipse at 85% 0%, rgba(245, 158, 11, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 15% 100%, rgba(59, 130, 246, 0.05) 0%, transparent 60%),
+    linear-gradient(180deg, #070a13 0%, #0a0f1d 100%) !important;
 }
 
 body[data-page="profile"] .page-bg-overlay::after,
@@ -89,12 +91,10 @@ body[data-page="create_room"] .page-bg-overlay::after {
   display: none !important;
 }
 
-
 /* ─── 3. CARD SYSTEM POLISH ───
    Consistent elevation, borders, hover states
    ───────────────────────────── */
 
-/* Base card refinement — applies to ALL .card and similar elements */
 .card,
 .pf-card,
 .pf-info-card,
@@ -104,30 +104,29 @@ body[data-page="create_room"] .page-bg-overlay::after {
   border: 1px solid var(--ds-card-border) !important;
   border-radius: var(--ds-card-radius) !important;
   box-shadow: var(--ds-card-shadow) !important;
+  color: var(--se-text, #f8fafc);
   transition: box-shadow var(--ds-duration) var(--ds-ease),
-              transform var(--ds-duration) var(--ds-ease) !important;
+              transform var(--ds-duration) var(--ds-ease),
+              border-color var(--ds-duration) ease !important;
 }
 
-/* Interactive cards get hover lift */
 a.card:hover,
 .se-deal-card:hover,
 .pf-sec-item:hover {
   box-shadow: var(--ds-card-shadow-hover) !important;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  border-color: rgba(245, 158, 11, 0.28) !important;
 }
 
-/* Form cards stay flat on hover */
 .pf-card:hover {
   box-shadow: var(--ds-card-shadow) !important;
   transform: none;
 }
 
-
 /* ─── 4. INPUT & FORM POLISH ───
    Consistent focus rings, borders, sizing
    ─────────────────────────────────────── */
 
-/* Unified input styling */
 .pf-input,
 .se-filter-select,
 .form-control,
@@ -137,12 +136,28 @@ input[type="password"],
 input[type="number"],
 input[type="tel"],
 input[type="url"],
+input[type="search"],
 textarea,
 select {
-  border: 1.5px solid rgba(15, 23, 42, 0.12) !important;
+  background: rgba(14, 20, 36, 0.85) !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: 10px !important;
+  padding: 0.65rem 1rem !important;
+  font-family: inherit !important;
+  font-size: 0.9rem !important;
   transition: border-color var(--ds-duration) ease,
-              box-shadow var(--ds-duration) ease !important;
+              box-shadow var(--ds-duration) ease,
+              background-color var(--ds-duration) ease !important;
+}
+
+.pf-input::placeholder,
+.se-filter-select::placeholder,
+.form-control::placeholder,
+input::placeholder,
+textarea::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
 }
 
 .pf-input:focus,
@@ -151,56 +166,259 @@ select {
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: rgba(37, 99, 235, 0.4) !important;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08) !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22) !important;
   outline: none !important;
+  background: rgba(18, 26, 46, 0.95) !important;
 }
 
 
-/* ─── 5. BUTTON REFINEMENT ───
-   Consistent sizing, transitions, hierarchy
-   ───────────────────────────────────────── */
+/* ─── 5. UNIFIED BUTTON SYSTEM & INTERACTIVE STATES ───
+   توفير أزرار موحدة بجميع الحالات: default, hover, focus, active, loading, disabled
+   ─────────────────────────────────────────────────────────── */
 
-/* Primary buttons */
+.se-btn,
 .pf-btn-save,
+.pf-btn-cancel,
 .se-dr-add-btn,
 .se-add-deal-btn,
 .btn-primary,
-[class*="btn-primary"] {
-  border-radius: 12px !important;
+.btn-secondary,
+.btn-outline-primary,
+.hp-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: var(--se-space-2, 8px) !important;
+  min-height: var(--se-btn-h, 44px) !important;
+  padding: var(--se-btn-pad, 0.625rem 1.25rem) !important;
+  font-family: inherit !important;
+  font-size: var(--se-text-base, 0.875rem) !important;
   font-weight: 700 !important;
-  letter-spacing: -0.01em;
-  transition: all var(--ds-duration) var(--ds-ease) !important;
+  line-height: 1.2 !important;
+  border-radius: var(--se-r, 12px) !important;
+  border: 1px solid transparent !important;
+  cursor: pointer !important;
+  transition: transform 0.2s var(--se-ease, cubic-bezier(0.22, 1, 0.36, 1)),
+              box-shadow 0.2s var(--se-ease, cubic-bezier(0.22, 1, 0.36, 1)),
+              background-color 0.2s ease,
+              border-color 0.2s ease,
+              color 0.2s ease !important;
+  user-select: none !important;
+  text-decoration: none !important;
+  position: relative !important;
+  white-space: nowrap !important;
 }
 
+/* ─── Variants ─── */
+.se-btn-gold,
+.hp-btn-primary {
+  background: var(--se-gold, #c9963b) !important;
+  color: var(--se-navy, #0d1b2a) !important;
+  box-shadow: 0 2px 8px rgba(201, 150, 59, 0.25) !important;
+}
+
+.se-btn-gold:hover,
+.hp-btn-primary:hover {
+  background: var(--se-gold-soft, #e8b96a) !important;
+  color: var(--se-navy, #0d1b2a) !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 14px rgba(201, 150, 59, 0.35) !important;
+}
+
+.se-btn-primary,
+.pf-btn-save,
+.se-dr-add-btn,
+.se-add-deal-btn,
+.btn-primary {
+  background: var(--se-navy, #0d1b2a) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: var(--se-shadow-1) !important;
+}
+
+.se-btn-primary:hover,
 .pf-btn-save:hover,
 .se-dr-add-btn:hover,
 .se-add-deal-btn:hover,
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+  background: var(--se-navy-mid, #1a2e45) !important;
+  color: #ffffff !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: var(--se-shadow-2) !important;
 }
 
+.se-btn-secondary,
+.hp-btn-secondary,
+.btn-secondary {
+  background: var(--se-surface, #ffffff) !important;
+  color: var(--se-text, #0f1d2f) !important;
+  border-color: var(--se-border, rgba(15, 23, 42, 0.12)) !important;
+  box-shadow: var(--se-shadow-1) !important;
+}
+
+.se-btn-secondary:hover,
+.hp-btn-secondary:hover,
+.btn-secondary:hover {
+  background: var(--se-surface-hover, #fafbfc) !important;
+  color: var(--se-text, #0f1d2f) !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: var(--se-shadow-2) !important;
+}
+
+.se-btn-ghost,
+.hp-btn-ghost,
+.pf-btn-cancel,
+.se-dr-ghost-btn {
+  background: transparent !important;
+  color: var(--se-text-2, #475569) !important;
+  border-color: transparent !important;
+}
+
+.se-btn-ghost:hover,
+.hp-btn-ghost:hover,
+.pf-btn-cancel:hover,
+.se-dr-ghost-btn:hover {
+  background: rgba(15, 23, 42, 0.05) !important;
+  color: var(--se-text, #0f1d2f) !important;
+  transform: translateY(-1px) !important;
+}
+
+html[data-theme="dark"] .se-btn-ghost:hover,
+html[data-theme="dark"] .hp-btn-ghost:hover,
+html[data-theme="dark"] .pf-btn-cancel:hover,
+html[data-theme="dark"] .se-dr-ghost-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: var(--se-text, #ffffff) !important;
+}
+
+.se-btn-danger,
+.btn-danger {
+  background: var(--se-danger, #dc2626) !important;
+  color: #ffffff !important;
+}
+
+.se-btn-danger:hover,
+.btn-danger:hover {
+  background: #b91c1c !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3) !important;
+}
+
+.se-btn-success,
+.btn-success {
+  background: var(--se-success, #16a34a) !important;
+  color: #ffffff !important;
+}
+
+.se-btn-success:hover,
+.btn-success:hover {
+  background: #15803d !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3) !important;
+}
+
+/* ─── Active & Touch Press ─── */
+.se-btn:active,
 .pf-btn-save:active,
+.pf-btn-cancel:active,
 .se-dr-add-btn:active,
 .se-add-deal-btn:active,
-.btn-primary:active {
-  transform: translateY(0);
+.btn-primary:active,
+.btn-secondary:active,
+.hp-btn:active {
+  transform: translateY(1px) scale(0.99) !important;
   box-shadow: none !important;
 }
 
-/* Ghost/outline buttons */
-.pf-btn-cancel,
-.se-dr-ghost-btn,
-[class*="btn-outline"] {
-  border-radius: 12px !important;
-  transition: all var(--ds-duration) var(--ds-ease) !important;
+/* ─── Focus States (WCAG 2.2 AA) ─── */
+.se-btn:focus-visible,
+.pf-btn-save:focus-visible,
+.pf-btn-cancel:focus-visible,
+.btn:focus-visible,
+.hp-btn:focus-visible {
+  outline: 2px solid var(--se-gold, #c9963b) !important;
+  outline-offset: 2px !important;
+  box-shadow: var(--se-focus-ring) !important;
 }
 
-.pf-btn-cancel:hover,
-.se-dr-ghost-btn:hover,
-[class*="btn-outline"]:hover {
-  transform: translateY(-1px);
+/* ─── Disabled State ─── */
+.se-btn:disabled,
+.se-btn.is-disabled,
+button:disabled,
+.btn:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ─── Loading State (Prevents resize / layout shift) ─── */
+.se-btn.is-loading,
+.se-btn[data-loading="true"],
+button.is-loading {
+  pointer-events: none !important;
+  cursor: wait !important;
+  opacity: 0.88 !important;
+}
+
+.se-btn-spinner {
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: seSpin 0.65s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes seSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── LAYOUT SHIFT PROTECTION & SKELETON PRIMITIVES ─── */
+.se-aspect-16-9 {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  object-fit: cover;
+}
+
+.se-aspect-1-1 {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.se-skeleton {
+  background: var(--se-skeleton-bg);
+  background-size: 200% 100%;
+  animation: seSkeletonShimmer 1.5s infinite linear;
+  border-radius: var(--se-r-sm, 8px);
+  display: block;
+}
+
+@keyframes seSkeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.se-skeleton-text {
+  height: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+}
+
+.se-skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.se-skeleton-btn {
+  height: 44px;
+  min-width: 120px;
+  border-radius: 12px;
 }
 
 
@@ -406,4 +624,99 @@ body[data-page="notifications"] > div > div:first-child {
     padding: 20px 16px !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   FEE CALCULATOR & DRAFT BANNER COMPONENTS
+   ═══════════════════════════════════════════════════════════════ */
+.se-fee-calculator {
+  margin-top: 16px;
+  padding: 16px 20px;
+  border-radius: var(--se-r, 12px);
+  background: var(--se-surface-soft, rgba(201, 150, 59, 0.05));
+  border: 1.5px solid rgba(201, 150, 59, 0.2);
+  transition: all 0.2s ease;
+}
+
+.se-fee-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--se-gold-text, #8a6420);
+  margin-bottom: 12px;
+}
+
+html[data-theme="dark"] .se-fee-head {
+  color: var(--se-gold, #f4c95d);
+}
+
+.se-fee-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.84rem;
+}
+
+.se-fee-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--se-text-2, #475569);
+}
+
+.se-fee-row.se-fee-total {
+  padding-top: 8px;
+  border-top: 1px dashed rgba(201, 150, 59, 0.25);
+  font-weight: 800;
+  color: var(--se-text, #0f1d2f);
+}
+
+html[data-theme="dark"] .se-fee-row.se-fee-total {
+  color: #ffffff;
+}
+
+.se-fee-total strong {
+  font-size: 1.1rem;
+  color: var(--se-gold, #c9963b);
+}
+
+/* Draft banner */
+.se-draft-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--se-r, 12px);
+  background: rgba(201, 150, 59, 0.1);
+  border: 1px solid rgba(201, 150, 59, 0.3);
+  margin-bottom: 20px;
+}
+
+.se-draft-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--se-text);
+}
+
+.se-draft-info i {
+  color: var(--se-gold);
+}
+
+.se-draft-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.se-btn-sm {
+  min-height: 34px !important;
+  padding: 0.3rem 0.85rem !important;
+  font-size: 0.8rem !important;
+}
+
 

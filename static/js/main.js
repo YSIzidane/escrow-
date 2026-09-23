@@ -1,7 +1,7 @@
 /**
  * ============================================================
- *  SafouaneEscrow — main.js  v2.0 (fixed)
- *  تحسينات تجربة المستخدم — نسخة مُصلَحة
+ *  DZHub — main.js  v2.0
+ *  منصة جزائرية للخدمات والمنتجات الرقمية
  * ============================================================
  */
 
@@ -13,19 +13,25 @@
   if (!navbar) return;
 
   let lastScroll = 0;
+  let ticking = false;
   window.addEventListener('scroll', () => {
-    const current = window.scrollY;
-    navbar.style.boxShadow = current > 10
-      ? '0 4px 24px rgba(0,0,0,0.35)'
-      : '0 2px 20px rgba(0,0,0,0.3)';
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const current = window.scrollY;
+        navbar.style.boxShadow = current > 10
+          ? '0 4px 24px rgba(0,0,0,0.35)'
+          : '0 2px 20px rgba(0,0,0,0.3)';
 
-    if (current > lastScroll && current > 80) {
-      navbar.style.transform = 'translateY(-100%)';
-      navbar.style.transition = 'transform 0.35s ease, box-shadow 0.3s ease';
-    } else {
-      navbar.style.transform = 'translateY(0)';
+        if (current > lastScroll && current > 80) {
+          navbar.style.transform = 'translateY(-100%)';
+        } else {
+          navbar.style.transform = 'translateY(0)';
+        }
+        lastScroll = current;
+        ticking = false;
+      });
+      ticking = true;
     }
-    lastScroll = current;
   }, { passive: true });
 
   document.addEventListener('click', (e) => {
@@ -40,38 +46,18 @@
 /* ══════════════════════════════════════════════
    2. SMOOTH PAGE TRANSITIONS — انتقال سلس
 ══════════════════════════════════════════════ */
-(function initPageTransitions() {
-  const shouldSkipTransitions = window.matchMedia('(max-width: 768px), (prefers-reduced-motion: reduce)').matches;
-  if (shouldSkipTransitions) return;
-
-  const overlay = document.createElement('div');
-  overlay.id = 'se-page-overlay';
-  Object.assign(overlay.style, {
-    position: 'fixed', inset: '0', background: '#0D1B2A',
-    opacity: '0', pointerEvents: 'none',
-    transition: 'opacity 0.25s ease', zIndex: '9999'
-  });
-  document.body.appendChild(overlay);
-
-  window.addEventListener('load', () => {
-    overlay.style.opacity = '0';
-    overlay.style.pointerEvents = 'none';
-  });
-
-  document.querySelectorAll('a[href]').forEach((link) => {
-    const href = link.getAttribute('href');
-    if (
-      !href || href.startsWith('#') || href.startsWith('javascript') ||
-      href.startsWith('mailto') || href.startsWith('tel') ||
-      link.target === '_blank' || link.closest('form')
-    ) return;
-
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      overlay.style.opacity = '0.5';
-      overlay.style.pointerEvents = 'all';
-      setTimeout(() => { window.location.href = href; }, 180);
-    });
+(function initFastNavigation() {
+  /* التبديل الفوري وسرعة الاستجابة دون تأخير برمجي */
+  document.querySelectorAll('a[data-prefetch="true"]').forEach((link) => {
+    link.addEventListener('mouseenter', () => {
+      const href = link.getAttribute('href');
+      if (href && !href.startsWith('#') && !document.querySelector(`link[rel="prefetch"][href="${href}"]`)) {
+        const prefetchLink = document.createElement('link');
+        prefetchLink.rel = 'prefetch';
+        prefetchLink.href = href;
+        document.head.appendChild(prefetchLink);
+      }
+    }, { once: true, passive: true });
   });
 })();
 
@@ -143,8 +129,10 @@ SE.toast = function (message, type = 'info', duration = 4000) {
     (() => {
       const c = document.createElement('div');
       c.id = 'toastContainer';
+      const isRtl = document.documentElement.dir === 'rtl';
       Object.assign(c.style, {
-        position: 'fixed', top: '16px', left: '16px',
+        position: 'fixed', top: '16px',
+        insetInlineEnd: '16px',
         zIndex: '1100', display: 'flex', flexDirection: 'column', gap: '10px'
       });
       document.body.appendChild(c);
@@ -192,34 +180,46 @@ SE.toast = function (message, type = 'info', duration = 4000) {
 
 
 /* ══════════════════════════════════════════════
-   5. FORM ENHANCEMENTS — تحسينات النماذج
+   5. FORM ENHANCEMENTS — تحسينات النماذج والأزرار
 ══════════════════════════════════════════════ */
 (function initForms() {
-  // منع الإرسال المزدوج
+  // منع الإرسال المزدوج وحفظ أبعاد الزر من القفز
   document.querySelectorAll('form').forEach((form) => {
     if (form.getAttribute('method') === 'get') return;
     form.addEventListener('submit', function handler() {
       const btn = this.querySelector('button[type="submit"]:not([data-no-disable])');
       if (!btn || btn.disabled) return;
+
+      const widthBefore = btn.offsetWidth;
+      btn.style.minWidth = widthBefore + 'px';
       btn.disabled = true;
-      const original = btn.innerHTML;
-      btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> جارٍ المعالجة...`;
+      btn.classList.add('is-loading');
+      btn.setAttribute('data-loading', 'true');
+      btn.setAttribute('aria-busy', 'true');
+
+      const isAr = document.documentElement.lang === 'ar';
+      const loadingText = isAr ? 'جارٍ المعالجة...' : 'Processing...';
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = `<span class="se-btn-spinner" aria-hidden="true"></span> <span>${loadingText}</span>`;
+
       setTimeout(() => {
         btn.disabled = false;
-        btn.innerHTML = original;
+        btn.classList.remove('is-loading');
+        btn.removeAttribute('data-loading');
+        btn.removeAttribute('aria-busy');
+        btn.innerHTML = originalHtml;
+        btn.style.minWidth = '';
       }, 8000);
     });
   });
 
-  // تأثير focus على الحقول
-  document.querySelectorAll('.form-control, .form-select').forEach((input) => {
-    const wrapper = input.parentElement;
+  // آمن ومستقر دون التسبب في Reflow Focus
+  document.querySelectorAll('.form-control, .form-select, .pf-input').forEach((input) => {
     input.addEventListener('focus', () => {
-      wrapper.style.transition = 'transform 0.2s ease';
-      wrapper.style.transform = 'scale(1.01)';
+      input.classList.add('is-focused');
     });
     input.addEventListener('blur', () => {
-      wrapper.style.transform = 'scale(1)';
+      input.classList.remove('is-focused');
     });
   });
 
@@ -729,9 +729,9 @@ function filterChats(q) {
    21. INIT LOG
 ══════════════════════════════════════════════ */
 console.log(
-  '%c SafouaneEscrow JS %c v2.0 ',
-  'background:#0D1B2A;color:#C9963B;padding:4px 8px;border-radius:4px 0 0 4px;font-weight:bold;',
-  'background:#C9963B;color:#0D1B2A;padding:4px 8px;border-radius:0 4px 4px 0;font-weight:bold;'
+  '%c DZHub %c v2.0 ',
+  'background:#1261A0;color:#FFFFFF;padding:4px 8px;border-radius:4px 0 0 4px;font-weight:bold;',
+  'background:#159BD7;color:#FFFFFF;padding:4px 8px;border-radius:0 4px 4px 0;font-weight:bold;'
 );
 
 /* ══════════════════════════════════════════════
@@ -1119,4 +1119,152 @@ console.log(
     }));
   }
 
+})();
+
+/* ══════════════════════════════════════════════
+   DYNAMIC ESCROW FEE CALCULATOR & DRAFT AUTO-SAVE
+══════════════════════════════════════════════ */
+(function initFeeCalculatorAndDrafts() {
+  const priceInput = document.getElementById('price');
+  const startingPriceInput = document.getElementById('startingPrice');
+  const calcOriginal = document.getElementById('seFeeOriginalAmount');
+  const calcFee = document.getElementById('seFeeCalculated');
+  const calcTotal = document.getElementById('seFeeTotalPayable');
+  const feeCalculator = document.getElementById('seFeeCalculator');
+  const feeRate = (parseFloat(feeCalculator?.dataset.feeRate || '0') || 0) / 100;
+
+  function updateFee() {
+    if (!calcOriginal || !calcFee || !calcTotal) return;
+    const isAr = document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
+    const curr = isAr ? ' دج' : ' DZD';
+    const val = parseFloat(priceInput?.value || startingPriceInput?.value || 0);
+    if (isNaN(val) || val <= 0) {
+      calcOriginal.textContent = `0.00${curr}`;
+      calcFee.textContent = `0.00${curr}`;
+      calcTotal.textContent = `0.00${curr}`;
+      return;
+    }
+    const fee = val * feeRate;
+    const total = val + fee;
+    calcOriginal.textContent = `${val.toFixed(2)}${curr}`;
+    calcFee.textContent = `${fee.toFixed(2)}${curr}`;
+    calcTotal.textContent = `${total.toFixed(2)}${curr}`;
+  }
+
+  if (priceInput) priceInput.addEventListener('input', updateFee);
+  if (startingPriceInput) startingPriceInput.addEventListener('input', updateFee);
+  updateFee();
+
+  // DRAFT AUTO-SAVE & RESTORE
+  const titleInput = document.getElementById('productTitle');
+  const descInput = document.getElementById('productDescription');
+  const draftBanner = document.getElementById('seDraftBanner');
+  const restoreBtn = document.getElementById('seRestoreDraftBtn');
+  const discardBtn = document.getElementById('seDiscardDraftBtn');
+  const DRAFT_KEY = 'se_deal_draft_v1';
+
+  function saveDraft() {
+    if (!titleInput && !descInput) return;
+    const data = {
+      title: titleInput?.value || '',
+      desc: descInput?.value || '',
+      timestamp: Date.now()
+    };
+    if (data.title.trim().length > 3 || data.desc.trim().length > 10) {
+      try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch(e){}
+    }
+  }
+
+  if (titleInput) titleInput.addEventListener('input', saveDraft);
+  if (descInput) descInput.addEventListener('input', saveDraft);
+
+  // Check draft on load
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (raw && draftBanner && (!titleInput || !titleInput.value)) {
+      const parsed = JSON.parse(raw);
+      if (parsed.title || parsed.desc) {
+        draftBanner.style.display = 'flex';
+        restoreBtn?.addEventListener('click', () => {
+          if (titleInput) titleInput.value = parsed.title || '';
+          if (descInput) descInput.value = parsed.desc || '';
+          draftBanner.style.display = 'none';
+          if (window.SE?.toast) SE.toast('تمت استعادة المسودة بنجاح', 'success');
+        });
+        discardBtn?.addEventListener('click', () => {
+          localStorage.removeItem(DRAFT_KEY);
+          draftBanner.style.display = 'none';
+        });
+      }
+    }
+  } catch(e){}
+
+  // Clear draft on successful form submit
+  const dealForm = document.getElementById('createDealForm');
+  dealForm?.addEventListener('submit', () => {
+    try { localStorage.removeItem(DRAFT_KEY); } catch(e){}
+  });
+})();
+
+/* ══════════════════════════════════════════════
+   HIGH-RES PROOF LIGHTBOX GALLERY
+══════════════════════════════════════════════ */
+(function initImageLightbox() {
+  function openLightbox(src, alt = '') {
+    let overlay = document.getElementById('seLightboxOverlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'seLightboxOverlay';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-label', 'معاينة الصورة المكبرة');
+      Object.assign(overlay.style, {
+        position: 'fixed', inset: '0', zIndex: '99999',
+        background: 'rgba(5, 7, 13, 0.92)', backdropFilter: 'blur(16px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '24px', opacity: '0', transition: 'opacity 0.25s ease',
+        cursor: 'zoom-out'
+      });
+      overlay.innerHTML = `
+        <button type="button" class="se-lightbox-close" aria-label="إغلاق المعاينة" style="position:absolute;top:20px;right:24px;background:rgba(255,255,255,0.12);border:none;color:#fff;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:grid;place-items:center;">
+          <i class="fas fa-xmark"></i>
+        </button>
+        <img id="seLightboxImg" src="" alt="" style="max-width:92vw;max-height:88vh;object-fit:contain;border-radius:12px;box-shadow:0 24px 80px rgba(0,0,0,0.6);transform:scale(0.96);transition:transform 0.25s cubic-bezier(0.22,1,0.36,1);">
+      `;
+      document.body.appendChild(overlay);
+
+      const closeBtn = overlay.querySelector('.se-lightbox-close');
+      const close = () => {
+        overlay.style.opacity = '0';
+        setTimeout(() => { overlay.style.display = 'none'; }, 250);
+      };
+      closeBtn.addEventListener('click', close);
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay || e.target.id === 'seLightboxImg') close();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.style.display !== 'none') close();
+      });
+    }
+
+    const img = overlay.querySelector('#seLightboxImg');
+    img.src = src;
+    img.alt = alt;
+    overlay.style.display = 'flex';
+    requestAnimationFrame(() => {
+      overlay.style.opacity = '1';
+      img.style.transform = 'scale(1)';
+    });
+  }
+
+  window.SE = window.SE || {};
+  window.SE.openLightbox = openLightbox;
+
+  document.addEventListener('click', (e) => {
+    const target = e.target.closest('.er-task-main img, [data-lightbox="true"], .se-gallery-main img');
+    if (target && target.src) {
+      e.preventDefault();
+      openLightbox(target.src, target.alt);
+    }
+  });
 })();

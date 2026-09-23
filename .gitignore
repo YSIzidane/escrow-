@@ -101,3 +101,11 @@ desktop.ini
 # =========================
 sqlite_export.json
 ss.txt
+
+# =========================
+# Agent / Scratch Files (not part of the product)
+# =========================
+.agents/
+antigravity-gemini-skills/
+just_fun_and_learn.py
+just_learn_2.py

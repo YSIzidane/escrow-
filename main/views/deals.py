@@ -1,5 +1,6 @@
 from decimal import Decimal, InvalidOperation
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -33,6 +34,10 @@ from .notifications import create_notification
 
 def _is_ajax(request):
     return request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+
+def _fee_rate_percent():
+    return int(Decimal(str(getattr(settings, "ESCROW_FEE_PERCENTAGE", 0.05))) * 100)
 
 
 def _ajax_response(request, message, message_type="success", status=200, **extra):
@@ -701,7 +706,10 @@ def create_deal(request):
         if not delivery_type or delivery_type not in valid_delivery_types:
             delivery_type = category_delivery_defaults.get(category, "shipping")
 
-        ctx = {"form_data": form_data}
+        ctx = {
+            "form_data": form_data,
+            "fee_rate_percent": _fee_rate_percent(),
+        }
 
         if not product_title or len(product_title) < 5:
             messages.error(request, "يرجى إدخال عنوان المنتج، 5 أحرف على الأقل.")
@@ -814,7 +822,11 @@ def create_deal(request):
             messages.error(request, "حدث خطأ أثناء إنشاء الصفقة. حاول مجدداً.")
             return render(request, "create_deal_form.html", ctx)
 
-    return render(request, "create_deal_form.html")
+    return render(
+        request,
+        "create_deal_form.html",
+        {"fee_rate_percent": _fee_rate_percent()},
+    )
 
 
 @login_required(login_url="login")

@@ -13,7 +13,8 @@ from django.template.loader import render_to_string
 
 class BrandedAccountAdapter(DefaultAccountAdapter):
     INLINE_IMAGES = {
-        "brand-logo": Path(settings.BASE_DIR) / "static" / "images" / "brand" / "logo-primary.png",
+        # PNG keeps the logo visible in mail clients that block inline SVG.
+        "brand-logo": Path(settings.BASE_DIR) / "static" / "images" / "brand" / "dzhub-symbol.png",
         "brand-hero": Path(settings.BASE_DIR) / "static" / "images" / "brand" / "og-card.png",
     }
 
@@ -38,7 +39,6 @@ class BrandedAccountAdapter(DefaultAccountAdapter):
         if not attachments:
             return
 
-        message.mixed_subtype = "related"
         for attachment in attachments:
             image = MIMEImage(
                 attachment["path"].read_bytes(),
@@ -95,3 +95,12 @@ class BrandedAccountAdapter(DefaultAccountAdapter):
             msg.content_subtype = "html"
             self._attach_inline_images(msg, inline_images)
         return msg
+
+    def send_mail(self, template_prefix, email, context):
+        try:
+            msg = self.render_mail(template_prefix, email, context)
+            msg.send()
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Failed to send mail ({template_prefix}) to {email}: {e}")

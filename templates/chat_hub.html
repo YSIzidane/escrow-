@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static site_i18n %}
 
-{% block title %}{% t "chat_hub.header" %} - Safouane{% endblock %}
+{% block title %}{% t "chat_hub.header" %} - {% t "site.name" %}{% endblock %}
 {% block page_type %}chat_hub{% endblock %}
 {% block nav_chat %}active{% endblock %}
 
@@ -10,11 +10,11 @@
 {% endblock %}
 
 {% block late_css %}
-<link rel="stylesheet" href="{% static 'css/communication_dark.css' %}?v=20260523a" media="not all" data-theme-dark-style>
+<link rel="stylesheet" href="{% static 'css/communication_dark.css' %}?v=20260923vCommLuxury">
 {% endblock %}
 
 {% block content %}
-<main class="cm-page cm-bg-messages" dir="rtl">
+<main class="cm-page cm-bg-messages" dir="{{ current_dir }}">
   <section class="cm-shell cm-messages-shell" aria-labelledby="messages-title">
     <aside class="cm-panel cm-conversation-panel" aria-label="{% t 'chat_hub.conversations' %}">
       <header class="cm-panel-head">
@@ -52,7 +52,7 @@
               <strong>{{ friend.username }}{% verification_badge friend.profile %}</strong>
               <small>{% t "chat_hub.click_to_chat" %}</small>
             </span>
-            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+            <i class="fas fa-chevron-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}" aria-hidden="true"></i>
           </a>
           {% endfor %}
         {% else %}
@@ -70,15 +70,23 @@
     </aside>
 
     <section class="cm-panel cm-welcome-panel">
-      <div class="cm-welcome-mark" aria-hidden="true">
-        <i class="fas fa-comments"></i>
+      <!-- 3D Luxury Showcase Banner for Chat Hub -->
+      <div class="cm-welcome-visual-card" aria-hidden="true">
+        <div class="cm-welcome-visual-inner">
+          <img src="{% static 'images/brand/chat_secure_hero.jpg' %}" alt="{% t 'chat_hub.encrypted_badge' %}" class="cm-welcome-visual-img" loading="eager">
+          <div class="cm-welcome-visual-overlay"></div>
+          <div class="cm-welcome-floating-badge">
+            <span class="cm-pulsing-dot"></span>
+            <i class="fas fa-shield-halved" aria-hidden="true"></i>
+            <span>{% t "chat_hub.encrypted_badge" %}</span>
+          </div>
+        </div>
       </div>
-      <span class="cm-live">
-        <i aria-hidden="true"></i>
-        {% t "chat_hub.live_space" %}
-      </span>
-      <h2>{% t "chat_hub.welcome" %} {{ user.first_name|default:user.username }}</h2>
-      <p>{% t "chat_hub.intro_copy" %}</p>
+
+      <div class="cm-welcome-text-wrap" style="width:100%;">
+        <h2 style="font-size:1.55rem; font-weight:900; margin-bottom:6px; color:#fff;">{% t "chat_hub.welcome" %} {{ user.first_name|default:user.username }}</h2>
+        <p style="color:#94a3b8; font-size:0.92rem; margin:0; line-height:1.5;">{% t "chat_hub.intro_copy" %}</p>
+      </div>
 
       <div class="cm-action-grid">
         <a href="{% url 'friends_list' %}" class="cm-action-card">

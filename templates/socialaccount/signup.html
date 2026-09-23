@@ -16,7 +16,7 @@
           <div class="social-login-icon">
             <img src="{% static 'images/brand/icon-192.png' %}" alt="{% t 'site.name' %}" class="social-login-mark" width="192" height="192" decoding="async">
           </div>
-          <img src="{% static 'images/brand/logo-white-small.webp' %}" alt="{% t 'site.name' %}" class="social-login-wordmark" width="520" height="150" decoding="async">
+          <img src="{% static 'images/brand/dzhub-logo-white.svg' %}" alt="{% t 'site.name' %}" class="social-login-wordmark" width="540" height="140" decoding="async">
         </div>
 
         <div class="social-login-provider"><i class="fab fa-google"></i><span>Google</span></div>
@@ -82,7 +82,7 @@
               name="username"
               id="id_username"
               class="form-control social-login-input"
-              placeholder="{% if current_language == 'ar' %}مثال: safouane.store{% else %}Example: safouane.store{% endif %}"
+              placeholder="{% if current_language == 'ar' %}مثال: dzhub.store{% else %}Example: dzhub.store{% endif %}"
               required
               autofocus
               value="{{ form.username.value|default:'' }}"

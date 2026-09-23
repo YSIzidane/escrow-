@@ -1,1 +1,1 @@
-{% if current_language == 'ar' %}تم حذف بريد من حسابك في SafouaneEscrow{% else %}An email address was removed from your SafouaneEscrow account{% endif %}
+{% if current_language == 'ar' %}تم حذف بريد من حسابك في DZHub{% else %}An email address was removed from your DZHub account{% endif %}

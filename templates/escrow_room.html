@@ -7,10 +7,13 @@
 {% endblock %}
 
 {% block content %}
-<div class="er-container">
+<div class="er-container" dir="{{ current_dir }}">
 
   <!-- Header -->
-  <div class="er-header">
+  <div class="er-header-profile-style">
+    <div class="dl-cover-mesh-wrap" aria-hidden="true">
+      <div class="dl-hero-ambient-glow"></div>
+    </div>
     <div class="er-header-info">
       <div class="er-badge-pulse">
         <div class="er-dot"></div>
@@ -46,6 +49,51 @@
           </div>
         {% endif %}
       {% endif %}
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       INTERACTIVE ESCROW TIMELINE STEPPER WIDGET
+       ═══════════════════════════════════════ -->
+  <div class="er-stepper-container" aria-label="{% if current_language == 'ar' %}مراحل الصفقة والضمان{% else %}Escrow deal progress steps{% endif %}">
+    <div class="er-stepper-track">
+      <div class="er-step {% if engine_state in 'STATE_OPEN,STATE_DEPOSITED,STATE_SHIPPED,STATE_DELIVERED,STATE_COMPLETED,STATE_REFUNDED,STATE_DISPUTED' or deal.status != 'new' %}is-done{% else %}is-current{% endif %}">
+        <div class="er-step-icon"><i class="fas fa-handshake" aria-hidden="true"></i></div>
+        <div class="er-step-label">{% if current_language == 'ar' %}الاتفاق{% else %}Agreement{% endif %}</div>
+        <div class="er-step-sub">{% if current_language == 'ar' %}إنشاء الصفقة{% else %}Deal Created{% endif %}</div>
+      </div>
+
+      <div class="er-step-line {% if payment and payment.status in 'escrow_held,released,refunded' or engine_state in 'STATE_DEPOSITED,STATE_SHIPPED,STATE_DELIVERED,STATE_COMPLETED' %}is-active{% endif %}"></div>
+
+      <div class="er-step {% if payment and payment.status in 'escrow_held,released,refunded' or engine_state in 'STATE_DEPOSITED,STATE_SHIPPED,STATE_DELIVERED,STATE_COMPLETED' %}is-done{% elif deal.buyer and not payment or payment.status == 'pending' %}is-current{% else %}is-pending{% endif %}">
+        <div class="er-step-icon"><i class="fas fa-vault" aria-hidden="true"></i></div>
+        <div class="er-step-label">{% if current_language == 'ar' %}إيداع المبلغ{% else %}Deposit{% endif %}</div>
+        <div class="er-step-sub">{% if current_language == 'ar' %}حفظ بالضمان{% else %}Escrow Deposit{% endif %}</div>
+      </div>
+
+      <div class="er-step-line {% if engine_state in 'STATE_SHIPPED,STATE_DELIVERED,STATE_COMPLETED' %}is-active{% endif %}"></div>
+
+      <div class="er-step {% if engine_state in 'STATE_SHIPPED,STATE_DELIVERED,STATE_COMPLETED' %}is-done{% elif engine_state == 'STATE_DEPOSITED' %}is-current{% else %}is-pending{% endif %}">
+        <div class="er-step-icon"><i class="fas fa-truck-fast" aria-hidden="true"></i></div>
+        <div class="er-step-label">{% if current_language == 'ar' %}التسليم{% else %}Delivery{% endif %}</div>
+        <div class="er-step-sub">{% if current_language == 'ar' %}إرسال الطلب{% else %}Fulfillment{% endif %}</div>
+      </div>
+
+      <div class="er-step-line {% if engine_state in 'STATE_DELIVERED,STATE_COMPLETED' %}is-active{% endif %}"></div>
+
+      <div class="er-step {% if engine_state in 'STATE_DELIVERED,STATE_COMPLETED' %}is-done{% elif engine_state == 'STATE_SHIPPED' %}is-current{% else %}is-pending{% endif %}">
+        <div class="er-step-icon"><i class="fas fa-clipboard-check" aria-hidden="true"></i></div>
+        <div class="er-step-label">{% if current_language == 'ar' %}المعاينة والقبول{% else %}Inspection{% endif %}</div>
+        <div class="er-step-sub">{% if current_language == 'ar' %}فحص المشتري{% else %}Buyer Review{% endif %}</div>
+      </div>
+
+      <div class="er-step-line {% if engine_state == 'STATE_COMPLETED' or payment.status == 'released' %}is-active{% endif %}"></div>
+
+      <div class="er-step {% if engine_state == 'STATE_COMPLETED' or payment.status == 'released' %}is-done{% elif engine_state == 'STATE_REFUNDED' or payment.status == 'refunded' %}is-refunded{% else %}is-pending{% endif %}">
+        <div class="er-step-icon"><i class="fas fa-circle-check" aria-hidden="true"></i></div>
+        <div class="er-step-label">{% if current_language == 'ar' %}التحرير والاكتمال{% else %}Completed{% endif %}</div>
+        <div class="er-step-sub">{% if current_language == 'ar' %}تحويل الأموال{% else %}Funds Released{% endif %}</div>
+      </div>
     </div>
   </div>
 
@@ -281,7 +329,7 @@
           {% if msg.is_admin %}
             <div class="er-msg-admin-wrap">
                 <div class="er-msg-admin">
-                 <img src="{% static 'images/brand/logo-black-small.webp' %}" alt="{% t 'site.name' %}" class="se-brand-logo-admin-note" width="520" height="150" loading="lazy" decoding="async">{{ msg.text }}
+                 <img src="{% static 'images/brand/dzhub-symbol.svg' %}" alt="{% t 'site.name' %}" class="se-brand-logo-admin-note" width="32" height="32" loading="lazy" decoding="async">{{ msg.text }}
                 <div class="er-time">{{ msg.created_at|date:"H:i" }}</div>
               </div>
             </div>
@@ -808,7 +856,7 @@
 
       if (msg.is_admin) {
         div.className = "er-msg-admin-wrap";
-        div.innerHTML = `<div class="er-msg-admin"><img src="/static/images/brand/logo-black-small.webp" alt="Saf" class="se-brand-logo-admin-note" width="520" height="150" loading="lazy" decoding="async">${safeText}<div class="er-time">${safeTime}</div></div>`;
+        div.innerHTML = `<div class="er-msg-admin"><img src="/static/images/brand/dzhub-symbol.svg" alt="DZHub" class="se-brand-logo-admin-note" width="32" height="32" loading="lazy" decoding="async">${safeText}<div class="er-time">${safeTime}</div></div>`;
       } else if (msg.is_me) {
         div.className = "er-msg-me-wrap";
         div.innerHTML = `<div class="er-msg-me">${safeText}<div class="er-time">${safeTime}</div></div>`;
