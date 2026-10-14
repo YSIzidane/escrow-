@@ -1,8 +1,10 @@
-# Contributing
+# Contributing to DZHub (دزاير هب) / دليل المساهمة
 
-Thank you for your interest in contributing to SafouaneEscrow.
+شكراً لاهتمامك بالمساهمة في مشروع **DZHub**! هذا المشروع مفتوح المصدر وقيد التطوير النشط، ونرحب بكل المطورين بمختلف مستويات خبرتهم.
 
-This project handles payments, user trust, and protected transaction flows, so contributions should favor clarity, safety, and maintainability over speed.
+Thank you for your interest in contributing to **DZHub**! This project is open-source, actively maintained, and welcomes contributions from developers worldwide.
+
+> 🔒 **Notice:** Because this project handles payments, escrow, user trust, and protected transactions, contributions must prioritize security, clarity, and safety.
 
 ## Principles
 

@@ -1,409 +1,741 @@
 /* ═══════════════════════════════════════════════════════════════════
-   DZHub — دزاير هب — Homepage Light Theme (Pure White & Blue)
-   منصة جزائرية للخدمات والمنتجات الرقمية
+   DZHub — دزاير هب — Homepage Design System (Fintech Royal Blue & Cyan)
+   المظهر الرسمي الموحد لصفحة الهبوط — وسيط مالي جزائري موثوق
    ═══════════════════════════════════════════════════════════════════ */
 
 /* ── Container & Global Scoping ── */
 .dzhub-home-page {
-  background-color: var(--dzhub-page-bg);
-  color: var(--dzhub-text);
+  background-color: var(--dzhub-page-bg, #f8fafc);
+  color: var(--dzhub-text, #0f172a);
   overflow-x: hidden;
   font-family: var(--font-sans);
+  position: relative;
 }
 
 .dzhub-shell {
-  max-width: 1200px;
+  max-width: 1220px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 24px;
 }
 
 .dzhub-section {
-  padding: 70px 0;
+  padding: 80px 0;
   position: relative;
+  background-color: var(--dzhub-page-bg, #f8fafc);
+}
+
+.dzhub-section-alt {
+  background-color: var(--dzhub-surface, #ffffff);
+  border-top: 1px solid var(--dzhub-border, #e2e8f0);
+  border-bottom: 1px solid var(--dzhub-border, #e2e8f0);
 }
 
 .dzhub-section-head {
   text-align: center;
-  max-width: 720px;
-  margin: 0 auto 48px;
+  max-width: 740px;
+  margin: 0 auto 52px;
 }
 
 .dzhub-badge-chip {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 16px;
-  background-color: var(--dzhub-light-blue);
-  color: var(--dzhub-primary);
-  border: 1px solid var(--dzhub-border);
-  border-radius: var(--radius-pill);
+  padding: 6px 18px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(6, 182, 212, 0.12) 100%);
+  color: var(--dzhub-primary, #2563eb);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: var(--radius-pill, 999px);
   font-size: 0.875rem;
   font-weight: 700;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+  letter-spacing: -0.2px;
+}
+
+.dzhub-badge-chip i {
+  color: var(--dzhub-blue, #06b6d4);
 }
 
 .dzhub-section-head h2 {
-  font-size: 2.1rem;
-  font-weight: 800;
-  color: var(--dzhub-text);
-  margin-bottom: 14px;
+  font-size: 2.35rem;
+  font-weight: 900;
+  color: #0f172a;
+  margin-bottom: 16px;
   line-height: 1.3;
+  letter-spacing: -0.6px;
 }
 
 .dzhub-section-head p {
-  font-size: 1.05rem;
-  color: var(--dzhub-muted);
-  line-height: 1.6;
+  font-size: 1.125rem;
+  color: #334155;
+  font-weight: 500;
+  line-height: 1.7;
   margin: 0;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   1. HERO SECTION
+   1. HERO SECTION (Cinematic Fintech Theme)
    ═══════════════════════════════════════════════════════════════════ */
 .dzhub-hero {
-  padding: 60px 0 70px;
-  background: linear-gradient(180deg, #FFFFFF 0%, var(--dzhub-page-bg) 100%);
-  border-bottom: 1px solid var(--dzhub-border);
+  padding: 85px 0 90px;
+  position: relative;
+  background: 
+    radial-gradient(ellipse 65% 55% at 85% 20%, rgba(6, 182, 212, 0.08), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 15% 85%, rgba(37, 99, 235, 0.06), transparent 60%),
+    linear-gradient(180deg, #ffffff 0%, var(--dzhub-page-bg, #f8fafc) 100%);
+  border-bottom: 1px solid var(--dzhub-border, #e2e8f0);
+  overflow: hidden;
+}
+
+.dzhub-hero::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  width: 44%;
+  height: 100%;
+  background: radial-gradient(ellipse 80% 60% at 75% 30%, rgba(37, 99, 235, 0.08), transparent 70%);
+  pointer-events: none;
 }
 
 .dzhub-hero-grid {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  align-items: center;
-  gap: 48px;
+  display: block;
+  max-width: 880px;
+  margin: 0 auto;
 }
 
 .dzhub-hero-content {
-  text-align: start;
+  text-align: center;
 }
 
 .dzhub-hero-title {
-  font-size: 2.75rem;
-  font-weight: 800;
-  color: var(--dzhub-text);
+  font-size: 3.25rem;
+  font-weight: 900;
+  color: #0f172a;
   line-height: 1.25;
   margin-bottom: 20px;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.8px;
 }
 
 .dzhub-hero-title span {
-  color: var(--dzhub-primary);
+  background: linear-gradient(135deg, var(--dzhub-primary, #2563eb) 0%, var(--dzhub-blue, #06b6d4) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
 }
 
 .dzhub-hero-lead {
-  font-size: 1.2rem;
-  color: var(--dzhub-muted);
-  line-height: 1.65;
-  margin-bottom: 32px;
-  max-width: 580px;
+  font-size: 1.25rem;
+  color: #334155;
+  font-weight: 500;
+  line-height: 1.75;
+  margin: 0 auto 32px;
+  max-width: 680px;
 }
 
 .dzhub-hero-ctas {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 36px;
+  margin-bottom: 34px;
 }
 
 .dzhub-btn-hero-primary {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background-color: var(--dzhub-primary);
-  color: #FFFFFF !important;
+  background: linear-gradient(135deg, var(--dzhub-primary, #2563eb) 0%, var(--dzhub-primary-dark, #1d4ed8) 100%);
+  color: #ffffff !important;
   font-size: 1.05rem;
   font-weight: 700;
-  padding: 13px 26px;
-  border-radius: var(--radius-md);
+  padding: 14px 28px;
+  border-radius: var(--radius-md, 12px);
   text-decoration: none;
-  box-shadow: 0 4px 14px rgba(18, 97, 160, 0.28);
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.28);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .dzhub-btn-hero-primary:hover {
-  background-color: var(--dzhub-primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(18, 97, 160, 0.35);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.38);
+  color: #ffffff !important;
 }
 
 .dzhub-btn-hero-secondary {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background-color: #FFFFFF;
-  color: var(--dzhub-primary) !important;
-  border: 1.5px solid var(--dzhub-border);
+  background-color: #ffffff;
+  color: var(--dzhub-primary, #2563eb) !important;
+  border: 1.5px solid var(--dzhub-border, #e2e8f0);
   font-size: 1.05rem;
   font-weight: 700;
-  padding: 13px 26px;
-  border-radius: var(--radius-md);
+  padding: 14px 28px;
+  border-radius: var(--radius-md, 12px);
   text-decoration: none;
-  box-shadow: var(--shadow-xs);
-  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.06));
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dzhub-btn-hero-secondary:hover {
-  border-color: var(--dzhub-blue);
-  background-color: var(--dzhub-light-blue);
+  border-color: var(--dzhub-primary, #2563eb);
+  background-color: var(--dzhub-light-blue, #eff6ff);
+  color: var(--dzhub-primary, #2563eb) !important;
   transform: translateY(-2px);
 }
 
+/* ─── Hero Quick Search Bar ─── */
+.dzhub-hero-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: var(--radius-pill, 999px);
+  padding: 6px 8px 6px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+[dir="rtl"] .dzhub-hero-search {
+  padding: 6px 20px 6px 8px;
+}
+
+.dzhub-hero-search:focus-within {
+  border-color: var(--dzhub-primary, #2563eb);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14), 0 8px 24px rgba(37, 99, 235, 0.12);
+}
+
+.dzhub-hero-search .search-icon {
+  color: var(--dzhub-muted, #64748b);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.dzhub-hero-search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #0f172a;
+  font-weight: 600;
+  min-width: 0;
+}
+
+.dzhub-hero-search input::placeholder {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.dzhub-hero-search-btn {
+  background: linear-gradient(135deg, var(--dzhub-primary, #2563eb) 0%, var(--dzhub-primary-dark, #1d4ed8) 100%);
+  color: #ffffff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: var(--radius-pill, 999px);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.25);
+  flex-shrink: 0;
+}
+
+.dzhub-hero-search-btn:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+
+/* ─── Hero Quick Tags ─── */
+.dzhub-hero-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+  font-size: 0.85rem;
+}
+
+.dzhub-tags-label {
+  font-weight: 700;
+  color: #334155;
+}
+
+.dzhub-tag-item {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-pill, 999px);
+  color: #334155;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  transition: all 0.2s ease;
+}
+
+.dzhub-tag-item:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #2563eb;
+  transform: translateY(-1px);
+}
+
+/* ─── High-Contrast Trust Points Bar ─── */
 .dzhub-hero-trust-bar {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border-top: 1px solid var(--dzhub-border);
-  padding-top: 24px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  padding-top: 26px;
+  border-top: 1px solid var(--dzhub-border, #e2e8f0);
 }
 
 .dzhub-trust-item {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.9375rem;
+  font-size: 0.95rem;
+  color: #1e293b;
   font-weight: 600;
-  color: var(--dzhub-text);
 }
 
 .dzhub-trust-item i {
-  color: var(--dzhub-primary);
+  color: var(--dzhub-primary, #2563eb);
   font-size: 1.05rem;
   flex-shrink: 0;
 }
 
-/* Hero Visual / Symbol Card */
-.dzhub-hero-visual {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* ═══════════════════════════════════════════════════════════════════
+   2. LIVE PLATFORM TRUST STATS (Real home_stats data only)
+   ═══════════════════════════════════════════════════════════════════ */
+.dzhub-stats-section {
+  padding: 40px 0;
+  background: #ffffff;
+  border-bottom: 1px solid var(--dzhub-border, #e2e8f0);
 }
 
-.dzhub-hero-card {
-  width: 100%;
-  max-width: 440px;
-  background-color: #FFFFFF;
-  border: 1px solid var(--dzhub-border);
-  border-radius: var(--radius-lg);
-  padding: 32px 28px;
-  box-shadow: var(--shadow-md);
-  position: relative;
+.dzhub-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
 }
 
-.dzhub-hero-symbol-wrap {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 24px;
-}
-
-.dzhub-hero-symbol-wrap img {
-  width: 140px;
-  height: 140px;
-  object-fit: contain;
-}
-
-.dzhub-hero-status-pill {
+.dzhub-stat-card {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 18px;
-  background-color: var(--dzhub-light-blue);
-  border: 1px solid var(--dzhub-border);
-  border-radius: var(--radius-base);
-  margin-bottom: 12px;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--dzhub-page-bg, #f8fafc);
+  border: 1px solid var(--dzhub-border, #e2e8f0);
+  border-radius: var(--radius-md, 12px);
+  transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
-.dzhub-hero-status-pill strong {
-  color: var(--dzhub-primary);
-  font-weight: 700;
-  font-size: 0.9375rem;
+.dzhub-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(37, 99, 235, 0.35);
+  background: #ffffff;
 }
 
-.dzhub-hero-status-pill span {
+.dzhub-stat-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(6, 182, 212, 0.12) 100%);
+  color: var(--dzhub-primary, #2563eb);
+}
+
+.dzhub-stat-info h3 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--dzhub-text, #0f172a);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.dzhub-stat-info p {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--dzhub-muted);
+  color: var(--dzhub-muted, #64748b);
+  margin: 3px 0 0;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   2. HOW IT WORKS IN 3 STEPS
+   3. HOW IT WORKS (3 STEPS)
    ═══════════════════════════════════════════════════════════════════ */
 .dzhub-steps-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 28px;
+  position: relative;
 }
 
 .dzhub-step-card {
-  background-color: #FFFFFF;
-  border: 1px solid var(--dzhub-border);
-  border-radius: var(--radius-lg);
-  padding: 32px 24px;
-  box-shadow: var(--shadow-sm);
+  background: #ffffff;
+  border: 1px solid var(--dzhub-border, #e2e8f0);
+  border-radius: var(--radius-lg, 16px);
+  padding: 38px 28px;
   position: relative;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.06));
 }
 
 .dzhub-step-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
-  border-color: #BDD7E7;
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+  border-color: rgba(37, 99, 235, 0.3);
 }
 
 .dzhub-step-number {
   width: 44px;
   height: 44px;
-  border-radius: 50%;
-  background-color: var(--dzhub-light-blue);
-  color: var(--dzhub-primary);
-  border: 2px solid var(--dzhub-border);
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--dzhub-primary, #2563eb) 0%, var(--dzhub-blue, #06b6d4) 100%);
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
-  font-weight: 800;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
 }
 
 .dzhub-step-card h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--dzhub-text);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--dzhub-text, #0f172a);
   margin-bottom: 12px;
+  line-height: 1.35;
 }
 
 .dzhub-step-card p {
-  font-size: 0.9375rem;
-  color: var(--dzhub-muted);
-  line-height: 1.6;
+  font-size: 0.95rem;
+  color: var(--dzhub-muted, #64748b);
+  line-height: 1.65;
   margin: 0;
 }
 
+/* ─── Ambient Section Background Textures ─── */
+.dzhub-section#services {
+  position: relative;
+  overflow: hidden;
+}
+
 /* ═══════════════════════════════════════════════════════════════════
-   3 & 4. CATEGORIES (Services & Digital Products)
+   DZHub Homepage Crisp High-Contrast Backgrounds & Solid Modern Cards
+   ═══════════════════════════════════════════════════════════════════ */
+.dzhub-section {
+  position: relative;
+  overflow: hidden;
+}
+
+/* 1. How It Works: Crisp light surface with clean ambient depth */
+.dzhub-section#how-it-works {
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%),
+    url('../images/brand/dzhub-bg-arch.webp') center / cover no-repeat fixed;
+}
+
+/* 2. Digital Services: Clean modern workspace surface */
+.dzhub-section#services {
+  background: 
+    linear-gradient(180deg, rgba(248, 250, 252, 0.97) 0%, rgba(241, 245, 249, 0.98) 100%),
+    url('../images/brand/dzhub-bg-desk.webp') center right / cover no-repeat;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* 3. Digital Products: Textured clean plaster canvas wash */
+.dzhub-section#products {
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 249, 255, 0.98) 100%),
+    url('../images/brand/dzhub-bg-canvas.webp') center / cover no-repeat;
+}
+
+/* 4. Latest Deals: Clean light surface */
+.dzhub-section#latest-deals {
+  background: 
+    linear-gradient(180deg, rgba(248, 250, 252, 0.98) 0%, rgba(241, 245, 249, 0.98) 100%),
+    url('../images/brand/dzhub-bg-arch.webp') center / cover no-repeat;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* 5. Trust Section: Serene textured plaster canvas */
+.dzhub-section#trust {
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%),
+    url('../images/brand/dzhub-bg-canvas.webp') center / cover no-repeat;
+}
+
+/* 6. Fees Section: Soft ambient light surface */
+.dzhub-section#fees {
+  background: 
+    linear-gradient(180deg, rgba(248, 250, 252, 0.98) 0%, rgba(238, 246, 255, 0.98) 100%),
+    url('../images/brand/dzhub-bg-bokeh.webp') center top / cover no-repeat;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* 7. FAQ Section: Clean airy canvas */
+.dzhub-section#faq {
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%),
+    url('../images/brand/dzhub-bg-canvas.webp') center / cover no-repeat;
+}
+
+/* Solid Modern High-Contrast Cards: 100% white, sharp borders, deep readable text */
+.dzhub-step-card,
+.dzhub-cat-card,
+.dzhub-deal-card,
+.dzhub-trust-card,
+.dzhub-fees-box,
+.dzhub-faq-item {
+  background: #ffffff !important;
+  border: 1.5px solid #e2e8f0 !important;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05) !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
+}
+
+.dzhub-step-card:hover,
+.dzhub-cat-card:hover,
+.dzhub-deal-card:hover,
+.dzhub-trust-card:hover,
+.dzhub-faq-item:hover {
+  background: #ffffff !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 16px 36px rgba(37, 99, 235, 0.12) !important;
+  border-color: rgba(37, 99, 235, 0.35) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   4. SERVICES & PRODUCTS CATEGORIES
    ═══════════════════════════════════════════════════════════════════ */
 .dzhub-cat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 }
 
+.dzhub-cat-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.dzhub-cat-grid-6 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+@media (max-width: 991px) {
+  .dzhub-cat-grid-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
+  .dzhub-cat-grid-6 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dzhub-cat-footer-row {
+  margin-top: 36px;
+  display: flex;
+  justify-content: center;
+}
+
+.dzhub-btn-all-listings {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  color: #1e40af;
+  border: 1.5px solid #bfdbfe;
+  padding: 13px 30px;
+  border-radius: var(--radius-pill, 999px);
+  font-size: 0.975rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
+  transition: all 0.25s ease;
+}
+
+.dzhub-btn-all-listings:hover {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.25);
+  text-decoration: none;
+}
+
 .dzhub-cat-card {
-  background-color: #FFFFFF;
-  border: 1px solid var(--dzhub-border);
-  border-radius: var(--radius-base);
-  padding: 24px 20px;
+  background: var(--dzhub-page-bg, #f8fafc);
+  border: 1px solid var(--dzhub-border, #e2e8f0);
+  border-radius: var(--radius-md, 12px);
+  padding: 26px 20px;
   text-decoration: none;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-xs, 0 1px 3px rgba(15, 23, 42, 0.04));
 }
 
 .dzhub-cat-card:hover {
-  background-color: var(--dzhub-light-blue);
-  border-color: var(--dzhub-blue);
-  transform: translateY(-2px);
+  background: #ffffff;
+  border-color: var(--dzhub-primary, #2563eb);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.12);
+  text-decoration: none;
 }
 
 .dzhub-cat-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-base);
-  background-color: var(--dzhub-light-blue);
-  color: var(--dzhub-primary);
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(6, 182, 212, 0.12) 100%);
+  color: var(--dzhub-primary, #2563eb);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
-  margin-bottom: 16px;
-  transition: background-color 0.2s ease;
+  font-size: 1.35rem;
+  margin-bottom: 18px;
+  transition: all 0.25s ease;
 }
 
 .dzhub-cat-card:hover .dzhub-cat-icon {
-  background-color: var(--dzhub-primary);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, var(--dzhub-primary, #2563eb) 0%, var(--dzhub-blue, #06b6d4) 100%);
+  color: #ffffff;
+  transform: scale(1.05);
 }
 
 .dzhub-cat-card h4 {
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--dzhub-text);
-  margin: 0 0 6px 0;
+  color: var(--dzhub-text, #0f172a);
+  margin-bottom: 8px;
+  line-height: 1.35;
 }
 
 .dzhub-cat-card p {
-  font-size: 0.8125rem;
-  color: var(--dzhub-muted);
+  font-size: 0.85rem;
+  color: var(--dzhub-muted, #64748b);
+  line-height: 1.55;
   margin: 0;
-  line-height: 1.4;
+  flex-grow: 1;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   5. LATEST DEALS GRID
+   5. LATEST DEALS & OFFERS
    ═══════════════════════════════════════════════════════════════════ */
+.dzhub-section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 38px;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
 .dzhub-deals-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
 }
 
 .dzhub-deal-card {
-  background-color: #FFFFFF;
-  border: 1px solid var(--dzhub-border);
-  border-radius: var(--radius-lg);
+  background: #ffffff;
+  border: 1px solid var(--dzhub-border, #e2e8f0);
+  border-radius: var(--radius-md, 12px);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.06));
   display: flex;
   flex-direction: column;
-  transition: all 0.2s ease;
 }
 
 .dzhub-deal-card:hover {
-  border-color: #BDD7E7;
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.09);
+  border-color: rgba(37, 99, 235, 0.3);
 }
 
 .dzhub-deal-media {
-  height: 180px;
-  background-color: var(--dzhub-surface-subtle);
   position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  background-color: var(--dzhub-surface-subtle, #f1f5f9);
   overflow: hidden;
 }
 
 .dzhub-deal-media img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.dzhub-deal-card:hover .dzhub-deal-media img {
+  transform: scale(1.04);
 }
 
 .dzhub-deal-media-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
-  color: var(--dzhub-border);
+  color: var(--dzhub-muted, #64748b);
+  font-size: 2.2rem;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(6, 182, 212, 0.08) 100%);
 }
 
 .dzhub-deal-badge-type {
   position: absolute;
   top: 12px;
-  right: 12px;
-  background: rgba(255, 255, 255, 0.94);
-  color: var(--dzhub-primary);
+  inset-inline-start: 12px;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
   font-size: 0.75rem;
   font-weight: 700;
   padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  box-shadow: var(--shadow-xs);
+  border-radius: var(--radius-pill, 999px);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-[dir="rtl"] .dzhub-deal-badge-type {
-  right: auto;
-  left: 12px;
+.dzhub-deal-badge-type i {
+  color: var(--dzhub-blue, #06b6d4);
 }
 
 .dzhub-deal-body {
@@ -414,49 +746,95 @@
 }
 
 .dzhub-deal-title {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  color: var(--dzhub-text);
+  color: var(--dzhub-text, #0f172a);
   text-decoration: none;
-  margin-bottom: 8px;
-  line-height: 1.4;
+  line-height: 1.45;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s ease;
 }
 
 .dzhub-deal-title:hover {
-  color: var(--dzhub-primary);
+  color: var(--dzhub-primary, #2563eb);
 }
 
 .dzhub-deal-price-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
   margin-top: auto;
-  padding-top: 16px;
-  border-top: 1px solid var(--dzhub-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--dzhub-border-subtle, #f1f5f9);
 }
 
 .dzhub-deal-price {
   font-size: 1.25rem;
   font-weight: 800;
-  color: var(--dzhub-primary);
+  color: var(--dzhub-primary, #2563eb);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.dzhub-deal-currency {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--dzhub-muted, #64748b);
 }
 
 .dzhub-deal-seller {
-  font-size: 0.8125rem;
-  color: var(--dzhub-muted);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--dzhub-muted, #64748b);
 }
 
 .dzhub-deal-seller img {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--dzhub-border, #e2e8f0);
+}
+
+/* Empty State */
+.dzhub-empty-card {
+  text-align: center;
+  padding: 56px 24px;
+  background: #ffffff;
+  border: 1px solid var(--dzhub-border, #e2e8f0);
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: var(--shadow-xs, 0 1px 3px rgba(15, 23, 42, 0.04));
+}
+
+.dzhub-empty-icon {
+  font-size: 2.8rem;
+  color: var(--dzhub-muted, #64748b);
+  margin-bottom: 18px;
+}
+
+.dzhub-empty-title {
+  color: var(--dzhub-text, #0f172a);
+  font-weight: 800;
+  font-size: 1.35rem;
+  margin-bottom: 8px;
+}
+
+.dzhub-empty-lead {
+  color: var(--dzhub-muted, #64748b);
+  margin-bottom: 24px;
+  font-size: 0.95rem;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   6. WHY TRUST DZHub
+   6. WHY TRUST DZHub (Fintech Security Architecture)
    ═══════════════════════════════════════════════════════════════════ */
 .dzhub-trust-grid {
   display: grid;
@@ -465,31 +843,45 @@
 }
 
 .dzhub-trust-card {
-  background-color: #FFFFFF;
-  border: 1px solid var(--dzhub-border);
-  border-radius: var(--radius-lg);
-  padding: 32px 24px;
-  box-shadow: var(--shadow-sm);
-  text-align: center;
+  background: #ffffff;
+  border: 1px solid var(--dzhub-border, #e2e8f0);
+  border-radius: var(--radius-lg, 16px);
+  padding: 38px 28px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.06));
 }
 
-.dzhub-trust-card i {
-  font-size: 2.2rem;
-  color: var(--dzhub-primary);
-  margin-bottom: 20px;
+.dzhub-trust-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+.dzhub-trust-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(6, 182, 212, 0.12) 100%);
+  color: var(--dzhub-primary, #2563eb);
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 22px;
 }
 
 .dzhub-trust-card h3 {
   font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--dzhub-text);
+  font-weight: 800;
+  color: var(--dzhub-text, #0f172a);
   margin-bottom: 12px;
+  line-height: 1.35;
 }
 
 .dzhub-trust-card p {
-  font-size: 0.9375rem;
-  color: var(--dzhub-muted);
-  line-height: 1.6;
+  font-size: 0.95rem;
+  color: var(--dzhub-muted, #64748b);
+  line-height: 1.65;
   margin: 0;
 }
 
@@ -497,13 +889,13 @@
    7. TRANSPARENT FEES SECTION
    ═══════════════════════════════════════════════════════════════════ */
 .dzhub-fees-box {
-  background: #FFFFFF;
-  border: 1px solid var(--dzhub-border);
-  border-radius: var(--radius-lg);
-  padding: 40px 32px;
-  max-width: 800px;
+  background: #ffffff;
+  border: 1.5px solid var(--dzhub-border, #e2e8f0);
+  border-radius: var(--radius-lg, 16px);
+  padding: 48px 36px;
+  max-width: 860px;
   margin: 0 auto;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.08);
   text-align: center;
 }
 
@@ -516,135 +908,339 @@
 }
 
 .dzhub-fee-rate-number {
-  font-size: 3.5rem;
+  font-size: 4.25rem;
   font-weight: 900;
-  color: var(--dzhub-primary);
+  color: var(--dzhub-primary, #2563eb);
   line-height: 1;
+  letter-spacing: -1px;
 }
 
 .dzhub-fee-rate-symbol {
-  font-size: 2rem;
+  font-size: 2.4rem;
   font-weight: 800;
-  color: var(--dzhub-blue);
+  color: var(--dzhub-blue, #06b6d4);
 }
 
 .dzhub-fee-explanation {
-  font-size: 1.05rem;
-  color: var(--dzhub-muted);
-  max-width: 580px;
-  margin: 0 auto 28px;
-  line-height: 1.6;
+  font-size: 1.125rem;
+  color: #334155;
+  font-weight: 500;
+  max-width: 620px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+
+/* ─── Interactive Instant Fee Calculator ─── */
+.dzhub-fee-calculator {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 16px;
+  padding: 26px 24px;
+  margin: 0 auto 36px;
+  text-align: start;
+}
+
+.dzhub-calc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dzhub-calc-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.dzhub-calc-title i {
+  color: #2563eb;
+  font-size: 1.25rem;
+}
+
+.dzhub-calc-tag {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill, 999px);
+  font-size: 0.775rem;
+  font-weight: 700;
+}
+
+.dzhub-calc-input-block {
+  margin-bottom: 16px;
+}
+
+.dzhub-calc-label {
+  display: block;
+  font-size: 0.925rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.dzhub-calc-input-wrap {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 4px 14px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+}
+
+.dzhub-calc-input-wrap:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.dzhub-calc-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  padding: 10px 4px;
+  font-family: inherit;
+}
+
+.dzhub-calc-currency {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.dzhub-calc-presets {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.dzhub-presets-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.dzhub-calc-chip {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-pill, 999px);
+  padding: 5px 14px;
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.dzhub-calc-chip:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #2563eb;
+}
+
+.dzhub-calc-chip.is-active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.dzhub-calc-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.dzhub-calc-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+.dzhub-calc-card-fee {
+  border-color: #bfdbfe;
+  background: #f0f7ff;
+}
+
+.dzhub-calc-card-net {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.dzhub-calc-c-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.dzhub-calc-c-val {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.dzhub-calc-c-badge {
+  font-size: 0.775rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
 }
 
 .dzhub-fee-features {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  border-top: 1px solid var(--dzhub-border);
-  padding-top: 24px;
+  gap: 20px;
+  border-top: 1px solid var(--dzhub-border, #e2e8f0);
+  padding-top: 28px;
   text-align: center;
 }
 
 .dzhub-fee-feature-item {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--dzhub-text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .dzhub-fee-feature-item i {
-  color: var(--dzhub-success);
+  color: var(--dzhub-success, #10b981);
+  font-size: 1.15rem;
+  flex-shrink: 0;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   8. FAQ ACCORDION
+   8. FAQ ACCORDION (Modern High-Contrast)
    ═══════════════════════════════════════════════════════════════════ */
 .dzhub-faq-stack {
-  max-width: 760px;
+  max-width: 820px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .dzhub-faq-item {
-  background-color: #FFFFFF;
-  border: 1px solid var(--dzhub-border);
-  border-radius: var(--radius-md);
+  background-color: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: var(--radius-md, 12px) !important;
   padding: 0;
   overflow: hidden;
-  transition: border-color 0.2s ease;
+  transition: all 0.25s ease !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
 }
 
 .dzhub-faq-item[open] {
-  border-color: var(--dzhub-blue);
+  border-color: #2563eb !important;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1) !important;
 }
 
 .dzhub-faq-item summary {
-  padding: 18px 22px;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--dzhub-text);
+  padding: 22px 24px;
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #0f172a !important;
   cursor: pointer;
   list-style: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.dzhub-faq-item summary:hover {
+  color: #2563eb !important;
 }
 
 .dzhub-faq-item summary::-webkit-details-marker {
   display: none;
 }
 
-.dzhub-faq-item summary::after {
-  content: "+";
-  font-size: 1.3rem;
-  color: var(--dzhub-primary);
-  font-weight: 600;
-  transition: transform 0.2s ease;
+.dzhub-faq-item .faq-chevron {
+  font-size: 0.95rem;
+  color: #2563eb;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
 }
 
-.dzhub-faq-item[open] summary::after {
-  content: "−";
+.dzhub-faq-item[open] .faq-chevron {
+  transform: rotate(180deg);
 }
 
 .dzhub-faq-item p {
-  padding: 0 22px 20px;
-  font-size: 0.9375rem;
-  color: var(--dzhub-muted);
-  line-height: 1.6;
+  padding: 0 24px 24px;
+  font-size: 1rem;
+  color: #334155 !important;
+  font-weight: 500;
+  line-height: 1.75;
   margin: 0;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   9. FINAL CTA SECTION
+   9. FINAL CTA SECTION (Deep Midnight Navy & Royal Blue)
    ═══════════════════════════════════════════════════════════════════ */
+.dzhub-cta-section {
+  padding-bottom: 95px;
+}
+
 .dzhub-cta-box {
-  background: linear-gradient(135deg, var(--dzhub-primary) 0%, var(--dzhub-primary-dark) 100%);
-  border-radius: var(--radius-lg);
-  padding: 60px 32px;
-  color: #FFFFFF;
+  background: 
+    radial-gradient(circle at 18% 28%, rgba(6, 182, 212, 0.35), transparent 50%),
+    radial-gradient(circle at 82% 78%, rgba(37, 99, 235, 0.40), transparent 50%),
+    linear-gradient(135deg, #091e3a 0%, #0d3862 50%, #15558d 100%);
+  border-radius: var(--radius-lg, 16px);
+  padding: 72px 36px;
+  color: #ffffff;
   text-align: center;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 24px 60px rgba(6, 30, 58, 0.38);
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .dzhub-cta-box h2 {
-  font-size: 2.2rem;
+  font-size: 2.35rem;
   font-weight: 800;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  color: #ffffff;
+  letter-spacing: -0.5px;
 }
 
 .dzhub-cta-box p {
-  font-size: 1.1rem;
-  color: #E2E8F0;
-  max-width: 600px;
-  margin: 0 auto 32px;
-  line-height: 1.6;
+  font-size: 1.15rem;
+  color: #e2e8f0;
+  max-width: 620px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
 }
 
 .dzhub-cta-actions {
@@ -656,43 +1252,196 @@
 }
 
 .dzhub-btn-cta-white {
-  background-color: #FFFFFF;
-  color: var(--dzhub-primary-dark) !important;
-  font-weight: 700;
+  background-color: #ffffff;
+  color: #0f172a !important;
+  font-weight: 800;
   font-size: 1.05rem;
-  padding: 13px 28px;
-  border-radius: var(--radius-md);
+  padding: 14px 30px;
+  border-radius: var(--radius-md, 12px);
   text-decoration: none;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-  transition: all 0.2s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .dzhub-btn-cta-white:hover {
-  background-color: var(--dzhub-light-blue);
+  background-color: #f8fafc;
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  color: var(--dzhub-primary, #2563eb) !important;
 }
 
-/* ── Responsive Fixes ── */
+.dzhub-btn-cta-ghost {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 14px 30px;
+  border-radius: var(--radius-md, 12px);
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dzhub-btn-cta-ghost:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  color: #ffffff !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   10. RESPONSIVE DESIGN & ADAPTATIONS
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .dzhub-cat-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .dzhub-cat-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dzhub-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 991px) {
+  .dzhub-hero {
+    padding: 60px 0 65px;
+  }
   .dzhub-hero-grid {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: 42px;
   }
   .dzhub-hero-content {
     text-align: center;
   }
+  .dzhub-hero-title {
+    font-size: 2.45rem;
+  }
   .dzhub-hero-lead {
-    margin-left: auto;
-    margin-right: auto;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
   }
   .dzhub-hero-ctas {
+    justify-content: center;
+  }
+  .dzhub-hero-search {
+    max-width: 600px;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+  }
+  .dzhub-hero-tags {
     justify-content: center;
   }
   .dzhub-hero-trust-bar {
     align-items: center;
   }
   .dzhub-steps-grid,
-  .dzhub-trust-grid {
+  .dzhub-trust-grid,
+  .dzhub-deals-grid {
     grid-template-columns: 1fr;
+  }
+  .dzhub-calc-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .dzhub-fee-features {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 640px) {
+  .dzhub-shell {
+    padding: 0 16px;
+  }
+  .dzhub-section {
+    padding: 56px 0;
+  }
+  .dzhub-hero-title {
+    font-size: 2rem;
+  }
+  .dzhub-hero-lead {
+    font-size: 1.05rem;
+  }
+  .dzhub-hero-ctas {
+    flex-direction: column;
+    width: 100%;
+  }
+  .dzhub-btn-hero-primary,
+  .dzhub-btn-hero-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+  .dzhub-hero-search {
+    padding: 4px 6px 4px 14px;
+  }
+  [dir="rtl"] .dzhub-hero-search {
+    padding: 4px 14px 4px 6px;
+  }
+  .dzhub-hero-search input {
+    font-size: 0.875rem;
+  }
+  .dzhub-hero-search-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+  .dzhub-sim-deal-box {
+    padding: 16px;
+  }
+  .dzhub-sim-vault-amount-card {
+    padding: 16px;
+  }
+  .dzhub-amount-num {
+    font-size: 1.95rem;
+  }
+  .dzhub-sim-parties {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .dzhub-party-arrow {
+    display: none;
+  }
+  .dzhub-stepper-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dzhub-sim-footer {
+    justify-content: center;
+  }
+  .dzhub-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .dzhub-cat-grid,
+  .dzhub-cat-grid-4 {
+    grid-template-columns: 1fr;
+  }
+  .dzhub-fees-box {
+    padding: 32px 18px;
+  }
+  .dzhub-fee-calculator {
+    padding: 18px 14px;
+  }
+  .dzhub-cta-box {
+    padding: 44px 20px;
+  }
+  .dzhub-cta-box h2 {
+    font-size: 1.75rem;
+  }
+  .dzhub-cta-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .dzhub-btn-cta-white,
+  .dzhub-btn-cta-ghost {
+    width: 100%;
+    justify-content: center;
   }
 }

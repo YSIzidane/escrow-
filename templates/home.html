@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block late_css %}
-  <link rel="stylesheet" href="{% static 'css/dzhub-home.css' %}?v=20260923v1">
+  <link rel="stylesheet" href="{% static 'css/dzhub-home.css' %}?v=20260925vFintech2">
 {% endblock %}
 
 {% block content %}
@@ -39,16 +39,16 @@
 
           <p class="dzhub-hero-lead">
             {% if current_language == 'ar' %}
-              أنشئ صفقة، احمِ أموالك، واستلم خدمتك أو منتجك الرقمي بثقة.
+              أنشئ صفقة، احمِ أموالك عبر حساب الضمان المالي المحايد، واستلم خدمتك أو منتجك الرقمي بثقة وراحة بال.
             {% else %}
-              Create a deal, protect your funds, and receive your digital service or product with confidence.
+              Create a deal, protect your funds in neutral escrow, and receive your digital service or product with confidence.
             {% endif %}
           </p>
 
           <div class="dzhub-hero-ctas">
-            <a class="dzhub-btn-hero-primary" href="{% url 'listings' %}?category=services" id="hero-browse-services">
+            <a class="dzhub-btn-hero-primary" href="{% url 'listings' %}" id="hero-browse-services">
               <i class="fas fa-store" aria-hidden="true"></i>
-              <span>{% t "home.btn_browse_services" %}</span>
+              <span>{% if current_language == 'ar' %}تصفح سوق الصفقات{% else %}Explore Marketplace{% endif %}</span>
             </a>
             <a class="dzhub-btn-hero-secondary" href="{% if user.is_authenticated %}{% url 'create_deal' %}{% else %}{% url 'login' %}?next={% url 'create_deal' %}{% endif %}" id="hero-create-deal">
               <i class="fas fa-handshake" aria-hidden="true"></i>
@@ -56,43 +56,37 @@
             </a>
           </div>
 
-          <!-- Honest Trust Points (No exaggerated claims) -->
+          <!-- Hero Quick Search Bar -->
+          <form action="{% url 'listings' %}" method="get" class="dzhub-hero-search" role="search">
+            <i class="fas fa-magnifying-glass search-icon" aria-hidden="true"></i>
+            <input type="text" name="q" placeholder="{% if current_language == 'ar' %}ابحث عن خدمة، برمجة متجر، تصميم، حساب، منتج رقمي...{% else %}Search services, web dev, design kit, accounts...{% endif %}" aria-label="{% if current_language == 'ar' %}بحث فوري{% else %}Instant Search{% endif %}">
+            <button type="submit" class="dzhub-hero-search-btn">
+              <span>{% if current_language == 'ar' %}بحث{% else %}Search{% endif %}</span>
+              <i class="fas fa-arrow-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}" aria-hidden="true"></i>
+            </button>
+          </form>
+
+          <div class="dzhub-hero-tags">
+            <span class="dzhub-tags-label">{% if current_language == 'ar' %}شائع الآن:{% else %}Popular:{% endif %}</span>
+            <a href="{% url 'listings' %}?q={% if current_language == 'ar' %}متجر{% else %}store{% endif %}" class="dzhub-tag-item">{% if current_language == 'ar' %}متاجر إلكترونية{% else %}E-Commerce{% endif %}</a>
+            <a href="{% url 'listings' %}?q={% if current_language == 'ar' %}تصميم{% else %}design{% endif %}" class="dzhub-tag-item">{% if current_language == 'ar' %}تصميم UI/UX{% else %}UI/UX{% endif %}</a>
+            <a href="{% url 'listings' %}?category=accounts" class="dzhub-tag-item">{% if current_language == 'ar' %}حسابات رقمية{% else %}Accounts{% endif %}</a>
+            <a href="{% url 'listings' %}?category=digital" class="dzhub-tag-item">{% if current_language == 'ar' %}سكربتات برمجية{% else %}Scripts{% endif %}</a>
+          </div>
+
+          <!-- High-Contrast Trust Points Bar -->
           <div class="dzhub-hero-trust-bar">
             <div class="dzhub-trust-item">
-              <i class="fas fa-lock" aria-hidden="true"></i>
-              <span>{% t "home.sec_trust_1_title" %}: {% t "home.sec_trust_1_desc" %}</span>
+              <i class="fas fa-shield-halved" aria-hidden="true"></i>
+              <span>{% if current_language == 'ar' %}حساب ضمان مالي محايد 100%{% else %}100% Neutral Escrow Vault{% endif %}</span>
             </div>
             <div class="dzhub-trust-item">
               <i class="fas fa-scale-balanced" aria-hidden="true"></i>
-              <span>{% t "home.sec_trust_2_title" %}: {% t "home.sec_trust_2_desc" %}</span>
+              <span>{% if current_language == 'ar' %}حماية النزاعات والتحكيم العادل 24/7{% else %}24/7 Fair Dispute Arbitration{% endif %}</span>
             </div>
             <div class="dzhub-trust-item">
-              <i class="fas fa-file-circle-check" aria-hidden="true"></i>
-              <span>{% t "home.sec_trust_3_title" %}: {% t "home.sec_trust_3_desc" %}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: Modern Light Visual Card -->
-        <div class="dzhub-hero-visual">
-          <div class="dzhub-hero-card">
-            <div class="dzhub-hero-symbol-wrap">
-              <img src="{% static 'images/brand/dzhub-symbol.svg' %}" alt="{% t 'site.name' %}" width="140" height="140" loading="eager">
-            </div>
-
-            <div class="dzhub-hero-status-pill">
-              <span>{% if current_language == 'ar' %}حالة الضمان{% else %}Escrow Status{% endif %}</span>
-              <strong><i class="fas fa-circle-check" style="color:var(--dzhub-success);"></i> {% if current_language == 'ar' %}المبلغ محجوز بأمان{% else %}Funds Securely Held{% endif %}</strong>
-            </div>
-
-            <div class="dzhub-hero-status-pill">
-              <span>{% if current_language == 'ar' %}العملة الرسمية{% else %}Currency{% endif %}</span>
-              <strong>{% if current_language == 'ar' %}الدينار الجزائري (دج){% else %}Algerian Dinar (DZD){% endif %}</strong>
-            </div>
-
-            <div class="dzhub-hero-status-pill" style="margin-bottom:0;">
-              <span>{% if current_language == 'ar' %}رسوم الخدمة{% else %}Fee Rate{% endif %}</span>
-              <strong>{{ fee_rate_percent }}% {% if current_language == 'ar' %}فقط وبشفافية{% else %}transparent{% endif %}</strong>
+              <i class="fas fa-money-bill-transfer" aria-hidden="true"></i>
+              <span>{% if current_language == 'ar' %}دفع واستلام آمن بالدينار (دج){% else %}Official Algerian Dinar (DZD) Transfers{% endif %}</span>
             </div>
           </div>
         </div>
@@ -101,12 +95,79 @@
   </section>
 
   <!-- ═══════════════════════════════════════
-       2. HOW IT WORKS (3 STEPS)
+       2. REAL PLATFORM TRUST STATS (Honest & Reassuring Data)
+       ═══════════════════════════════════════ -->
+  <section class="dzhub-stats-section" aria-label="{% if current_language == 'ar' %}إحصائيات المنصة{% else %}Platform Metrics{% endif %}">
+    <div class="dzhub-shell">
+      <div class="dzhub-stats-grid">
+        <div class="dzhub-stat-card">
+          <div class="dzhub-stat-icon-wrap">
+            <i class="fas fa-shield-halved" aria-hidden="true"></i>
+          </div>
+          <div class="dzhub-stat-info">
+            {% if home_stats.completed_deals_count and home_stats.completed_deals_count > 5 %}
+              <h3>{{ home_stats.completed_deals_count }}+</h3>
+              <p>{% if current_language == 'ar' %}صفقة مكتملة ومحمية بنجاح{% else %}Protected Deals Completed{% endif %}</p>
+            {% else %}
+              <h3>100%</h3>
+              <p>{% if current_language == 'ar' %}حماية مالية مضمونة للمشتري والبائع{% else %}Guaranteed Escrow Protection{% endif %}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="dzhub-stat-card">
+          <div class="dzhub-stat-icon-wrap">
+            <i class="fas fa-users-gear" aria-hidden="true"></i>
+          </div>
+          <div class="dzhub-stat-info">
+            {% if home_stats.users_count and home_stats.users_count > 10 %}
+              <h3>{{ home_stats.users_count }}+</h3>
+              <p>{% if current_language == 'ar' %}مستخدم مسجل في الجزائر{% else %}Registered Algerian Users{% endif %}</p>
+            {% else %}
+              <h3>0%</h3>
+              <p>{% if current_language == 'ar' %}مخاطرة على أموالك قبل الاستلام{% else %}Zero Risk Before Verification{% endif %}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="dzhub-stat-card">
+          <div class="dzhub-stat-icon-wrap">
+            <i class="fas fa-store" aria-hidden="true"></i>
+          </div>
+          <div class="dzhub-stat-info">
+            {% if home_stats.public_deals_count and home_stats.public_deals_count > 0 %}
+              <h3>{{ home_stats.public_deals_count }}</h3>
+              <p>{% if current_language == 'ar' %}خدمة ومنتج رقمي متاح للتداول{% else %}Active Listings Available{% endif %}</p>
+            {% else %}
+              <h3>24/7</h3>
+              <p>{% if current_language == 'ar' %}وساطة محايدة وحماية فورية{% else %}24/7 Neutral Dispute Support{% endif %}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="dzhub-stat-card">
+          <div class="dzhub-stat-icon-wrap">
+            <i class="fas fa-scale-balanced" aria-hidden="true"></i>
+          </div>
+          <div class="dzhub-stat-info">
+            <h3>{% if current_language == 'ar' %}دينار جزائري{% else %}DZD{% endif %}</h3>
+            <p>{% if current_language == 'ar' %}تعاملات رسمية بـ بريدي موب وCIB{% else %}Official Algerian Dinar & Cards{% endif %}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       3. HOW IT WORKS (3 STEPS)
        ═══════════════════════════════════════ -->
   <section class="dzhub-section" id="how-it-works">
     <div class="dzhub-shell">
       <div class="dzhub-section-head">
-        <span class="dzhub-badge-chip">{% t "nav.how_it_works" %}</span>
+        <span class="dzhub-badge-chip">
+          <i class="fas fa-list-check" aria-hidden="true"></i>
+          <span>{% t "nav.how_it_works" %}</span>
+        </span>
         <h2>{% t "home.sec_how_title" %}</h2>
         <p>{% t "home.sec_how_sub" %}</p>
       </div>
@@ -134,104 +195,85 @@
   </section>
 
   <!-- ═══════════════════════════════════════
-       3. DIGITAL SERVICES CATEGORIES
+       4. DIGITAL MARKETPLACE CATEGORIES (Merged & Unified)
        ═══════════════════════════════════════ -->
-  <section class="dzhub-section" id="services" style="background:#FFFFFF; border-top:1px solid var(--dzhub-border); border-bottom:1px solid var(--dzhub-border);">
+  <section class="dzhub-section dzhub-section-alt" id="marketplace-categories">
     <div class="dzhub-shell">
       <div class="dzhub-section-head">
-        <span class="dzhub-badge-chip">{% t "nav.services" %}</span>
-        <h2>{% t "home.sec_services_title" %}</h2>
-        <p>{% t "home.sec_services_sub" %}</p>
+        <span class="dzhub-badge-chip">
+          <i class="fas fa-store" aria-hidden="true"></i>
+          <span>{% if current_language == 'ar' %}سوق الصفقات والخدمات{% else %}Marketplace & Services{% endif %}</span>
+        </span>
+        <h2>{% if current_language == 'ar' %}تصفح مجالات الصفقات والخدمات الرقمية{% else %}Browse Digital Services & Products{% endif %}</h2>
+        <p>{% if current_language == 'ar' %}كل ما تحتاجه للعمل الرقمي والتقني في الجزائر مع وساطة مالية محايدة 100% وحماية كاملة للطرفين.{% else %}Everything you need for digital business in Algeria with 100% escrow protection.{% endif %}</p>
       </div>
 
-      <div class="dzhub-cat-grid">
-        <a href="{% url 'listings' %}?category=services" class="dzhub-cat-card">
-          <div class="dzhub-cat-icon"><i class="fas fa-code"></i></div>
-          <h4>{% if current_language == 'ar' %}تطوير وبرمجة المواقع{% else %}Web & App Development{% endif %}</h4>
-          <p>{% if current_language == 'ar' %}مواقع كاملة، برمجة خاصة، وتطبيقات هاتف ذكية.{% else %}Full web applications, backend APIs, and mobile apps.{% endif %}</p>
+      <div class="dzhub-cat-grid dzhub-cat-grid-6">
+        <a href="{% url 'listings' %}?category=services&q={% if current_language == 'ar' %}تطوير{% else %}development{% endif %}" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-laptop-code" aria-hidden="true"></i></div>
+          <h4>{% if current_language == 'ar' %}تطوير وبرمجة المواقع والمتاجر{% else %}Web & Store Development{% endif %}</h4>
+          <p>{% if current_language == 'ar' %}مواقع كاملة، برمجة خاصة، ومتاجر إلكترونية متوافقة مع بوابات الدفع الجزائرية.{% else %}Full web applications, stores, and Algerian payment integration.{% endif %}</p>
         </a>
 
-        <a href="{% url 'listings' %}?category=services" class="dzhub-cat-card">
-          <div class="dzhub-cat-icon"><i class="fas fa-palette"></i></div>
+        <a href="{% url 'listings' %}?category=services&q={% if current_language == 'ar' %}تصميم{% else %}design{% endif %}" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-palette" aria-hidden="true"></i></div>
           <h4>{% if current_language == 'ar' %}تصميم جرافيك وUI/UX{% else %}Graphic & UI/UX Design{% endif %}</h4>
-          <p>{% if current_language == 'ar' %}شعارات، هويات بصرية، واجهات مستخدم احترافية.{% else %}Logos, branding identities, and clean interfaces.{% endif %}</p>
+          <p>{% if current_language == 'ar' %}شعارات، هويات بصرية، واجهات مستخدم احترافية لتطبيقات ومواقع الويب.{% else %}Logos, branding identities, and clean mobile/web interfaces.{% endif %}</p>
         </a>
 
-        <a href="{% url 'listings' %}?category=services" class="dzhub-cat-card">
-          <div class="dzhub-cat-icon"><i class="fas fa-pen-nib"></i></div>
-          <h4>{% if current_language == 'ar' %}كتابة وترجمة رقمية{% else %}Content Writing & Translation{% endif %}</h4>
-          <p>{% if current_language == 'ar' %}مقالات متوافقة مع SEO، ترجمة معتمدة، وتدقيق لغوي.{% else %}SEO articles, professional translations, and copywriting.{% endif %}</p>
-        </a>
-
-        <a href="{% url 'listings' %}?category=services" class="dzhub-cat-card">
-          <div class="dzhub-cat-icon"><i class="fas fa-bullhorn"></i></div>
-          <h4>{% if current_language == 'ar' %}تسويق وإعلانات رقمية{% else %}Digital Marketing & Ads{% endif %}</h4>
-          <p>{% if current_language == 'ar' %}إدارة حملات ممولة، تحسين محركات البحث، وصناعة المحتوى.{% else %}Paid ad campaigns, social media growth, and SEO.{% endif %}</p>
-        </a>
-
-        <a href="{% url 'listings' %}?category=services" class="dzhub-cat-card">
-          <div class="dzhub-cat-icon"><i class="fas fa-video"></i></div>
-          <h4>{% if current_language == 'ar' %}مونتاج ورسوم متحركة{% else %}Video Editing & Motion{% endif %}</h4>
-          <p>{% if current_language == 'ar' %}تعديل فيديوهات احترافي، موشن جرافيك، وريلز تسويقية.{% else %}Short-form reels, explainer motion graphics, and edits.{% endif %}</p>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════
-       4. DIGITAL PRODUCTS CATEGORIES
-       ═══════════════════════════════════════ -->
-  <section class="dzhub-section" id="products">
-    <div class="dzhub-shell">
-      <div class="dzhub-section-head">
-        <span class="dzhub-badge-chip">{% t "nav.products" %}</span>
-        <h2>{% t "home.sec_digital_title" %}</h2>
-        <p>{% t "home.sec_digital_sub" %}</p>
-      </div>
-
-      <div class="dzhub-cat-grid">
-        <a href="{% url 'listings' %}?category=digital" class="dzhub-cat-card">
-          <div class="dzhub-cat-icon"><i class="fas fa-laptop-code"></i></div>
+        <a href="{% url 'listings' %}?category=digital&q={% if current_language == 'ar' %}برمجيات{% else %}software{% endif %}" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-code" aria-hidden="true"></i></div>
           <h4>{% if current_language == 'ar' %}سكربتات وبرمجيات جاهزة{% else %}Scripts & Software{% endif %}</h4>
-          <p>{% if current_language == 'ar' %}أنظمة إدارة، إضافات ووردبريس، بوتات وأكواد جاهزة.{% else %}Management scripts, WordPress plugins, and bots.{% endif %}</p>
+          <p>{% if current_language == 'ar' %}أنظمة إدارة، إضافات، بوتات أتمتة، وأكواد برمجية جاهزة للتثبيت الفوري.{% else %}Management scripts, plugins, automated bots, and turnkey code.{% endif %}</p>
         </a>
 
-        <a href="{% url 'listings' %}?category=digital" class="dzhub-cat-card">
-          <div class="dzhub-cat-icon"><i class="fas fa-layer-group"></i></div>
-          <h4>{% if current_language == 'ar' %}قوالب وتصاميم جاهزة{% else %}Templates & Themes{% endif %}</h4>
-          <p>{% if current_language == 'ar' %}قوالب صفحات هبوط، عروض تقديمية، ومخططات واجهات.{% else %}Landing page templates, UI kits, and presentations.{% endif %}</p>
-        </a>
-
-        <a href="{% url 'listings' %}?category=digital" class="dzhub-cat-card">
-          <div class="dzhub-cat-icon"><i class="fas fa-shield-halved"></i></div>
+        <a href="{% url 'listings' %}?category=accounts" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-id-badge" aria-hidden="true"></i></div>
           <h4>{% if current_language == 'ar' %}حسابات واشتراكات رسمية{% else %}Official Accounts & Access{% endif %}</h4>
-          <p>{% if current_language == 'ar' %}اشتراكات أدوات سحابية، استضافات، وخدمات للمطورين.{% else %}Cloud development tools, hosting, and SaaS credits.{% endif %}</p>
+          <p>{% if current_language == 'ar' %}اشتراكات أدوات سحابية، استضافات، وخدمات معتمدة للمطورين والمصممين.{% else %}Cloud development tools, hosting, and verified SaaS subscriptions.{% endif %}</p>
         </a>
 
-        <a href="{% url 'listings' %}?category=digital" class="dzhub-cat-card">
-          <div class="dzhub-cat-icon"><i class="fas fa-book-bookmark"></i></div>
-          <h4>{% if current_language == 'ar' %}كتب وأدلة رقمية{% else %}E-Books & Guides{% endif %}</h4>
-          <p>{% if current_language == 'ar' %}دورات وملفات تدريبية حصرية في مختلف مجالات العمل الحر.{% else %}Guides and resources for Algerian digital creators.{% endif %}</p>
+        <a href="{% url 'listings' %}?category=services&q={% if current_language == 'ar' %}تسويق{% else %}marketing{% endif %}" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-bullhorn" aria-hidden="true"></i></div>
+          <h4>{% if current_language == 'ar' %}تسويق رقمي وحملات ممولة{% else %}Digital Marketing & Ads{% endif %}</h4>
+          <p>{% if current_language == 'ar' %}إدارة حملات ممولة، تحسين محركات البحث SEO، وصناعة المحتوى الإعلاني.{% else %}Paid ad campaigns, social growth, and search engine optimization.{% endif %}</p>
+        </a>
+
+        <a href="{% url 'listings' %}?category=digital&q={% if current_language == 'ar' %}قوالب{% else %}templates{% endif %}" class="dzhub-cat-card">
+          <div class="dzhub-cat-icon"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
+          <h4>{% if current_language == 'ar' %}قوالب وملفات رقمية جاهزة{% else %}Templates & Digital Assets{% endif %}</h4>
+          <p>{% if current_language == 'ar' %}قوالب صفحات هبوط، عروض تقديمية، ومخططات واجهات جاهزة للاستخدام.{% else %}Landing page kits, presentation decks, and digital tools.{% endif %}</p>
+        </a>
+      </div>
+
+      <div class="dzhub-cat-footer-row">
+        <a href="{% url 'listings' %}" class="dzhub-btn-all-listings">
+          <i class="fas fa-store" aria-hidden="true"></i>
+          <span>{% if current_language == 'ar' %}تصفح جميع الصفقات والخدمات في السوق{% else %}Browse All Listings in Marketplace{% endif %}</span>
+          <i class="fas fa-arrow-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}" aria-hidden="true"></i>
         </a>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════
-       5. LATEST DEALS & OFFERS
+       6. LATEST DEALS & OFFERS
        ═══════════════════════════════════════ -->
-  <section class="dzhub-section" id="latest-deals" style="background:#FFFFFF; border-top:1px solid var(--dzhub-border); border-bottom:1px solid var(--dzhub-border);">
+  <section class="dzhub-section dzhub-section-alt" id="latest-deals">
     <div class="dzhub-shell">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:36px; flex-wrap:wrap; gap:16px;">
+      <div class="dzhub-section-header-row">
         <div>
-          <span class="dzhub-badge-chip">{% t "home.sec_latest_title" %}</span>
-          <h2 style="font-size:1.85rem; font-weight:800; color:var(--dzhub-text); margin:0;">
+          <span class="dzhub-badge-chip">
+            <i class="fas fa-bolt" aria-hidden="true"></i>
+            <span>{% t "home.sec_latest_title" %}</span>
+          </span>
+          <h2 class="dzhub-section-head-title">
             {% if current_language == 'ar' %}عروض وخدمات نشطة الآن{% else %}Active Listings Available Now{% endif %}
           </h2>
         </div>
-        <a href="{% url 'listings' %}" class="dzhub-btn-secondary" style="font-size:0.9375rem;">
+        <a href="{% url 'listings' %}" class="dzhub-btn-hero-secondary">
           <span>{% t "home.view_all" %}</span>
-          <i class="fas fa-arrow-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}"></i>
+          <i class="fas fa-arrow-{% if current_dir == 'rtl' %}left{% else %}right{% endif %}" aria-hidden="true"></i>
         </a>
       </div>
 
@@ -243,15 +285,17 @@
             {% if deal.cover_image %}
               <img src="{{ deal.cover_image.image|file_url:'images/brand/og-card.png' }}" alt="{{ deal.product_title }}" loading="lazy" decoding="async">
             {% else %}
-              <div class="dzhub-deal-media-placeholder"><i class="fas fa-image"></i></div>
+              <div class="dzhub-deal-media-placeholder"><i class="fas fa-image" aria-hidden="true"></i></div>
             {% endif %}
             <span class="dzhub-deal-badge-type">
               {% if deal.category == 'services' %}
-                <i class="fas fa-screwdriver-wrench"></i> {% t "nav.services" %}
+                <i class="fas fa-screwdriver-wrench" aria-hidden="true"></i> {% t "nav.services" %}
               {% elif deal.category == 'digital' %}
-                <i class="fas fa-cloud-arrow-down"></i> {% t "nav.products" %}
+                <i class="fas fa-cloud-arrow-down" aria-hidden="true"></i> {% t "nav.products" %}
+              {% elif deal.category == 'accounts' %}
+                <i class="fas fa-id-badge" aria-hidden="true"></i> {% if current_language == 'ar' %}حسابات{% else %}Accounts{% endif %}
               {% else %}
-                <i class="fas fa-shield-halved"></i> {% if deal.is_auction %}{% t "home.deal_type_auction" %}{% else %}{% t "home.deal_type_fixed" %}{% endif %}
+                <i class="fas fa-shield-halved" aria-hidden="true"></i> {% if deal.is_auction %}{% t "home.deal_type_auction" %}{% else %}{% t "home.deal_type_fixed" %}{% endif %}
               {% endif %}
             </span>
           </div>
@@ -263,7 +307,7 @@
 
             <div class="dzhub-deal-price-row">
               <span class="dzhub-deal-price">
-                {{ deal.display_price }} <span style="font-size:0.8em; font-weight:700;">{% if current_language == 'ar' %}دج{% else %}DZD{% endif %}</span>
+                {{ deal.display_price }} <span class="dzhub-deal-currency">{% if current_language == 'ar' %}دج{% else %}DZD{% endif %}</span>
               </span>
               <div class="dzhub-deal-seller">
                 <img src="{{ deal.seller.profile.avatar|file_url:'images/default_avatar.jpg' }}" alt="{{ deal.seller.username }}" loading="lazy">
@@ -275,42 +319,51 @@
         {% endfor %}
       </div>
       {% else %}
-      <div class="dzhub-card" style="text-align:center; padding:48px 24px;">
-        <i class="fas fa-box-open" style="font-size:2.5rem; color:var(--dzhub-muted); margin-bottom:16px;"></i>
-        <h3 style="color:var(--dzhub-text); font-weight:700;">{% if current_language == 'ar' %}لا توجد صفقات منشورة بعد{% else %}No listings published yet{% endif %}</h3>
-        <p style="color:var(--dzhub-muted); margin-bottom:24px;">{% t "home.empty_deals" %}</p>
-        <a href="{% url 'create_deal' %}" class="dzhub-btn">{% t "home.btn_create_deal" %}</a>
+      <div class="dzhub-empty-card">
+        <i class="fas fa-box-open dzhub-empty-icon" aria-hidden="true"></i>
+        <h3 class="dzhub-empty-title">{% if current_language == 'ar' %}لا توجد صفقات منشورة بعد{% else %}No listings published yet{% endif %}</h3>
+        <p class="dzhub-empty-lead">{% t "home.empty_deals" %}</p>
+        <a href="{% url 'create_deal' %}" class="dzhub-btn-hero-primary">{% t "home.btn_create_deal" %}</a>
       </div>
       {% endif %}
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════
-       6. WHY TRUST DZHub
+       7. WHY TRUST DZHub
        ═══════════════════════════════════════ -->
   <section class="dzhub-section" id="trust">
     <div class="dzhub-shell">
       <div class="dzhub-section-head">
-        <span class="dzhub-badge-chip">{% t "home.sec_trust_title" %}</span>
+        <span class="dzhub-badge-chip">
+          <i class="fas fa-shield-halved" aria-hidden="true"></i>
+          <span>{% t "home.sec_trust_title" %}</span>
+        </span>
         <h2>{% if current_language == 'ar' %}أمان مالي ونظام وساطة واضح يحمي الطرفين{% else %}Financial security and transparent deal protection{% endif %}</h2>
         <p>{% if current_language == 'ar' %}صُممت منصة DZHub لتمنح المشتري والبائع بيئة واضحة، بدون ضياع للأموال وبدون رسائل خارجية مشتتة.{% else %}DZHub gives buyers and sellers a structured space where funds and agreements stay protected.{% endif %}</p>
       </div>
 
       <div class="dzhub-trust-grid">
         <div class="dzhub-trust-card">
-          <i class="fas fa-vault"></i>
+          <div class="dzhub-trust-card-icon">
+            <i class="fas fa-vault" aria-hidden="true"></i>
+          </div>
           <h3>{% t "home.sec_trust_1_title" %}</h3>
           <p>{% t "home.sec_trust_1_desc" %}</p>
         </div>
 
         <div class="dzhub-trust-card">
-          <i class="fas fa-shield-check"></i>
+          <div class="dzhub-trust-card-icon">
+            <i class="fas fa-shield-check" aria-hidden="true"></i>
+          </div>
           <h3>{% t "home.sec_trust_2_title" %}</h3>
           <p>{% t "home.sec_trust_2_desc" %}</p>
         </div>
 
         <div class="dzhub-trust-card">
-          <i class="fas fa-scale-balanced"></i>
+          <div class="dzhub-trust-card-icon">
+            <i class="fas fa-scale-balanced" aria-hidden="true"></i>
+          </div>
           <h3>{% t "home.sec_trust_3_title" %}</h3>
           <p>{% t "home.sec_trust_3_desc" %}</p>
         </div>
@@ -319,12 +372,15 @@
   </section>
 
   <!-- ═══════════════════════════════════════
-       7. TRANSPARENT FEES SECTION
+       8. TRANSPARENT FEES SECTION
        ═══════════════════════════════════════ -->
-  <section class="dzhub-section" id="fees" style="background:#FFFFFF; border-top:1px solid var(--dzhub-border); border-bottom:1px solid var(--dzhub-border);">
+  <section class="dzhub-section dzhub-section-alt" id="fees">
     <div class="dzhub-shell">
       <div class="dzhub-section-head">
-        <span class="dzhub-badge-chip">{% t "nav.fees" %}</span>
+        <span class="dzhub-badge-chip">
+          <i class="fas fa-percent" aria-hidden="true"></i>
+          <span>{% t "nav.fees" %}</span>
+        </span>
         <h2>{% t "home.sec_fees_title" %}</h2>
         <p>{% t "home.sec_fees_sub" %}</p>
       </div>
@@ -336,24 +392,73 @@
         </div>
         <p class="dzhub-fee-explanation">
           {% if current_language == 'ar' %}
-            رسوم الضمان ثابتة ومحسوبة تلقائياً عند إنشاء الصفقة، بدون أي تكاليف خفية أو رسوم سحب غير معلنة.
+            رسوم الضمان ثابتة وشفافة ومحسوبة تلقائياً عند إنشاء الصفقة، بدون أي تكاليف خفية أو رسوم سحب غير معلنة.
           {% else %}
             Escrow fee is clearly calculated upon deal creation with zero hidden costs or surprise deductions.
           {% endif %}
         </p>
 
+        <!-- Interactive Live Fee Calculator -->
+        <div class="dzhub-fee-calculator" id="feeCalculator">
+          <div class="dzhub-calc-head">
+            <div class="dzhub-calc-title">
+              <i class="fas fa-calculator" aria-hidden="true"></i>
+              <span>{% if current_language == 'ar' %}حاسبة رسوم الضمان الفورية{% else %}Instant Escrow Fee Calculator{% endif %}</span>
+            </div>
+            <span class="dzhub-calc-tag">{% if current_language == 'ar' %}حساب فوري بالدينار الجزائري{% else %}Real-time DZD Calculation{% endif %}</span>
+          </div>
+
+          <div class="dzhub-calc-input-block">
+            <label for="calcDealAmount" class="dzhub-calc-label">{% if current_language == 'ar' %}قيمة الصفقة أو الخدمة (دج):{% else %}Deal Amount (DZD):{% endif %}</label>
+            <div class="dzhub-calc-input-wrap">
+              <input type="number" id="calcDealAmount" value="20000" min="500" step="500" placeholder="20000" class="dzhub-calc-input">
+              <span class="dzhub-calc-currency">{% if current_language == 'ar' %}دج جزائري{% else %}DZD{% endif %}</span>
+            </div>
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="dzhub-calc-presets">
+            <span class="dzhub-presets-label">{% if current_language == 'ar' %}أمثلة سريعة:{% else %}Quick values:{% endif %}</span>
+            <button type="button" class="dzhub-calc-chip" data-amount="5000">5,000 دج</button>
+            <button type="button" class="dzhub-calc-chip is-active" data-amount="20000">20,000 دج</button>
+            <button type="button" class="dzhub-calc-chip" data-amount="50000">50,000 دج</button>
+            <button type="button" class="dzhub-calc-chip" data-amount="100000">100,000 دج</button>
+          </div>
+
+          <!-- Live Breakdown Cards -->
+          <div class="dzhub-calc-cards-grid">
+            <div class="dzhub-calc-card">
+              <span class="dzhub-calc-c-title">{% if current_language == 'ar' %}يدفعه المشتري{% else %}Buyer Pays{% endif %}</span>
+              <strong class="dzhub-calc-c-val" id="calcBuyerPays">20,000 دج</strong>
+              <span class="dzhub-calc-c-badge text-emerald"><i class="fas fa-check-circle" aria-hidden="true"></i> {% if current_language == 'ar' %}حماية مجانية 100%{% else %}100% Free Protection{% endif %}</span>
+            </div>
+
+            <div class="dzhub-calc-card dzhub-calc-card-fee">
+              <span class="dzhub-calc-c-title">{% if current_language == 'ar' %}رسوم الضمان ({{ fee_rate_percent }}%){% else %}Escrow Fee ({{ fee_rate_percent }}%){% endif %}</span>
+              <strong class="dzhub-calc-c-val text-primary" id="calcFeeAmount">1,000 دج</strong>
+              <span class="dzhub-calc-c-badge text-primary"><i class="fas fa-shield-halved" aria-hidden="true"></i> {% if current_language == 'ar' %}إدارة النزاعات مشمولة{% else %}Dispute Shield Included{% endif %}</span>
+            </div>
+
+            <div class="dzhub-calc-card dzhub-calc-card-net">
+              <span class="dzhub-calc-c-title">{% if current_language == 'ar' %}صافي أرباح البائع{% else %}Seller Net Payout{% endif %}</span>
+              <strong class="dzhub-calc-c-val text-emerald" id="calcSellerNet">19,000 دج</strong>
+              <span class="dzhub-calc-c-badge text-emerald"><i class="fas fa-bolt" aria-hidden="true"></i> {% if current_language == 'ar' %}تحويل فوري للمحفظة{% else %}Instant Transfer{% endif %}</span>
+            </div>
+          </div>
+        </div>
+
         <div class="dzhub-fee-features">
           <div class="dzhub-fee-feature-item">
-            <i class="fas fa-check-circle"></i>
-            <span>{% if current_language == 'ar' %}حساب مجاني 100%{% else %}Free account registration{% endif %}</span>
+            <i class="fas fa-check-circle" aria-hidden="true"></i>
+            <span>{% if current_language == 'ar' %}حساب مجاني 100% بدون أي اشتراك شهري{% else %}Free account with zero monthly subscriptions{% endif %}</span>
           </div>
           <div class="dzhub-fee-feature-item">
-            <i class="fas fa-check-circle"></i>
-            <span>{% if current_language == 'ar' %}حاسبة رسوم شفافة{% else %}Instant fee calculation{% endif %}</span>
+            <i class="fas fa-check-circle" aria-hidden="true"></i>
+            <span>{% if current_language == 'ar' %}بدون أي تكاليف خفية أو رسوم سحب غير معلنة{% else %}Zero hidden withdrawal fees{% endif %}</span>
           </div>
           <div class="dzhub-fee-feature-item">
-            <i class="fas fa-check-circle"></i>
-            <span>{% if current_language == 'ar' %}حماية النزاعات مشمولة{% else %}Dispute protection included{% endif %}</span>
+            <i class="fas fa-check-circle" aria-hidden="true"></i>
+            <span>{% if current_language == 'ar' %}حماية النزاعات والتحكيم مشمولة مجاناً{% else %}Neutral dispute support included{% endif %}</span>
           </div>
         </div>
       </div>
@@ -361,34 +466,49 @@
   </section>
 
   <!-- ═══════════════════════════════════════
-       8. FAQ SECTION
+       9. FAQ SECTION
        ═══════════════════════════════════════ -->
   <section class="dzhub-section" id="faq">
     <div class="dzhub-shell">
       <div class="dzhub-section-head">
-        <span class="dzhub-badge-chip">{% t "home.sec_faq_title" %}</span>
+        <span class="dzhub-badge-chip">
+          <i class="fas fa-circle-question" aria-hidden="true"></i>
+          <span>{% t "home.sec_faq_title" %}</span>
+        </span>
         <h2>{% if current_language == 'ar' %}إجابات واضحة ومباشرة{% else %}Frequently Asked Questions{% endif %}</h2>
-        <p>{% if current_language == 'ar' %}كل ما تحتاج معرفته عن التعامل داخل منصة دزاير هب.{% else %}Everything you need to know about trading through DZHub.{% endif %}</p>
+        <p>{% if current_language == 'ar' %}كل ما تحتاج معرفته عن التعامل والوساطة المالية داخل منصة دزاير هب.{% else %}Everything you need to know about trading through DZHub.{% endif %}</p>
       </div>
 
       <div class="dzhub-faq-stack">
         <details class="dzhub-faq-item" open>
-          <summary>{% if current_language == 'ar' %}كيف يضمن DZHub أموالي عند الشراء؟{% else %}How does DZHub protect my money when buying?{% endif %}</summary>
+          <summary>
+            <span>{% if current_language == 'ar' %}كيف يضمن DZHub أموالي عند الشراء؟{% else %}How does DZHub protect my money when buying?{% endif %}</span>
+            <i class="fas fa-chevron-down faq-chevron" aria-hidden="true"></i>
+          </summary>
           <p>{% if current_language == 'ar' %}عند قيامك بالدفع، لا يذهب المبلغ للبائع مباشرة، بل يُحجز في حساب الضمان التابع للمنصة. البائع يبدأ العمل وهو مطمئن لوجود المبلغ، وأنت تطمئن لأن المبلغ لا يُسلَّم له إلا بعد فحصك للخدمة وموافقتك التامة.{% else %}When paying, funds are safely held in escrow and are only released to the seller after you inspect the delivery and confirm your satisfaction.{% endif %}</p>
         </details>
 
         <details class="dzhub-faq-item">
-          <summary>{% if current_language == 'ar' %}ماذا أفعل إذا تأخر البائع أو لم يسلّم ما اتفقنا عليه؟{% else %}What happens if the seller delays or fails to deliver?{% endif %}</summary>
+          <summary>
+            <span>{% if current_language == 'ar' %}ماذا أفعل إذا تأخر البائع أو لم يسلّم ما اتفقنا عليه؟{% else %}What happens if the seller delays or fails to deliver?{% endif %}</span>
+            <i class="fas fa-chevron-down faq-chevron" aria-hidden="true"></i>
+          </summary>
           <p>{% if current_language == 'ar' %}يمكنك فتح نزاع بضغطة زر داخل غرفة الصفقة. يتدخل فريق الدعم لمراجعة شروط الاتفاق والمحادثات والملفات المرفقة لإنصاف الطرفين وحماية حقوقك.{% else %}You can open a dispute directly in the deal room. Our support team reviews all contract agreements, chat history, and files to make a fair determination.{% endif %}</p>
         </details>
 
         <details class="dzhub-faq-item">
-          <summary>{% if current_language == 'ar' %}ما هي العملة المعتمدة في الصفقات؟{% else %}What currency is used for deals?{% endif %}</summary>
+          <summary>
+            <span>{% if current_language == 'ar' %}ما هي العملة المعتمدة في الصفقات؟{% else %}What currency is used for deals?{% endif %}</span>
+            <i class="fas fa-chevron-down faq-chevron" aria-hidden="true"></i>
+          </summary>
           <p>{% if current_language == 'ar' %}المنصة مخصصة للسوق الجزائري وتعتمد الدينار الجزائري (دج / DZD) لعرض وإتمام كافة الصفقات والخدمات والمنتجات الرقمية.{% else %}The platform is tailored for Algeria, using the Algerian Dinar (DZD) for all digital transactions.{% endif %}</p>
         </details>
 
         <details class="dzhub-faq-item">
-          <summary>{% if current_language == 'ar' %}هل يمكن للبائع تغيير الشروط أو السعر بعد الدفع؟{% else %}Can the seller change terms or price after payment?{% endif %}</summary>
+          <summary>
+            <span>{% if current_language == 'ar' %}هل يمكن للبائع تغيير الشروط أو السعر بعد الدفع؟{% else %}Can the seller change terms or price after payment?{% endif %}</span>
+            <i class="fas fa-chevron-down faq-chevron" aria-hidden="true"></i>
+          </summary>
           <p>{% if current_language == 'ar' %}كلا، بمجرد حجز المبلغ تصبح شروط الصفقة والسعر ملزمين لكلا الطرفين ولا يمكن تعديلهما إلا بموافقة صريحة من الطرفين أو عبر إدارة النزاعات.{% else %}No, once funds are held, deal terms and pricing are locked and can only be altered with mutual consent or through dispute mediation.{% endif %}</p>
         </details>
       </div>
@@ -396,9 +516,9 @@
   </section>
 
   <!-- ═══════════════════════════════════════
-       9. FINAL CTA SECTION
+       10. FINAL CTA SECTION
        ═══════════════════════════════════════ -->
-  <section class="dzhub-section" id="cta" style="padding-bottom:90px;">
+  <section class="dzhub-section dzhub-cta-section" id="cta">
     <div class="dzhub-shell">
       <div class="dzhub-cta-box">
         <h2>{% t "home.sec_cta_title" %}</h2>
@@ -407,20 +527,20 @@
         <div class="dzhub-cta-actions">
           {% if user.is_authenticated %}
           <a href="{% url 'create_deal' %}" class="dzhub-btn-cta-white">
-            <i class="fas fa-plus"></i>
+            <i class="fas fa-plus" aria-hidden="true"></i>
             <span>{% t "home.btn_create_deal" %}</span>
           </a>
-          <a href="{% url 'my_deals' %}" class="dzhub-btn-hero-secondary" style="border-color:rgba(255,255,255,0.4); color:#fff !important; background:transparent;">
-            <i class="fas fa-briefcase"></i>
+          <a href="{% url 'my_deals' %}" class="dzhub-btn-cta-ghost">
+            <i class="fas fa-briefcase" aria-hidden="true"></i>
             <span>{% t "nav.my_deals" %}</span>
           </a>
           {% else %}
           <a href="{% url 'register' %}" class="dzhub-btn-cta-white">
-            <i class="fas fa-bolt"></i>
+            <i class="fas fa-bolt" aria-hidden="true"></i>
             <span>{% t "nav.start_now" %}</span>
           </a>
-          <a href="{% url 'listings' %}" class="dzhub-btn-hero-secondary" style="border-color:rgba(255,255,255,0.4); color:#fff !important; background:transparent;">
-            <i class="fas fa-store"></i>
+          <a href="{% url 'listings' %}" class="dzhub-btn-cta-ghost">
+            <i class="fas fa-store" aria-hidden="true"></i>
             <span>{% t "home.btn_browse_services" %}</span>
           </a>
           {% endif %}
@@ -430,4 +550,59 @@
   </section>
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function initDZHubHomeExperience() {
+    const isAr = document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
+
+    // Interactive Instant Fee Calculator
+
+    // 2. Interactive Instant Fee Calculator
+    const dealInput = document.getElementById('calcDealAmount');
+    const feeRate = parseFloat('{{ fee_rate_percent|default:"5" }}') || 5;
+    const buyerPaysEl = document.getElementById('calcBuyerPays');
+    const feeAmountEl = document.getElementById('calcFeeAmount');
+    const sellerNetEl = document.getElementById('calcSellerNet');
+    const chips = document.querySelectorAll('.dzhub-calc-chip');
+
+    function formatDZD(val) {
+      const rounded = Math.round(val);
+      const str = rounded.toLocaleString('en-US');
+      return isAr ? `${str} دج` : `${str} DZD`;
+    }
+
+    function calculateFees() {
+      if (!dealInput) return;
+      let amount = parseFloat(dealInput.value);
+      if (isNaN(amount) || amount < 0) amount = 0;
+      const fee = (amount * feeRate) / 100;
+      const net = amount - fee;
+
+      if (buyerPaysEl) buyerPaysEl.textContent = formatDZD(amount);
+      if (feeAmountEl) feeAmountEl.textContent = formatDZD(fee);
+      if (sellerNetEl) sellerNetEl.textContent = formatDZD(net);
+    }
+
+    if (dealInput) {
+      dealInput.addEventListener('input', function () {
+        chips.forEach(c => c.classList.remove('is-active'));
+        calculateFees();
+      });
+      calculateFees();
+    }
+
+    if (chips.length && dealInput) {
+      chips.forEach(chip => {
+        chip.addEventListener('click', function () {
+          chips.forEach(c => c.classList.remove('is-active'));
+          this.classList.add('is-active');
+          dealInput.value = this.dataset.amount;
+          calculateFees();
+        });
+      });
+    }
+  })();
+</script>
 {% endblock %}

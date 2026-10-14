@@ -6,43 +6,45 @@
 :root {
   color-scheme: light;
 
-  /* ─── DZHub Official Color Palette ─── */
-  --dzhub-primary: #1261A0;
-  --dzhub-primary-dark: #0B477A;
-  --dzhub-blue: #159BD7;
-  --dzhub-light-blue: #EAF6FC;
-  --dzhub-page-bg: #F6FAFD;
-  --dzhub-surface: #FFFFFF;
-  --dzhub-surface-subtle: #F1F7FB;
-  --dzhub-text: #12324A;
-  --dzhub-muted: #688197;
-  --dzhub-border: #DCEAF3;
-  --dzhub-border-subtle: #E8F1F8;
-  --dzhub-success: #16A36A;
-  --dzhub-success-light: #E8F7F0;
-  --dzhub-danger: #D9535F;
-  --dzhub-danger-light: #FDF0F1;
-  --dzhub-warning: #D98A20;
-  --dzhub-warning-light: #FEF7ED;
+  /* ─── DZHub Official Color Palette (Royal Blue + Cyan Accent) ─── */
+  --dzhub-primary: #2563eb;
+  --dzhub-primary-dark: #1d4ed8;
+  --dzhub-primary-light: #3b82f6;
+  --dzhub-blue: #06b6d4;
+  --dzhub-light-blue: #eff6ff;
+  --dzhub-cyan-subtle: #ecfeff;
+  --dzhub-page-bg: #f8fafc;
+  --dzhub-surface: #ffffff;
+  --dzhub-surface-subtle: #f1f5f9;
+  --dzhub-text: #0f172a;
+  --dzhub-muted: #64748b;
+  --dzhub-border: #e2e8f0;
+  --dzhub-border-subtle: #f1f5f9;
+  --dzhub-success: #10b981;
+  --dzhub-success-light: #ecfdf5;
+  --dzhub-danger: #f43f5e;
+  --dzhub-danger-light: #fff1f2;
+  --dzhub-warning: #f59e0b;
+  --dzhub-warning-light: #fffbeb;
 
-  /* ─── Global System Overrides (Mapping Old Dark Tokens to DZHub Light) ─── */
+  /* ─── Global System Overrides (Mapping Old Dark Tokens to DZHub Clean Light) ─── */
   --bg-canvas: var(--dzhub-page-bg);
   --bg-surface: var(--dzhub-surface);
   --bg-surface-alt: var(--dzhub-surface-subtle);
   --card-glass: rgba(255, 255, 255, 0.96);
-  --card-glass-hover: #FFFFFF;
+  --card-glass-hover: #ffffff;
 
   --color-bg: var(--dzhub-page-bg);
   --color-bg-2: var(--dzhub-surface-subtle);
   --color-card: var(--dzhub-surface);
-  --color-card-2: #FFFFFF;
-  --color-card-3: #F8FAFC;
+  --color-card-2: #ffffff;
+  --color-card-3: #f8fafc;
   --color-primary: var(--dzhub-primary);
   --color-primary-2: var(--dzhub-blue);
   --color-text: var(--dzhub-text);
   --color-muted: var(--dzhub-muted);
   --color-border: var(--dzhub-border);
-  --color-border-2: #CBD5E1;
+  --color-border-2: #cbd5e1;
   --color-green: var(--dzhub-success);
   --color-danger: var(--dzhub-danger);
   --color-gold: var(--dzhub-primary);
@@ -51,12 +53,12 @@
   --se-bg-alt: var(--dzhub-surface-subtle);
   --se-surface: var(--dzhub-surface);
   --se-surface-soft: var(--dzhub-light-blue);
-  --se-surface-strong: #FFFFFF;
+  --se-surface-strong: #ffffff;
   --se-text: var(--dzhub-text);
   --se-text-2: var(--dzhub-muted);
-  --se-text-3: #94A3B8;
+  --se-text-3: #94a3b8;
   --se-border: var(--dzhub-border);
-  --se-border-strong: #BDD7E7;
+  --se-border-strong: #93c5fd;
   --se-primary: var(--dzhub-primary);
   --se-primary-hover: var(--dzhub-primary-dark);
   --se-primary-subtle: var(--dzhub-light-blue);
@@ -76,11 +78,11 @@
   --radius-pill: 999px;
 
   /* ─── Elevation / Clean Light Shadows ─── */
-  --shadow-xs: 0 1px 3px rgba(18, 50, 74, 0.04);
-  --shadow-sm: 0 2px 8px rgba(18, 50, 74, 0.06);
-  --shadow-md: 0 4px 16px rgba(18, 50, 74, 0.08);
-  --shadow-lg: 0 10px 30px rgba(18, 50, 74, 0.10);
-  --shadow-focus: 0 0 0 3px rgba(18, 97, 160, 0.20);
+  --shadow-xs: 0 1px 3px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.10);
+  --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.20);
 }
 
 /* RTL Typography Priority */

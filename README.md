@@ -13,7 +13,19 @@
     <img src="https://img.shields.io/badge/Redis-Realtime%20%26%20Queues-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis" />
     <img src="https://img.shields.io/badge/Stripe-Escrow%20Flow-635BFF?style=for-the-badge&logo=stripe&logoColor=white" alt="Stripe" />
   </p>
+
+  <p>
+    <a href="https://github.com/test-bit-sys/escrow-"><img src="https://img.shields.io/badge/Status-Under%20Active%20Development-f59e0b?style=for-the-badge&logo=git" alt="Status" /></a>
+    <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/Contributions-Welcome-22c55e?style=for-the-badge&logo=github" alt="PRs Welcome" /></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-3b82f6?style=for-the-badge" alt="License" /></a>
+  </p>
 </div>
+
+> [!IMPORTANT]
+> **🚧 مشروع مفتوح المصدر قيد التطوير النشط (Work In Progress)**  
+> هذا المشروع في مرحلة بناء وتطوير مستمر، وهو **مفتوح المصدر بالكامل** ومتاح لكافة المطورين للمساهمة والتطوير. نرحب بكل الأفكار، تحسينات الكود، إصلاحات الأخطاء، وطلبات السحب (Pull Requests). يرجى مراجعة [دليل المساهمة (CONTRIBUTING.md)](CONTRIBUTING.md) و [سياسة الأمان (SECURITY.md)](SECURITY.md).
+>
+> *This repository is under active development and open for public community contributions. We warmly welcome pull requests, security audits, feature ideas, and feedback!*
 
 <table>
   <tr>
@@ -165,8 +177,8 @@ DEPLOYMENT_CHECKLIST.md  Launch and deployment checklist
 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/escrow_project.git
-cd escrow_project
+git clone https://github.com/test-bit-sys/escrow-.git
+cd escrow-
 ```
 
 2. Create and activate a virtual environment
@@ -309,6 +321,20 @@ For staging or production, ensure:
 - Stripe webhook configuration matches `SITE_URL`
 - Email delivery is configured
 - Secret values are real and not placeholders
+
+## 🤝 Open for Developers / المساهمة والتطوير
+
+هذا المشروع يرحب بكل المطورين والمهتمين بالبرمجيات الحرة! إذا كنت ترغب في المساهمة بكود، تحسين الواجهة، أو الإبلاغ عن أخطاء، فالباب مفتوح لك بالكامل.
+
+### 🌟 مجالات نرحب بالمساهمة فيها (Good First Issues & Roadmap):
+- **🌐 تعدد اللغات (i18n):** استكمال تعريب وتدويل النصوص (عربي / إنجليزي / فرنسي).
+- **💳 بوابات الدفع (Payment Adapters):** إضافة بوابات دفع محلية (مثل BaridiMob / Satim / CIB) أو تجريبية.
+- **📱 تحسينات تجربة المستخدم (UI/UX Polish):** تحسين استجابة الصفحات على الهواتف والأجهزة اللوحية ورفع مستوى إمكانية الوصول (Accessibility).
+- **🧪 زيادة التغطية الاختبارية (Tests):** كتابة المزيد من اختبارات الوحدة (Unit Tests) لتدفقات النزاع والمحادثات الحية.
+- **⚡ تحسين أداء WebSockets:** تحسين قنوات الاتصال الحي (Django Channels) وحفظ الرسائل في Redis.
+- **🔒 تدقيق ومراجعة الأمان:** المساعدة في فحص تدفقات الصرف والحجز وضمان سلامة المنطق المالي.
+
+يرجى مراجعة [دليل المساهمة CONTRIBUTING.md](CONTRIBUTING.md) للبدء في خطوتك الأولى، ولا تتردد في فتح [Issue جديدة](https://github.com/test-bit-sys/escrow-/issues) لمناقشة أي فكرة قبل البدء بها!
 
 ## Documentation
 

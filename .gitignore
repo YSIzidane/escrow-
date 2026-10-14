@@ -55,6 +55,7 @@ secrets.json
 *.temp
 tmp/
 temp/
+.tmp*
 .tmp*/
 .tmp-local-ssl/
 

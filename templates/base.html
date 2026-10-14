@@ -47,8 +47,8 @@
   <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}?v=5.3.2">
   {% endif %}
   
-  <link rel="stylesheet" href="{% static 'css/tokens.css' %}?v=20260920c">
-  <link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=20260920b">
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}?v=20260925v1">
+  <link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=20260925v1">
   <link rel="stylesheet" href="{% static 'css/main.css' %}?v=20260920b">
   <link rel="stylesheet" href="{% static 'css/base-chrome.css' %}?v=20260923vPill">
   <link rel="stylesheet" href="{% static 'css/responsive_fixes.css' %}?v=20260920b">
@@ -68,7 +68,7 @@
   {% block extra_css %}{% endblock %}
   {% block late_css %}{% endblock %}
   <!-- Load the DZHub layer last so legacy page styles cannot pull the site back to dark/gold. -->
-  <link rel="stylesheet" href="{% static 'css/dzhub-theme.css' %}?v=20260923v2">
+  <link rel="stylesheet" href="{% static 'css/dzhub-theme.css' %}?v=20260925v1">
   <script>
     window.SE_UI = {
       shareUnsupported: '{% t "share.unsupported"|escapejs %}',
@@ -145,11 +145,8 @@
       <li><a href="{% url 'home' %}" class="{% block nav_home %}{% endblock %}">
         <i class="fas fa-house-chimney"></i> {% t "nav.home" %}
       </a></li>
-      <li><a href="{% url 'listings' %}?category=services" class="{% block nav_services %}{% endblock %}">
-        <i class="fas fa-screwdriver-wrench"></i> {% t "nav.services" %}
-      </a></li>
-      <li><a href="{% url 'listings' %}?category=digital" class="{% block nav_products %}{% endblock %}">
-        <i class="fas fa-cloud-arrow-down"></i> {% t "nav.products" %}
+      <li><a href="{% url 'listings' %}" class="{% block nav_listings %}{% endblock %}">
+        <i class="fas fa-store"></i> {% if current_language == 'ar' %}سوق الصفقات والخدمات{% else %}Marketplace & Deals{% endif %}
       </a></li>
       <li><a href="{% url 'how_it_works' %}" class="{% block nav_how %}{% endblock %}">
         <i class="fas fa-shield-halved"></i> {% t "nav.how_it_works" %}
@@ -392,8 +389,7 @@
       <span class="se-footer-copyline"><strong>{% t 'site.name' %}</strong> - {% t 'site.tagline' %} &copy; 2026</span>
     </div>
     <div class="se-footer-links">
-      <a href="{% url 'listings' %}?category=services"><i class="fas fa-screwdriver-wrench"></i>{% t 'nav.services' %}</a>
-      <a href="{% url 'listings' %}?category=digital"><i class="fas fa-cloud-arrow-down"></i>{% t 'nav.products' %}</a>
+      <a href="{% url 'listings' %}"><i class="fas fa-store"></i>{% if current_language == 'ar' %}سوق الصفقات والخدمات{% else %}Marketplace & Deals{% endif %}</a>
       <a href="{% url 'how_it_works' %}"><i class="fas fa-route"></i>{% if current_language == 'ar' %}دليل الاستخدام{% else %}Guide{% endif %}</a>
       <a href="{% url 'home' %}#fees"><i class="fas fa-percent"></i>{% t 'nav.fees' %}</a>
       <a href="{% url 'create_ticket' %}"><i class="fas fa-life-ring"></i>{% t 'nav.support' %}</a>
@@ -791,7 +787,7 @@
   <script defer src="{% static 'js/visual_experience.js' %}?v=20260817a"></script>
   {% block extra_js %}{% endblock %}
   <!-- Final DZHub visual layer: loaded after page-level styles so every surface keeps one identity. -->
-  <link rel="stylesheet" href="{% static 'css/dzhub-final.css' %}?v=20260923v2">
+  <link rel="stylesheet" href="{% static 'css/dzhub-final.css' %}?v=20260925vArt1">
   <!-- Page skins: ambient blue/white backgrounds so no page reads as a plain white document. -->
   <link rel="stylesheet" href="{% static 'css/dzhub-page-skins.css' %}?v=20260923v1">
 

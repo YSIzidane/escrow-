@@ -21,32 +21,41 @@
   --card-glass: rgba(15, 23, 42, 0.82);
   --card-glass-hover: rgba(30, 41, 59, 0.88);
 
-  /* ─── Champagne Gold Accents ─── */
-  --gold-primary: #f59e0b;
-  --gold-bright: #fbbf24;
-  --gold-glow: rgba(245, 158, 11, 0.25);
+  /* ─── Modern Trust Fintech Palette (Royal Blue + Cyan Accent) ─── */
+  --royal-blue: #2563eb;
+  --royal-blue-dark: #1d4ed8;
+  --royal-blue-light: #3b82f6;
+  --cyan-accent: #06b6d4;
+  --cyan-bright: #22d3ee;
+  --cyan-glow: rgba(6, 182, 212, 0.22);
+  --blue-glow: rgba(37, 99, 235, 0.25);
+
+  /* ─── Legacy Gold Aliases (Maintains 100% backward compatibility) ─── */
+  --gold-primary: var(--royal-blue);
+  --gold-bright: var(--cyan-accent);
+  --gold-glow: var(--cyan-glow);
 
   /* ─── Geometric Mesh Header Palette ─── */
-  --mesh-indigo: #4f6ef7;
-  --mesh-gold: #f59e0b;
+  --mesh-indigo: #2563eb;
+  --mesh-gold: #06b6d4;
   --mesh-emerald: #10b981;
 
   /* ─── Status Colors ─── */
   --emerald-success: #10b981;
   --rose-danger: #f43f5e;
-  --indigo-accent: #6366f1;
+  --indigo-accent: #2563eb;
 
-  /* ─── Canonical Profile System Tokens ─── */
-  --color-bg: #070a13;
-  --color-bg-2: #0a0f1d;
+  /* ─── Canonical System Tokens ─── */
+  --color-bg: #0a0f1e;
+  --color-bg-2: #0f172a;
   --color-card: #0e1424;
   --color-card-2: #131c31;
   --color-card-3: #18243e;
-  --color-cover-start: #0e1424;
-  --color-cover-end: #162038;
-  --color-primary: #f59e0b;
-  --color-primary-2: #fbbf24;
-  --color-gold: #fbbf24;
+  --color-cover-start: #0a0f1e;
+  --color-cover-end: #1e293b;
+  --color-primary: #2563eb;
+  --color-primary-2: #06b6d4;
+  --color-gold: #06b6d4;
   --color-green: #10b981;
   --color-danger: #f43f5e;
   --color-text: #f8fafc;
@@ -54,12 +63,12 @@
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-2: rgba(255, 255, 255, 0.15);
 
-  --gradient-brand: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
-  --gradient-brand-soft: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.04));
-  --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+  --gradient-brand: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #06b6d4 100%);
+  --gradient-brand-soft: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(6, 182, 212, 0.04));
+  --gradient-gold: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
   --shadow-card: 0 24px 70px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.25);
-  --shadow-glow: 0 0 0 1px rgba(245, 158, 11, 0.2), 0 18px 50px rgba(0, 0, 0, 0.4);
-  --shadow-brand: 0 12px 30px rgba(245, 158, 11, 0.25);
+  --shadow-glow: 0 0 0 1px rgba(6, 182, 212, 0.2), 0 18px 50px rgba(0, 0, 0, 0.4);
+  --shadow-brand: 0 12px 30px rgba(37, 99, 235, 0.25);
 
   --radius-card: 24px;
   --radius-panel: 18px;
@@ -71,8 +80,8 @@
   --se-font-sans: var(--font-sans);
 
   /* ─── Glass Borders ─── */
-  --border-glass: rgba(245, 158, 11, 0.18);
-  --border-hover: rgba(245, 158, 11, 0.45);
+  --border-glass: rgba(37, 99, 235, 0.22);
+  --border-hover: rgba(6, 182, 212, 0.45);
 
   /* ─── Glassmorphism ─── */
   --glass-blur: blur(16px);
@@ -80,19 +89,20 @@
   --glass-saturate: saturate(1.6);
 
   /* ─── Glow Shadows ─── */
-  --glow-gold: 0 10px 30px -5px rgba(245, 158, 11, 0.2);
-  --glow-gold-strong: 0 0 0 1px rgba(245, 158, 11, 0.35), 0 8px 32px -8px rgba(245, 158, 11, 0.4);
+  --glow-gold: 0 10px 30px -5px rgba(6, 182, 212, 0.25);
+  --glow-gold-strong: 0 0 0 1px rgba(6, 182, 212, 0.35), 0 8px 32px -8px rgba(37, 99, 235, 0.4);
 
   /* ─── Legacy bridge (keeps --se-* / --dl-* consumers in sync) ─── */
   --se-font-family: var(--font-sans);
 
-  /* ─── Brand Identity (Dark Navy & Gold Fintech) ─── */
-  --se-gold: #f4c95d;
-  --se-gold-soft: #e8b96a;
-  --se-gold-dark: #9a7228;
-  --se-gold-text: #f4c95d;
-  --se-navy: #0d1b2a;
-  --se-navy-mid: #1a2e45;
+  /* ─── Brand Identity (Navy & Royal Blue / Cyan Fintech) ─── */
+  --se-gold: #06b6d4;
+  --se-gold-soft: #38bdf8;
+  --se-gold-dark: #0284c7;
+  --se-gold-text: #06b6d4;
+  --se-navy: #0a0f1e;
+  --se-navy-mid: #0f172a;
+  --se-navy-light: #1e293b;
   --se-navy-light: #243b55;
 
   /* ─── Surfaces ─── */
@@ -161,10 +171,10 @@
   --se-info-bg: rgba(117, 167, 255, 0.14);
 
   /* ─── Focus & Chrome ─── */
-  --se-focus-ring: 0 0 0 3px rgba(244, 201, 93, 0.35);
-  --se-focus-outline: 2px solid #f4c95d;
+  --se-focus-ring: 0 0 0 3px rgba(6, 182, 212, 0.35);
+  --se-focus-outline: 2px solid #06b6d4;
   --se-focus-offset: 2px;
-  --se-chrome-bg: rgba(7, 17, 29, 0.84);
+  --se-chrome-bg: rgba(10, 15, 30, 0.88);
   --se-chrome-text: #edf3fb;
   --se-chrome-border: rgba(226, 232, 240, 0.12);
 
@@ -183,7 +193,7 @@
 
 /* حالات الوصول الموحدة — WCAG 2.2 AA Focus Indicators */
 :focus-visible {
-  outline: var(--se-focus-outline, 2px solid #c9963b) !important;
+  outline: var(--se-focus-outline, 2px solid #2563eb) !important;
   outline-offset: var(--se-focus-offset, 2px) !important;
   box-shadow: var(--se-focus-ring) !important;
 }

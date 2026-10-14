@@ -335,8 +335,11 @@ body[data-page="home"] .dzhub-hero {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: clamp(72px, 8vw, 112px) 0 clamp(68px, 7vw, 96px) !important;
-  background: linear-gradient(135deg, #062F55 0%, #0B477A 48%, #1261A0 100%) !important;
+  padding: clamp(65px, 7vw, 95px) 0 clamp(60px, 6vw, 85px) !important;
+  background: 
+    radial-gradient(ellipse 65% 55% at 85% 20%, rgba(6, 182, 212, 0.2), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 15% 85%, rgba(37, 99, 235, 0.25), transparent 60%),
+    linear-gradient(135deg, #062F55 0%, #0B477A 50%, #1261A0 100%) !important;
   border-bottom: 0 !important;
   color: #FFFFFF !important;
 }
@@ -347,10 +350,8 @@ body[data-page="home"] .dzhub-hero::before {
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  background: url("../images/brand/hero-escrow-flow.jpg") center / cover no-repeat;
-  filter: saturate(.62) hue-rotate(148deg) brightness(1.08);
-  opacity: .28;
-  transform: scale(1.04);
+  background: radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.12), transparent 70%);
+  opacity: .8;
 }
 
 body[data-page="home"] .dzhub-hero::after {
@@ -360,8 +361,8 @@ body[data-page="home"] .dzhub-hero::after {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 82% 22%, rgba(56, 189, 248, .26), transparent 30%),
-    linear-gradient(90deg, rgba(6, 47, 85, .96) 0%, rgba(11, 71, 122, .76) 48%, rgba(18, 97, 160, .55) 100%);
+    radial-gradient(circle at 82% 28%, rgba(6, 182, 212, .25), transparent 50%),
+    linear-gradient(90deg, rgba(6, 47, 85, .94) 0%, rgba(11, 71, 122, .82) 50%, rgba(18, 97, 160, .68) 100%);
 }
 
 body[data-page="home"] .dzhub-hero > .dzhub-shell {
@@ -441,32 +442,117 @@ body[data-page="home"] .dzhub-hero-status-pill {
   border-color: #DCEAF3 !important;
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   DZHub Homepage Visual Section Backgrounds (Curated Art Set)
+   ═══════════════════════════════════════════════════════════════════ */
 body[data-page="home"] .dzhub-section {
-  background: #F6FAFD !important;
+  position: relative;
+  overflow: hidden;
+  background: #F8FAFC;
 }
 
-body[data-page="home"] #services,
-body[data-page="home"] #latest-deals,
+/* 1. How It Works: Architectural staircase representing structured steps & solid foundations */
+body[data-page="home"] #how-it-works {
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(241, 245, 249, 0.88) 100%),
+    url("../images/brand/dzhub-bg-arch.webp") center / cover no-repeat fixed !important;
+}
+
+/* 2. Digital Services: Modern minimalist workspace desk with laptop and succulent */
+body[data-page="home"] #services {
+  background: 
+    linear-gradient(180deg, rgba(248, 250, 252, 0.87) 0%, rgba(241, 245, 249, 0.89) 100%),
+    url("../images/brand/dzhub-bg-desk.webp") center right / cover no-repeat !important;
+  border-top: 1px solid rgba(226, 232, 240, 0.8) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+}
+
+/* 3. Digital Products: Textured watercolor & linen plaster canvas wash */
+body[data-page="home"] #products {
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 249, 255, 0.88) 100%),
+    url("../images/brand/dzhub-bg-canvas.webp") center / cover no-repeat !important;
+}
+
+/* 4. Latest Deals: Clean light surface with subtle architectural depth */
+body[data-page="home"] #latest-deals {
+  background: 
+    linear-gradient(180deg, rgba(248, 250, 252, 0.92) 0%, rgba(241, 245, 249, 0.90) 100%),
+    url("../images/brand/dzhub-bg-arch.webp") center / cover no-repeat !important;
+  border-top: 1px solid rgba(226, 232, 240, 0.8) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+}
+
+/* 5. Trust Section: Serene textured plaster canvas */
+body[data-page="home"] #trust {
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.89) 0%, rgba(248, 250, 252, 0.90) 100%),
+    url("../images/brand/dzhub-bg-canvas.webp") center / cover no-repeat !important;
+}
+
+/* 6. Fees Section: Soft sunlight tree blossom bokeh evoking peace of mind and transparent pricing */
 body[data-page="home"] #fees {
-  background: #EAF6FC !important;
-  border-color: #DCEAF3 !important;
+  background: 
+    linear-gradient(180deg, rgba(248, 250, 252, 0.87) 0%, rgba(238, 246, 255, 0.89) 100%),
+    url("../images/brand/dzhub-bg-bokeh.webp") center top / cover no-repeat !important;
+  border-top: 1px solid rgba(226, 232, 240, 0.8) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
 }
 
-body[data-page="home"] #how-it-works,
-body[data-page="home"] #products,
-body[data-page="home"] #trust,
+/* 7. FAQ Section: Clean airy canvas */
 body[data-page="home"] #faq {
-  background: #F6FAFD !important;
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 0.92) 100%),
+    url("../images/brand/dzhub-bg-canvas.webp") center / cover no-repeat !important;
 }
 
+/* 8. Final CTA: Deep Midnight Navy & Royal Blue with 100% Crisp High-Contrast Text */
+body[data-page="home"] #cta .dzhub-cta-box {
+  background: 
+    radial-gradient(circle at 18% 28%, rgba(6, 182, 212, 0.35), transparent 50%),
+    radial-gradient(circle at 82% 78%, rgba(37, 99, 235, 0.4), transparent 50%),
+    linear-gradient(135deg, #091e3a 0%, #0d3862 50%, #15558d 100%) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 24px 60px rgba(6, 30, 58, 0.38) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+body[data-page="home"] #cta .dzhub-cta-box h2 {
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+body[data-page="home"] #cta .dzhub-cta-box p {
+  color: #f8fafc !important;
+  font-weight: 600 !important;
+  font-size: 1.15rem !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Solid Modern High-Contrast Cards: 100% white, sharp borders, deep readable text */
 body[data-page="home"] .dzhub-step-card,
 body[data-page="home"] .dzhub-cat-card,
 body[data-page="home"] .dzhub-deal-card,
 body[data-page="home"] .dzhub-trust-card,
 body[data-page="home"] .dzhub-fees-box,
 body[data-page="home"] .dzhub-faq-item {
-  background: rgba(255, 255, 255, .92) !important;
-  box-shadow: 0 10px 28px rgba(18, 50, 74, .07) !important;
+  background: #ffffff !important;
+  border: 1.5px solid #e2e8f0 !important;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05) !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
+}
+
+body[data-page="home"] .dzhub-step-card:hover,
+body[data-page="home"] .dzhub-cat-card:hover,
+body[data-page="home"] .dzhub-deal-card:hover,
+body[data-page="home"] .dzhub-trust-card:hover,
+body[data-page="home"] .dzhub-faq-item:hover {
+  background: #ffffff !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 16px 36px rgba(37, 99, 235, 0.12) !important;
+  border-color: rgba(37, 99, 235, 0.35) !important;
 }
 
 @media (max-width: 991px) {

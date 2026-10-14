@@ -1,6 +1,6 @@
 # Security Policy
 
-SafouaneEscrow handles authentication, payments, protected deal communication, and user trust workflows. Security issues should be treated seriously and reported responsibly.
+DZHub (دزاير هب) handles authentication, payments, protected deal communication, and user trust workflows. Security issues should be treated seriously and reported responsibly.
 
 ## Supported Versions
 
